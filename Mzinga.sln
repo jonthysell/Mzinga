@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Core", "Mzinga.Core\Mzinga.Core.csproj", "{6E780540-68A7-4F84-9306-6231EC5427CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.CoreTest", "Mzinga.CoreTest\Mzinga.CoreTest.csproj", "{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Engine", "Mzinga.Engine\Mzinga.Engine.csproj", "{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
