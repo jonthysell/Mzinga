@@ -138,6 +138,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mzinga.Core\Mzinga.Core.csproj">
+      <Project>{6e780540-68a7-4f84-9306-6231ec5427ca}</Project>
+      <Name>Mzinga.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mzinga.Engine\Mzinga.Engine.csproj">
       <Project>{6273e30d-eaaa-42f3-bcdc-3ad28aeed433}</Project>
       <Name>Mzinga.Engine</Name>

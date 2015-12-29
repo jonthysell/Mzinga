@@ -32,6 +32,8 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Mzinga.Viewer.ViewModel
 {
+    public delegate void BoardUpdatedEventHandler(string boardString);
+
     public class MainViewModel : ViewModelBase
     {
         public AppViewModel AppVM
@@ -113,9 +115,16 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public event BoardUpdatedEventHandler BoardUpdated;
+
         public MainViewModel()
         {
             AppVM.PropertyChanged += AppVM_PropertyChanged;
+
+            BoardUpdated += (boardString) =>
+            {
+                StatusText = boardString;
+            };
         }
 
         private void AppVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -125,8 +134,16 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("EngineOutputText");
             }
             else if (e.PropertyName == "BoardString")
+            {               
+                OnBoardUpdate(AppVM.BoardString);
+            }
+        }
+
+        private void OnBoardUpdate(string boardString)
+        {
+            if (null != BoardUpdated)
             {
-                StatusText = AppVM.BoardString;
+                BoardUpdated(boardString);
             }
         }
     }
