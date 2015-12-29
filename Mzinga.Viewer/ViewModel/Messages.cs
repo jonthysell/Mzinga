@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// Messages.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,29 +25,22 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Mzinga.Engine
+using GalaSoft.MvvmLight.Messaging;
+
+namespace Mzinga.Viewer.ViewModel
 {
-    public class Program
+    public class ExceptionMessage : MessageBase
     {
-        static void Main(string[] args)
-        {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
+        public ExceptionViewModel ExceptionVM { get; private set; }
 
-            while (!engine.ExitRequested)
-            {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
-            }
-        }
-
-        static void PrintLine(string format, params object[] arg)
+        public ExceptionMessage(Exception exception) : base()
         {
-            Console.Out.WriteLine(format, arg);
+            ExceptionVM = new ExceptionViewModel(exception);
         }
     }
 }

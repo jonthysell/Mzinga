@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// MessageHandlers.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -26,28 +26,33 @@
 
 using System;
 
-namespace Mzinga.Engine
-{
-    public class Program
-    {
-        static void Main(string[] args)
-        {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
+using GalaSoft.MvvmLight.Messaging;
 
-            while (!engine.ExitRequested)
-            {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
-            }
+using Mzinga.Viewer.ViewModel;
+
+namespace Mzinga.Viewer
+{
+    public class MessageHandlers
+    {
+        public static void RegisterMessageHandlers(object recipient)
+        {
+            Messenger.Default.Register<ExceptionMessage>(recipient, (message) => MessageHandlers.ShowException(message));
         }
 
-        static void PrintLine(string format, params object[] arg)
+        public static void UnregisterMessageHandlers(object recipient)
         {
-            Console.Out.WriteLine(format, arg);
+            Messenger.Default.Unregister<ExceptionMessage>(recipient);
+        }
+
+        private static void ShowException(ExceptionMessage message)
+        {
+            ExceptionWindow window = new ExceptionWindow();
+            window.DataContext = message.ExceptionVM;
+            message.ExceptionVM.RequestClose += () =>
+            {
+                window.Close();
+            };
+            window.ShowDialog();
         }
     }
 }

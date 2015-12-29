@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// ExceptionUtils.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -26,28 +26,26 @@
 
 using System;
 
-namespace Mzinga.Engine
-{
-    public class Program
-    {
-        static void Main(string[] args)
-        {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
+using GalaSoft.MvvmLight.Messaging;
 
-            while (!engine.ExitRequested)
+namespace Mzinga.Viewer.ViewModel
+{
+    public class ExceptionUtils
+    {
+        public static AppViewModel AppVM
+        {
+            get
             {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
+                return AppViewModel.Instance;
             }
         }
 
-        static void PrintLine(string format, params object[] arg)
+        public static void HandleException(Exception exception)
         {
-            Console.Out.WriteLine(format, arg);
+            AppVM.DoOnUIThread(() =>
+            {
+                Messenger.Default.Send<ExceptionMessage>(new ExceptionMessage(exception));
+            });
         }
     }
 }

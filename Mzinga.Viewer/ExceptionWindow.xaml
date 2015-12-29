@@ -1,0 +1,23 @@
+﻿<Window x:Class="Mzinga.Viewer.ExceptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" Width="480" MinHeight="100" SizeToContent="Height" ResizeMode="NoResize">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Image Source="{StaticResource ErrorIcon32}" Margin="15" VerticalAlignment="Top" />
+            <StackPanel VerticalAlignment="Center" Width="400">
+                <Label Height="Auto" Margin="5">
+                    <Label.Content>
+                        <AccessText TextWrapping="Wrap" Text="{Binding Message}"/>
+                    </Label.Content>
+                </Label>
+                <Expander Header="Details" Margin="5">
+                    <TextBox Text="{Binding Details, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                </Expander>
+            </StackPanel>
+        </StackPanel>
+        <WrapPanel FlowDirection="RightToLeft">
+            <Button Command="{Binding Accept}" Content="OK" Width="75" Margin="5" IsDefault="True" Style="{DynamicResource CleanButton}" HorizontalAlignment="Right"/>
+        </WrapPanel>
+    </StackPanel>
+</Window>

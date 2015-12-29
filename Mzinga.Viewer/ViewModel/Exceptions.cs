@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// Exceptions.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -26,28 +26,15 @@
 
 using System;
 
-namespace Mzinga.Engine
+namespace Mzinga.Viewer.ViewModel
 {
-    public class Program
+    public class EngineException : Exception
     {
-        static void Main(string[] args)
-        {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
+        public EngineException(string message) : base(message) { }
+    }
 
-            while (!engine.ExitRequested)
-            {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
-            }
-        }
-
-        static void PrintLine(string format, params object[] arg)
-        {
-            Console.Out.WriteLine(format, arg);
-        }
+    public class InvalidMoveException : EngineException
+    {
+        public InvalidMoveException(string message) : base(message) { }
     }
 }

@@ -141,16 +141,17 @@ namespace Mzinga.Engine
             {
                 ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
             }
+            ConsoleOut("ok");
         }
 
-        public void Info()
+        private void Info()
         {
             ConsoleOut("id {0}", ID);
         }
 
-        public void Help()
+        private void Help()
         {
-            ConsoleOut("Available coommands:");
+            ConsoleOut("Available commands: ");
             ConsoleOut("info");
             ConsoleOut("help");
             ConsoleOut("board");
@@ -164,7 +165,7 @@ namespace Mzinga.Engine
             ConsoleOut("exit");
         }
 
-        public void PrintBoard()
+        private void PrintBoard()
         {
             if (null == Board)
             {
@@ -174,13 +175,13 @@ namespace Mzinga.Engine
             ConsoleOut(Board.ToString());
         }
 
-        public void NewGame()
+        private void NewGame()
         {
             Board = new Board();
             ConsoleOut(Board.ToString());
         }
 
-        public void Play()
+        private void Play()
         {
             if (null == Board)
             {
@@ -193,7 +194,7 @@ namespace Mzinga.Engine
             ConsoleOut(Board.ToString());
         }
 
-        public void Play(string moveString)
+        private void Play(string moveString)
         {
             if (null == Board)
             {
@@ -204,7 +205,7 @@ namespace Mzinga.Engine
             ConsoleOut(Board.ToString());
         }
 
-        public void Pass()
+        private void Pass()
         {
             if (null == Board)
             {
@@ -215,7 +216,7 @@ namespace Mzinga.Engine
             ConsoleOut(Board.ToString());
         }
 
-        public void ValidMoves()
+        private void ValidMoves()
         {
             if (null == Board)
             {
@@ -226,7 +227,7 @@ namespace Mzinga.Engine
             ConsoleOut(validMoves.ToString());
         }
 
-        public void ValidMoves(string pieceName)
+        private void ValidMoves(string pieceName)
         {
             if (null == Board)
             {
@@ -242,7 +243,7 @@ namespace Mzinga.Engine
             ConsoleOut(validMoves.ToString());
         }
 
-        public void BestMove()
+        private void BestMove()
         {
             if (null == Board)
             {
@@ -253,7 +254,7 @@ namespace Mzinga.Engine
             ConsoleOut(bestMove.ToString());
         }
 
-        public void Undo()
+        private void Undo()
         {
             if (null == Board)
             {
@@ -264,7 +265,7 @@ namespace Mzinga.Engine
             ConsoleOut(Board.ToString());
         }
 
-        public void History()
+        private void History()
         {
             if (null == Board)
             {
@@ -288,7 +289,7 @@ namespace Mzinga.Engine
             ConsoleOut(history);
         }
 
-        public void Exit()
+        private void Exit()
         {
             ExitRequested = true;
         }

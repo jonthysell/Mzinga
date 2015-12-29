@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// MainWindow.xaml.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,29 +25,30 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
-namespace Mzinga.Engine
+namespace Mzinga.Viewer
 {
-    public class Program
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
-        static void Main(string[] args)
+        public MainWindow()
         {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
-
-            while (!engine.ExitRequested)
-            {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
-            }
-        }
-
-        static void PrintLine(string format, params object[] arg)
-        {
-            Console.Out.WriteLine(format, arg);
+            InitializeComponent();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿// 
-// Program.cs
+// App.xaml.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,29 +25,54 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
-namespace Mzinga.Engine
+using Mzinga.Viewer.ViewModel;
+
+namespace Mzinga.Viewer
 {
-    public class Program
+    /// <summary>
+    /// Interaction logic for App.xaml
+    /// </summary>
+    public partial class App : Application
     {
-        static void Main(string[] args)
+        public AppViewModel AppVM
         {
-            Engine engine = new Engine(PrintLine);
-            engine.ParseCommand("info");
-
-            while (!engine.ExitRequested)
+            get
             {
-                string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
-                {
-                    engine.ParseCommand(command);
-                }
+                return AppViewModel.Instance;
             }
         }
 
-        static void PrintLine(string format, params object[] arg)
+        public App()
         {
-            Console.Out.WriteLine(format, arg);
+            MessageHandlers.RegisterMessageHandlers(this);
+
+            AppViewModel.Init((action) =>
+            {
+                Dispatcher.Invoke(action);
+            });
+
+            Exit += App_Exit;
+        }
+
+        private void App_Exit(object sender, ExitEventArgs e)
+        {
+            try
+            {
+                AppVM.Close();
+                MessageHandlers.UnregisterMessageHandlers(this);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
         }
     }
 }
