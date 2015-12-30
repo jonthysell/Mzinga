@@ -101,12 +101,15 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.SendCommand(EngineInputText);
-                        EngineInputText = "";                        
+                        AppVM.SendCommand(EngineInputText);                      
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
+                    }
+                    finally
+                    {
+                        EngineInputText = "";
                     }
                 }, () =>
                 {

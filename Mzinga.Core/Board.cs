@@ -186,6 +186,11 @@ namespace Mzinga.Core
 
         public void Play(Move move)
         {
+            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
+            {
+                throw new InvalidMoveException(move, "You can't play, the game is over.");
+            }
+
             if (null == move)
             {
                 throw new ArgumentNullException("move");
@@ -195,11 +200,6 @@ namespace Mzinga.Core
             {
                 Pass();
                 return;
-            }
-
-            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
-            {
-                throw new InvalidMoveException(move, "You can't play, the game is over.");
             }
 
             Piece targetPiece = GetPiece(move.PieceName);

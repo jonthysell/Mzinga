@@ -49,26 +49,34 @@ namespace Mzinga.Viewer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double HexRadius = 20;
+        private double HexRadiusRatio = 0.05;
+
         private string LastBoardString;
 
         private SolidColorBrush WhiteBrush;
         private SolidColorBrush BlackBrush;
         private SolidColorBrush HighlightBrush;
 
+        private SolidColorBrush QueenBeeBrush;
+        private SolidColorBrush SpiderBrush;
+        private SolidColorBrush BeetleBrush;
+        private SolidColorBrush GrasshopperBrush;
+        private SolidColorBrush SoldierAntBrush;
+
         public MainWindow()
         {
             InitializeComponent();
 
             // Init brushes
-            WhiteBrush = new SolidColorBrush();
-            WhiteBrush.Color = Colors.White;
+            WhiteBrush = new SolidColorBrush(Colors.White);
+            BlackBrush = new SolidColorBrush(Colors.Black);
+            HighlightBrush = new SolidColorBrush(Colors.Aqua);
 
-            BlackBrush = new SolidColorBrush();
-            BlackBrush.Color = Colors.Black;
-
-            HighlightBrush = new SolidColorBrush();
-            HighlightBrush.Color = Colors.Blue;
+            QueenBeeBrush = new SolidColorBrush(Colors.Gold);
+            SpiderBrush = new SolidColorBrush(Colors.Brown);
+            BeetleBrush = new SolidColorBrush(Colors.Purple);
+            GrasshopperBrush = new SolidColorBrush(Colors.Green);
+            SoldierAntBrush = new SolidColorBrush(Colors.Blue);
 
             // Bind board updates to VM
             MainViewModel vm = DataContext as MainViewModel;
@@ -90,9 +98,10 @@ namespace Mzinga.Viewer
                 double maxY = Double.MinValue;
 
                 int maxStack;
-                Dictionary<int, List<Piece>> pieces = GetPieces(boardString, out maxStack);
+                int numPieces;
+                Dictionary<int, List<Piece>> pieces = GetPieces(boardString, out numPieces, out maxStack);
 
-                double size = HexRadius;
+                double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
                 for (int stack = 0; stack <= maxStack; stack++)
                 {
@@ -108,7 +117,7 @@ namespace Mzinga.Viewer
                             Polygon hex = GetHex(centerX, centerY, size, hexType);
                             BoardCanvas.Children.Add(hex);
 
-                            TextBlock hexText = GetHexText(centerX, centerY, size, hexType, EnumUtils.GetShortName(piece.PieceName).Substring(1));
+                            TextBlock hexText = GetHexText(centerX, centerY, size, piece.PieceName);
                             BoardCanvas.Children.Add(hexText);
 
                             minX = Math.Min(minX, centerX - size);
@@ -139,13 +148,14 @@ namespace Mzinga.Viewer
             LastBoardString = boardString;
         }
 
-        private Dictionary<int, List<Piece>> GetPieces(string boardString, out int maxStack)
+        private Dictionary<int, List<Piece>> GetPieces(string boardString, out int numPieces, out int maxStack)
         {
             if (String.IsNullOrWhiteSpace(boardString))
             {
                 throw new ArgumentNullException("boardString");
             }
 
+            numPieces = 0;
             maxStack = -1;
 
             Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
@@ -164,6 +174,7 @@ namespace Mzinga.Viewer
                 }
 
                 pieces[stack].Add(piece);
+                numPieces++;
             }
 
             return pieces;
@@ -210,25 +221,52 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private TextBlock GetHexText(double centerX, double centerY, double size, HexType hexType, string text)
+        private TextBlock GetHexText(double centerX, double centerY, double size, Core.PieceName pieceName)
         {
             TextBlock hexText = new TextBlock();
-            hexText.Text = text;
+            hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
+            hexText.FontFamily = new FontFamily("Lucida Console");
 
-            switch (hexType)
+            switch (pieceName)
             {
-                case HexType.White:
-                case HexType.WhiteHighlighted:
-                    hexText.Foreground = BlackBrush;
+                case PieceName.WhiteQueenBee:
+                case PieceName.BlackQueenBee:
+                    hexText.Foreground = QueenBeeBrush;
                     break;
-                case HexType.Black:
-                case HexType.BlackHighlighted:
-                    hexText.Foreground = WhiteBrush;
+                case PieceName.WhiteSpider1:
+                case PieceName.WhiteSpider2:
+                case PieceName.BlackSpider1:
+                case PieceName.BlackSpider2:
+                    hexText.Foreground = SpiderBrush;
+                    break;
+                case PieceName.WhiteBeetle1:
+                case PieceName.WhiteBeetle2:
+                case PieceName.BlackBeetle1:
+                case PieceName.BlackBeetle2:
+                    hexText.Foreground = BeetleBrush;
+                    break;
+                case PieceName.WhiteGrasshopper1:
+                case PieceName.WhiteGrasshopper2:
+                case PieceName.WhiteGrassHopper3:
+                case PieceName.BlackGrasshopper1:
+                case PieceName.BlackGrasshopper2:
+                case PieceName.BlackGrassHopper3:
+                    hexText.Foreground = GrasshopperBrush;
+                    break;
+                case PieceName.WhiteSoldierAnt1:
+                case PieceName.WhiteSoldierAnt2:
+                case PieceName.WhiteSoldierAnt3:
+                case PieceName.BlackSoldierAnt1:
+                case PieceName.BlackSoldierAnt2:
+                case PieceName.BlackSoldierAnt3:
+                    hexText.Foreground = SoldierAntBrush;
                     break;
             }
 
-            Canvas.SetLeft(hexText, centerX);
-            Canvas.SetTop(hexText, centerY);
+            hexText.FontSize = size;
+
+            Canvas.SetLeft(hexText, centerX - (hexText.Text.Length * (hexText.FontSize / 3.5)));
+            Canvas.SetTop(hexText, centerY - (hexText.FontSize / 2.0));
 
             return hexText;
         }
