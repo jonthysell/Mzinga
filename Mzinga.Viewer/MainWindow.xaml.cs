@@ -84,10 +84,10 @@ namespace Mzinga.Viewer
 
             if (!String.IsNullOrWhiteSpace(boardString))
             {
-                double minX = 0;
-                double minY = 0;
-                double maxX = 0;
-                double maxY = 0;
+                double minX = Double.MaxValue;
+                double minY = Double.MaxValue;
+                double maxX = Double.MinValue;
+                double maxY = Double.MinValue;
 
                 int maxStack;
                 Dictionary<int, List<Piece>> pieces = GetPieces(boardString, out maxStack);
@@ -112,19 +112,24 @@ namespace Mzinga.Viewer
                             BoardCanvas.Children.Add(hexText);
 
                             minX = Math.Min(minX, centerX - size);
-                            minX = Math.Min(minY, centerY - size);
+                            minY = Math.Min(minY, centerY - size);
 
                             maxX = Math.Max(maxX, centerX + size);
-                            maxY = Math.Max(maxY, centerY - size);
+                            maxY = Math.Max(maxY, centerY + size);
                         }
 
                         // Translate board
-
                         double boardWidth = Math.Abs(maxX - minX);
                         double boardHeight = Math.Abs(maxY - minY);
 
-                        double offsetX = 0.5 * (BoardCanvas.ActualWidth);
-                        double offsetY = 0.5 * (BoardCanvas.ActualHeight);
+                        double boardCenterX = minX + (boardWidth / 2);
+                        double boardCenterY = minY + (boardHeight / 2);
+
+                        double canvasCenterX = BoardCanvas.ActualWidth / 2;
+                        double canvasCenterY = BoardCanvas.ActualHeight / 2;
+
+                        double offsetX = canvasCenterX - boardCenterX;
+                        double offsetY = canvasCenterY - boardCenterY;
 
                         BoardCanvas.RenderTransform = new TranslateTransform(offsetX, offsetY);
                     }
