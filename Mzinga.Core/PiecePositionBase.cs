@@ -58,14 +58,9 @@ namespace Mzinga.Core
 
         protected static void Parse(string pieceString, out PieceName pieceName, out Position position)
         {
-            if (String.IsNullOrWhiteSpace(pieceString))
-            {
-                throw new ArgumentNullException("pieceString");
-            }
-
             if (!TryParse(pieceString, out pieceName, out position))
             {
-                throw new ArgumentOutOfRangeException("pieceString");
+                throw new ArgumentException(String.Format("Unable to parse \"{0}\".", pieceString));
             }
         }
 

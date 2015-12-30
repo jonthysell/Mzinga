@@ -251,7 +251,11 @@ namespace Mzinga.Engine
             }
 
             Move bestMove = GetBestMove();
-            ConsoleOut(bestMove.ToString());
+
+            if (null != bestMove)
+            {
+                ConsoleOut(bestMove.ToString());
+            }
         }
 
         private void Undo()

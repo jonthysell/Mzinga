@@ -85,6 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScrollingTextBox.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\Messages.cs" />

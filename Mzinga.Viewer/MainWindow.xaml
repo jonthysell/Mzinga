@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Mzinga.Viewer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
         Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="480" Width="640">
     <Window.DataContext>
@@ -32,7 +33,7 @@
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Grid.Row="0" Grid.Column="1" Command="{Binding SendEngineCommand}" Content="Send" Margin="5" Style="{DynamicResource CleanButton}" />
-                <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
         </GroupBox>
         <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
