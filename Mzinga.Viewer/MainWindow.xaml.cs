@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,14 @@ namespace Mzinga.Viewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MainViewModel VM
+        {
+            get
+            {
+                return DataContext as MainViewModel;
+            }
+        }
+
         private double HexRadiusRatio = 0.05;
 
         private string LastBoardString;
@@ -79,10 +88,17 @@ namespace Mzinga.Viewer
             SoldierAntBrush = new SolidColorBrush(Colors.Blue);
 
             // Bind board updates to VM
-            MainViewModel vm = DataContext as MainViewModel;
-            if (null != vm)
+            if (null != VM)
             {
-                vm.BoardUpdated += DrawBoard;
+                VM.PropertyChanged += VM_PropertyChanged;
+            }
+        }
+
+        private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "BoardString")
+            {
+                DrawBoard(VM.BoardString);
             }
         }
 

@@ -25,15 +25,12 @@
 // THE SOFTWARE.
 
 using System;
-using System.ComponentModel;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace Mzinga.Viewer.ViewModel
 {
-    public delegate void BoardUpdatedEventHandler(string boardString);
-
     public class MainViewModel : ViewModelBase
     {
         public AppViewModel AppVM
@@ -56,7 +53,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return AppVM.EngineText;
+                return AppVM.EngineWrapper.EngineText;
             }
         }
 
@@ -74,6 +71,14 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private string _engineInputText = "";
+
+        public string BoardString
+        {
+            get
+            {
+                return AppVM.EngineWrapper.BoardString;
+            }
+        }
 
         public string StatusText
         {
@@ -101,7 +106,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.SendCommand(EngineInputText);                      
+                        AppVM.EngineWrapper.SendCommand(EngineInputText);                      
                     }
                     catch (Exception ex)
                     {
@@ -118,36 +123,18 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public event BoardUpdatedEventHandler BoardUpdated;
-
         public MainViewModel()
         {
-            AppVM.PropertyChanged += AppVM_PropertyChanged;
-
-            BoardUpdated += (boardString) =>
+            AppVM.EngineWrapper.BoardUpdated += (boardString) =>
             {
+                RaisePropertyChanged("BoardString");
                 StatusText = boardString;
             };
-        }
 
-        private void AppVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "EngineText")
+            AppVM.EngineWrapper.EngineTextUpdated += (engineText) =>
             {
                 RaisePropertyChanged("EngineOutputText");
-            }
-            else if (e.PropertyName == "BoardString")
-            {               
-                OnBoardUpdate(AppVM.BoardString);
-            }
-        }
-
-        private void OnBoardUpdate(string boardString)
-        {
-            if (null != BoardUpdated)
-            {
-                BoardUpdated(boardString);
-            }
+            };
         }
     }
 }
