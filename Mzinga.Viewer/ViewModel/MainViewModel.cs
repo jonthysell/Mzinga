@@ -128,7 +128,10 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.BoardUpdated += (boardString) =>
             {
                 RaisePropertyChanged("BoardString");
-                StatusText = boardString;
+                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2}",
+                    AppVM.EngineWrapper.BoardState.ToString(),
+                    AppVM.EngineWrapper.CurrentTurnColor.ToString(),
+                    AppVM.EngineWrapper.CurrentTurn);
             };
 
             AppVM.EngineWrapper.EngineTextUpdated += (engineText) =>

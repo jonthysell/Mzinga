@@ -29,6 +29,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModel
 {
@@ -51,6 +54,12 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private string _boardString = "";
+
+        public BoardState? BoardState { get; private set; }
+
+        public int? CurrentTurn { get; private set; }
+
+        public Color? CurrentTurnColor { get; private set; }
 
         public string EngineText
         {
@@ -234,6 +243,42 @@ namespace Mzinga.Viewer.ViewModel
 
         private void OnBoardUpdate(string boardString)
         {
+            // Parse out other states
+            if (!String.IsNullOrWhiteSpace(boardString))
+            {
+                Match match = Regex.Match(boardString, BoardStringRegex, RegexOptions.IgnoreCase);
+
+                BoardState boardState;
+                if (Enum.TryParse<BoardState>(match.Groups[1].Value, out boardState))
+                {
+                    BoardState = boardState;
+                }
+                else
+                {
+                    BoardState = null;
+                }
+
+                Color currentTurnColor;
+                if (Enum.TryParse<Color>(match.Groups[2].Value, out currentTurnColor))
+                {
+                    CurrentTurnColor = currentTurnColor;
+                }
+                else
+                {
+                    CurrentTurnColor = null;
+                }
+
+                int currentTurn;
+                if (Int32.TryParse(match.Groups[3].Value, out currentTurn))
+                {
+                    CurrentTurn = currentTurn;
+                }
+                else
+                {
+                    CurrentTurn = null;
+                }
+            }
+
             if (null != BoardUpdated)
             {
                 BoardUpdated(boardString);
@@ -263,5 +308,7 @@ namespace Mzinga.Viewer.ViewModel
             History,
             Exit
         }
+
+        protected const string BoardStringRegex = @"^([a-z]*);(White|Black)\[([0-9]*)\]";
     }
 }
