@@ -58,7 +58,21 @@ namespace Mzinga.Viewer
             }
         }
 
+        public Point CanvasCursorPosition
+        {
+            get
+            {
+                Point point = MouseUtils.CorrectGetPosition(BoardCanvas);
+                point.X -= CanvasOffsetX;
+                point.Y -= CanvasOffsetY;
+                return point;
+            }
+        }
+
         private double HexRadiusRatio = 0.05;
+
+        private double CanvasOffsetX = 0.0;
+        private double CanvasOffsetY = 0.0;
 
         private string LastBoardString;
 
@@ -105,6 +119,9 @@ namespace Mzinga.Viewer
         private void DrawBoard(string boardString)
         {
             BoardCanvas.Children.Clear();
+
+            CanvasOffsetX = 0.0;
+            CanvasOffsetX = 0.0;
 
             if (!String.IsNullOrWhiteSpace(boardString))
             {
@@ -156,9 +173,33 @@ namespace Mzinga.Viewer
                         double offsetX = canvasCenterX - boardCenterX;
                         double offsetY = canvasCenterY - boardCenterY;
 
-                        BoardCanvas.RenderTransform = new TranslateTransform(offsetX, offsetY);
+                        foreach (UIElement child in BoardCanvas.Children)
+                        {
+                            if (null != (child as TextBlock)) // Hex labels
+                            {
+                                Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
+                                Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
+                            }
+                            else if (null != (child as Polygon)) // Hexes
+                            {
+                                Polygon hex = (Polygon)child;
+                                PointCollection oldPoints = new PointCollection(hex.Points);
+
+                                hex.Points.Clear();
+
+                                foreach (Point oldPoint in oldPoints)
+                                {
+                                    hex.Points.Add(new Point(oldPoint.X + offsetX, oldPoint.Y + offsetY));
+                                }
+                            }
+                        }
+
+                        CanvasOffsetX = offsetX;
+                        CanvasOffsetY = offsetY;
                     }
                 }
+
+                VM.CanvasHexRadius = size;
             }
 
             LastBoardString = boardString;
@@ -296,7 +337,14 @@ namespace Mzinga.Viewer
             ValidMove
         }
 
-        private void Board_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Point p = CanvasCursorPosition;
+            VM.CanvasCursorX = p.X;
+            VM.CanvasCursorY = p.Y;
+        }
+
+        private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             DrawBoard(LastBoardString);
         }

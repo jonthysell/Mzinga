@@ -16,7 +16,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="BoardCanvas" SizeChanged="Board_SizeChanged" />
+        <Canvas Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>

@@ -80,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="ExceptionWindow.xaml.cs" />
     <Compile Include="MessageHandlers.cs" />
+    <Compile Include="MouseUtils.cs" />
     <Compile Include="Resources\Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

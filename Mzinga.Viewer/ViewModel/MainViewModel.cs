@@ -98,6 +98,57 @@ namespace Mzinga.Viewer.ViewModel
         }
         private string _statusText = " ";
 
+        #region Canvas properties
+
+        public double CanvasHexRadius
+        {
+            get
+            {
+                return _canvasHexRadius;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+
+                _canvasHexRadius = value;
+                RaisePropertyChanged("CanvasHexRadius");
+            }
+        }
+        private double _canvasHexRadius = 20;
+
+        public double CanvasCursorX
+        {
+            get
+            {
+                return _canvasCursorX;
+            }
+            set
+            {
+                _canvasCursorX = value;
+                RaisePropertyChanged("CanvasCursorX");
+            }
+        }
+        private double _canvasCursorX;
+
+        public double CanvasCursorY
+        {
+            get
+            {
+                return _canvasCursorY;
+            }
+            set
+            {
+                _canvasCursorY = value;
+                RaisePropertyChanged("CanvasCursorY");
+            }
+        }
+        private double _canvasCursorY;
+
+        #endregion
+
         public RelayCommand SendEngineCommand
         {
             get
