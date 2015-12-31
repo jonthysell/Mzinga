@@ -1,5 +1,5 @@
 ﻿// 
-// Engine.cs
+// GameEngine.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -26,24 +26,14 @@
 
 using System;
 using System.Text;
-using System.Reflection;
 
-using Mzinga.Core;
-
-namespace Mzinga.Engine
+namespace Mzinga.Core
 {
     public delegate void ConsoleOut(string format, params object[] arg);
 
-    public class Engine
+    public class GameEngine
     {
-        public string ID
-        {
-            get
-            {
-                return String.Format("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
-            }
-        }
-
+        public string ID { get; private set; }
         public ConsoleOut ConsoleOut { get; private set; }
 
         private Board Board;
@@ -52,13 +42,19 @@ namespace Mzinga.Engine
 
         public bool ExitRequested { get; private set; }
 
-        public Engine(ConsoleOut consoleOut)
+        public GameEngine(string id, ConsoleOut consoleOut)
         {
+            if (String.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException("id");
+            }
+
             if (null == consoleOut)
             {
                 throw new ArgumentNullException("consoleOut");
             }
 
+            ID = id;
             ConsoleOut = consoleOut;
             Random = new Random();
             ExitRequested = false;

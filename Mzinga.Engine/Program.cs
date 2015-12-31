@@ -25,14 +25,25 @@
 // THE SOFTWARE.
 
 using System;
+using System.Reflection;
+
+using Mzinga.Core;
 
 namespace Mzinga.Engine
 {
     public class Program
     {
+        static string ID
+        {
+            get
+            {
+                return String.Format("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+            }
+        }
+
         static void Main(string[] args)
         {
-            Engine engine = new Engine(PrintLine);
+            GameEngine engine = new GameEngine(ID, PrintLine);
             engine.ParseCommand("info");
 
             while (!engine.ExitRequested)
