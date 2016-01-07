@@ -159,6 +159,51 @@ namespace Mzinga.Core
             return new Position(-Y, -Z, -X, Stack);
         }
 
+        public static Position FromCursor(double cursorX, double cursorY, double hexRadius)
+        {
+            if (hexRadius < 0)
+            {
+                throw new ArgumentOutOfRangeException("hexRadius");
+            }
+            else if (hexRadius == 0) // No hexes on board
+            {
+                return Position.Origin;
+            }
+
+            // Convert cursor to axial
+            double q = (cursorX * (2.0 / 3.0)) / hexRadius;
+            double r = ((-cursorX / 3.0) + (Math.Sqrt(3.0) / 3.0) * cursorY) / hexRadius;
+
+            // Convert axial to cube
+            double x = q;
+            double z = r;
+            double y = -x - z;
+
+            // Round cube
+            double rx = Math.Round(x);
+            double ry = Math.Round(y);
+            double rz = Math.Round(z);
+
+            double xdiff = Math.Abs(rx - x);
+            double ydiff = Math.Abs(ry - y);
+            double zdiff = Math.Abs(rz - z);
+
+            if (xdiff > ydiff && xdiff > zdiff)
+            {
+                rx = -ry - rz;
+            }
+            else if (ydiff > zdiff)
+            {
+                ry = -rx - rz;
+            }
+            else
+            {
+                rz = -rx - ry;
+            }
+
+            return new Position((int)rx, (int)ry, (int)rz, 0);
+        }
+
         public Position Clone()
         {
             return new Position(X, Y, Z, Stack);

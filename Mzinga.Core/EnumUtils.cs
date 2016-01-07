@@ -73,6 +73,11 @@ namespace Mzinga.Core
 
         public static string GetShortName(PieceName pieceName)
         {
+            if (pieceName == PieceName.INVALID)
+            {
+                return "";
+            }
+
             return PieceShortName[(int)pieceName];
         }
 

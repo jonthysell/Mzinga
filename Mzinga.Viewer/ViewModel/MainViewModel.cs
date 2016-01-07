@@ -26,6 +26,8 @@
 
 using System;
 
+using Mzinga.Core;
+
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
@@ -80,6 +82,14 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public string SelectedPiece
+        {
+            get
+            {
+                return EnumUtils.GetShortName(AppVM.EngineWrapper.SelectedPiece);
+            }
+        }
+
         public string StatusText
         {
             get
@@ -125,7 +135,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 return _canvasCursorX;
             }
-            set
+            private set
             {
                 _canvasCursorX = value;
                 RaisePropertyChanged("CanvasCursorX");
@@ -139,7 +149,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 return _canvasCursorY;
             }
-            set
+            private set
             {
                 _canvasCursorY = value;
                 RaisePropertyChanged("CanvasCursorY");
@@ -179,16 +189,36 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.BoardUpdated += (boardString) =>
             {
                 RaisePropertyChanged("BoardString");
-                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2}",
-                    AppVM.EngineWrapper.BoardState.ToString(),
-                    AppVM.EngineWrapper.CurrentTurnColor.ToString(),
-                    AppVM.EngineWrapper.CurrentTurn);
+                UpdateStatusText();
             };
 
             AppVM.EngineWrapper.EngineTextUpdated += (engineText) =>
             {
                 RaisePropertyChanged("EngineOutputText");
             };
+
+            AppVM.EngineWrapper.SelectedPieceUpdated += (pieceName) =>
+            {
+                RaisePropertyChanged("SelectedPiece");
+                UpdateStatusText();
+            };
+        }
+
+        internal void CanvasClick(double cursorX, double cursorY)
+        {
+            CanvasCursorX = cursorX;
+            CanvasCursorY = cursorY;
+
+            AppVM.EngineWrapper.SelectPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+        }
+
+        private void UpdateStatusText()
+        {
+            StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3}",
+                    AppVM.EngineWrapper.BoardState.ToString(),
+                    AppVM.EngineWrapper.CurrentTurnColor.ToString(),
+                    AppVM.EngineWrapper.CurrentTurn,
+                    SelectedPiece);
         }
     }
 }

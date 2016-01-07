@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -39,6 +40,8 @@ namespace Mzinga.Viewer.ViewModel
 
     public delegate void EngineTextUpdatedEventHandler(string boardString);
 
+    public delegate void SelectedPieceUpdatedEventHandler(PieceName pieceName);
+
     public class EngineWrapper
     {
         public string BoardString
@@ -49,8 +52,14 @@ namespace Mzinga.Viewer.ViewModel
             }
             private set
             {
+                string oldValue = _boardString;
+
                 _boardString = value;
-                OnBoardUpdate(BoardString);
+
+                if (oldValue != value)
+                {
+                    OnBoardUpdate(BoardString);
+                }
             }
         }
         private string _boardString = "";
@@ -60,6 +69,26 @@ namespace Mzinga.Viewer.ViewModel
         public int? CurrentTurn { get; private set; }
 
         public Color? CurrentTurnColor { get; private set; }
+
+        public PieceName SelectedPiece
+        {
+            get
+            {
+                return _selectedPiece;
+            }
+            private set
+            {
+                PieceName oldValue = _selectedPiece;
+
+                _selectedPiece = value;
+
+                if (oldValue != value)
+                {
+                    OnSelectedPieceUpdate(SelectedPiece);
+                }
+            }
+        }
+        private PieceName _selectedPiece = PieceName.INVALID;
 
         public string EngineText
         {
@@ -72,6 +101,8 @@ namespace Mzinga.Viewer.ViewModel
 
         public event BoardUpdatedEventHandler BoardUpdated;
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
+
+        public event SelectedPieceUpdatedEventHandler SelectedPieceUpdated;
 
         private Process _process;
         private StreamReader _reader;
@@ -241,6 +272,45 @@ namespace Mzinga.Viewer.ViewModel
             OnEngineTextUpdate(EngineText);
         }
 
+        public void SelectPieceAt(double cursorX, double cursorY, double hexRadius)
+        {
+            Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
+            SelectedPiece = GetPieceOnTop(position);
+        }
+
+        private PieceName GetPieceOnTop(Position position)
+        {
+            if (null == position)
+            {
+                throw new ArgumentNullException("position");
+            }
+
+            PieceName topPieceName = PieceName.INVALID;
+
+            if (!String.IsNullOrWhiteSpace(BoardString))
+            {
+                int numPieces;
+                int maxStack;
+                Dictionary<int, List<Piece>> pieces = Board.ParsePieces(BoardString, out numPieces, out maxStack);
+
+                for (int stack = 0; stack <= maxStack; stack++)
+                {
+                    foreach (Piece piece in pieces[stack])
+                    {
+                        if (piece.Position.X == position.X &&
+                            piece.Position.Y == position.Y &&
+                            piece.Position.Z == position.Z)
+                        {
+                            topPieceName = piece.PieceName;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return topPieceName;
+        }
+
         private void OnBoardUpdate(string boardString)
         {
             // Parse out other states
@@ -277,11 +347,21 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     CurrentTurn = null;
                 }
+
+                SelectedPiece = PieceName.INVALID;
             }
 
             if (null != BoardUpdated)
             {
                 BoardUpdated(boardString);
+            }
+        }
+
+        private void OnSelectedPieceUpdate(PieceName pieceName)
+        {
+            if (null != SelectedPieceUpdated)
+            {
+                SelectedPieceUpdated(pieceName);
             }
         }
 

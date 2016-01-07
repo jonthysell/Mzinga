@@ -132,7 +132,7 @@ namespace Mzinga.Viewer
 
                 int maxStack;
                 int numPieces;
-                Dictionary<int, List<Piece>> pieces = GetPieces(boardString, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> pieces = Board.ParsePieces(boardString, out numPieces, out maxStack);
 
                 double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
@@ -203,38 +203,6 @@ namespace Mzinga.Viewer
             }
 
             LastBoardString = boardString;
-        }
-
-        private Dictionary<int, List<Piece>> GetPieces(string boardString, out int numPieces, out int maxStack)
-        {
-            if (String.IsNullOrWhiteSpace(boardString))
-            {
-                throw new ArgumentNullException("boardString");
-            }
-
-            numPieces = 0;
-            maxStack = -1;
-
-            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
-
-            string[] split = boardString.Split(Board.BoardStringSeparator);
-            for (int i = 2; i < split.Length; i++)
-            {
-                Piece piece = new Piece(split[i]);
-
-                int stack = piece.Position.Stack;
-                maxStack = Math.Max(maxStack, stack);
-
-                if (!pieces.ContainsKey(stack))
-                {
-                    pieces[stack] = new List<Piece>();
-                }
-
-                pieces[stack].Add(piece);
-                numPieces++;
-            }
-
-            return pieces;
         }
 
         private Polygon GetHex(double centerX, double centerY, double size, HexType hexType)
@@ -340,8 +308,7 @@ namespace Mzinga.Viewer
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point p = CanvasCursorPosition;
-            VM.CanvasCursorX = p.X;
-            VM.CanvasCursorY = p.Y;
+            VM.CanvasClick(p.X, p.Y);
         }
 
         private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
