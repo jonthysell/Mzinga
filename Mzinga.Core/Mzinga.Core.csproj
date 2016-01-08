@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.cs" />
+    <Compile Include="GameBoard.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="EnumUtils.cs" />
     <Compile Include="MoveSet.cs" />

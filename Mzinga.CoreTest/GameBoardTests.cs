@@ -1,10 +1,10 @@
 ﻿// 
-// BoardTests.cs
+// GameBoardTests.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,36 +32,38 @@ using Mzinga.Core;
 namespace Mzinga.CoreTest
 {
     [TestClass]
-    public class BoardTests
+    public class GameBoardTests
     {
         [TestMethod]
-        public void Board_NewTest()
+        public void GameBoard_NewTest()
         {
-            Board b = new Board();
+            GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
         }
 
         [TestMethod]
         public void Board_NewBoardValidMovesTest()
         {
-            Board b = new Board();
+            GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
+
+            int numBugsWithoutQueen = EnumUtils.NumBugTypes - 1;
 
             MoveSet validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
-            Assert.AreEqual(10, validMoves.Count);
+            Assert.AreEqual(numBugsWithoutQueen, validMoves.Count);
 
             b.Play(new Move(PieceName.WhiteSpider1, Position.Origin));
 
             validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
-            Assert.AreEqual(60, validMoves.Count);
+            Assert.AreEqual(numBugsWithoutQueen * EnumUtils.NumDirections, validMoves.Count);
         }
 
         [TestMethod]
-        public void Board_ValidMovesTest()
+        public void GameBoard_ValidMovesTest()
         {
-            Board b = new Board();
+            GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
 
             b.Play(new Move(PieceName.WhiteSpider1, Position.Origin));
@@ -72,9 +74,9 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Board_QueenMustPlayByFourthMoveValidMovesTest()
+        public void GameBoard_QueenMustPlayByFourthMoveValidMovesTest()
         {
-            Board b = new Board();
+            GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
 
             // Turn 1
@@ -101,9 +103,9 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Board_CanCommitSuicideTest()
+        public void GameBoard_CanCommitSuicideTest()
         {
-            Board b = new Board();
+            GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
 
             // Turn 1

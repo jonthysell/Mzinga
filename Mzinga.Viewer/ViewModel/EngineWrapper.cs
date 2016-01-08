@@ -291,7 +291,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 int numPieces;
                 int maxStack;
-                Dictionary<int, List<Piece>> pieces = Board.ParsePieces(BoardString, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> pieces = GameBoard.ParsePieces(BoardString, out numPieces, out maxStack);
 
                 for (int stack = 0; stack <= maxStack; stack++)
                 {

@@ -36,7 +36,7 @@ namespace Mzinga.Core
         public string ID { get; private set; }
         public ConsoleOut ConsoleOut { get; private set; }
 
-        private Board Board;
+        private GameBoard GameBoard;
 
         private Random Random;
 
@@ -163,69 +163,69 @@ namespace Mzinga.Core
 
         private void PrintBoard()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            ConsoleOut(Board.ToString());
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void NewGame()
         {
-            Board = new Board();
-            ConsoleOut(Board.ToString());
+            GameBoard = new GameBoard();
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void Play()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
             Move bestMove = GetBestMove();
 
-            Board.Play(bestMove);
-            ConsoleOut(Board.ToString());
+            GameBoard.Play(bestMove);
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void Play(string moveString)
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            Board.Play(new Move(moveString));
-            ConsoleOut(Board.ToString());
+            GameBoard.Play(new Move(moveString));
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void Pass()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            Board.Pass();
-            ConsoleOut(Board.ToString());
+            GameBoard.Pass();
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void ValidMoves()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            MoveSet validMoves = Board.GetValidMoves();
+            MoveSet validMoves = GameBoard.GetValidMoves();
             ConsoleOut(validMoves.ToString());
         }
 
         private void ValidMoves(string pieceName)
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
@@ -235,13 +235,13 @@ namespace Mzinga.Core
                 throw new ArgumentNullException(pieceName);
             }
 
-            MoveSet validMoves = Board.GetValidMoves(EnumUtils.ParseShortName(pieceName));
+            MoveSet validMoves = GameBoard.GetValidMoves(EnumUtils.ParseShortName(pieceName));
             ConsoleOut(validMoves.ToString());
         }
 
         private void BestMove()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
@@ -256,25 +256,25 @@ namespace Mzinga.Core
 
         private void Undo()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            Board.UndoLastMove();
-            ConsoleOut(Board.ToString());
+            GameBoard.UndoLastMove();
+            ConsoleOut(GameBoard.ToString());
         }
 
         private void History()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (Move move in Board.MoveHistory)
+            foreach (Move move in GameBoard.MoveHistory)
             {
                 sb.AppendFormat("{0}{1}", move.ToString(), MoveSet.MoveStringSeparator);
             }
@@ -296,12 +296,12 @@ namespace Mzinga.Core
 
         private Move GetBestMove()
         {
-            if (null == Board)
+            if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            MoveSet validMoves = Board.GetValidMoves();
+            MoveSet validMoves = GameBoard.GetValidMoves();
 
             int randIndex = Random.Next(validMoves.Count);
 
@@ -316,9 +316,9 @@ namespace Mzinga.Core
                     randomMove = move;
                 }
 
-                BoardState resultState = Board.TryMove(move);
-                if ((Board.CurrentTurnColor == Color.White && resultState == BoardState.WhiteWins) ||
-                    (Board.CurrentTurnColor == Color.Black && resultState == BoardState.BlackWins))
+                BoardState resultState = GameBoard.TryMove(move);
+                if ((GameBoard.CurrentTurnColor == Color.White && resultState == BoardState.WhiteWins) ||
+                    (GameBoard.CurrentTurnColor == Color.Black && resultState == BoardState.BlackWins))
                 {
                     bestMove = move;
                     break;

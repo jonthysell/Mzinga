@@ -132,7 +132,7 @@ namespace Mzinga.Viewer
 
                 int maxStack;
                 int numPieces;
-                Dictionary<int, List<Piece>> pieces = Board.ParsePieces(boardString, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> pieces = GameBoard.ParsePieces(boardString, out numPieces, out maxStack);
 
                 double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
