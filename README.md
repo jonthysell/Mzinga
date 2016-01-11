@@ -32,5 +32,6 @@ Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Current
 
 Future investment includes finishing the gameboard rendering, exposing game options, and enabling point-and-click play (instead of requiring the user to send commands manually).
 
+Mzinga Copyright © 2015, 2016 Jon Thysell.
 
-Hive (C) 2010 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see http://www.hivegame.com.
+Hive Copyright © 2010 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see http://www.hivegame.com.
