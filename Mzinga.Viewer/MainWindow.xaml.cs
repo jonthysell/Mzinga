@@ -74,7 +74,7 @@ namespace Mzinga.Viewer
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
 
-        private string LastBoardString;
+        private Board LastBoard;
 
         private SolidColorBrush WhiteBrush;
         private SolidColorBrush BlackBrush;
@@ -110,20 +110,20 @@ namespace Mzinga.Viewer
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "BoardString")
+            if (e.PropertyName == "Board")
             {
-                DrawBoard(VM.BoardString);
+                DrawBoard(VM.Board);
             }
         }
 
-        private void DrawBoard(string boardString)
+        private void DrawBoard(Board board)
         {
             BoardCanvas.Children.Clear();
 
             CanvasOffsetX = 0.0;
             CanvasOffsetX = 0.0;
 
-            if (!String.IsNullOrWhiteSpace(boardString))
+            if (null != board)
             {
                 double minX = Double.MaxValue;
                 double minY = Double.MaxValue;
@@ -132,7 +132,7 @@ namespace Mzinga.Viewer
 
                 int maxStack;
                 int numPieces;
-                Dictionary<int, List<Piece>> pieces = GameBoard.ParsePieces(boardString, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> pieces = GetPiecesInPlay(board, out numPieces, out maxStack);
 
                 double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
@@ -202,7 +202,36 @@ namespace Mzinga.Viewer
                 VM.CanvasHexRadius = size;
             }
 
-            LastBoardString = boardString;
+            LastBoard = board;
+        }
+
+        private Dictionary<int, List<Piece>> GetPiecesInPlay(Board board, out int numPieces, out int maxStack)
+        {
+            if (null == board)
+            {
+                throw new ArgumentNullException("board");
+            }
+
+            numPieces = 0;
+            maxStack = -1;
+
+            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
+
+            foreach (Piece piece in board.PiecesInPlay)
+            {
+                int stack = piece.Position.Stack;
+                maxStack = Math.Max(maxStack, stack);
+
+                if (!pieces.ContainsKey(stack))
+                {
+                    pieces[stack] = new List<Piece>();
+                }
+
+                pieces[stack].Add(piece);
+                numPieces++;
+            }
+
+            return pieces;
         }
 
         private Polygon GetHex(double centerX, double centerY, double size, HexType hexType)
@@ -313,7 +342,7 @@ namespace Mzinga.Viewer
 
         private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            DrawBoard(LastBoardString);
+            DrawBoard(LastBoard);
         }
     }
 }

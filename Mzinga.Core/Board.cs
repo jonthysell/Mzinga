@@ -373,39 +373,6 @@ namespace Mzinga.Core
             return true;
         }
 
-        // TODO: Need to deprecate this
-        public static Dictionary<int, List<Piece>> ParsePieces(string boardString, out int numPieces, out int maxStack)
-        {
-            if (String.IsNullOrWhiteSpace(boardString))
-            {
-                throw new ArgumentNullException("boardString");
-            }
-
-            numPieces = 0;
-            maxStack = -1;
-
-            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
-
-            string[] split = boardString.Split(GameBoard.BoardStringSeparator);
-            for (int i = 2; i < split.Length; i++)
-            {
-                Piece piece = new Piece(split[i]);
-
-                int stack = piece.Position.Stack;
-                maxStack = Math.Max(maxStack, stack);
-
-                if (!pieces.ContainsKey(stack))
-                {
-                    pieces[stack] = new List<Piece>();
-                }
-
-                pieces[stack].Add(piece);
-                numPieces++;
-            }
-
-            return pieces;
-        }
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

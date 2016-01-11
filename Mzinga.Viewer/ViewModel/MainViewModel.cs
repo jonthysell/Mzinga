@@ -51,6 +51,14 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public Board Board
+        {
+            get
+            {
+                return AppVM.EngineWrapper.Board;
+            }
+        }
+
         public string EngineOutputText
         {
             get
@@ -73,14 +81,6 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private string _engineInputText = "";
-
-        public string BoardString
-        {
-            get
-            {
-                return AppVM.EngineWrapper.BoardString;
-            }
-        }
 
         public string SelectedPiece
         {
@@ -186,9 +186,9 @@ namespace Mzinga.Viewer.ViewModel
 
         public MainViewModel()
         {
-            AppVM.EngineWrapper.BoardUpdated += (boardString) =>
+            AppVM.EngineWrapper.BoardUpdated += (board) =>
             {
-                RaisePropertyChanged("BoardString");
+                RaisePropertyChanged("Board");
                 UpdateStatusText();
             };
 
@@ -214,11 +214,14 @@ namespace Mzinga.Viewer.ViewModel
 
         private void UpdateStatusText()
         {
-            StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3}",
-                    AppVM.EngineWrapper.BoardState.ToString(),
-                    AppVM.EngineWrapper.CurrentTurnColor.ToString(),
-                    AppVM.EngineWrapper.CurrentTurn,
-                    SelectedPiece);
+            if (null != Board)
+            {
+                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3}",
+                        Board.BoardState.ToString(),
+                        Board.CurrentTurnColor.ToString(),
+                        Board.CurrentTurn,
+                        SelectedPiece);
+            }
         }
     }
 }

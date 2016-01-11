@@ -30,45 +30,32 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModel
 {
-    public delegate void BoardUpdatedEventHandler(string boardString);
+    public delegate void BoardUpdatedEventHandler(Board board);
 
-    public delegate void EngineTextUpdatedEventHandler(string boardString);
+    public delegate void EngineTextUpdatedEventHandler(string engineText);
 
     public delegate void SelectedPieceUpdatedEventHandler(PieceName pieceName);
 
     public class EngineWrapper
     {
-        public string BoardString
+        public Board Board
         {
             get
             {
-                return _boardString;
+                return _board;
             }
             private set
             {
-                string oldValue = _boardString;
-
-                _boardString = value;
-
-                if (oldValue != value)
-                {
-                    OnBoardUpdate(BoardString);
-                }
+                _board = value;
+                OnBoardUpdate(Board);
             }
         }
-        private string _boardString = "";
-
-        public BoardState? BoardState { get; private set; }
-
-        public int? CurrentTurn { get; private set; }
-
-        public Color? CurrentTurnColor { get; private set; }
+        private Board _board = null;
 
         public PieceName SelectedPiece
         {
@@ -254,7 +241,7 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    BoardString = output[0];
+                    Board = new Board(output[0]);
                     break;
                 case EngineCommand.ValidMoves:
                 case EngineCommand.BestMove:
@@ -275,85 +262,16 @@ namespace Mzinga.Viewer.ViewModel
         public void SelectPieceAt(double cursorX, double cursorY, double hexRadius)
         {
             Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
-            SelectedPiece = GetPieceOnTop(position);
+
+            Piece piece = Board.GetPieceOnTop(position);
+            SelectedPiece = (null != piece) ? piece.PieceName : PieceName.INVALID;
         }
 
-        private PieceName GetPieceOnTop(Position position)
+        private void OnBoardUpdate(Board board)
         {
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
-            PieceName topPieceName = PieceName.INVALID;
-
-            if (!String.IsNullOrWhiteSpace(BoardString))
-            {
-                int numPieces;
-                int maxStack;
-                Dictionary<int, List<Piece>> pieces = GameBoard.ParsePieces(BoardString, out numPieces, out maxStack);
-
-                for (int stack = 0; stack <= maxStack; stack++)
-                {
-                    foreach (Piece piece in pieces[stack])
-                    {
-                        if (piece.Position.X == position.X &&
-                            piece.Position.Y == position.Y &&
-                            piece.Position.Z == position.Z)
-                        {
-                            topPieceName = piece.PieceName;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return topPieceName;
-        }
-
-        private void OnBoardUpdate(string boardString)
-        {
-            // Parse out other states
-            if (!String.IsNullOrWhiteSpace(boardString))
-            {
-                Match match = Regex.Match(boardString, BoardStringRegex, RegexOptions.IgnoreCase);
-
-                BoardState boardState;
-                if (Enum.TryParse<BoardState>(match.Groups[1].Value, out boardState))
-                {
-                    BoardState = boardState;
-                }
-                else
-                {
-                    BoardState = null;
-                }
-
-                Color currentTurnColor;
-                if (Enum.TryParse<Color>(match.Groups[2].Value, out currentTurnColor))
-                {
-                    CurrentTurnColor = currentTurnColor;
-                }
-                else
-                {
-                    CurrentTurnColor = null;
-                }
-
-                int currentTurn;
-                if (Int32.TryParse(match.Groups[3].Value, out currentTurn))
-                {
-                    CurrentTurn = currentTurn;
-                }
-                else
-                {
-                    CurrentTurn = null;
-                }
-
-                SelectedPiece = PieceName.INVALID;
-            }
-
             if (null != BoardUpdated)
             {
-                BoardUpdated(boardString);
+                BoardUpdated(board);
             }
         }
 
@@ -388,7 +306,5 @@ namespace Mzinga.Viewer.ViewModel
             History,
             Exit
         }
-
-        protected const string BoardStringRegex = @"^([a-z]*);(White|Black)\[([0-9]*)\]";
     }
 }
