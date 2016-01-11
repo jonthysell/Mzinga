@@ -147,6 +147,11 @@ namespace Mzinga.Viewer
 
                             HexType hexType = (piece.Color == Core.Color.White) ? HexType.White : HexType.Black;
 
+                            if (piece.PieceName == VM.AppVM.EngineWrapper.SelectedPiece)
+                            {
+                                hexType = (HexType)((int)hexType + 2);
+                            }
+
                             Polygon hex = GetHex(centerX, centerY, size, hexType);
                             BoardCanvas.Children.Add(hex);
 
@@ -338,6 +343,7 @@ namespace Mzinga.Viewer
         {
             Point p = CanvasCursorPosition;
             VM.CanvasClick(p.X, p.Y);
+            DrawBoard(LastBoard);
         }
 
         private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
