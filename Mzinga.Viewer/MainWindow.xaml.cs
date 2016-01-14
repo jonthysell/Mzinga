@@ -164,45 +164,45 @@ namespace Mzinga.Viewer
                             maxX = Math.Max(maxX, centerX + size);
                             maxY = Math.Max(maxY, centerY + size);
                         }
-
-                        // Translate board
-                        double boardWidth = Math.Abs(maxX - minX);
-                        double boardHeight = Math.Abs(maxY - minY);
-
-                        double boardCenterX = minX + (boardWidth / 2);
-                        double boardCenterY = minY + (boardHeight / 2);
-
-                        double canvasCenterX = BoardCanvas.ActualWidth / 2;
-                        double canvasCenterY = BoardCanvas.ActualHeight / 2;
-
-                        double offsetX = canvasCenterX - boardCenterX;
-                        double offsetY = canvasCenterY - boardCenterY;
-
-                        foreach (UIElement child in BoardCanvas.Children)
-                        {
-                            if (null != (child as TextBlock)) // Hex labels
-                            {
-                                Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
-                                Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
-                            }
-                            else if (null != (child as Polygon)) // Hexes
-                            {
-                                Polygon hex = (Polygon)child;
-                                PointCollection oldPoints = new PointCollection(hex.Points);
-
-                                hex.Points.Clear();
-
-                                foreach (Point oldPoint in oldPoints)
-                                {
-                                    hex.Points.Add(new Point(oldPoint.X + offsetX, oldPoint.Y + offsetY));
-                                }
-                            }
-                        }
-
-                        CanvasOffsetX = offsetX;
-                        CanvasOffsetY = offsetY;
                     }
                 }
+
+                // Translate board
+                double boardWidth = Math.Abs(maxX - minX);
+                double boardHeight = Math.Abs(maxY - minY);
+
+                double boardCenterX = minX + (boardWidth / 2);
+                double boardCenterY = minY + (boardHeight / 2);
+
+                double canvasCenterX = BoardCanvas.ActualWidth / 2;
+                double canvasCenterY = BoardCanvas.ActualHeight / 2;
+
+                double offsetX = canvasCenterX - boardCenterX;
+                double offsetY = canvasCenterY - boardCenterY;
+
+                foreach (UIElement child in BoardCanvas.Children)
+                {
+                    if (null != (child as TextBlock)) // Hex labels
+                    {
+                        Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
+                        Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
+                    }
+                    else if (null != (child as Polygon)) // Hexes
+                    {
+                        Polygon hex = (Polygon)child;
+                        PointCollection oldPoints = new PointCollection(hex.Points);
+
+                        hex.Points.Clear();
+
+                        foreach (Point oldPoint in oldPoints)
+                        {
+                            hex.Points.Add(new Point(oldPoint.X + offsetX, oldPoint.Y + offsetY));
+                        }
+                    }
+                }
+
+                CanvasOffsetX = offsetX;
+                CanvasOffsetY = offsetY;
 
                 VM.CanvasHexRadius = size;
             }

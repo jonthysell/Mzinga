@@ -15,8 +15,18 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
+        <Canvas Grid.Row="0" Grid.Column="0" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlaySelected}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding UndoMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlayAI}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding BestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+        </StackPanel>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>

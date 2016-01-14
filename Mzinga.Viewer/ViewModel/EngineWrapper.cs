@@ -41,6 +41,8 @@ namespace Mzinga.Viewer.ViewModel
 
     public delegate void SelectedPieceUpdatedEventHandler(PieceName pieceName);
 
+    public delegate void SelectedTargetPositionUpdatedEventHandler(Position position);
+
     public class EngineWrapper
     {
         public Board Board
@@ -63,7 +65,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 return _selectedPiece;
             }
-            private set
+            set
             {
                 PieceName oldValue = _selectedPiece;
 
@@ -76,6 +78,34 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private PieceName _selectedPiece = PieceName.INVALID;
+
+        public Position SelectedTargetPosition
+        {
+            get
+            {
+                return _selectedTargetPosition;
+            }
+            set
+            {
+                Position oldValue = _selectedTargetPosition;
+
+                _selectedTargetPosition = value;
+
+                if (oldValue != value)
+                {
+                    OnSelectedTargetPositionUpdate(SelectedTargetPosition);
+                }
+            }
+        }
+        private Position _selectedTargetPosition = null;
+
+        public bool CanPlaySelected
+        {
+            get
+            {
+                return (SelectedPiece != PieceName.INVALID && null != SelectedTargetPosition);
+            }
+        }
 
         public string EngineText
         {
@@ -90,6 +120,7 @@ namespace Mzinga.Viewer.ViewModel
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
 
         public event SelectedPieceUpdatedEventHandler SelectedPieceUpdated;
+        public event SelectedTargetPositionUpdatedEventHandler SelectedTargetPositionUpdated;
 
         private Process _process;
         private StreamReader _reader;
@@ -130,6 +161,43 @@ namespace Mzinga.Viewer.ViewModel
             _process.WaitForExit();
             _process.Close();
             _process = null;
+        }
+
+        public void NewGame()
+        {
+            SendCommand("newgame");
+        }
+
+        public void PlaySelected()
+        {
+            if (SelectedPiece == PieceName.INVALID || null == SelectedTargetPosition)
+            {
+                throw new Exception("Please select a piece and destination first.");
+            }
+
+            Move move = new Move(SelectedPiece, SelectedTargetPosition);
+
+            SendCommand("play {0}", move);
+        }
+
+        public void UndoMove()
+        {
+            SendCommand("undo");
+        }
+
+        public void PlayAI()
+        {
+            SendCommand("play");
+        }
+
+        public void BestMove()
+        {
+            SendCommand("bestmove");
+        }
+
+        public void SendCommand(string format, params object[] args)
+        {
+            SendCommand(String.Format(format, args));
         }
 
         public void SendCommand(string command)
@@ -259,19 +327,48 @@ namespace Mzinga.Viewer.ViewModel
             OnEngineTextUpdate(EngineText);
         }
 
-        public void SelectPieceAt(double cursorX, double cursorY, double hexRadius)
+        public PieceName GetPieceAt(double cursorX, double cursorY, double hexRadius)
         {
             Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
 
-            Piece piece = Board.GetPieceOnTop(position);
-            SelectedPiece = (null != piece) ? piece.PieceName : PieceName.INVALID;
+            Piece topPiece = Board.GetPieceOnTop(position);
+            return ((null != topPiece) ? topPiece.PieceName : PieceName.INVALID);
+        }
+
+        public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius)
+        {
+            Position bottomPosition = Position.FromCursor(cursorX, cursorY, hexRadius);
+
+            Piece topPiece = Board.GetPieceOnTop(bottomPosition);
+
+            if (null == topPiece)
+            {
+                // No piece there, return position at bottom of the stack (stack == 0)
+                return bottomPosition;
+            }
+            else
+            {
+                // Piece present, return position on top of the piece
+                return topPiece.Position.GetShifted(0, 0, 0, 1);
+            }
         }
 
         private void OnBoardUpdate(Board board)
         {
+            SelectedPiece = PieceName.INVALID;
+            SelectedTargetPosition = null;
+
             if (null != BoardUpdated)
             {
                 BoardUpdated(board);
+            }
+        }
+
+        private void OnEngineTextUpdate(string engineText)
+        {
+            if (null != EngineTextUpdated)
+            {
+                EngineTextUpdated(engineText);
             }
         }
 
@@ -283,11 +380,11 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        private void OnEngineTextUpdate(string engineText)
+        private void OnSelectedTargetPositionUpdate(Position position)
         {
-            if (null != EngineTextUpdated)
+            if (null != SelectedTargetPositionUpdated)
             {
-                EngineTextUpdated(engineText);
+                SelectedTargetPositionUpdated(position);
             }
         }
 

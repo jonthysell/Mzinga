@@ -90,6 +90,15 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public string TargetPosition
+        {
+            get
+            {
+                Position pos = AppVM.EngineWrapper.SelectedTargetPosition;
+                return (null != pos) ? pos.ToString() : "";
+            }
+        }
+
         public string StatusText
         {
             get
@@ -159,6 +168,99 @@ namespace Mzinga.Viewer.ViewModel
 
         #endregion
 
+        public RelayCommand NewGame
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.NewGame();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+
+        public RelayCommand PlaySelected
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.PlaySelected();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return AppVM.EngineWrapper.CanPlaySelected;
+                });
+            }
+        }
+
+        public RelayCommand UndoMove
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.UndoMove();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+
+        public RelayCommand BestMove
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.BestMove();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+
+        public RelayCommand PlayAI
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.PlayAI();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+
         public RelayCommand SendEngineCommand
         {
             get
@@ -200,6 +302,13 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.SelectedPieceUpdated += (pieceName) =>
             {
                 RaisePropertyChanged("SelectedPiece");
+                RaisePropertyChanged("PlaySelected");
+                UpdateStatusText();
+            };
+
+            AppVM.EngineWrapper.SelectedTargetPositionUpdated += (position) =>
+            {
+                RaisePropertyChanged("PlaySelected");
                 UpdateStatusText();
             };
         }
@@ -209,18 +318,38 @@ namespace Mzinga.Viewer.ViewModel
             CanvasCursorX = cursorX;
             CanvasCursorY = cursorY;
 
-            AppVM.EngineWrapper.SelectPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+            PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+            Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+
+            if (AppVM.EngineWrapper.SelectedPiece != PieceName.INVALID)
+            {
+                // Piece already selected, select target position
+                AppVM.EngineWrapper.SelectedTargetPosition = clickedPosition;
+            }
+            else if (AppVM.EngineWrapper.SelectedPiece == PieceName.INVALID)
+            {
+                // First click on a new piece, select it
+                AppVM.EngineWrapper.SelectedPiece = clickedPiece;
+                AppVM.EngineWrapper.SelectedTargetPosition = null;
+            }
+            else if (AppVM.EngineWrapper.SelectedPiece == clickedPiece)
+            {
+                // Click on selected piece, unselect it
+                AppVM.EngineWrapper.SelectedPiece = PieceName.INVALID;
+                AppVM.EngineWrapper.SelectedTargetPosition = null;
+            }
         }
 
         private void UpdateStatusText()
         {
             if (null != Board)
             {
-                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3}",
+                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3} TargetPosition: {4}",
                         Board.BoardState.ToString(),
                         Board.CurrentTurnColor.ToString(),
                         Board.CurrentTurn,
-                        SelectedPiece);
+                        SelectedPiece,
+                        TargetPosition);
             }
         }
     }
