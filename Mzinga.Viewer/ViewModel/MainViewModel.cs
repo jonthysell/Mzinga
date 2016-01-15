@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -321,22 +321,24 @@ namespace Mzinga.Viewer.ViewModel
             PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
             Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
 
-            if (AppVM.EngineWrapper.SelectedPiece != PieceName.INVALID)
+            if (AppVM.EngineWrapper.SelectedPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
             {
-                // Piece already selected, select target position
-                AppVM.EngineWrapper.SelectedTargetPosition = clickedPosition;
-            }
-            else if (AppVM.EngineWrapper.SelectedPiece == PieceName.INVALID)
-            {
-                // First click on a new piece, select it
+                // No piece seleected, select it
                 AppVM.EngineWrapper.SelectedPiece = clickedPiece;
-                AppVM.EngineWrapper.SelectedTargetPosition = null;
             }
-            else if (AppVM.EngineWrapper.SelectedPiece == clickedPiece)
+            else if (AppVM.EngineWrapper.SelectedPiece != PieceName.INVALID)
             {
-                // Click on selected piece, unselect it
-                AppVM.EngineWrapper.SelectedPiece = PieceName.INVALID;
-                AppVM.EngineWrapper.SelectedTargetPosition = null;
+                // Piece is selected
+                if (clickedPiece == AppVM.EngineWrapper.SelectedPiece)
+                {
+                    // Unselect piece
+                    AppVM.EngineWrapper.SelectedPiece = PieceName.INVALID;
+                }
+                else
+                {
+                    // Select target
+                    AppVM.EngineWrapper.SelectedTargetPosition = clickedPosition;
+                }
             }
         }
 
