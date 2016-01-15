@@ -182,6 +182,11 @@ namespace Mzinga.Viewer.ViewModel
             SendCommand("play {0}", move);
         }
 
+        public void Pass()
+        {
+            SendCommand("pass");
+        }
+
         public void UndoMove()
         {
             SendCommand("undo");
@@ -311,10 +316,10 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = new Board(output[0]);
+                    Board = !String.IsNullOrWhiteSpace(output[0]) ? new Board(output[0]) : null;
                     break;
                 case EngineCommand.ValidMoves:
-                    ValidMoves = new MoveSet(output[0]);
+                    ValidMoves = !String.IsNullOrWhiteSpace(output[0]) ? new MoveSet(output[0]) : null;
                     break;
                 case EngineCommand.BestMove:
                 case EngineCommand.History:

@@ -40,6 +40,8 @@ namespace Mzinga.Core
 
         private Random Random;
 
+        private Move _cachedBestMove;
+
         public bool ExitRequested { get; private set; }
 
         public GameEngine(string id, ConsoleOut consoleOut)
@@ -174,6 +176,12 @@ namespace Mzinga.Core
         private void NewGame()
         {
             GameBoard = new GameBoard();
+
+            GameBoard.BoardChanged += () =>
+            {
+                _cachedBestMove = null;
+            };
+
             ConsoleOut(GameBoard.ToString());
         }
 
@@ -301,33 +309,38 @@ namespace Mzinga.Core
                 throw new NoBoardException();
             }
 
-            MoveSet validMoves = GameBoard.GetValidMoves();
-
-            int randIndex = Random.Next(validMoves.Count);
-
-            Move bestMove = null;
-            Move randomMove = null;
-
-            int index = 0;
-            foreach (Move move in validMoves)
+            if (null == _cachedBestMove)
             {
-                if (index == randIndex)
+                MoveSet validMoves = GameBoard.GetValidMoves();
+
+                int randIndex = Random.Next(validMoves.Count);
+
+                Move bestMove = null;
+                Move randomMove = null;
+
+                int index = 0;
+                foreach (Move move in validMoves)
                 {
-                    randomMove = move;
+                    if (index == randIndex)
+                    {
+                        randomMove = move;
+                    }
+
+                    BoardState resultState = GameBoard.TryMove(move);
+                    if ((GameBoard.CurrentTurnColor == Color.White && resultState == BoardState.WhiteWins) ||
+                        (GameBoard.CurrentTurnColor == Color.Black && resultState == BoardState.BlackWins))
+                    {
+                        bestMove = move;
+                        break;
+                    }
+
+                    index++;
                 }
 
-                BoardState resultState = GameBoard.TryMove(move);
-                if ((GameBoard.CurrentTurnColor == Color.White && resultState == BoardState.WhiteWins) ||
-                    (GameBoard.CurrentTurnColor == Color.Black && resultState == BoardState.BlackWins))
-                {
-                    bestMove = move;
-                    break;
-                }
-
-                index++;
+                _cachedBestMove = bestMove != null ? bestMove : randomMove;
             }
 
-            return bestMove != null ? bestMove : randomMove;
+            return _cachedBestMove;
         }
     }
 

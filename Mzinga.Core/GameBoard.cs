@@ -31,6 +31,8 @@ using System.Text;
 
 namespace Mzinga.Core
 {
+    public delegate void BoardChangedEventHandler();
+
     public class GameBoard : Board
     {
         #region Properties
@@ -46,6 +48,8 @@ namespace Mzinga.Core
             }
         }
         private BoardHistory _boardHistory;
+
+        public event BoardChangedEventHandler BoardChanged;
 
         #endregion
 
@@ -159,7 +163,7 @@ namespace Mzinga.Core
             _boardHistory.Add(move, originalPosition);
 
             CurrentTurn++;
-            UpdateBoardState();
+            OnBoardChanged();
         }
 
         public void Pass()
@@ -179,7 +183,7 @@ namespace Mzinga.Core
             _boardHistory.Add(pass, null);
 
             CurrentTurn++;
-            UpdateBoardState();
+            OnBoardChanged();
         }
 
         public void UndoLastMove()
@@ -198,7 +202,7 @@ namespace Mzinga.Core
             }
             
             CurrentTurn--;
-            UpdateBoardState();
+            OnBoardChanged();
         }
 
         public MoveSet GetValidMoves()
@@ -405,7 +409,7 @@ namespace Mzinga.Core
                     // Comparing stack heights after the beetle is removed as per http://www.boardgamegeek.com/wiki/page/Hive_FAQ
                     if (Math.Min(topLeftNeighborHeight, topRightNeighborHeight) <= Math.Max(currentHeight - 1, destinationHeight))
                     {
-                        Position targetPosition = null != topNeighbor ? topNeighbor.Position.GetShifted(0, 0, 0, 1) : newPosition;
+                        Position targetPosition = null != topNeighbor ? topNeighbor.Position.GetShifted(0, 0, 0, 1) : newPosition.GetShifted(0, 0, 0, -newPosition.Stack);
                         Move move = new Move(targetPiece.PieceName, targetPosition);
                         validMoves.Add(move);
                     }
@@ -523,7 +527,7 @@ namespace Mzinga.Core
             }
         }
 
-        private void UpdateBoardState()
+        private void OnBoardChanged()
         {
             bool whiteQueenSurrounded = (CountNeighbors(PieceName.WhiteQueenBee) == 6);
             bool blackQueenSurrounded = (CountNeighbors(PieceName.BlackQueenBee) == 6);
@@ -543,6 +547,11 @@ namespace Mzinga.Core
             else
             {
                 BoardState = CurrentTurn == 0 ? BoardState.NotStarted : BoardState.InProgress;
+            }
+
+            if (null != BoardChanged)
+            {
+                BoardChanged();
             }
         }
 

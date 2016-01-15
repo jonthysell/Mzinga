@@ -137,16 +137,16 @@ namespace Mzinga.Viewer
 
                 int maxStack;
                 int numPieces;
-                Dictionary<int, List<Piece>> pieces = GetPiecesInPlay(board, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesInPlay(board, out numPieces, out maxStack);
 
                 double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
-                // Draw the pieces
+                // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
                 {
-                    if (pieces.ContainsKey(stack))
+                    if (piecesInPlay.ContainsKey(stack))
                     {
-                        foreach (Piece piece in pieces[stack])
+                        foreach (Piece piece in piecesInPlay[stack])
                         {
                             Point center = GetPoint(piece.Position, size);
 
@@ -166,6 +166,12 @@ namespace Mzinga.Viewer
                         }
                     }
                 }
+
+                // Draw the pieces in white's hand
+
+
+                // Draw the pieces in black's hand
+
 
                 // Highlight the selected piece
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.SelectedPiece;

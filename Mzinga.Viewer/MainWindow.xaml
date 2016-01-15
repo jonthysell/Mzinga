@@ -22,6 +22,7 @@
             <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
             <Separator Margin="5" />
             <Button Command="{Binding PlaySelected}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
             <Button Command="{Binding UndoMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
             <Separator Margin="5" />
             <Button Command="{Binding PlayAI}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />

@@ -207,6 +207,27 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public RelayCommand Pass
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.Pass();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return (null != AppVM.EngineWrapper.ValidMoves && AppVM.EngineWrapper.ValidMoves.Contains(Move.Pass));
+                });
+            }
+        }
+
         public RelayCommand UndoMove
         {
             get
@@ -291,6 +312,7 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.BoardUpdated += (board) =>
             {
                 RaisePropertyChanged("Board");
+                RaisePropertyChanged("Pass");
                 UpdateStatusText();
             };
 
