@@ -385,6 +385,7 @@ namespace Mzinga.Core
             foreach (Direction direction in EnumUtils.Directions)
             {
                 Position newPosition = targetPiece.Position.NeighborAt(direction);
+                newPosition = newPosition.GetShifted(0, 0, 0, -newPosition.Stack);
     
                 Piece topNeighbor = GetPieceOnTop(newPosition);
 
@@ -397,21 +398,42 @@ namespace Mzinga.Core
                 Piece topLeftNeighbor = GetPieceOnTop(leftNeighborPosition);
                 Piece topRightNeighbor = GetPieceOnTop(rightNeighborPosition);
 
-                if (null != topNeighbor || null != topLeftNeighbor || null != topRightNeighbor)
+                // At least one neighbor is present
+                int currentHeight = targetPiece.Position.Stack + 1;
+                int destinationHeight = null != topNeighbor ? topNeighbor.Position.Stack + 1: 0;
+
+                int topLeftNeighborHeight = null != topLeftNeighbor ? topLeftNeighbor.Position.Stack + 1 : 0;
+                int topRightNeighborHeight = null != topRightNeighbor ? topRightNeighbor.Position.Stack + 1 : 0;
+
+                Position targetPosition = newPosition.GetShifted(0, 0, 0, destinationHeight);
+                Move targetMove = new Move(targetPiece.PieceName, targetPosition);
+
+                // "Take-off" beetle
+                currentHeight--;
+
+                if (currentHeight == destinationHeight && destinationHeight == 0)
                 {
-                    // At least one neighbor is present
-                    int currentHeight = targetPiece.Position.Stack + 1;
-                    int destinationHeight = null != topNeighbor ? topNeighbor.Position.Stack + 1: 0;
-
-                    int topLeftNeighborHeight = null != topLeftNeighbor ? topLeftNeighbor.Position.Stack + 1 : 0;
-                    int topRightNeighborHeight = null != topRightNeighbor ? topRightNeighbor.Position.Stack + 1 : 0;
-
-                    // Comparing stack heights after the beetle is removed as per http://www.boardgamegeek.com/wiki/page/Hive_FAQ
-                    if (Math.Min(topLeftNeighborHeight, topRightNeighborHeight) <= Math.Max(currentHeight - 1, destinationHeight))
+                    if ((topLeftNeighborHeight == 0 && topRightNeighborHeight != 0) ||
+                        (topLeftNeighborHeight != 0 && topRightNeighborHeight == 0))
                     {
-                        Position targetPosition = null != topNeighbor ? topNeighbor.Position.GetShifted(0, 0, 0, 1) : newPosition.GetShifted(0, 0, 0, -newPosition.Stack);
-                        Move move = new Move(targetPiece.PieceName, targetPosition);
-                        validMoves.Add(move);
+                        // Slide on bottom
+                        validMoves.Add(targetMove);
+                    }
+                }
+                else
+                {
+                    if ((topLeftNeighborHeight <= destinationHeight && topRightNeighborHeight <= destinationHeight) ||
+                            (topLeftNeighborHeight > destinationHeight && topRightNeighborHeight == destinationHeight) ||
+                            (topLeftNeighborHeight == destinationHeight && topRightNeighborHeight > destinationHeight))
+                    {
+                        // Slide on top
+                        validMoves.Add(targetMove);
+                    }
+                    else if ((topLeftNeighborHeight > destinationHeight && topRightNeighborHeight > destinationHeight) &&
+                             (topLeftNeighborHeight <= currentHeight && topRightNeighborHeight <= currentHeight))
+                    {
+                        // Step up and out or down and in
+                        validMoves.Add(targetMove);
                     }
                 }
             }
