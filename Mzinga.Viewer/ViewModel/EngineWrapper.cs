@@ -356,7 +356,6 @@ namespace Mzinga.Viewer.ViewModel
         private void OnBoardUpdate(Board board)
         {
             SelectedPiece = PieceName.INVALID;
-            SelectedTargetPosition = null;
 
             if (null != BoardUpdated)
             {

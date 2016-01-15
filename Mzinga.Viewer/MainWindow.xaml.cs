@@ -78,7 +78,9 @@ namespace Mzinga.Viewer
 
         private SolidColorBrush WhiteBrush;
         private SolidColorBrush BlackBrush;
-        private SolidColorBrush HighlightBrush;
+
+        private SolidColorBrush HighlightEdgeBrush;
+        private SolidColorBrush HighlightBodyBrush;
 
         private SolidColorBrush QueenBeeBrush;
         private SolidColorBrush SpiderBrush;
@@ -93,7 +95,10 @@ namespace Mzinga.Viewer
             // Init brushes
             WhiteBrush = new SolidColorBrush(Colors.White);
             BlackBrush = new SolidColorBrush(Colors.Black);
-            HighlightBrush = new SolidColorBrush(Colors.Aqua);
+
+            HighlightEdgeBrush = new SolidColorBrush(Colors.Aqua);
+            HighlightBodyBrush = new SolidColorBrush(Colors.Aqua);
+            HighlightBodyBrush.Opacity = 0.25;
 
             QueenBeeBrush = new SolidColorBrush(Colors.Gold);
             SpiderBrush = new SolidColorBrush(Colors.Brown);
@@ -136,38 +141,57 @@ namespace Mzinga.Viewer
 
                 double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
+                // Draw the pieces
                 for (int stack = 0; stack <= maxStack; stack++)
                 {
                     if (pieces.ContainsKey(stack))
                     {
                         foreach (Piece piece in pieces[stack])
                         {
-                            double centerX = size * 1.5 * piece.Position.Q;
-                            double centerY = size * Math.Sqrt(3.0) * (piece.Position.R + (0.5 * piece.Position.Q));
+                            Point center = GetPoint(piece.Position, size);
 
-                            HexType hexType = (piece.Color == Core.Color.White) ? HexType.White : HexType.Black;
+                            HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
-                            if (piece.PieceName == VM.AppVM.EngineWrapper.SelectedPiece)
-                            {
-                                hexType = (HexType)((int)hexType + 2);
-                            }
-
-                            Polygon hex = GetHex(centerX, centerY, size, hexType);
+                            Polygon hex = GetHex(center, size, hexType);
                             BoardCanvas.Children.Add(hex);
 
-                            TextBlock hexText = GetHexText(centerX, centerY, size, piece.PieceName);
+                            TextBlock hexText = GetHexText(center, size, piece.PieceName);
                             BoardCanvas.Children.Add(hexText);
 
-                            minX = Math.Min(minX, centerX - size);
-                            minY = Math.Min(minY, centerY - size);
+                            minX = Math.Min(minX, center.X - size);
+                            minY = Math.Min(minY, center.Y - size);
 
-                            maxX = Math.Max(maxX, centerX + size);
-                            maxY = Math.Max(maxY, centerY + size);
+                            maxX = Math.Max(maxX, center.X + size);
+                            maxY = Math.Max(maxY, center.Y + size);
                         }
                     }
                 }
 
-                // Translate board
+                // Highlight the selected piece
+                PieceName selectedPieceName = VM.AppVM.EngineWrapper.SelectedPiece;
+
+                if (selectedPieceName != PieceName.INVALID)
+                {
+                    Piece selectedPiece = board.GetPiece(selectedPieceName);
+
+                    Point center = GetPoint(selectedPiece.Position, size);
+
+                    Polygon hex = GetHex(center, size, HexType.SelectedPiece);
+                    BoardCanvas.Children.Add(hex);
+                }
+
+                // Highlight the target position
+                Position targetPosition = VM.AppVM.EngineWrapper.SelectedTargetPosition;
+
+                if (null != targetPosition)
+                {
+                    Point center = GetPoint(targetPosition, size);
+
+                    Polygon hex = GetHex(center, size, HexType.SelectedMove);
+                    BoardCanvas.Children.Add(hex);
+                }
+
+                // Translate everything on the board
                 double boardWidth = Math.Abs(maxX - minX);
                 double boardHeight = Math.Abs(maxY - minY);
 
@@ -210,6 +234,24 @@ namespace Mzinga.Viewer
             LastBoard = board;
         }
 
+        private Point GetPoint(Position position, double size)
+        {
+            if (null == position)
+            {
+                throw new ArgumentNullException("position");
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+
+            double x = size * 1.5 * position.Q;
+            double y = size * Math.Sqrt(3.0) * (position.R + (0.5 * position.Q));
+
+            return new Point(x, y);
+        }
+
         private Dictionary<int, List<Piece>> GetPiecesInPlay(Board board, out int numPieces, out int maxStack)
         {
             if (null == board)
@@ -239,30 +281,40 @@ namespace Mzinga.Viewer
             return pieces;
         }
 
-        private Polygon GetHex(double centerX, double centerY, double size, HexType hexType)
+        private Polygon GetHex(Point center, double size, HexType hexType)
         {
+            if (null == center)
+            {
+                throw new ArgumentNullException("center");
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+
             Polygon hex = new Polygon();
-            hex.Stroke = BlackBrush;
             hex.StrokeThickness = 2;
 
             switch (hexType)
             {
-                case HexType.White:
+                case HexType.WhitePiece:
                     hex.Fill = WhiteBrush;
+                    hex.Stroke = BlackBrush;
                     break;
-                case HexType.WhiteHighlighted:
-                    hex.Fill = WhiteBrush;
-                    hex.Stroke = HighlightBrush;
-                    break;
-                case HexType.Black:
+                case HexType.BlackPiece:
                     hex.Fill = BlackBrush;
-                    break;
-                case HexType.BlackHighlighted:
-                    hex.Fill = BlackBrush;
-                    hex.Stroke = HighlightBrush;
+                    hex.Stroke = BlackBrush;
                     break;
                 case HexType.ValidMove:
-                    hex.Stroke = HighlightBrush;
+                    hex.Fill = HighlightBodyBrush;
+                    break;
+                case HexType.SelectedPiece:
+                    hex.Stroke = HighlightEdgeBrush;
+                    break;
+                case HexType.SelectedMove:
+                    hex.Fill = HighlightBodyBrush;
+                    hex.Stroke = HighlightEdgeBrush;
                     break;
             }
 
@@ -272,7 +324,7 @@ namespace Mzinga.Viewer
             {
                 double angle_deg = 60.0 * i;
                 double angle_rad = Math.PI / 180 * angle_deg;
-                points.Add(new Point(centerX + size * Math.Cos(angle_rad), centerY + size * Math.Sin(angle_rad)));
+                points.Add(new Point(center.X + size * Math.Cos(angle_rad), center.Y + size * Math.Sin(angle_rad)));
             }
 
             hex.Points = points;
@@ -280,8 +332,18 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private TextBlock GetHexText(double centerX, double centerY, double size, Core.PieceName pieceName)
+        private TextBlock GetHexText(Point center, double size, Core.PieceName pieceName)
         {
+            if (null == center)
+            {
+                throw new ArgumentNullException("center");
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+
             TextBlock hexText = new TextBlock();
             hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
             hexText.FontFamily = new FontFamily("Lucida Console");
@@ -324,19 +386,19 @@ namespace Mzinga.Viewer
 
             hexText.FontSize = size;
 
-            Canvas.SetLeft(hexText, centerX - (hexText.Text.Length * (hexText.FontSize / 3.5)));
-            Canvas.SetTop(hexText, centerY - (hexText.FontSize / 2.0));
+            Canvas.SetLeft(hexText, center.X - (hexText.Text.Length * (hexText.FontSize / 3.5)));
+            Canvas.SetTop(hexText, center.Y - (hexText.FontSize / 2.0));
 
             return hexText;
         }
 
         private enum HexType
         {
-            White,
-            Black,
-            WhiteHighlighted,
-            BlackHighlighted,
-            ValidMove
+            WhitePiece,
+            BlackPiece,
+            ValidMove,
+            SelectedPiece,
+            SelectedMove
         }
 
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
