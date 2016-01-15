@@ -59,6 +59,8 @@ namespace Mzinga.Viewer.ViewModel
         }
         private Board _board = null;
 
+        public MoveSet ValidMoves { get; private set; }
+
         public PieceName SelectedPiece
         {
             get
@@ -312,6 +314,8 @@ namespace Mzinga.Viewer.ViewModel
                     Board = new Board(output[0]);
                     break;
                 case EngineCommand.ValidMoves:
+                    ValidMoves = new MoveSet(output[0]);
+                    break;
                 case EngineCommand.BestMove:
                 case EngineCommand.History:
                 case EngineCommand.Info:
@@ -356,6 +360,8 @@ namespace Mzinga.Viewer.ViewModel
         private void OnBoardUpdate(Board board)
         {
             SelectedPiece = PieceName.INVALID;
+
+            SendCommand("validmoves");
 
             if (null != BoardUpdated)
             {

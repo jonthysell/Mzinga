@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,6 +47,22 @@ namespace Mzinga.Core
         public MoveSet()
         {
             _moves = new List<Move>();
+        }
+
+        public MoveSet(string moveSetString) : this()
+        {
+            if (String.IsNullOrWhiteSpace(moveSetString))
+            {
+                throw new ArgumentOutOfRangeException("moveSetString");
+            }
+
+            string[] split = moveSetString.Split(MoveSet.MoveStringSeparator);
+
+            for (int i = 0; i < split.Length; i++)
+            {
+                Move parseMove = new Move(split[i]);
+                Add(parseMove);
+            }
         }
 
         public void Add(IEnumerable<Move> moves)

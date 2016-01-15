@@ -96,7 +96,7 @@ namespace Mzinga.Viewer
             WhiteBrush = new SolidColorBrush(Colors.White);
             BlackBrush = new SolidColorBrush(Colors.Black);
 
-            HighlightEdgeBrush = new SolidColorBrush(Colors.Aqua);
+            HighlightEdgeBrush = new SolidColorBrush(Colors.Orange);
             HighlightBodyBrush = new SolidColorBrush(Colors.Aqua);
             HighlightBodyBrush.Opacity = 0.25;
 
@@ -178,6 +178,23 @@ namespace Mzinga.Viewer
 
                     Polygon hex = GetHex(center, size, HexType.SelectedPiece);
                     BoardCanvas.Children.Add(hex);
+                }
+
+                // Draw the valid moves for that piece
+                MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
+
+                if (selectedPieceName != PieceName.INVALID && null != validMoves)
+                {
+                    foreach (Move validMove in validMoves)
+                    {
+                        if (validMove.PieceName == selectedPieceName)
+                        {
+                            Point center = GetPoint(validMove.Position, size);
+
+                            Polygon hex = GetHex(center, size, HexType.ValidMove);
+                            BoardCanvas.Children.Add(hex);
+                        }
+                    }
                 }
 
                 // Highlight the target position
