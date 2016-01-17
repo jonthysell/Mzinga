@@ -190,7 +190,7 @@ namespace Mzinga.Core
         {
             if (_boardHistory.Count == 0)
             {
-                throw new InvalidOperationException("You can't undo any move moves.");
+                throw new InvalidOperationException("You can't undo any more moves.");
             }
 
             BoardHistoryItem item = _boardHistory.UndoLastMove();

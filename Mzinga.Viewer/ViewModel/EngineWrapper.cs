@@ -61,6 +61,15 @@ namespace Mzinga.Viewer.ViewModel
 
         public MoveSet ValidMoves { get; private set; }
 
+
+        public bool GameInProgress
+        {
+            get
+            {
+                return (null != Board && (Board.BoardState == BoardState.NotStarted || Board.BoardState == BoardState.InProgress));
+            }
+        }
+
         public PieceName SelectedPiece
         {
             get
@@ -105,7 +114,23 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return (SelectedPiece != PieceName.INVALID && null != SelectedTargetPosition);
+                return (GameInProgress && SelectedPiece != PieceName.INVALID && null != SelectedTargetPosition);
+            }
+        }
+
+        public bool CanPass
+        {
+            get
+            {
+                return (GameInProgress && null != ValidMoves && ValidMoves.Contains(Move.Pass));
+            }
+        }
+
+        public bool CanUndoLastMove
+        {
+            get
+            {
+                return (null != Board && Board.BoardState != BoardState.NotStarted);
             }
         }
 
@@ -187,17 +212,17 @@ namespace Mzinga.Viewer.ViewModel
             SendCommand("pass");
         }
 
-        public void UndoMove()
+        public void UndoLastMove()
         {
             SendCommand("undo");
         }
 
-        public void PlayAI()
+        public void PlayBestMove()
         {
             SendCommand("play");
         }
 
-        public void BestMove()
+        public void FindBestMove()
         {
             SendCommand("bestmove");
         }
@@ -306,7 +331,14 @@ namespace Mzinga.Viewer.ViewModel
                 throw new InvalidMoveException(invalidMoveMessage);
             }
 
-            string[] output = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] outputSplit = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            string firstLine = "";
+
+            if (null != outputSplit && outputSplit.Length > 0)
+            {
+                firstLine = outputSplit[0];
+            }
 
             // Update other properties
             switch (command)
@@ -316,10 +348,10 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !String.IsNullOrWhiteSpace(output[0]) ? new Board(output[0]) : null;
+                    Board = !String.IsNullOrWhiteSpace(firstLine) ? new Board(firstLine) : null;
                     break;
                 case EngineCommand.ValidMoves:
-                    ValidMoves = !String.IsNullOrWhiteSpace(output[0]) ? new MoveSet(output[0]) : null;
+                    ValidMoves = !String.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
                 case EngineCommand.History:

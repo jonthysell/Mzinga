@@ -223,12 +223,12 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return (null != AppVM.EngineWrapper.ValidMoves && AppVM.EngineWrapper.ValidMoves.Contains(Move.Pass));
+                    return AppVM.EngineWrapper.CanPass;
                 });
             }
         }
 
-        public RelayCommand UndoMove
+        public RelayCommand UndoLastMove
         {
             get
             {
@@ -236,17 +236,20 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.UndoMove();
+                        AppVM.EngineWrapper.UndoLastMove();
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
                     }
+                }, () =>
+                {
+                    return AppVM.EngineWrapper.CanUndoLastMove;
                 });
             }
         }
 
-        public RelayCommand BestMove
+        public RelayCommand FindBestMove
         {
             get
             {
@@ -254,17 +257,20 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.BestMove();
+                        AppVM.EngineWrapper.FindBestMove();
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
                     }
+                }, () =>
+                {
+                    return AppVM.EngineWrapper.GameInProgress;
                 });
             }
         }
 
-        public RelayCommand PlayAI
+        public RelayCommand PlayBestMove
         {
             get
             {
@@ -272,12 +278,15 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.PlayAI();
+                        AppVM.EngineWrapper.PlayBestMove();
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
                     }
+                }, () =>
+                {
+                    return AppVM.EngineWrapper.GameInProgress;
                 });
             }
         }
@@ -313,6 +322,9 @@ namespace Mzinga.Viewer.ViewModel
             {
                 RaisePropertyChanged("Board");
                 RaisePropertyChanged("Pass");
+                RaisePropertyChanged("PlayBestMove");
+                RaisePropertyChanged("FindBestMove");
+                RaisePropertyChanged("UndoLastMove");
                 UpdateStatusText();
             };
 

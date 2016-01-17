@@ -95,7 +95,7 @@ namespace Mzinga.Core
                     case "play":
                         if (paramCount == 0)
                         {
-                            Play();
+                            PlayBestMove();
                         }
                         else
                         {
@@ -185,7 +185,7 @@ namespace Mzinga.Core
             ConsoleOut(GameBoard.ToString());
         }
 
-        private void Play()
+        private void PlayBestMove()
         {
             if (null == GameBoard)
             {
