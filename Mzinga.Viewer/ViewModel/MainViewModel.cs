@@ -82,11 +82,11 @@ namespace Mzinga.Viewer.ViewModel
         }
         private string _engineInputText = "";
 
-        public string SelectedPiece
+        public string TargetPiece
         {
             get
             {
-                return EnumUtils.GetShortName(AppVM.EngineWrapper.SelectedPiece);
+                return EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                Position pos = AppVM.EngineWrapper.SelectedTargetPosition;
+                Position pos = AppVM.EngineWrapper.TargetPosition;
                 return (null != pos) ? pos.ToString() : "";
             }
         }
@@ -186,7 +186,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public RelayCommand PlaySelected
+        public RelayCommand PlayTarget
         {
             get
             {
@@ -194,7 +194,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.PlaySelected();
+                        AppVM.EngineWrapper.PlayTargetMove();
                     }
                     catch (Exception ex)
                     {
@@ -202,7 +202,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanPlaySelected;
+                    return AppVM.EngineWrapper.CanPlayTargetMove;
                 });
             }
         }
@@ -333,17 +333,17 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("EngineOutputText");
             };
 
-            AppVM.EngineWrapper.SelectedPieceUpdated += (pieceName) =>
+            AppVM.EngineWrapper.TargetPieceUpdated += (pieceName) =>
             {
-                RaisePropertyChanged("SelectedPiece");
-                RaisePropertyChanged("PlaySelected");
+                RaisePropertyChanged("TargetPiece");
+                RaisePropertyChanged("PlayTarget");
                 UpdateStatusText();
             };
 
-            AppVM.EngineWrapper.SelectedTargetPositionUpdated += (position) =>
+            AppVM.EngineWrapper.TargetPositionUpdated += (position) =>
             {
                 RaisePropertyChanged("TargetPosition");
-                RaisePropertyChanged("PlaySelected");
+                RaisePropertyChanged("PlayTarget");
                 UpdateStatusText();
             };
         }
@@ -356,46 +356,56 @@ namespace Mzinga.Viewer.ViewModel
             PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
             Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
 
-            if (AppVM.EngineWrapper.SelectedPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
+            if (AppVM.EngineWrapper.TargetPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
             {
                 // No piece seleected, select it
-                AppVM.EngineWrapper.SelectedPiece = clickedPiece;
+                AppVM.EngineWrapper.TargetPiece = clickedPiece;
             }
-            else if (AppVM.EngineWrapper.SelectedPiece != PieceName.INVALID)
+            else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
             {
                 // Piece is selected
-                if (clickedPiece == AppVM.EngineWrapper.SelectedPiece)
+                if (clickedPiece == AppVM.EngineWrapper.TargetPiece)
                 {
                     // Unselect piece
-                    AppVM.EngineWrapper.SelectedPiece = PieceName.INVALID;
+                    AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
                 }
                 else
                 {
-                    // Select target
-                    AppVM.EngineWrapper.SelectedTargetPosition = clickedPosition;
+                    // Get the move with the clicked position
+                    Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
+                    if (AppVM.EngineWrapper.CanPlayMove(targetMove))
+                    {
+                        // Move is valid, select position
+                        AppVM.EngineWrapper.TargetPosition = clickedPosition;
+                    }
+                    else
+                    {
+                        // Move is invalid, (un)select clicked piece
+                        AppVM.EngineWrapper.TargetPiece = clickedPiece;
+                    }
                 }
             }
         }
 
         internal void PieceClick(PieceName clickedPiece)
         {
-            if (AppVM.EngineWrapper.SelectedPiece == clickedPiece)
+            if (AppVM.EngineWrapper.TargetPiece == clickedPiece)
             {
                 clickedPiece = PieceName.INVALID;
             }
 
-            AppVM.EngineWrapper.SelectedPiece = clickedPiece;
+            AppVM.EngineWrapper.TargetPiece = clickedPiece;
         }
 
         private void UpdateStatusText()
         {
             if (null != Board)
             {
-                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} SelectedPiece: {3} TargetPosition: {4}",
+                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} TargetPiece: {3} TargetPosition: {4}",
                         Board.BoardState.ToString(),
                         Board.CurrentTurnColor.ToString(),
                         Board.CurrentTurn,
-                        SelectedPiece,
+                        TargetPiece,
                         TargetPosition);
             }
         }

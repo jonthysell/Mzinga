@@ -39,9 +39,9 @@ namespace Mzinga.Viewer.ViewModel
 
     public delegate void EngineTextUpdatedEventHandler(string engineText);
 
-    public delegate void SelectedPieceUpdatedEventHandler(PieceName pieceName);
+    public delegate void TargetPieceUpdatedEventHandler(PieceName pieceName);
 
-    public delegate void SelectedTargetPositionUpdatedEventHandler(Position position);
+    public delegate void TargetPositionUpdatedEventHandler(Position position);
 
     public class EngineWrapper
     {
@@ -70,51 +70,64 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public PieceName SelectedPiece
+        public PieceName TargetPiece
         {
             get
             {
-                return _selectedPiece;
+                return _targetPiece;
             }
             set
             {
-                PieceName oldValue = _selectedPiece;
+                PieceName oldValue = _targetPiece;
 
-                _selectedPiece = value;
+                _targetPiece = value;
 
                 if (oldValue != value)
                 {
-                    OnSelectedPieceUpdate(SelectedPiece);
+                    OnTargetPieceUpdate(TargetPiece);
                 }
             }
         }
-        private PieceName _selectedPiece = PieceName.INVALID;
+        private PieceName _targetPiece = PieceName.INVALID;
 
-        public Position SelectedTargetPosition
+        public Position TargetPosition
         {
             get
             {
-                return _selectedTargetPosition;
+                return _targetPosition;
             }
             set
             {
-                Position oldValue = _selectedTargetPosition;
+                Position oldValue = _targetPosition;
 
-                _selectedTargetPosition = value;
+                _targetPosition = value;
 
                 if (oldValue != value)
                 {
-                    OnSelectedTargetPositionUpdate(SelectedTargetPosition);
+                    OnTargetPositionUpdate(TargetPosition);
                 }
             }
         }
-        private Position _selectedTargetPosition = null;
+        private Position _targetPosition = null;
 
-        public bool CanPlaySelected
+        public Move TargetMove
         {
             get
             {
-                return (GameInProgress && SelectedPiece != PieceName.INVALID && null != SelectedTargetPosition);
+                if (TargetPiece != PieceName.INVALID && null != TargetPosition)
+                {
+                    return new Move(TargetPiece, TargetPosition);
+                }
+
+                return null;
+            }
+        }
+
+        public bool CanPlayTargetMove
+        {
+            get
+            {
+                return CanPlayMove(TargetMove);
             }
         }
 
@@ -146,8 +159,8 @@ namespace Mzinga.Viewer.ViewModel
         public event BoardUpdatedEventHandler BoardUpdated;
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
 
-        public event SelectedPieceUpdatedEventHandler SelectedPieceUpdated;
-        public event SelectedTargetPositionUpdatedEventHandler SelectedTargetPositionUpdated;
+        public event TargetPieceUpdatedEventHandler TargetPieceUpdated;
+        public event TargetPositionUpdatedEventHandler TargetPositionUpdated;
 
         private Process _process;
         private StreamReader _reader;
@@ -195,14 +208,14 @@ namespace Mzinga.Viewer.ViewModel
             SendCommand("newgame");
         }
 
-        public void PlaySelected()
+        public void PlayTargetMove()
         {
-            if (SelectedPiece == PieceName.INVALID || null == SelectedTargetPosition)
-            {
-                throw new Exception("Please select a piece and destination first.");
-            }
+            Move move = TargetMove;
 
-            Move move = new Move(SelectedPiece, SelectedTargetPosition);
+            if (null == move)
+            {
+                throw new Exception("Please select a valid piece and destination first.");
+            }
 
             SendCommand("play {0}", move);
         }
@@ -357,8 +370,8 @@ namespace Mzinga.Viewer.ViewModel
                     if (!String.IsNullOrWhiteSpace(firstLine))
                     {
                         Move bestMove = new Move(firstLine);
-                        SelectedPiece = bestMove.PieceName;
-                        SelectedTargetPosition = bestMove.Position;
+                        TargetPiece = bestMove.PieceName;
+                        TargetPosition = bestMove.Position;
                     }
                     break;
                 case EngineCommand.History:
@@ -401,9 +414,14 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public bool CanPlayMove(Move move)
+        {
+            return (GameInProgress && null != move && null != ValidMoves && ValidMoves.Contains(move));
+        }
+
         private void OnBoardUpdate(Board board)
         {
-            SelectedPiece = PieceName.INVALID;
+            TargetPiece = PieceName.INVALID;
 
             SendCommand("validmoves");
 
@@ -421,21 +439,21 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        private void OnSelectedPieceUpdate(PieceName pieceName)
+        private void OnTargetPieceUpdate(PieceName pieceName)
         {
-            SelectedTargetPosition = null;
+            TargetPosition = null;
 
-            if (null != SelectedPieceUpdated)
+            if (null != TargetPieceUpdated)
             {
-                SelectedPieceUpdated(pieceName);
+                TargetPieceUpdated(pieceName);
             }
         }
 
-        private void OnSelectedTargetPositionUpdate(Position position)
+        private void OnTargetPositionUpdate(Position position)
         {
-            if (null != SelectedTargetPositionUpdated)
+            if (null != TargetPositionUpdated)
             {
-                SelectedTargetPositionUpdated(position);
+                TargetPositionUpdated(position);
             }
         }
 

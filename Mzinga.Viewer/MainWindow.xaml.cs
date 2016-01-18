@@ -118,7 +118,7 @@ namespace Mzinga.Viewer
             switch (e.PropertyName)
             {
                 case "Board":
-                case "SelectedPiece":
+                case "TargetPiece":
                 case "TargetPosition":
                     DrawBoard(VM.Board);
                     break;
@@ -183,7 +183,7 @@ namespace Mzinga.Viewer
                 }
 
                 // Highlight the selected piece
-                PieceName selectedPieceName = VM.AppVM.EngineWrapper.SelectedPiece;
+                PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
 
                 if (selectedPieceName != PieceName.INVALID)
                 {
@@ -222,7 +222,7 @@ namespace Mzinga.Viewer
                 }
 
                 // Highlight the target position
-                Position targetPosition = VM.AppVM.EngineWrapper.SelectedTargetPosition;
+                Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
 
                 if (null != targetPosition)
                 {
@@ -481,7 +481,7 @@ namespace Mzinga.Viewer
             pieceCanvas.Children.Add(hexText);
 
             // Add highlight if the piece is selected
-            if (VM.AppVM.EngineWrapper.SelectedPiece == piece.PieceName)
+            if (VM.AppVM.EngineWrapper.TargetPiece == piece.PieceName)
             {
                 Polygon highlightHex = GetHex(center, size, HexType.SelectedPiece);
                 pieceCanvas.Children.Add(highlightHex);

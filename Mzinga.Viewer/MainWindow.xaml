@@ -53,7 +53,7 @@
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
             <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
             <Separator Margin="5" />
-            <Button Command="{Binding PlaySelected}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding PlayTarget}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
             <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
             <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
             <Separator Margin="5" />
