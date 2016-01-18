@@ -128,6 +128,8 @@ namespace Mzinga.Viewer
         private void DrawBoard(Board board)
         {
             BoardCanvas.Children.Clear();
+            WhiteHandStackPanel.Children.Clear();
+            BlackHandStackPanel.Children.Clear();
 
             CanvasOffsetX = 0.0;
             CanvasOffsetX = 0.0;
@@ -167,10 +169,18 @@ namespace Mzinga.Viewer
                 }
 
                 // Draw the pieces in white's hand
-
+                foreach (Piece piece in board.WhiteHand)
+                {
+                    Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                    WhiteHandStackPanel.Children.Add(pieceCanvas);
+                }
 
                 // Draw the pieces in black's hand
-
+                foreach (Piece piece in board.BlackHand)
+                {
+                    Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                    BlackHandStackPanel.Children.Add(pieceCanvas);
+                }
 
                 // Highlight the selected piece
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.SelectedPiece;
@@ -449,6 +459,48 @@ namespace Mzinga.Viewer
             ValidMove,
             SelectedPiece,
             SelectedMove
+        }
+
+        private Canvas GetPieceCanvas(Piece piece, double size)
+        {
+            Point center = new Point(size, size);
+
+            HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
+
+            Polygon hex = GetHex(center, size, hexType);
+            TextBlock hexText = GetHexText(center, size, piece.PieceName);
+
+            Canvas pieceCanvas = new Canvas();
+            pieceCanvas.Height = size * 2;
+            pieceCanvas.Width = size * 2;
+            pieceCanvas.Margin = new Thickness(5);
+
+            pieceCanvas.Name = EnumUtils.GetShortName(piece.PieceName);
+
+            pieceCanvas.Children.Add(hex);
+            pieceCanvas.Children.Add(hexText);
+
+            // Add highlight if the piece is selected
+            if (VM.AppVM.EngineWrapper.SelectedPiece == piece.PieceName)
+            {
+                Polygon highlightHex = GetHex(center, size, HexType.SelectedPiece);
+                pieceCanvas.Children.Add(highlightHex);
+            }
+
+            pieceCanvas.MouseLeftButtonDown += PieceCanvas_MouseLeftButtonDown;
+
+            return pieceCanvas;
+        }
+
+        private void PieceCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Canvas pieceCanvas = sender as Canvas;
+
+            if (null != pieceCanvas)
+            {
+                PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
+                VM.PieceClick(clickedPiece);
+            }
         }
 
         private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

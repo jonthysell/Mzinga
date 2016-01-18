@@ -377,6 +377,16 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        internal void PieceClick(PieceName clickedPiece)
+        {
+            if (AppVM.EngineWrapper.SelectedPiece == clickedPiece)
+            {
+                clickedPiece = PieceName.INVALID;
+            }
+
+            AppVM.EngineWrapper.SelectedPiece = clickedPiece;
+        }
+
         private void UpdateStatusText()
         {
             if (null != Board)

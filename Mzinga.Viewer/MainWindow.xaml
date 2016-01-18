@@ -9,7 +9,9 @@
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -17,18 +19,14 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Row="0" Grid.Column="0" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Grid.Row="0" Grid.Column="1">
-            <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Separator Margin="5" />
-            <Button Command="{Binding PlaySelected}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Separator Margin="5" />
-            <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+        <StackPanel Grid.Row="0" Grid.Column="0" Name="BlackHandStackPanel" Orientation="Horizontal">
+            
         </StackPanel>
-        <Expander Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
+        <Canvas Grid.Row="1" Grid.Column="0" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Name="WhiteHandStackPanel" Orientation="Horizontal">
+
+        </StackPanel>
+        <Expander Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -47,10 +45,20 @@
                 <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
         </Expander>
-        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+        <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}" />
             </StatusBarItem>
         </StatusBar>
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
+            <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlaySelected}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+        </StackPanel>
     </Grid>
 </Window>
