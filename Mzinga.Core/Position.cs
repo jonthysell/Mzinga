@@ -165,7 +165,7 @@ namespace Mzinga.Core
             {
                 throw new ArgumentOutOfRangeException("hexRadius");
             }
-            else if (hexRadius == 0) // No hexes on board
+            else if (Double.IsInfinity(cursorX) || Double.IsInfinity(cursorY) || hexRadius == 0) // No hexes on board
             {
                 return Position.Origin;
             }

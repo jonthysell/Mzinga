@@ -115,9 +115,13 @@ namespace Mzinga.Viewer
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Board")
+            switch (e.PropertyName)
             {
-                DrawBoard(VM.Board);
+                case "Board":
+                case "SelectedPiece":
+                case "TargetPosition":
+                    DrawBoard(VM.Board);
+                    break;
             }
         }
 
@@ -130,16 +134,14 @@ namespace Mzinga.Viewer
 
             if (null != board)
             {
-                double minX = Double.MaxValue;
-                double minY = Double.MaxValue;
-                double maxX = Double.MinValue;
-                double maxY = Double.MinValue;
+                Point minPoint = new Point(Double.MaxValue, Double.MaxValue);
+                Point maxPoint = new Point(Double.MinValue, Double.MinValue);
 
                 int maxStack;
                 int numPieces;
                 Dictionary<int, List<Piece>> piecesInPlay = GetPiecesInPlay(board, out numPieces, out maxStack);
 
-                double size = Math.Min(HexRadiusRatio, (double)numPieces / (double)EnumUtils.NumPieceNames) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
+                double size = Math.Min(HexRadiusRatio, 1.0 - ((double)numPieces / (double)EnumUtils.NumPieceNames)) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
@@ -158,11 +160,8 @@ namespace Mzinga.Viewer
                             TextBlock hexText = GetHexText(center, size, piece.PieceName);
                             BoardCanvas.Children.Add(hexText);
 
-                            minX = Math.Min(minX, center.X - size);
-                            minY = Math.Min(minY, center.Y - size);
-
-                            maxX = Math.Max(maxX, center.X + size);
-                            maxY = Math.Max(maxY, center.Y + size);
+                            minPoint = Min(center, size, minPoint);
+                            maxPoint = Max(center, size, maxPoint);
                         }
                     }
                 }
@@ -180,10 +179,16 @@ namespace Mzinga.Viewer
                 {
                     Piece selectedPiece = board.GetPiece(selectedPieceName);
 
-                    Point center = GetPoint(selectedPiece.Position, size);
+                    if (selectedPiece.InPlay)
+                    {
+                        Point center = GetPoint(selectedPiece.Position, size);
 
-                    Polygon hex = GetHex(center, size, HexType.SelectedPiece);
-                    BoardCanvas.Children.Add(hex);
+                        Polygon hex = GetHex(center, size, HexType.SelectedPiece);
+                        BoardCanvas.Children.Add(hex);
+
+                        minPoint = Min(center, size, minPoint);
+                        maxPoint = Max(center, size, maxPoint);
+                    }
                 }
 
                 // Draw the valid moves for that piece
@@ -199,6 +204,9 @@ namespace Mzinga.Viewer
 
                             Polygon hex = GetHex(center, size, HexType.ValidMove);
                             BoardCanvas.Children.Add(hex);
+
+                            minPoint = Min(center, size, minPoint);
+                            maxPoint = Max(center, size, maxPoint);
                         }
                     }
                 }
@@ -212,14 +220,17 @@ namespace Mzinga.Viewer
 
                     Polygon hex = GetHex(center, size, HexType.SelectedMove);
                     BoardCanvas.Children.Add(hex);
+
+                    minPoint = Min(center, size, minPoint);
+                    maxPoint = Max(center, size, maxPoint);
                 }
 
                 // Translate everything on the board
-                double boardWidth = Math.Abs(maxX - minX);
-                double boardHeight = Math.Abs(maxY - minY);
+                double boardWidth = Math.Abs(maxPoint.X - minPoint.X);
+                double boardHeight = Math.Abs(maxPoint.Y - minPoint.Y);
 
-                double boardCenterX = minX + (boardWidth / 2);
-                double boardCenterY = minY + (boardHeight / 2);
+                double boardCenterX = minPoint.X + (boardWidth / 2);
+                double boardCenterY = minPoint.Y + (boardHeight / 2);
 
                 double canvasCenterX = BoardCanvas.ActualWidth / 2;
                 double canvasCenterY = BoardCanvas.ActualHeight / 2;
@@ -255,6 +266,22 @@ namespace Mzinga.Viewer
             }
 
             LastBoard = board;
+        }
+
+        private Point Min(Point center, double size, Point minPoint)
+        {
+            double minX = Math.Min(minPoint.X, center.X - size);
+            double minY = Math.Min(minPoint.Y, center.Y - size);
+
+            return new Point(minX, minY);
+        }
+
+        private Point Max(Point center, double size, Point maxPoint)
+        {
+            double maxX = Math.Max(maxPoint.X, center.X + size);
+            double maxY = Math.Max(maxPoint.Y, center.Y + size);
+
+            return new Point(maxX, maxY);
         }
 
         private Point GetPoint(Position position, double size)
@@ -355,7 +382,7 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private TextBlock GetHexText(Point center, double size, Core.PieceName pieceName)
+        private TextBlock GetHexText(Point center, double size, PieceName pieceName)
         {
             if (null == center)
             {
@@ -428,7 +455,6 @@ namespace Mzinga.Viewer
         {
             Point p = CanvasCursorPosition;
             VM.CanvasClick(p.X, p.Y);
-            DrawBoard(LastBoard);
         }
 
         private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)

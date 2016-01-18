@@ -354,6 +354,13 @@ namespace Mzinga.Viewer.ViewModel
                     ValidMoves = !String.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
+                    if (!String.IsNullOrWhiteSpace(firstLine))
+                    {
+                        Move bestMove = new Move(firstLine);
+                        SelectedPiece = bestMove.PieceName;
+                        SelectedTargetPosition = bestMove.Position;
+                    }
+                    break;
                 case EngineCommand.History:
                 case EngineCommand.Info:
                 case EngineCommand.Help:
@@ -372,7 +379,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
 
-            Piece topPiece = Board.GetPieceOnTop(position);
+            Piece topPiece = (null != Board) ? Board.GetPieceOnTop(position) : null;
             return ((null != topPiece) ? topPiece.PieceName : PieceName.INVALID);
         }
 
@@ -380,7 +387,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             Position bottomPosition = Position.FromCursor(cursorX, cursorY, hexRadius);
 
-            Piece topPiece = Board.GetPieceOnTop(bottomPosition);
+            Piece topPiece = (null != Board) ? Board.GetPieceOnTop(bottomPosition) : null;
 
             if (null == topPiece)
             {

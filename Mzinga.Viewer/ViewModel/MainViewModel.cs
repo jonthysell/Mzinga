@@ -342,6 +342,7 @@ namespace Mzinga.Viewer.ViewModel
 
             AppVM.EngineWrapper.SelectedTargetPositionUpdated += (position) =>
             {
+                RaisePropertyChanged("TargetPosition");
                 RaisePropertyChanged("PlaySelected");
                 UpdateStatusText();
             };
