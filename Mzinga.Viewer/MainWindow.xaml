@@ -19,13 +19,9 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Name="BlackHandStackPanel" Orientation="Horizontal">
-            
-        </StackPanel>
-        <Canvas Grid.Row="1" Grid.Column="0" Name="BoardCanvas" Background="WhiteSmoke" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Grid.Row="2" Grid.Column="0" Name="WhiteHandStackPanel" Orientation="Horizontal">
-
-        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="0" Name="BlackHandStackPanel" Background="White" Orientation="Horizontal" />
+        <Canvas Grid.Row="1" Grid.Column="0" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
+        <StackPanel Grid.Row="2" Grid.Column="0" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
         <Expander Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>

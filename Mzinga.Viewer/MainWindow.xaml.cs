@@ -71,6 +71,8 @@ namespace Mzinga.Viewer
 
         private double HexRadiusRatio = 0.05;
 
+        private double PieceCanvasMargin = 5.0;
+
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
 
@@ -141,9 +143,15 @@ namespace Mzinga.Viewer
 
                 int maxStack;
                 int numPieces;
-                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesInPlay(board, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out numPieces, out maxStack);
 
-                double size = Math.Min(HexRadiusRatio, 1.0 - ((double)numPieces / (double)EnumUtils.NumPieceNames)) * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
+                double size = HexRadiusRatio * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
+
+                WhiteHandStackPanel.MinHeight = (size + PieceCanvasMargin) * 2;
+                BlackHandStackPanel.MinHeight = (size + PieceCanvasMargin) * 2;
+
+                PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
+                Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
 
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
@@ -152,7 +160,14 @@ namespace Mzinga.Viewer
                     {
                         foreach (Piece piece in piecesInPlay[stack])
                         {
-                            Point center = GetPoint(piece.Position, size);
+                            Position position = piece.Position;
+
+                            if (piece.PieceName == selectedPieceName && null != targetPosition)
+                            {
+                                position = targetPosition;
+                            }
+
+                            Point center = GetPoint(position, size);
 
                             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
@@ -171,20 +186,24 @@ namespace Mzinga.Viewer
                 // Draw the pieces in white's hand
                 foreach (Piece piece in board.WhiteHand)
                 {
-                    Canvas pieceCanvas = GetPieceCanvas(piece, size);
-                    WhiteHandStackPanel.Children.Add(pieceCanvas);
+                    if (piece.PieceName != selectedPieceName || (piece.PieceName == selectedPieceName && null == targetPosition))
+                    {
+                        Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                        WhiteHandStackPanel.Children.Add(pieceCanvas);
+                    }
                 }
 
                 // Draw the pieces in black's hand
                 foreach (Piece piece in board.BlackHand)
                 {
-                    Canvas pieceCanvas = GetPieceCanvas(piece, size);
-                    BlackHandStackPanel.Children.Add(pieceCanvas);
+                    if (piece.PieceName != selectedPieceName || (piece.PieceName == selectedPieceName && null == targetPosition))
+                    {
+                        Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                        BlackHandStackPanel.Children.Add(pieceCanvas);
+                    }
                 }
 
                 // Highlight the selected piece
-                PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
-
                 if (selectedPieceName != PieceName.INVALID)
                 {
                     Piece selectedPiece = board.GetPiece(selectedPieceName);
@@ -222,8 +241,6 @@ namespace Mzinga.Viewer
                 }
 
                 // Highlight the target position
-                Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
-
                 if (null != targetPosition)
                 {
                     Point center = GetPoint(targetPosition, size);
@@ -312,7 +329,7 @@ namespace Mzinga.Viewer
             return new Point(x, y);
         }
 
-        private Dictionary<int, List<Piece>> GetPiecesInPlay(Board board, out int numPieces, out int maxStack)
+        private Dictionary<int, List<Piece>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
         {
             if (null == board)
             {
@@ -323,10 +340,28 @@ namespace Mzinga.Viewer
             maxStack = -1;
 
             Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
+            pieces[0] = new List<Piece>();
 
+            PieceName targetPieceName = VM.AppVM.EngineWrapper.TargetPiece;
+            Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
+
+            bool targetPieceInPlay = false;
+
+            // Add pieces already on the board
             foreach (Piece piece in board.PiecesInPlay)
             {
-                int stack = piece.Position.Stack;
+                Position position = piece.Position;
+
+                if (piece.PieceName == targetPieceName)
+                {
+                    if (null != targetPosition)
+                    {
+                        position = targetPosition;
+                    }
+                    targetPieceInPlay = true;
+                }
+
+                int stack = position.Stack;
                 maxStack = Math.Max(maxStack, stack);
 
                 if (!pieces.ContainsKey(stack))
@@ -335,6 +370,21 @@ namespace Mzinga.Viewer
                 }
 
                 pieces[stack].Add(piece);
+                numPieces++;
+            }
+
+            // Add piece being placed on the board
+            if (!targetPieceInPlay && null != targetPosition)
+            {
+                int stack = targetPosition.Stack;
+                maxStack = Math.Max(maxStack, stack);
+
+                if (!pieces.ContainsKey(stack))
+                {
+                    pieces[stack] = new List<Piece>();
+                }
+
+                pieces[stack].Add(new Piece(targetPieceName, targetPosition));
                 numPieces++;
             }
 
@@ -473,7 +523,8 @@ namespace Mzinga.Viewer
             Canvas pieceCanvas = new Canvas();
             pieceCanvas.Height = size * 2;
             pieceCanvas.Width = size * 2;
-            pieceCanvas.Margin = new Thickness(5);
+            pieceCanvas.Margin = new Thickness(PieceCanvasMargin);
+            pieceCanvas.Background = (piece.Color == Core.Color.White) ? WhiteHandStackPanel.Background : BlackHandStackPanel.Background;
 
             pieceCanvas.Name = EnumUtils.GetShortName(piece.PieceName);
 
