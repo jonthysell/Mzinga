@@ -28,9 +28,9 @@ Mzinga.Engine is a command-line interface which can read input commands, send th
 
 ### Mzinga.Viewer ###
 
-Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a rendered gameboard and allows users to send text commands directly to Mzinga.Engine and view it's output.
+Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a rendered gameboard and allows users to interact with Mzinga.Engine.
 
-Future investment includes finishing the gameboard rendering, exposing game options, and enabling point-and-click play (instead of requiring the user to send commands manually).
+Future investment include exposing game options and improving the usability for players.
 
 Mzinga Copyright © 2015, 2016 Jon Thysell.
 
