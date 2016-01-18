@@ -28,7 +28,7 @@
             <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
             <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
         </StackPanel>
-        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
+        <Expander Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -46,7 +46,7 @@
                 <Button Grid.Row="0" Grid.Column="1" Command="{Binding SendEngineCommand}" Content="Send" Margin="5" Style="{DynamicResource CleanButton}" />
                 <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
-        </GroupBox>
+        </Expander>
         <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}" />
