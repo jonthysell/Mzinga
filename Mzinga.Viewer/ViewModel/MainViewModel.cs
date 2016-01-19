@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.ObjectModel;
 
 using Mzinga.Core;
 
@@ -96,6 +97,22 @@ namespace Mzinga.Viewer.ViewModel
             {
                 Position pos = AppVM.EngineWrapper.TargetPosition;
                 return (null != pos) ? pos.ToString() : "";
+            }
+        }
+
+        public ObservableCollection<string> BoardHistory
+        {
+            get
+            {
+                ObservableCollection<string> collection = new ObservableCollection<string>();
+                if (null != AppVM.EngineWrapper.BoardHistory)
+                {
+                    foreach (BoardHistoryItem item in AppVM.EngineWrapper.BoardHistory)
+                    {
+                        collection.Add(item.ToString());
+                    }
+                }
+                return collection;
             }
         }
 
@@ -321,6 +338,7 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.BoardUpdated += (board) =>
             {
                 RaisePropertyChanged("Board");
+                RaisePropertyChanged("BoardHistory");
                 RaisePropertyChanged("Pass");
                 RaisePropertyChanged("PlayBestMove");
                 RaisePropertyChanged("FindBestMove");

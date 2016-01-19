@@ -37,14 +37,11 @@ namespace Mzinga.Core
     {
         #region Properties
 
-        public IEnumerable<Move> MoveHistory
+        public IEnumerable<BoardHistoryItem> BoardHistory
         {
             get
             {
-                foreach (BoardHistoryItem item in _boardHistory)
-                {
-                    yield return item.Move;
-                }
+                return _boardHistory.AsEnumerable();
             }
         }
         private BoardHistory _boardHistory;
@@ -61,9 +58,9 @@ namespace Mzinga.Core
         public GameBoard Clone()
         {
             GameBoard clone = new GameBoard();
-            foreach (Move move in MoveHistory)
+            foreach (BoardHistoryItem item in BoardHistory)
             {
-                clone.Play(move);
+                clone.Play(item.Move);
             }
             return clone;
         }

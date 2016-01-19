@@ -280,21 +280,8 @@ namespace Mzinga.Core
                 throw new NoBoardException();
             }
 
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Move move in GameBoard.MoveHistory)
-            {
-                sb.AppendFormat("{0}{1}", move.ToString(), MoveSet.MoveStringSeparator);
-            }
-
-            string history = sb.ToString().TrimEnd(MoveSet.MoveStringSeparator);
-
-            if (String.IsNullOrWhiteSpace(history))
-            {
-                throw new Exception("You must move before you can see any move history.");
-            }
-
-            ConsoleOut(history);
+            BoardHistory history = new BoardHistory(GameBoard.BoardHistory);
+            ConsoleOut(history.ToString());
         }
 
         private void Exit()

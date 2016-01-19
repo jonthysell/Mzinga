@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="480" Width="640">
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="600" Width="800">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -16,13 +16,35 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Name="BlackHandStackPanel" Background="White" Orientation="Horizontal" />
-        <Canvas Grid.Row="1" Grid.Column="0" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Grid.Row="2" Grid.Column="0" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
-        <Expander Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Engine Console" Margin="5">
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Header="Commands" FontWeight="Bold" Margin="5">
+            <StackPanel>
+            <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlayTarget}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Separator Margin="5" />
+            <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+            </StackPanel>
+        </GroupBox>
+        <StackPanel Grid.Row="0" Grid.Column="1" Name="BlackHandStackPanel" Background="White" Orientation="Horizontal" />
+        <Canvas Grid.Row="1" Grid.Column="1" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
+        <StackPanel Grid.Row="2" Grid.Column="1" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
+        <GroupBox Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Header="History" FontWeight="Bold" Margin="5">
+            <ListView ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent" IsEnabled="False">
+                <ListView.ItemTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding .}" FontWeight="Normal" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </GroupBox>
+        <Expander Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Header="Engine Console" FontWeight="Bold" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -41,20 +63,10 @@
                 <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
         </Expander>
-        <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+        <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
             <StatusBarItem>
                 <TextBlock Text="{Binding StatusText}" />
             </StatusBarItem>
         </StatusBar>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
-            <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Separator Margin="5" />
-            <Button Command="{Binding PlayTarget}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Separator Margin="5" />
-            <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
-        </StackPanel>
     </Grid>
 </Window>

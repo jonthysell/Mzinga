@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Mzinga.Core
 {
@@ -46,6 +47,27 @@ namespace Mzinga.Core
         public BoardHistory()
         {
             _items = new List<BoardHistoryItem>();
+        }
+
+        public BoardHistory(IEnumerable<BoardHistoryItem> items) : this()
+        {
+            _items.AddRange(items);
+        }
+
+        public BoardHistory(string boardHistoryString) : this()
+        {
+            if (String.IsNullOrWhiteSpace(boardHistoryString))
+            {
+                throw new ArgumentOutOfRangeException("boardHistoryString");
+            }
+
+            string[] split = boardHistoryString.Split(BoardHistory.BoardHistoryItemStringSeparator);
+
+            for (int i = 0; i < split.Length; i++)
+            {
+                BoardHistoryItem parseItem = new BoardHistoryItem(split[i]);
+                _items.Add(parseItem);
+            }
         }
 
         public void Add(Move move, Position originalPosition)
@@ -78,6 +100,20 @@ namespace Mzinga.Core
         {
             return this.GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (BoardHistoryItem item in _items)
+            {
+                sb.AppendFormat("{0}{1}", item.ToString(), BoardHistoryItemStringSeparator);
+            }
+
+            return sb.ToString().TrimEnd(BoardHistoryItemStringSeparator);
+        }
+
+        public const char BoardHistoryItemStringSeparator = ';';
     }
 
     public class BoardHistoryItem
@@ -94,6 +130,29 @@ namespace Mzinga.Core
 
             Move = move;
             OriginalPosition = originalPosition;
+        }
+
+        public BoardHistoryItem(string boardHistoryItemString)
+        {
+            if (String.IsNullOrWhiteSpace(boardHistoryItemString))
+            {
+                throw new ArgumentNullException("boardHistoryItemString");
+            }
+
+            string[] split = boardHistoryItemString.Split(new char[] { ' ', '>' }, StringSplitOptions.RemoveEmptyEntries);
+
+            Piece startingPiece = new Piece(split[0]);
+            Move move = new Move(split[1]);
+
+            Move = move;
+            OriginalPosition = startingPiece.Position;
+        }
+
+        public override string ToString()
+        {
+            Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
+
+            return String.Format("{0} > {1}", startingPiece, Move);
         }
     }
 }

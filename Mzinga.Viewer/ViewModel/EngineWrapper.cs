@@ -61,6 +61,7 @@ namespace Mzinga.Viewer.ViewModel
 
         public MoveSet ValidMoves { get; private set; }
 
+        public BoardHistory BoardHistory { get; private set; }
 
         public bool GameInProgress
         {
@@ -373,8 +374,14 @@ namespace Mzinga.Viewer.ViewModel
                         TargetPiece = bestMove.PieceName;
                         TargetPosition = bestMove.Position;
                     }
+                    else
+                    {
+                        TargetPiece = PieceName.INVALID;
+                    }
                     break;
                 case EngineCommand.History:
+                    BoardHistory = !String.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
+                    break;
                 case EngineCommand.Info:
                 case EngineCommand.Help:
                 default:
@@ -424,6 +431,7 @@ namespace Mzinga.Viewer.ViewModel
             TargetPiece = PieceName.INVALID;
 
             SendCommand("validmoves");
+            SendCommand("history");
 
             if (null != BoardUpdated)
             {
