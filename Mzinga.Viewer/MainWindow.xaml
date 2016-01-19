@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
+        Icon="{DynamicResource MzingaIcon}"
         Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="600" Width="800">
     <Window.DataContext>
         <vm:MainViewModel />
@@ -36,13 +37,13 @@
         <Canvas Grid.Row="1" Grid.Column="1" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
         <StackPanel Grid.Row="2" Grid.Column="1" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
         <GroupBox Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Header="History" FontWeight="Bold" Margin="5">
-            <ListView ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent" IsEnabled="False">
-                <ListView.ItemTemplate>
+            <ItemsControl ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent">
+                <ItemsControl.ItemTemplate>
                     <DataTemplate >
                         <TextBlock Text="{Binding .}" FontWeight="Normal" />
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </GroupBox>
         <Expander Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Header="Engine Console" FontWeight="Bold" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">

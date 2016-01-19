@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <BitmapImage x:Key="MzingaIcon" >pack://siteoforigin:,,,/Resources/mzinga.ico</BitmapImage>
         <BitmapImage x:Key="ErrorIcon32" >pack://application:,,,/Resources/error32.png</BitmapImage>
         <!-- Adapted from http://www.infosysblogs.com/microsoft/2010/07/wpf_-_disabled_look_for_button.html -->
         <Style x:Key="CleanButton" TargetType="{x:Type Button}" BasedOn="{x:Null}">
