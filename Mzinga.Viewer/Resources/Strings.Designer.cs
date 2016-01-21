@@ -61,11 +61,74 @@ namespace Mzinga.Viewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}. {1}.
+        /// </summary>
+        internal static string BoardHistoryItemFormat {
+            get {
+                return ResourceManager.GetString("BoardHistoryItemFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exception details: {0}.
         /// </summary>
         internal static string ExceptionViewModelDetailsFormat {
             get {
                 return ResourceManager.GetString("ExceptionViewModelDetailsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s black&apos;s turn..
+        /// </summary>
+        internal static string GameStateBlacksTurn {
+            get {
+                return ResourceManager.GetString("GameStateBlacksTurn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Black has won the game..
+        /// </summary>
+        internal static string GameStateBlackWon {
+            get {
+                return ResourceManager.GetString("GameStateBlackWon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The game is a draw..
+        /// </summary>
+        internal static string GameStateDraw {
+            get {
+                return ResourceManager.GetString("GameStateDraw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A game has not been started..
+        /// </summary>
+        internal static string GameStateNoGame {
+            get {
+                return ResourceManager.GetString("GameStateNoGame", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It&apos;s white&apos;s turn..
+        /// </summary>
+        internal static string GameStateWhitesTurn {
+            get {
+                return ResourceManager.GetString("GameStateWhitesTurn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to White has won the game..
+        /// </summary>
+        internal static string GameStateWhiteWon {
+            get {
+                return ResourceManager.GetString("GameStateWhiteWon", resourceCulture);
             }
         }
     }

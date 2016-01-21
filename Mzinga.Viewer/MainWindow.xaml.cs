@@ -69,9 +69,9 @@ namespace Mzinga.Viewer
             }
         }
 
-        private double HexRadiusRatio = 0.05;
+        private double HexRadiusRatio = 1.0 / (EnumUtils.NumPieceNames + 1);
 
-        private double PieceCanvasMargin = 5.0;
+        private double PieceCanvasMargin = 3.0;
 
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
@@ -120,8 +120,7 @@ namespace Mzinga.Viewer
             switch (e.PropertyName)
             {
                 case "Board":
-                case "TargetPiece":
-                case "TargetPosition":
+                case "TargetMove":
                     DrawBoard(VM.Board);
                     break;
             }
@@ -560,9 +559,15 @@ namespace Mzinga.Viewer
             VM.CanvasClick(p.X, p.Y);
         }
 
+        private DateTime LastRedrawOnSizeChange = DateTime.Now;
+
         private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            DrawBoard(LastBoard);
+            if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(20))
+            {
+                DrawBoard(LastBoard);
+                LastRedrawOnSizeChange = DateTime.Now;
+            }
         }
     }
 }

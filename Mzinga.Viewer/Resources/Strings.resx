@@ -117,7 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BoardHistoryItemFormat" xml:space="preserve">
+    <value>{0}. {1}</value>
+  </data>
   <data name="ExceptionViewModelDetailsFormat" xml:space="preserve">
     <value>Exception details: {0}</value>
+  </data>
+  <data name="GameStateBlacksTurn" xml:space="preserve">
+    <value>It's black's turn.</value>
+  </data>
+  <data name="GameStateBlackWon" xml:space="preserve">
+    <value>Black has won the game.</value>
+  </data>
+  <data name="GameStateDraw" xml:space="preserve">
+    <value>The game is a draw.</value>
+  </data>
+  <data name="GameStateNoGame" xml:space="preserve">
+    <value>A game has not been started.</value>
+  </data>
+  <data name="GameStateWhitesTurn" xml:space="preserve">
+    <value>It's white's turn.</value>
+  </data>
+  <data name="GameStateWhiteWon" xml:space="preserve">
+    <value>White has won the game.</value>
   </data>
 </root>

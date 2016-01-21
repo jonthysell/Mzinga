@@ -28,6 +28,7 @@ using System;
 using System.Collections.ObjectModel;
 
 using Mzinga.Core;
+using Mzinga.Viewer.Resources;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -60,6 +61,8 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        #region Engine console properties
+
         public string EngineOutputText
         {
             get
@@ -83,22 +86,7 @@ namespace Mzinga.Viewer.ViewModel
         }
         private string _engineInputText = "";
 
-        public string TargetPiece
-        {
-            get
-            {
-                return EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
-            }
-        }
-
-        public string TargetPosition
-        {
-            get
-            {
-                Position pos = AppVM.EngineWrapper.TargetPosition;
-                return (null != pos) ? pos.ToString() : "";
-            }
-        }
+        #endregion
 
         public ObservableCollection<string> BoardHistory
         {
@@ -107,32 +95,81 @@ namespace Mzinga.Viewer.ViewModel
                 ObservableCollection<string> collection = new ObservableCollection<string>();
                 if (null != AppVM.EngineWrapper.BoardHistory)
                 {
+                    int count = 1;
                     foreach (BoardHistoryItem item in AppVM.EngineWrapper.BoardHistory)
                     {
-                        collection.Add(item.ToString());
+                        collection.Add(String.Format(Strings.BoardHistoryItemFormat, count, item));
+                        count++;
                     }
                 }
                 return collection;
             }
         }
 
-        public string StatusText
+        #region Status properties
+
+        public string GameState
         {
             get
             {
-                return _statusText;
-            }
-            set
-            {
-                if (String.IsNullOrWhiteSpace(value))
+                string state = Strings.GameStateNoGame;
+
+                if (null != Board)
                 {
-                    value = " ";
+                    switch (Board.BoardState)
+                    {
+                        case BoardState.Draw:
+                            state = Strings.GameStateDraw;
+                            break;
+                        case BoardState.WhiteWins:
+                            state = Strings.GameStateWhiteWon;
+                            break;
+                        case BoardState.BlackWins:
+                            state = Strings.GameStateBlackWon;
+                            break;
+                        default:
+                            state = (Board.CurrentTurnColor == Color.White) ? Strings.GameStateWhitesTurn : Strings.GameStateBlacksTurn;
+                            break;
+                    }
                 }
-                _statusText = value;
-                RaisePropertyChanged("StatusText");
+
+                return state;
             }
         }
-        private string _statusText = " ";
+
+        public string ValidMoves
+        {
+            get
+            {
+                string moves = "";
+                if (null != AppVM.EngineWrapper.ValidMoves)
+                {
+                    moves = AppVM.EngineWrapper.ValidMoves.Count.ToString();
+                }
+
+                return moves;
+            }
+        }
+
+        public string TargetMove
+        {
+            get
+            {
+                string move = "";
+                if (null != AppVM.EngineWrapper.TargetMove)
+                {
+                    move = AppVM.EngineWrapper.TargetMove.ToString();
+                }
+                else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
+                {
+                    move = EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
+                }
+
+                return move;
+            }
+        }
+
+        #endregion
 
         #region Canvas properties
 
@@ -343,7 +380,8 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("PlayBestMove");
                 RaisePropertyChanged("FindBestMove");
                 RaisePropertyChanged("UndoLastMove");
-                UpdateStatusText();
+                RaisePropertyChanged("GameState");
+                RaisePropertyChanged("ValidMoves");
             };
 
             AppVM.EngineWrapper.EngineTextUpdated += (engineText) =>
@@ -353,16 +391,14 @@ namespace Mzinga.Viewer.ViewModel
 
             AppVM.EngineWrapper.TargetPieceUpdated += (pieceName) =>
             {
-                RaisePropertyChanged("TargetPiece");
+                RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
-                UpdateStatusText();
             };
 
             AppVM.EngineWrapper.TargetPositionUpdated += (position) =>
             {
-                RaisePropertyChanged("TargetPosition");
+                RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
-                UpdateStatusText();
             };
         }
 
@@ -413,19 +449,6 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             AppVM.EngineWrapper.TargetPiece = clickedPiece;
-        }
-
-        private void UpdateStatusText()
-        {
-            if (null != Board)
-            {
-                StatusText = String.Format("BoardState: {0} CurrentTurnColor: {1} CurrentTurn: {2} TargetPiece: {3} TargetPosition: {4}",
-                        Board.BoardState.ToString(),
-                        Board.CurrentTurnColor.ToString(),
-                        Board.CurrentTurn,
-                        TargetPiece,
-                        TargetPosition);
-            }
         }
     }
 }
