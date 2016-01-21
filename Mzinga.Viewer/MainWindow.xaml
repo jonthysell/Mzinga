@@ -55,13 +55,13 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Row="0" Grid.Column="0" Name="EngineConsoleInput" Text="{Binding EngineInputText, UpdateSourceTrigger=PropertyChanged}" MaxLines="1" Margin="5" Height="20">
+                <TextBox Grid.Row="0" Grid.Column="0" Name="EngineConsoleInput" Text="{Binding EngineInputText, UpdateSourceTrigger=PropertyChanged}" MaxLines="1" Margin="5" Height="20" FontWeight="Normal">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="{Binding SendEngineCommand}" />
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Grid.Row="0" Grid.Column="1" Command="{Binding SendEngineCommand}" Content="Send" Margin="5" Style="{DynamicResource CleanButton}" />
-                <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" FontWeight="Normal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </Grid>
         </Expander>
         <StatusBar Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">

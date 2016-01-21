@@ -42,7 +42,7 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Board_NewBoardValidMovesTest()
+        public void GameBoard_NewBoardValidMovesTest()
         {
             GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
