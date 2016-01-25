@@ -300,9 +300,9 @@ namespace Mzinga.Core
 
             foreach (Piece piece in PiecesInPlay)
             {
-                if (piece.Color == targetPiece.Color && piece.Position.Stack == 0)
+                if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetPiece.Color)
                 {
-                    // Piece is in play and the right color, look through neighbors
+                    // Piece is in play, on the bottom, and the top is the right color, look through neighbors
                     foreach (Position neighbor in piece.Position.Neighbors)
                     {
                         if (!HasPieceAt(neighbor))
