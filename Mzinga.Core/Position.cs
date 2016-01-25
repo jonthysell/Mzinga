@@ -288,6 +288,7 @@ namespace Mzinga.Core
 
             return a.Equals(b);
         }
+
         public static bool operator !=(Position a, Position b)
         {
             return !(a == b);
