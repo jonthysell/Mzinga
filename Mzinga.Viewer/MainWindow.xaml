@@ -44,15 +44,19 @@
         <StackPanel Grid.Row="0" Grid.Column="1" Name="BlackHandStackPanel" Background="White" Orientation="Horizontal" />
         <Canvas Grid.Row="1" Grid.Column="1" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
         <StackPanel Grid.Row="2" Grid.Column="1" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
-        <GroupBox Grid.Row="0" Grid.Column="2" Grid.RowSpan="3" Header="History" FontWeight="Bold" Margin="5">
-            <ItemsControl ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate >
-                        <TextBlock Text="{Binding .}" FontWeight="Normal" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </GroupBox>
+        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
+            <GroupBox Header="History" FontWeight="Bold" Margin="5">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate >
+                                <TextBlock Text="{Binding .}" FontWeight="Normal" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </GroupBox>
+        </Grid>
         <Expander Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Engine Console" FontWeight="Bold" Margin="5">
             <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
                 <Grid.RowDefinitions>
