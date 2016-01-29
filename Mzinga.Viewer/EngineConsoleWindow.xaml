@@ -1,0 +1,28 @@
+﻿<Window x:Class="Mzinga.Viewer.EngineConsoleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
+        xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
+        Icon="{DynamicResource MzingaIcon}"
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" Width="480" Height="240" MinWidth="480" MinHeight="240" SizeToContent="Height" ResizeMode="CanResizeWithGrip">
+    <Window.DataContext>
+        <vm:EngineConsoleViewModel />
+    </Window.DataContext>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Row="0" Grid.Column="0" Name="EngineConsoleInput" Text="{Binding EngineInputText, UpdateSourceTrigger=PropertyChanged}" MaxLines="1" Margin="5" Height="20" FontWeight="Normal">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Enter" Command="{Binding SendEngineCommand}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <Button Grid.Row="0" Grid.Column="1" Command="{Binding SendEngineCommand}" Content="Send" Margin="5" Style="{DynamicResource CleanButton}" />
+        <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" TextWrapping="Wrap" FontWeight="Normal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </Grid>
+</Window>

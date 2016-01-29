@@ -141,4 +141,10 @@
   <data name="GameStateWhiteWon" xml:space="preserve">
     <value>White has won the game.</value>
   </data>
+  <data name="EngineConsoleTitle" xml:space="preserve">
+    <value>Engine Console</value>
+  </data>
+  <data name="GameOverTitle" xml:space="preserve">
+    <value>Game Over</value>
+  </data>
 </root>

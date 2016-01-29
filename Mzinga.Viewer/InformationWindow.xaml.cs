@@ -1,10 +1,10 @@
 ﻿// 
-// Messages.cs
+// InformationWindow.xaml.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,38 +29,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-using GalaSoft.MvvmLight.Messaging;
-
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.Viewer
 {
-    public class ExceptionMessage : MessageBase
+    /// <summary>
+    /// Interaction logic for InformationWindow.xaml
+    /// </summary>
+    public partial class InformationWindow : Window
     {
-        public ExceptionViewModel ExceptionVM { get; private set; }
-
-        public ExceptionMessage(Exception exception) : base()
+        public InformationWindow()
         {
-            ExceptionVM = new ExceptionViewModel(exception);
+            InitializeComponent();
         }
-    }
-
-    public class InformationMessage : MessageBase
-    {
-        public InformationViewModel InformationVM { get; private set; }
-
-        public InformationMessage(string message, string title = "Mzinga", Action callback = null) : base()
-        {
-            InformationVM = new InformationViewModel(message, title, callback);
-        }
-
-        public void Process()
-        {
-            InformationVM.ProcessClose();
-        }
-    }
-
-    public class EngineConsoleMessage : MessageBase
-    {
-        public EngineConsoleMessage() : base() { }
     }
 }

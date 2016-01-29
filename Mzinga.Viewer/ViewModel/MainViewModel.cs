@@ -32,6 +32,7 @@ using Mzinga.Viewer.Resources;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Mzinga.Viewer.ViewModel
 {
@@ -60,33 +61,6 @@ namespace Mzinga.Viewer.ViewModel
                 return AppVM.EngineWrapper.Board;
             }
         }
-
-        #region Engine console properties
-
-        public string EngineOutputText
-        {
-            get
-            {
-                return AppVM.EngineWrapper.EngineText;
-            }
-        }
-
-        public string EngineInputText
-        {
-            get
-            {
-                return _engineInputText;
-            }
-            set
-            {
-                _engineInputText = value;
-                RaisePropertyChanged("EngineInputText");
-                RaisePropertyChanged("SendEngineCommand");
-            }
-        }
-        private string _engineInputText = "";
-
-        #endregion
 
         public ObservableCollection<string> BoardHistory
         {
@@ -345,7 +319,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public RelayCommand SendEngineCommand
+        public RelayCommand ShowEngineConsole
         {
             get
             {
@@ -353,41 +327,19 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.SendCommand(EngineInputText);                      
+                        Messenger.Default.Send<EngineConsoleMessage>(new EngineConsoleMessage());
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                    finally
-                    {
-                        EngineInputText = "";
-                    }
-                }, () =>
-                {
-                    return !String.IsNullOrWhiteSpace(EngineInputText);
                 });
             }
         }
 
         public MainViewModel()
         {
-            AppVM.EngineWrapper.BoardUpdated += (board) =>
-            {
-                RaisePropertyChanged("Board");
-                RaisePropertyChanged("BoardHistory");
-                RaisePropertyChanged("Pass");
-                RaisePropertyChanged("PlayBestMove");
-                RaisePropertyChanged("FindBestMove");
-                RaisePropertyChanged("UndoLastMove");
-                RaisePropertyChanged("GameState");
-                RaisePropertyChanged("ValidMoves");
-            };
-
-            AppVM.EngineWrapper.EngineTextUpdated += (engineText) =>
-            {
-                RaisePropertyChanged("EngineOutputText");
-            };
+            AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
 
             AppVM.EngineWrapper.TargetPieceUpdated += (pieceName) =>
             {
@@ -400,6 +352,31 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
             };
+        }
+
+        private void OnBoardUpdated(Board board)
+        {
+            RaisePropertyChanged("Board");
+            RaisePropertyChanged("BoardHistory");
+            RaisePropertyChanged("Pass");
+            RaisePropertyChanged("PlayBestMove");
+            RaisePropertyChanged("FindBestMove");
+            RaisePropertyChanged("UndoLastMove");
+            RaisePropertyChanged("GameState");
+            RaisePropertyChanged("ValidMoves");
+
+            switch (board.BoardState)
+            {
+                case BoardState.WhiteWins:
+                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
+                    break;
+                case BoardState.BlackWins:
+                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
+                    break;
+                case BoardState.Draw:
+                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
+                    break;
+            }
         }
 
         internal void CanvasClick(double cursorX, double cursorY)

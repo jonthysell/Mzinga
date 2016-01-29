@@ -70,11 +70,29 @@ namespace Mzinga.Viewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Engine Console.
+        /// </summary>
+        internal static string EngineConsoleTitle {
+            get {
+                return ResourceManager.GetString("EngineConsoleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exception details: {0}.
         /// </summary>
         internal static string ExceptionViewModelDetailsFormat {
             get {
                 return ResourceManager.GetString("ExceptionViewModelDetailsFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game Over.
+        /// </summary>
+        internal static string GameOverTitle {
+            get {
+                return ResourceManager.GetString("GameOverTitle", resourceCulture);
             }
         }
         

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,11 +37,15 @@ namespace Mzinga.Viewer
         public static void RegisterMessageHandlers(object recipient)
         {
             Messenger.Default.Register<ExceptionMessage>(recipient, (message) => MessageHandlers.ShowException(message));
+            Messenger.Default.Register<InformationMessage>(recipient, (message) => MessageHandlers.ShowInformation(message));
+            Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => MessageHandlers.ShowEngineConsole(message));
         }
 
         public static void UnregisterMessageHandlers(object recipient)
         {
             Messenger.Default.Unregister<ExceptionMessage>(recipient);
+            Messenger.Default.Unregister<InformationMessage>(recipient);
+            Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
 
         private static void ShowException(ExceptionMessage message)
@@ -53,6 +57,30 @@ namespace Mzinga.Viewer
                 window.Close();
             };
             window.ShowDialog();
+        }
+
+        private static void ShowInformation(InformationMessage message)
+        {
+            InformationWindow window = new InformationWindow();
+            window.DataContext = message.InformationVM;
+            message.InformationVM.RequestClose += () =>
+            {
+                window.Close();
+            };
+            window.ShowDialog();
+            message.Process();
+        }
+
+        private static void ShowEngineConsole(EngineConsoleMessage message)
+        {
+            EngineConsoleWindow window = EngineConsoleWindow.Instance;
+
+            window.Show();
+
+            if (!window.IsActive)
+            {
+                window.Activate();
+            }
         }
     }
 }

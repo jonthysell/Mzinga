@@ -79,6 +79,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ExceptionWindow.xaml.cs" />
+    <Compile Include="EngineConsoleWindow.xaml.cs">
+      <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InformationWindow.xaml.cs">
+      <DependentUpon>InformationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MessageHandlers.cs" />
     <Compile Include="MouseUtils.cs" />
     <Compile Include="Resources\Strings.Designer.cs">
@@ -90,10 +96,20 @@
     <Compile Include="ViewModel\EngineWrapper.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
+    <Compile Include="ViewModel\InformationViewModel.cs" />
+    <Compile Include="ViewModel\EngineConsoleViewModel.cs" />
     <Compile Include="ViewModel\Messages.cs" />
     <Page Include="ExceptionWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EngineConsoleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InformationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -154,6 +170,7 @@
     <Resource Include="Resources\error32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\information32.png" />
     <Content Include="Resources\mzinga.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

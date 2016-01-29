@@ -14,7 +14,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -34,10 +33,11 @@
                     <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Engine AI" FontWeight="Bold" Margin="5">
+            <GroupBox Header="Engine" FontWeight="Bold" Margin="5">
                 <StackPanel>
                     <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding ShowEngineConsole}" Content="Show Console" Margin="5" Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
@@ -57,25 +57,6 @@
                 </ScrollViewer>
             </GroupBox>
         </Grid>
-        <Expander Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="Engine Console" FontWeight="Bold" Margin="5">
-            <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBox Grid.Row="0" Grid.Column="0" Name="EngineConsoleInput" Text="{Binding EngineInputText, UpdateSourceTrigger=PropertyChanged}" MaxLines="1" Margin="5" Height="20" FontWeight="Normal">
-                    <TextBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding SendEngineCommand}" />
-                    </TextBox.InputBindings>
-                </TextBox>
-                <Button Grid.Row="0" Grid.Column="1" Command="{Binding SendEngineCommand}" Content="Send" Margin="5" Style="{DynamicResource CleanButton}" />
-                <local:ScrollingTextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="EngineConsoleOutput" Text="{Binding EngineOutputText, Mode=OneWay}" IsReadOnly="True" Margin="5" Height="100" TextWrapping="Wrap" FontWeight="Normal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-            </Grid>
-        </Expander>
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

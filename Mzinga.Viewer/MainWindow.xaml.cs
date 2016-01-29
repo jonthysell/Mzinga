@@ -94,6 +94,8 @@ namespace Mzinga.Viewer
         {
             InitializeComponent();
 
+            Closing += MainWindow_Closing;
+
             // Init brushes
             WhiteBrush = new SolidColorBrush(Colors.White);
             BlackBrush = new SolidColorBrush(Colors.Black);
@@ -113,6 +115,11 @@ namespace Mzinga.Viewer
             {
                 VM.PropertyChanged += VM_PropertyChanged;
             }
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            EngineConsoleWindow.Instance.Close();
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
