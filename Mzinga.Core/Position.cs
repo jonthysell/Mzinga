@@ -232,7 +232,7 @@ namespace Mzinga.Core
 
                 positionString = positionString.Trim();
 
-                string[] split = positionString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] split = positionString.Split(new char[] { PositionStringSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (split.Length == 2)
                 {
@@ -298,10 +298,10 @@ namespace Mzinga.Core
         {
             if (Stack > 0)
             {
-                return String.Format("{0},{1},{2},{3}", X, Y, Z, Stack);
+                return String.Format("{1}{0}{2}{0}{3}{0}{4}", PositionStringSeparator, X, Y, Z, Stack);
             }
 
-            return String.Format("{0},{1},{2}", X, Y, Z);
+            return String.Format("{1}{0}{2}{0}{3}", PositionStringSeparator, X, Y, Z);
         }
 
         public int CompareTo(Position position)
@@ -344,5 +344,7 @@ namespace Mzinga.Core
             new int[] { -1, 0, 1 },
             new int[] { -1, 1, 0 },
         };
+
+        public const char PositionStringSeparator = ',';
     }
 }

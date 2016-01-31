@@ -38,7 +38,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Position_NewXYZTest()
         {
-            foreach (int[] coordinate in _validCoordinates)
+            foreach (int[] coordinate in _validXYZCoordinates)
             {
                 Position p = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
                 Assert.IsNotNull(p);
@@ -56,19 +56,18 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Position_NewQRTest()
         {
-            foreach (int[] coordinate in _validCoordinates)
+            foreach (int[] coordinate in _validQRCoordinates)
             {
-                Position p = new Position(coordinate[0], coordinate[2], coordinate[3]);
+                Position p = new Position(coordinate[0], coordinate[1], coordinate[2]);
                 Assert.IsNotNull(p);
 
                 Assert.AreEqual(coordinate[0], p.Q);
-                Assert.AreEqual(coordinate[2], p.R);
-                Assert.AreEqual(coordinate[3], p.Stack);
+                Assert.AreEqual(coordinate[1], p.R);
+                Assert.AreEqual(coordinate[2], p.Stack);
 
                 Assert.AreEqual(coordinate[0], p.X);
-                Assert.AreEqual(coordinate[1], p.Y);
-                Assert.AreEqual(0 - coordinate[0] - coordinate[2], p.Y);
-                Assert.AreEqual(coordinate[2], p.Z);
+                Assert.AreEqual(0 - coordinate[0] - coordinate[1], p.Y);
+                Assert.AreEqual(coordinate[1], p.Z);
             }
         }
 
@@ -77,7 +76,7 @@ namespace Mzinga.CoreTest
         {
             foreach (int[] coordinate in _invalidXYZCoordinates)
             {
-                TestUtils.ExceptionThrown<ArgumentOutOfRangeException>(() =>
+                TestUtils.AssertExceptionThrown<ArgumentOutOfRangeException>(() =>
                 {
                     Position p = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
                 });
@@ -89,7 +88,7 @@ namespace Mzinga.CoreTest
         {
             foreach (int[] coordinate in _invalidQRCoordinates)
             {
-                TestUtils.ExceptionThrown<ArgumentOutOfRangeException>(() =>
+                TestUtils.AssertExceptionThrown<ArgumentOutOfRangeException>(() =>
                 {
                     Position p = new Position(coordinate[0], coordinate[1], coordinate[2]);
                 });
@@ -119,7 +118,7 @@ namespace Mzinga.CoreTest
 
             List<Position> actualNeighbors = new List<Position>(position.Neighbors);
 
-            TestUtils.EqualChildren<Position>(expectedNeighbors, actualNeighbors);
+            TestUtils.AssertHaveEqualChildren<Position>(expectedNeighbors, actualNeighbors);
         }
 
         [TestMethod]
@@ -201,15 +200,314 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Position_CloneTest()
         {
-            foreach (int[] coordinate in _validCoordinates)
+            foreach (int[] coordinate in _validXYZCoordinates)
             {
                 Position p = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
                 Assert.IsNotNull(p);
 
                 Position clone = p.Clone();
 
-                Assert.AreEqual(p, clone);
+                AssertPositionsAreEqual(p, clone);
                 Assert.AreNotSame(p, clone);
+            }
+        }
+
+        [TestMethod]
+        public void Position_ParseXYZTest()
+        {
+            int[][] coordinates = _validXYZCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position position = new Position(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
+                Assert.IsNotNull(position);
+
+                Position parsedPosition = Position.Parse(positionStrings[i]);
+                Assert.IsNotNull(parsedPosition);
+
+                AssertPositionsAreEqual(position, parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_ParseQRTest()
+        {
+            int[][] coordinates = _validQRCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates, true);
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position position = new Position(coordinates[i][0], coordinates[i][1], 0);
+                Assert.IsNotNull(position);
+
+                Position parsedPosition = Position.Parse(positionStrings[i]);
+                Assert.IsNotNull(parsedPosition);
+
+                AssertPositionsAreEqual(position, parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_NullOrWhiteSpaceParseTest()
+        {
+            string[] positionStrings = TestUtils.NullOrWhiteSpaceStrings;
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position parsedPosition = Position.Parse(positionStrings[i]);
+                Assert.IsNull(parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_TryParseXYZTest()
+        {
+            int[][] coordinates = _validXYZCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position position = new Position(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
+                Assert.IsNotNull(position);
+
+                Position parsedPosition = null;
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNotNull(parsedPosition);
+
+                AssertPositionsAreEqual(position, parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_TryParseQRTest()
+        {
+            int[][] coordinates = _validQRCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates, true);
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position position = new Position(coordinates[i][0], coordinates[i][1], 0);
+                Assert.IsNotNull(position);
+
+                Position parsedPosition = null;
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNotNull(parsedPosition);
+
+                AssertPositionsAreEqual(position, parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_NullOrWhiteSpaceTryParseTest()
+        {
+            string[] positionStrings = TestUtils.NullOrWhiteSpaceStrings;
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position parsedPosition = Position.Origin;
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNull(parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidParseTest()
+        {
+            string[] positionStrings = _invalidPositionStrings;
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                TestUtils.AssertExceptionThrown<ArgumentOutOfRangeException>(() =>
+                {
+                    Position parsedPosition = Position.Parse(positionStrings[i]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidXYZParseTest()
+        {
+            int[][] coordinates = _invalidXYZCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                TestUtils.AssertExceptionThrown<ArgumentOutOfRangeException>(() =>
+                {
+                    Position parsedPosition = Position.Parse(positionStrings[i]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidQRParseTest()
+        {
+            int[][] coordinates = _invalidQRCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                TestUtils.AssertExceptionThrown<ArgumentOutOfRangeException>(() =>
+                {
+                    Position parsedPosition = Position.Parse(positionStrings[i]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidTryParseTest()
+        {
+            string[] positionStrings = _invalidPositionStrings;
+
+            for (int i = 0; i < positionStrings.Length; i++)
+            {
+                Position parsedPosition = Position.Origin;
+                Assert.IsFalse(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNull(parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidXYZTryParseTest()
+        {
+            int[][] coordinates = _invalidXYZCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                Position parsedPosition = Position.Origin;
+                Assert.IsFalse(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNull(parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_InvalidQRTryParseTest()
+        {
+            int[][] coordinates = _invalidQRCoordinates;
+            string[] positionStrings = GetPositionStrings(coordinates);
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                Position parsedPosition = Position.Origin;
+                Assert.IsFalse(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsNull(parsedPosition);
+            }
+        }
+
+        [TestMethod]
+        public void Position_EqualityTest()
+        {
+            foreach (int[] coordinate in _validXYZCoordinates)
+            {
+                Position p1 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
+                Position p2 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
+
+                Assert.AreEqual(p1, p2);
+                Assert.AreEqual(p2, p1);
+
+                Assert.IsTrue(p1.Equals(p2));
+                Assert.IsTrue(p2.Equals(p1));
+
+                Assert.IsTrue(p1 == p2);
+                Assert.IsTrue(p2 == p1);
+
+                Assert.IsFalse(p1 != p2);
+                Assert.IsFalse(p2 != p1);
+            }
+        }
+
+        [TestMethod]
+        public void Position_InequalityTest()
+        {
+            int[][] coordinates = _validXYZCoordinates;
+
+            for (int i = 1; i < coordinates.Length; i++)
+            {
+                Position p1 = new Position(coordinates[i - 1][0], coordinates[i - 1][1], coordinates[i - 1][2], coordinates[i - 1][3]);
+                Position p2 = new Position(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
+
+                Assert.AreNotEqual(p1, p2);
+                Assert.AreNotEqual(p2, p1);
+
+                Assert.IsFalse(p1.Equals(p2));
+                Assert.IsFalse(p2.Equals(p1));
+
+                Assert.IsFalse(p1 == p2);
+                Assert.IsFalse(p2 == p1);
+
+                Assert.IsTrue(p1 != p2);
+                Assert.IsTrue(p2 != p1);
+            }
+        }
+
+        [TestMethod]
+        public void Position_NullEqualityTest()
+        {
+            Position p = null;
+
+            Assert.AreEqual(p, null);
+            Assert.AreEqual(null, p);
+
+            Assert.IsTrue(p == null);
+            Assert.IsTrue(null == p);
+
+            Assert.IsFalse(p != null);
+            Assert.IsFalse(null != p);
+        }
+
+        [TestMethod]
+        public void Position_NullInequalityTest()
+        {
+            Position p = Position.Origin;
+
+            Assert.AreNotEqual(p, null);
+            Assert.AreNotEqual(null, p);
+
+            Assert.IsFalse(p.Equals(null));
+
+            Assert.IsFalse(p == null);
+            Assert.IsFalse(null == p);
+
+            Assert.IsTrue(p != null);
+            Assert.IsTrue(null != p);
+        }
+
+        [TestMethod]
+        public void Position_CompareToEqualsTest()
+        {
+            foreach (int[] coordinate in _validXYZCoordinates)
+            {
+                Position p1 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
+                Position p2 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
+
+                TestUtils.AssertCompareToEqualTo<Position>(p1, p2);
+                TestUtils.AssertCompareToEqualTo<Position>(p2, p1);
+            }
+        }
+
+        [TestMethod]
+        public void Position_CompareToNotEqualsTest()
+        {
+            Position[] sortedPositions = new Position[]
+            {
+                new Position(-1, 0, 1, 0),
+                new Position(-1, 0, 1, 1),
+                new Position(-1, 1, 0, 0),
+                new Position(-1, 1, 0, 1),
+                new Position(0, 0, 0, 0),
+                new Position(0, 0, 0, 1),
+                new Position(1, -1, 0, 0),
+                new Position(1, -1, 0, 1),
+                new Position(1, 0, -1, 0),
+                new Position(1, 0, -1, 1),
+            };
+
+            for (int i = 1; i < sortedPositions.Length; i++)
+            {
+                TestUtils.AssertCompareToLessThan<Position>(sortedPositions[i - 1], sortedPositions[i]);
+                TestUtils.AssertCompareToGreaterThan<Position>(sortedPositions[i], sortedPositions[i-1]);
             }
         }
 
@@ -227,7 +525,49 @@ namespace Mzinga.CoreTest
             return originNeighbors;
         }
 
-        private int[][] _validCoordinates = new int[][]
+        private string[] GetPositionStrings(int[][] coordinates, bool skipStack = false)
+        {
+            string[] positionStrings = new string[coordinates.Length];
+
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                string positionString = "";
+
+                int maxCoordinate = coordinates[i].Length;
+
+                if (skipStack)
+                {
+                    maxCoordinate--;
+                }
+
+                for (int j = 0; j < maxCoordinate; j++)
+                {
+                    positionString += coordinates[i][j].ToString() + Position.PositionStringSeparator.ToString();
+                }
+
+                positionStrings[i] = positionString.TrimEnd(Position.PositionStringSeparator);
+            }
+
+            return positionStrings;
+        }
+
+        private void AssertPositionsAreEqual(Position expected, Position actual)
+        {
+            Assert.IsNotNull(expected);
+            Assert.IsNotNull(actual);
+
+            Assert.AreEqual(expected, actual);
+
+            Assert.AreEqual(expected.X, actual.X);
+            Assert.AreEqual(expected.Y, actual.Y);
+            Assert.AreEqual(expected.Z, actual.Z);
+            Assert.AreEqual(expected.Stack, actual.Stack);
+
+            Assert.AreEqual(expected.Q, actual.Q);
+            Assert.AreEqual(expected.R, actual.R);
+        }
+
+        private int[][] _validXYZCoordinates = new int[][]
         {
             new int[] { 0, 0, 0, 0},
             new int[] { 1, 0, -1, 0},
@@ -250,6 +590,31 @@ namespace Mzinga.CoreTest
             new int[] { -Int32.MaxValue, Int32.MaxValue, 0, Int32.MaxValue},
             new int[] { 0, Int32.MaxValue, -Int32.MaxValue, Int32.MaxValue},
             new int[] { 0, -Int32.MaxValue, Int32.MaxValue, Int32.MaxValue},
+        };
+
+        private int[][] _validQRCoordinates = new int[][]
+        {
+            new int[] { 0, 0, 0},
+            new int[] { 1, -1, 0},
+            new int[] { -1, 1, 0},
+            new int[] { 1, 0, 0},
+            new int[] { -1, 0, 0},
+            new int[] { 0, -1, 0},
+            new int[] { 0, 1, 0},
+            new int[] { 0, 0, 1},
+            new int[] { 1, -1, 1},
+            new int[] { -1, 1, 1},
+            new int[] { 1, 0, 1},
+            new int[] { -1, 0, 1},
+            new int[] { 0, -1, 1},
+            new int[] { 0, 1, 1},
+            new int[] { 0, 0, Int32.MaxValue},
+            new int[] { Int32.MaxValue, -Int32.MaxValue, Int32.MaxValue},
+            new int[] { -Int32.MaxValue, Int32.MaxValue, Int32.MaxValue},
+            new int[] { Int32.MaxValue, 0, Int32.MaxValue},
+            new int[] { -Int32.MaxValue, 0, Int32.MaxValue},
+            new int[] { 0, -Int32.MaxValue, Int32.MaxValue},
+            new int[] { 0, Int32.MaxValue, Int32.MaxValue},
         };
 
         private int[][] _invalidXYZCoordinates = new int[][]
@@ -290,6 +655,35 @@ namespace Mzinga.CoreTest
         {
             new int[] { 0, 0, -1},
             new int[] { 0, 0, -Int32.MaxValue},
+        };
+
+        private string[] _invalidPositionStrings = new string[]
+        {
+            "0",
+            "a",
+            "a,0",
+            "0,a",
+            "a,a",
+            "a,0,0",
+            "0,a,0",
+            "0,0,a",
+            "a,a,0",
+            "0,a,a",
+            "a,a,a",
+            "a,0,0,0",
+            "0,a,0,0",
+            "0,0,a,0",
+            "0,0,0,a",
+            "a,a,0,0",
+            "a,0,a,0",
+            "a,0,0,a",
+            "a,a,a,0",
+            "a,a,0,a",
+            "a,a,a,a",
+            "0,a,a,0",
+            "0,a,0,a",
+            "0,0,a,a",
+            "0,a,a,a",
         };
     }
 }

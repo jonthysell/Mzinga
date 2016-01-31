@@ -32,7 +32,7 @@ namespace Mzinga.CoreTest
 {
     public class TestUtils
     {
-        public static void ExceptionThrown<T>(Action action) where T : Exception
+        public static void AssertExceptionThrown<T>(Action action) where T : Exception
         {
             bool exceptionThrown = false;
 
@@ -48,7 +48,7 @@ namespace Mzinga.CoreTest
             Assert.IsTrue(exceptionThrown);
         }
 
-        public static void EqualChildren<T>(List<T> expected, List<T> actual)
+        public static void AssertHaveEqualChildren<T>(List<T> expected, List<T> actual)
         {
             Assert.AreEqual(expected.Count, actual.Count);
 
@@ -57,5 +57,32 @@ namespace Mzinga.CoreTest
                 Assert.IsTrue(actual.Contains(item));
             }
         }
+
+        public static void AssertCompareToLessThan<T>(T lesser, T greater) where T : IComparable<T>
+        {
+            Assert.IsTrue(lesser.CompareTo(greater) < 0);
+        }
+
+        public static void AssertCompareToGreaterThan<T>(T greater, T lesser) where T : IComparable<T>
+        {
+            Assert.IsTrue(greater.CompareTo(lesser) > 0);
+        }
+
+        public static void AssertCompareToEqualTo<T>(T object1, T object2) where T : IComparable<T>
+        {
+            Assert.IsTrue(object1.CompareTo(object2) == 0);
+        }
+
+        public static string[] NullOrWhiteSpaceStrings = new string[]
+        {
+            null,
+            String.Empty,
+            " ",
+            "\t",
+            "  ",
+            "\t\t",
+            " \t ",
+            "\t \t",
+        };
     }
 }
