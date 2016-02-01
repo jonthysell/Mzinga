@@ -147,4 +147,7 @@
   <data name="GameOverTitle" xml:space="preserve">
     <value>Game Over</value>
   </data>
+  <data name="NewGameTitle" xml:space="preserve">
+    <value>New Game</value>
+  </data>
 </root>

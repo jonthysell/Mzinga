@@ -30,6 +30,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Mzinga.Core;
 
@@ -68,6 +70,16 @@ namespace Mzinga.Viewer.ViewModel
             get
             {
                 return (null != Board && (Board.BoardState == BoardState.NotStarted || Board.BoardState == BoardState.InProgress));
+            }
+        }
+
+        public bool CurrentTurnIsHuman
+        {
+            get
+            {
+                return (null != Board &&
+                        ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
+                         (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
             }
         }
 
@@ -157,6 +169,24 @@ namespace Mzinga.Viewer.ViewModel
         }
         private StringBuilder _engineText;
 
+        public GameSettings CurrentGameSettings
+        {
+            get
+            {
+                if (null == _currentGameSettings)
+                {
+                    _currentGameSettings = new GameSettings();
+                }
+
+                return _currentGameSettings.Clone();
+            }
+            private set
+            {
+                _currentGameSettings = (null != value) ? value.Clone() : null;
+            }
+        }
+        private GameSettings _currentGameSettings;
+
         public event BoardUpdatedEventHandler BoardUpdated;
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
 
@@ -166,6 +196,8 @@ namespace Mzinga.Viewer.ViewModel
         private Process _process;
         private StreamReader _reader;
         private StreamWriter _writer;
+
+        private const int AutoPlayMinMs = 1000;
 
         public EngineWrapper(string engineCommand)
         {
@@ -204,8 +236,15 @@ namespace Mzinga.Viewer.ViewModel
             _process = null;
         }
 
-        public void NewGame()
+        public void NewGame(GameSettings settings)
         {
+            if (null == settings)
+            {
+                throw new ArgumentNullException("settings");
+            }
+
+            CurrentGameSettings = settings;
+
             SendCommand("newgame");
         }
 
@@ -241,17 +280,14 @@ namespace Mzinga.Viewer.ViewModel
             SendCommand("bestmove");
         }
 
-        public void SendCommand(string format, params object[] args)
-        {
-            SendCommand(String.Format(format, args));
-        }
-
-        public void SendCommand(string command)
+        public void SendCommand(string command, params object[] args)
         {
             if (String.IsNullOrWhiteSpace(command))
             {
                 throw new ArgumentNullException("command");
             }
+
+            command = String.Format(command, args);
 
             EngineCommand cmd = IdentifyCommand(command);
 
@@ -313,7 +349,7 @@ namespace Mzinga.Viewer.ViewModel
             string errorMessage = "";
             string invalidMoveMessage = "";
 
-            string line;
+            string line = null;
             while (null != (line = _reader.ReadLine()))
             {
                 EngineTextAppendLine(line);
@@ -436,6 +472,30 @@ namespace Mzinga.Viewer.ViewModel
             if (null != BoardUpdated)
             {
                 BoardUpdated(board);
+            }
+
+            if (GameInProgress &&
+                ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
+                 (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)))
+            {
+                Task.Run(() =>
+                {
+                    DateTime start = DateTime.Now;
+
+                    Thread.Sleep(AutoPlayMinMs / 2);
+
+                    FindBestMove();
+
+                    int timeToFindBestMoveMs = (int)(DateTime.Now - start).TotalMilliseconds;
+                    int timeToWaitMs = AutoPlayMinMs - timeToFindBestMoveMs;
+
+                    if (timeToWaitMs > 0)
+                    {
+                        Thread.Sleep(timeToWaitMs);
+                    }
+
+                    PlayTargetMove();
+                });
             }
         }
 

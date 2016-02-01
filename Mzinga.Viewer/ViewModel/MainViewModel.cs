@@ -204,7 +204,17 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        AppVM.EngineWrapper.NewGame();
+                        Messenger.Default.Send<NewGameMessage>(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, (settings) =>
+                            {
+                                try
+                                {
+                                    AppVM.EngineWrapper.NewGame(settings);
+                                }
+                                catch (Exception ex)
+                                {
+                                    ExceptionUtils.HandleException(ex);
+                                }
+                            }));
                     }
                     catch (Exception ex)
                     {
@@ -230,7 +240,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanPlayTargetMove;
+                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanPlayTargetMove;
                 });
             }
         }
@@ -251,7 +261,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanPass;
+                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanPass;
                 });
             }
         }
@@ -272,7 +282,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanUndoLastMove;
+                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanUndoLastMove;
                 });
             }
         }
@@ -293,7 +303,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.GameInProgress;
+                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.GameInProgress;
                 });
             }
         }
@@ -314,7 +324,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.GameInProgress;
+                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.GameInProgress;
                 });
             }
         }
@@ -381,38 +391,41 @@ namespace Mzinga.Viewer.ViewModel
 
         internal void CanvasClick(double cursorX, double cursorY)
         {
-            CanvasCursorX = cursorX;
-            CanvasCursorY = cursorY;
-
-            PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
-            Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
-
-            if (AppVM.EngineWrapper.TargetPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
-                // No piece seleected, select it
-                AppVM.EngineWrapper.TargetPiece = clickedPiece;
-            }
-            else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
-            {
-                // Piece is selected
-                if (clickedPiece == AppVM.EngineWrapper.TargetPiece)
+                CanvasCursorX = cursorX;
+                CanvasCursorY = cursorY;
+
+                PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+                Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius);
+
+                if (AppVM.EngineWrapper.TargetPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
                 {
-                    // Unselect piece
-                    AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
+                    // No piece seleected, select it
+                    AppVM.EngineWrapper.TargetPiece = clickedPiece;
                 }
-                else
+                else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
-                    // Get the move with the clicked position
-                    Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
-                    if (AppVM.EngineWrapper.CanPlayMove(targetMove))
+                    // Piece is selected
+                    if (clickedPiece == AppVM.EngineWrapper.TargetPiece)
                     {
-                        // Move is valid, select position
-                        AppVM.EngineWrapper.TargetPosition = clickedPosition;
+                        // Unselect piece
+                        AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
                     }
                     else
                     {
-                        // Move is invalid, (un)select clicked piece
-                        AppVM.EngineWrapper.TargetPiece = clickedPiece;
+                        // Get the move with the clicked position
+                        Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
+                        if (AppVM.EngineWrapper.CanPlayMove(targetMove))
+                        {
+                            // Move is valid, select position
+                            AppVM.EngineWrapper.TargetPosition = clickedPosition;
+                        }
+                        else
+                        {
+                            // Move is invalid, (un)select clicked piece
+                            AppVM.EngineWrapper.TargetPiece = clickedPiece;
+                        }
                     }
                 }
             }
@@ -420,12 +433,15 @@ namespace Mzinga.Viewer.ViewModel
 
         internal void PieceClick(PieceName clickedPiece)
         {
-            if (AppVM.EngineWrapper.TargetPiece == clickedPiece)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
-                clickedPiece = PieceName.INVALID;
-            }
+                if (AppVM.EngineWrapper.TargetPiece == clickedPiece)
+                {
+                    clickedPiece = PieceName.INVALID;
+                }
 
-            AppVM.EngineWrapper.TargetPiece = clickedPiece;
+                AppVM.EngineWrapper.TargetPiece = clickedPiece;
+            }
         }
     }
 }

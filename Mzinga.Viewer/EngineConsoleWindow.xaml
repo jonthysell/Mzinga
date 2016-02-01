@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
         Icon="{DynamicResource MzingaIcon}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" Width="480" Height="240" MinWidth="480" MinHeight="240" SizeToContent="Height" ResizeMode="CanResizeWithGrip">
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" Width="480" Height="240" MinWidth="480" MinHeight="240" ResizeMode="CanResizeWithGrip">
     <Window.DataContext>
         <vm:EngineConsoleViewModel />
     </Window.DataContext>

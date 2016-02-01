@@ -1,10 +1,10 @@
 ﻿// 
-// Messages.cs
+// GameSettings.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,52 +30,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using GalaSoft.MvvmLight.Messaging;
+using Mzinga.Viewer.Resources;
 
 namespace Mzinga.Viewer.ViewModel
 {
-    public class ExceptionMessage : MessageBase
+    public class GameSettings
     {
-        public ExceptionViewModel ExceptionVM { get; private set; }
+        public PlayerType WhitePlayerType { get; set; }
 
-        public ExceptionMessage(Exception exception) : base()
+        public PlayerType BlackPlayerType { get; set; }
+
+        public GameSettings()
         {
-            ExceptionVM = new ExceptionViewModel(exception);
+            WhitePlayerType = PlayerType.Human;
+            BlackPlayerType = PlayerType.EngineAI;
+        }
+
+        public GameSettings Clone()
+        {
+            GameSettings clone = new GameSettings();
+
+            clone.WhitePlayerType = WhitePlayerType;
+            clone.BlackPlayerType = BlackPlayerType;
+
+            return clone;
         }
     }
 
-    public class InformationMessage : MessageBase
+    public enum PlayerType
     {
-        public InformationViewModel InformationVM { get; private set; }
-
-        public InformationMessage(string message, string title = "Mzinga", Action callback = null) : base()
-        {
-            InformationVM = new InformationViewModel(message, title, callback);
-        }
-
-        public void Process()
-        {
-            InformationVM.ProcessClose();
-        }
-    }
-
-    public class NewGameMessage : MessageBase
-    {
-        public NewGameViewModel NewGameVM { get; private set; }
-
-        public NewGameMessage(GameSettings settings = null, Action<GameSettings> callback = null) : base()
-        {
-            NewGameVM = new NewGameViewModel(settings, callback);
-        }
-
-        public void Process()
-        {
-            NewGameVM.ProcessClose();
-        }
-    }
-
-    public class EngineConsoleMessage : MessageBase
-    {
-        public EngineConsoleMessage() : base() { }
+        Human,
+        EngineAI
     }
 }

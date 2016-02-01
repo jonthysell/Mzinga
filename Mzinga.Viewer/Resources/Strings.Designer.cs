@@ -149,5 +149,14 @@ namespace Mzinga.Viewer.Resources {
                 return ResourceManager.GetString("GameStateWhiteWon", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Game.
+        /// </summary>
+        internal static string NewGameTitle {
+            get {
+                return ResourceManager.GetString("NewGameTitle", resourceCulture);
+            }
+        }
     }
 }

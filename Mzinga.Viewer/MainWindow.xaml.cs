@@ -128,7 +128,10 @@ namespace Mzinga.Viewer
             {
                 case "Board":
                 case "TargetMove":
-                    DrawBoard(VM.Board);
+                    AppViewModel.Instance.DoOnUIThread(() =>
+                        {
+                            DrawBoard(VM.Board);
+                        });
                     break;
             }
         }

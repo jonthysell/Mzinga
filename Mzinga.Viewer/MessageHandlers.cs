@@ -38,6 +38,7 @@ namespace Mzinga.Viewer
         {
             Messenger.Default.Register<ExceptionMessage>(recipient, (message) => MessageHandlers.ShowException(message));
             Messenger.Default.Register<InformationMessage>(recipient, (message) => MessageHandlers.ShowInformation(message));
+            Messenger.Default.Register<NewGameMessage>(recipient, (message) => MessageHandlers.ShowNewGame(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => MessageHandlers.ShowEngineConsole(message));
         }
 
@@ -45,6 +46,7 @@ namespace Mzinga.Viewer
         {
             Messenger.Default.Unregister<ExceptionMessage>(recipient);
             Messenger.Default.Unregister<InformationMessage>(recipient);
+            Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
 
@@ -64,6 +66,18 @@ namespace Mzinga.Viewer
             InformationWindow window = new InformationWindow();
             window.DataContext = message.InformationVM;
             message.InformationVM.RequestClose += () =>
+            {
+                window.Close();
+            };
+            window.ShowDialog();
+            message.Process();
+        }
+
+        private static void ShowNewGame(NewGameMessage message)
+        {
+            NewGameWindow window = new NewGameWindow();
+            window.DataContext = message.NewGameVM;
+            message.NewGameVM.RequestClose += () =>
             {
                 window.Close();
             };

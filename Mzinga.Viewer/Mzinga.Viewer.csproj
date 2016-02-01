@@ -78,9 +78,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EnumMatchToBooleanConverter.cs" />
     <Compile Include="ExceptionWindow.xaml.cs" />
     <Compile Include="EngineConsoleWindow.xaml.cs">
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NewGameWindow.xaml.cs">
+      <DependentUpon>NewGameWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="InformationWindow.xaml.cs">
       <DependentUpon>InformationWindow.xaml</DependentUpon>
@@ -96,6 +100,8 @@
     <Compile Include="ViewModel\EngineWrapper.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
+    <Compile Include="ViewModel\GameSettings.cs" />
+    <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\InformationViewModel.cs" />
     <Compile Include="ViewModel\EngineConsoleViewModel.cs" />
     <Compile Include="ViewModel\Messages.cs" />
@@ -104,6 +110,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="EngineConsoleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NewGameWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
