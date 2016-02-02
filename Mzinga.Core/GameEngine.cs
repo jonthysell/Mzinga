@@ -119,7 +119,15 @@ namespace Mzinga.Core
                         BestMove();
                         break;
                     case "undo":
-                        Undo();
+                        if (paramCount == 0)
+                        {
+                            Undo();
+                        }
+                        else
+                        {
+                            Undo(Int32.Parse(split[1]));
+                        }
+                        
                         break;
                     case "history":
                         History();
@@ -262,14 +270,26 @@ namespace Mzinga.Core
             }
         }
 
-        private void Undo()
+        private void Undo(int moves = 1)
         {
             if (null == GameBoard)
             {
                 throw new NoBoardException();
             }
 
-            GameBoard.UndoLastMove();
+            if (moves < 1)
+            {
+                throw new UndoTooFewMoves();
+            }
+            else if (moves > GameBoard.BoardHistoryCount)
+            {
+                throw new UndoTooManyMoves();
+            }
+
+            for (int i = 0; i < moves; i++)
+            {
+                GameBoard.UndoLastMove();
+            }
             ConsoleOut(GameBoard.ToString());
         }
 
@@ -334,5 +354,15 @@ namespace Mzinga.Core
     public class NoBoardException : Exception
     {
         public NoBoardException() : base("You must start a game before you can do that.") { }
+    }
+
+    public class UndoTooFewMoves : Exception
+    {
+        public UndoTooFewMoves() : base("You must undo at least one move.") { }
+    }
+
+    public class UndoTooManyMoves : Exception
+    {
+        public UndoTooManyMoves() : base("You cannot undo that many moves.") { }
     }
 }

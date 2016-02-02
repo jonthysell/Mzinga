@@ -37,6 +37,14 @@ namespace Mzinga.Core
     {
         #region Properties
 
+        public int BoardHistoryCount
+        {
+            get
+            {
+                return _boardHistory.Count;
+            }
+        }
+
         public IEnumerable<BoardHistoryItem> BoardHistory
         {
             get

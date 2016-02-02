@@ -59,7 +59,7 @@ namespace Mzinga.Viewer.ViewModel
 
     public enum PlayerType
     {
-        Human,
+        Human = 0,
         EngineAI
     }
 }

@@ -46,15 +46,7 @@
         <StackPanel Grid.Row="2" Grid.Column="1" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
         <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
             <GroupBox Header="History" FontWeight="Bold" Margin="5">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding BoardHistory}" BorderBrush="Transparent">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate >
-                                <TextBlock Text="{Binding .}" FontWeight="Normal" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <local:ScrollingTextBox Text="{Binding BoardHistory, Mode=OneWay}" IsReadOnly="True" Padding="5" BorderBrush="Transparent" MinWidth="120" TextWrapping="NoWrap" FontWeight="Normal" FontFamily="Lucida Console" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
             </GroupBox>
         </Grid>
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">

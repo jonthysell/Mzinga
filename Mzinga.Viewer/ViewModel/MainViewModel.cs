@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Text;
 
 using Mzinga.Core;
 using Mzinga.Viewer.Resources;
@@ -62,21 +63,42 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public ObservableCollection<string> BoardHistory
+        public string BoardHistory
         {
             get
             {
-                ObservableCollection<string> collection = new ObservableCollection<string>();
+                StringBuilder sb = new StringBuilder();
+
                 if (null != AppVM.EngineWrapper.BoardHistory)
                 {
                     int count = 1;
+                    bool isWhite = true;
                     foreach (BoardHistoryItem item in AppVM.EngineWrapper.BoardHistory)
                     {
-                        collection.Add(String.Format(Strings.BoardHistoryItemFormat, count, item));
-                        count++;
+                        string countString = count.ToString() + ". ";
+                        if (isWhite)
+                        {
+                            sb.AppendFormat(Strings.BoardHistoryItemFormat, countString, item.ToString(BoardHistoryItemStringFormat.ShortAlgebraic));
+                        }
+                        else
+                        {
+                            string spacing = "";
+
+                            for (int i = 0; i < countString.Length; i++)
+                            {
+                                spacing += " ";
+                            }
+
+                            sb.AppendFormat(Strings.BoardHistoryItemFormat, spacing, item.ToString(BoardHistoryItemStringFormat.ShortAlgebraic));
+                            count++;
+                        }
+
+                        sb.AppendLine();
+                        isWhite = !isWhite;
                     }
                 }
-                return collection;
+
+                return sb.ToString();
             }
         }
 
@@ -240,7 +262,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanPlayTargetMove;
+                    return AppVM.EngineWrapper.CanPlayTargetMove;
                 });
             }
         }
@@ -261,7 +283,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanPass;
+                    return AppVM.EngineWrapper.CanPass;
                 });
             }
         }
@@ -282,7 +304,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CanUndoLastMove;
+                    return AppVM.EngineWrapper.CanUndoLastMove;
                 });
             }
         }
@@ -375,18 +397,21 @@ namespace Mzinga.Viewer.ViewModel
             RaisePropertyChanged("GameState");
             RaisePropertyChanged("ValidMoves");
 
-            switch (board.BoardState)
+            AppVM.DoOnUIThread(() =>
             {
-                case BoardState.WhiteWins:
-                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
-                    break;
-                case BoardState.BlackWins:
-                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
-                    break;
-                case BoardState.Draw:
-                    Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
-                    break;
-            }
+                switch (board.BoardState)
+                {
+                    case BoardState.WhiteWins:
+                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
+                        break;
+                    case BoardState.BlackWins:
+                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
+                        break;
+                    case BoardState.Draw:
+                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
+                        break;
+                }
+            });
         }
 
         internal void CanvasClick(double cursorX, double cursorY)

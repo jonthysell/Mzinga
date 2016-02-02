@@ -69,7 +69,15 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return (null != Board && (Board.BoardState == BoardState.NotStarted || Board.BoardState == BoardState.InProgress));
+                return (null != Board && Board.GameInProgress);
+            }
+        }
+
+        public bool GameIsOver
+        {
+            get
+            {
+                return (null != Board && Board.GameIsOver);
             }
         }
 
@@ -148,7 +156,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return (GameInProgress && null != ValidMoves && ValidMoves.Contains(Move.Pass));
+                return (GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.Pass));
             }
         }
 
@@ -156,7 +164,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return (null != Board && Board.BoardState != BoardState.NotStarted);
+                return (null != Board && (GameIsOver || (CurrentTurnIsHuman && Board.BoardState != BoardState.NotStarted)));
             }
         }
 
@@ -267,7 +275,16 @@ namespace Mzinga.Viewer.ViewModel
 
         public void UndoLastMove()
         {
-            SendCommand("undo");
+            int moves = 1;
+
+            if (BoardHistory.Count > 1 &&
+                (CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI ||
+                 CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI))
+            {
+                moves++;
+            }
+
+            SendCommand("undo {0}", moves);
         }
 
         public void PlayBestMove()
@@ -459,7 +476,7 @@ namespace Mzinga.Viewer.ViewModel
 
         public bool CanPlayMove(Move move)
         {
-            return (GameInProgress && null != move && null != ValidMoves && ValidMoves.Contains(move));
+            return (GameInProgress && CurrentTurnIsHuman && null != move && null != ValidMoves && ValidMoves.Contains(move));
         }
 
         private void OnBoardUpdate(Board board)
@@ -494,7 +511,15 @@ namespace Mzinga.Viewer.ViewModel
                         Thread.Sleep(timeToWaitMs);
                     }
 
-                    PlayTargetMove();
+                    if (null == TargetMove)
+                    {
+                        // FindBestMove must have returned a Pass
+                        Pass();
+                    }
+                    else
+                    {
+                        PlayTargetMove();
+                    }
                 });
             }
         }

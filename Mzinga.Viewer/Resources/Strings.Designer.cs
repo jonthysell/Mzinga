@@ -61,7 +61,7 @@ namespace Mzinga.Viewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}. {1}.
+        ///   Looks up a localized string similar to {0}{1}.
         /// </summary>
         internal static string BoardHistoryItemFormat {
             get {

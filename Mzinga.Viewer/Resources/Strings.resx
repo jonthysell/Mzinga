@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BoardHistoryItemFormat" xml:space="preserve">
-    <value>{0}. {1}</value>
+    <value>{0}{1}</value>
   </data>
   <data name="ExceptionViewModelDetailsFormat" xml:space="preserve">
     <value>Exception details: {0}</value>

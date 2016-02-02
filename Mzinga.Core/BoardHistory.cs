@@ -150,9 +150,30 @@ namespace Mzinga.Core
 
         public override string ToString()
         {
-            Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
-
-            return String.Format("{0} > {1}", startingPiece, Move);
+            return ToString(BoardHistoryItemStringFormat.FullAlgebraic);
         }
+
+        public string ToString(BoardHistoryItemStringFormat format)
+        {
+            if (Move.IsPass)
+            {
+                return Move.ToString();
+            }
+
+            switch (format)
+            {
+                case BoardHistoryItemStringFormat.ShortAlgebraic:
+                    return Move.ToString();
+                default:
+                    Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
+                    return String.Format("{0} > {1}", startingPiece, Move);
+            }
+        }
+    }
+
+    public enum BoardHistoryItemStringFormat
+    {
+        FullAlgebraic,
+        ShortAlgebraic
     }
 }

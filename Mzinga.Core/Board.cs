@@ -55,6 +55,22 @@ namespace Mzinga.Core
             }
         }
 
+        public bool GameInProgress
+        {
+            get
+            {
+                return (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress);
+            }
+        }
+
+        public bool GameIsOver
+        {
+            get
+            {
+                return (BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins || BoardState == BoardState.Draw);
+            }
+        }
+
         public IEnumerable<Piece> AllPieces
         {
             get
