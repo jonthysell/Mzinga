@@ -164,7 +164,48 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return (null != Board && (GameIsOver || (CurrentTurnIsHuman && Board.BoardState != BoardState.NotStarted)));
+                return (null != Board && CanUndoMoveCount > 0);
+            }
+        }
+
+        public int CanUndoMoveCount
+        {
+            get
+            {
+                int moves = 0;
+
+                int historyCount = null != BoardHistory ? BoardHistory.Count : 0;
+
+                if (null != Board && historyCount > 0)
+                {
+                    if (CurrentGameSettings.WhitePlayerType == PlayerType.Human && CurrentGameSettings.BlackPlayerType == PlayerType.Human)
+                    {
+                        moves = 1; // Can only undo one Human move
+                    }
+                    else if (CurrentGameSettings.WhitePlayerType != CurrentGameSettings.BlackPlayerType)
+                    {
+                        if (CurrentTurnIsHuman)
+                        {
+                            moves = 2; // Undo the previous move (AI) and the move before that (Human)
+                        }
+                        else if (GameIsOver)
+                        {
+                            moves = 1; // Undo the previous, game-ending move (Human)
+                        }
+                    }
+                    else if (CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)
+                    {
+                        moves = 0; // Can't undo an AI vs AI's moves
+                    }
+                }
+
+                // Only undo moves if there are enough moves to undo
+                if (moves <= historyCount)
+                {
+                    return moves;
+                }
+
+                return 0;
             }
         }
 
@@ -275,16 +316,12 @@ namespace Mzinga.Viewer.ViewModel
 
         public void UndoLastMove()
         {
-            int moves = 1;
+            int moves = CanUndoMoveCount;
 
-            if (BoardHistory.Count > 1 &&
-                (CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI ||
-                 CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI))
+            if (moves > 0)
             {
-                moves++;
+                SendCommand("undo {0}", moves);
             }
-
-            SendCommand("undo {0}", moves);
         }
 
         public void PlayBestMove()
