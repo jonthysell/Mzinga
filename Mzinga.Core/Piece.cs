@@ -55,6 +55,11 @@ namespace Mzinga.Core
 
         public Piece(string pieceString)
         {
+            if (String.IsNullOrWhiteSpace(pieceString))
+            {
+                throw new ArgumentNullException("pieceString");
+            }
+
             PieceName pieceName;
             Position position;
 

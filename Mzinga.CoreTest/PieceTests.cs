@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,14 +35,134 @@ namespace Mzinga.CoreTest
     public class PieceTest
     {
         [TestMethod]
-        public void NewPieceTest()
+        public void Piece_NewInHandTest()
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 Piece p = new Piece(pieceName);
+                VerifyPieceProperties(p, pieceName, null);
+            }
+        }
+
+        [TestMethod]
+        public void Piece_NewInPlayTest()
+        {
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                Piece p = new Piece(pieceName, Position.Origin);
+                VerifyPieceProperties(p, pieceName, Position.Origin);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void Piece_InvalidNewTest()
+        {
+            Piece p = new Piece(PieceName.INVALID);
+        }
+
+        [TestMethod]
+        public void Piece_NewInHandPieceStringTest()
+        {
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+                Piece p = new Piece(pieceString);
+                VerifyPieceProperties(p, pieceName, null);
+            }
+        }
+
+        [TestMethod]
+        public void Piece_NewInPlayPieceStringTest()
+        {
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+                Piece p = new Piece(pieceString);
+                VerifyPieceProperties(p, pieceName, Position.Origin);
+            }
+        }
+
+        [TestMethod]
+        public void Piece_NullOrWhiteSpaceNewPieceStringTest()
+        {
+            string[] pieceStrings = TestUtils.NullOrWhiteSpaceStrings;
+
+            for (int i = 0; i < pieceStrings.Length; i++)
+            {
+                TestUtils.AssertExceptionThrown<ArgumentNullException>(() =>
+                {
+                    Piece p = new Piece(pieceStrings[i]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void Piece_InvalidNewPieceStringTest()
+        {
+            string[] pieceStrings = new string[]
+            {
+                "test",
+                "test[0,0,0]",
+                "WQ[test]",
+            };
+
+            for (int i = 0; i < pieceStrings.Length; i++)
+            {
+                TestUtils.AssertExceptionThrown<ArgumentException>(() =>
+                {
+                    Piece p = new Piece(pieceStrings[i]);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void Piece_ToStringInHandTest()
+        {
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+                Piece p = new Piece(pieceString);
                 Assert.IsNotNull(p);
-                Assert.AreEqual(pieceName, p.PieceName);
-                Assert.IsNull(p.Position);
+
+                Assert.AreEqual(pieceString, p.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void Piece_ToStringInPlayTest()
+        {
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+                Piece p = new Piece(pieceString);
+                Assert.IsNotNull(p);
+
+                Assert.AreEqual(pieceString, p.ToString());
+            }
+        }
+
+        private void VerifyPieceProperties(Piece actualPiece, PieceName expectedPieceName, Position expectedPosition)
+        {
+            Assert.IsNotNull(actualPiece);
+
+            Assert.AreEqual(expectedPieceName, actualPiece.PieceName);
+            Assert.AreEqual(EnumUtils.GetColor(expectedPieceName), actualPiece.Color);
+            Assert.AreEqual(EnumUtils.GetBugType(expectedPieceName), actualPiece.BugType);
+
+            if (null == expectedPosition)
+            {
+                Assert.IsNull(actualPiece.Position);
+
+                Assert.IsTrue(actualPiece.InHand);
+                Assert.IsFalse(actualPiece.InPlay);
+            }
+            else
+            {
+                Assert.AreEqual(expectedPosition, actualPiece.Position);
+
+                Assert.IsFalse(actualPiece.InHand);
+                Assert.IsTrue(actualPiece.InPlay);
             }
         }
     }

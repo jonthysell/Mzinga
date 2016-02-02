@@ -511,6 +511,46 @@ namespace Mzinga.CoreTest
             }
         }
 
+        [TestMethod]
+        public void Position_ToStringXYZTest()
+        {
+            foreach (int[] coordinate in _validXYZCoordinates)
+            {
+                Position p = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
+                Assert.IsNotNull(p);
+
+                if (coordinate[3] == 0)
+                {
+                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2]), p.ToString());
+                }
+                else
+                {
+                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2], coordinate[3]), p.ToString());
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Position_ToStringQRTest()
+        {
+            foreach (int[] coordinate in _validQRCoordinates)
+            {
+                Position p = new Position(coordinate[0], coordinate[1], coordinate[2]);
+                Assert.IsNotNull(p);
+
+                int y = 0 - coordinate[0] - coordinate[1];
+
+                if (coordinate[2] == 0)
+                {
+                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1]), p.ToString());
+                }
+                else
+                {
+                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1], coordinate[2]), p.ToString());
+                }
+            }
+        }
+
         private Dictionary<Direction, Position> GetOriginNeighbors()
         {
             Dictionary<Direction, Position> originNeighbors = new Dictionary<Direction, Position>();
