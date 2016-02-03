@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 
 namespace Mzinga.Core
 {
-    public class Move : PiecePositionBase, IComparable
+    public class Move : PiecePositionBase, IEquatable<Move>, IComparable<Move>
     {
         public static Move Pass
         {
@@ -61,6 +61,11 @@ namespace Mzinga.Core
 
         public Move(string moveString) : this()
         {
+            if (String.IsNullOrWhiteSpace(moveString))
+            {
+                throw new ArgumentNullException("moveString");
+            }
+
             if (!moveString.Equals(PassString, StringComparison.CurrentCultureIgnoreCase))
             {
                 PieceName pieceName;
@@ -74,12 +79,12 @@ namespace Mzinga.Core
 
         private void Init(PieceName pieceName, Position position)
         {
-            if (pieceName == PieceName.INVALID)
+            if (pieceName == PieceName.INVALID && null != position)
             {
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
-            if (null == position)
+            if (pieceName != PieceName.INVALID && null == position)
             {
                 throw new ArgumentNullException("position");
             }
@@ -88,17 +93,11 @@ namespace Mzinga.Core
             Position = position;
         }
 
-        public int CompareTo(object obj)
+        public int CompareTo(Move move)
         {
-            if (null == obj)
-            {
-                throw new ArgumentNullException("obj");
-            }
-
-            Move move = obj as Move;
             if (null == move)
             {
-                throw new ArgumentException();
+                throw new ArgumentNullException("move");
             }
 
             int pieceCompare = ((int)PieceName).CompareTo((int)move.PieceName);
@@ -122,6 +121,41 @@ namespace Mzinga.Core
             }
 
             return Position.CompareTo(move.Position);
+        }
+
+        public bool Equals(Move move)
+        {
+            if (null == move)
+            {
+                return false;
+            }
+
+            return PieceName == move.PieceName && Position == move.Position;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Move);
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
+        public static bool operator ==(Move a, Move b)
+        {
+            if (object.ReferenceEquals(a, null))
+            {
+                return object.ReferenceEquals(b, null);
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Move a, Move b)
+        {
+            return !(a == b);
         }
 
         public override string ToString()

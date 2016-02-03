@@ -32,7 +32,7 @@ using Mzinga.Core;
 namespace Mzinga.CoreTest
 {
     [TestClass]
-    public class PieceTest
+    public class PieceTests
     {
         [TestMethod]
         public void Piece_NewInHandTest()
@@ -67,6 +67,7 @@ namespace Mzinga.CoreTest
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+
                 Piece p = new Piece(pieceString);
                 VerifyPieceProperties(p, pieceName, null);
             }
@@ -78,6 +79,7 @@ namespace Mzinga.CoreTest
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+
                 Piece p = new Piece(pieceString);
                 VerifyPieceProperties(p, pieceName, Position.Origin);
             }
@@ -122,6 +124,7 @@ namespace Mzinga.CoreTest
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+
                 Piece p = new Piece(pieceString);
                 Assert.IsNotNull(p);
 
@@ -135,6 +138,7 @@ namespace Mzinga.CoreTest
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+
                 Piece p = new Piece(pieceString);
                 Assert.IsNotNull(p);
 
