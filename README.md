@@ -14,15 +14,15 @@ Mzinga is developed in C# for .NET 4.5.
 
 ### Mzinga.Core ###
 
-Mzinga.Core implements all of the rules of the core Hive game (no expansion pieces). In that respect it is complete. It also contains the game AI, which is currently very weak. It looks at the set of valid moves, and if it sees a move that will cause it to win the game (completely surrounding the enemy Queen) it takes it, otherwise it chooses a valid move at random.
+Mzinga.Core implements all of the rules of the core Hive game (no expansion pieces), and in that respect it is complete. It also contains the game AI, though it is currently very weak.
 
-Most future investment in Mzinga.Core will be to improve the AI.
+Expansion pieces will be added eventually, but most future investment in Mzinga.Core will be to improve the game AI.
 
 ### Mzinga.CoreTest ###
 
 Mzinga.CoreTest contains unit tests for Mzinga.Core.
 
-Future investment includes increasing code coverage with more tests, in particular tests to validate the more complicated game rules.
+Future investment includes increasing code coverage with more tests.
 
 ### Mzinga.Engine ###
 
@@ -30,9 +30,9 @@ Mzinga.Engine is a command-line interface which can read input commands, send th
 
 ### Mzinga.Viewer ###
 
-Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a graphically rendered gameboard and allows users to to play games with Mzinga.Engine.
+Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a graphically rendered gameboard and allows users to play games with Mzinga.Engine.
 
-Future investment includes exposing game options and improving the usability for players.
+Future investment includes continuing to expose Mzinga.Engine functionality and improving the usability for players.
 
 Mzinga Copyright © 2015, 2016 Jon Thysell.
 
