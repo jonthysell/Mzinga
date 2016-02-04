@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mzinga.Core
 {
@@ -68,6 +69,22 @@ namespace Mzinga.Core
                 {
                     yield return (PieceName)i;
                 }
+            }
+        }
+
+        public static IEnumerable<PieceName> WhitePieceNames
+        {
+            get
+            {
+                return PieceNames.Where<PieceName>((pieceName) => { return EnumUtils.GetColor(pieceName) == Color.White; });
+            }
+        }
+
+        public static IEnumerable<PieceName> BlackPieceNames
+        {
+            get
+            {
+                return PieceNames.Where<PieceName>((pieceName) => { return EnumUtils.GetColor(pieceName) == Color.Black; });
             }
         }
 

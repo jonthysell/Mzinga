@@ -139,13 +139,21 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("boardHistoryItemString");
             }
 
-            string[] split = boardHistoryItemString.Split(new char[] { ' ', '>' }, StringSplitOptions.RemoveEmptyEntries);
+            if (boardHistoryItemString.Equals(Move.PassString, StringComparison.CurrentCultureIgnoreCase))
+            {
+                Move = Move.Pass;
+                OriginalPosition = null;
+            }
+            else
+            {
+                string[] split = boardHistoryItemString.Split(new char[] { ' ', '>' }, StringSplitOptions.RemoveEmptyEntries);
 
-            Piece startingPiece = new Piece(split[0]);
-            Move move = new Move(split[1]);
+                Piece startingPiece = new Piece(split[0]);
+                Move move = new Move(split[1]);
 
-            Move = move;
-            OriginalPosition = startingPiece.Position;
+                Move = move;
+                OriginalPosition = startingPiece.Position;
+            }
         }
 
         public override string ToString()

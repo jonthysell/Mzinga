@@ -156,8 +156,8 @@ namespace Mzinga.Viewer
 
                 double size = HexRadiusRatio * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
 
-                WhiteHandStackPanel.MinHeight = (size + PieceCanvasMargin) * 2;
-                BlackHandStackPanel.MinHeight = (size + PieceCanvasMargin) * 2;
+                WhiteHandStackPanel.MinHeight = board.WhiteHand.Count() > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                BlackHandStackPanel.MinHeight = board.BlackHand.Count() > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
                 Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;

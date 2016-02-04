@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Mzinga.Core
@@ -320,34 +321,82 @@ namespace Mzinga.Core
             {
                 MoveSet validMoves = GameBoard.GetValidMoves();
 
-                int randIndex = Random.Next(validMoves.Count);
+                EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
+                BoardMetrics metricsBeforeMove = GameBoard.GetBoardMetrics();
+                double scoreBeforeMove = CalculateBoardScore(metricsBeforeMove);
 
-                Move bestMove = null;
-                Move randomMove = null;
-
-                int index = 0;
                 foreach (Move move in validMoves)
                 {
-                    if (index == randIndex)
-                    {
-                        randomMove = move;
-                    }
-
-                    BoardState resultState = GameBoard.TryMove(move);
-                    if ((GameBoard.CurrentTurnColor == Color.White && resultState == BoardState.WhiteWins) ||
-                        (GameBoard.CurrentTurnColor == Color.Black && resultState == BoardState.BlackWins))
-                    {
-                        bestMove = move;
-                        break;
-                    }
-
-                    index++;
+                    EvaluatedMove evaluatedMove = Evaluate(move, metricsBeforeMove, scoreBeforeMove);
+                    evaluatedMoves.Add(evaluatedMove);
                 }
 
-                _cachedBestMove = bestMove != null ? bestMove : randomMove;
+                List<EvaluatedMove> bestMoves = new List<EvaluatedMove>(evaluatedMoves.GetBestMoves());
+
+                int randIndex = Random.Next(bestMoves.Count);
+                _cachedBestMove = bestMoves[randIndex].Move;
             }
 
             return _cachedBestMove;
+        }
+
+        private EvaluatedMove Evaluate(Move move, BoardMetrics metricsBeforeMove, double scoreBeforeMove)
+        {
+            if (null == move)
+            {
+                throw new ArgumentNullException("move");
+            }
+
+            if (null == metricsBeforeMove)
+            {
+                throw new ArgumentNullException("metricsBeforeMove");
+            }
+
+            BoardMetrics metricsAfterMove = GameBoard.TryMove(move);
+            double scoreAfterMove = CalculateBoardScore(metricsAfterMove);
+
+            return new EvaluatedMove(move, scoreBeforeMove, scoreAfterMove);
+        }
+
+        private double CalculateBoardScore(BoardMetrics boardMetrics)
+        {
+            if (null == boardMetrics)
+            {
+                throw new ArgumentNullException("boardMetrics");
+            }
+
+            Color currentTurnColor = GameBoard.CurrentTurnColor;
+            Color opponentTurnColor = (Color)(1 - (int)currentTurnColor);
+
+            PieceName currentQueen = currentTurnColor == Color.White ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee;
+            PieceName opponentQueen = opponentTurnColor == Color.White ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee;
+
+            BoardState boardState = boardMetrics.BoardState;
+
+            if ((currentTurnColor == Color.White && boardState == BoardState.WhiteWins) ||
+                (currentTurnColor == Color.Black && boardState == BoardState.BlackWins))
+            {
+                return Double.MaxValue;
+            }
+            else if ((currentTurnColor == Color.White && boardState == BoardState.BlackWins) ||
+                     (currentTurnColor == Color.Black && boardState == BoardState.WhiteWins))
+            {
+                return Double.MinValue;
+            }
+            else if (boardState == BoardState.Draw)
+            {
+                return 0;
+            }
+
+            double score = 0;
+
+            int currentQueenNeighbors = boardMetrics.TurnMetrics[currentTurnColor].PieceMetrics[currentQueen].NeighborCount;
+            int opponentQueenNeighbors = boardMetrics.TurnMetrics[opponentTurnColor].PieceMetrics[opponentQueen].NeighborCount;
+
+            score += 10.0 * opponentQueenNeighbors; // Attack the enemy Queen!
+            score -= 5.0 * currentQueenNeighbors; // Protect your Queen!
+
+            return score;
         }
     }
 
