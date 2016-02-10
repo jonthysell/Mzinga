@@ -536,12 +536,10 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     DateTime start = DateTime.Now;
 
-                    Thread.Sleep(AutoPlayMinMs / 2);
-
                     FindBestMove();
 
                     int timeToFindBestMoveMs = (int)(DateTime.Now - start).TotalMilliseconds;
-                    int timeToWaitMs = AutoPlayMinMs - timeToFindBestMoveMs;
+                    int timeToWaitMs = Math.Max(AutoPlayMinMs - timeToFindBestMoveMs, (AutoPlayMinMs / 2));
 
                     if (timeToWaitMs > 0)
                     {

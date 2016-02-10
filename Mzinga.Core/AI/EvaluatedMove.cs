@@ -26,25 +26,15 @@
 
 using System;
 
-namespace Mzinga.Core
+namespace Mzinga.Core.AI
 {
     public class EvaluatedMove : IComparable<EvaluatedMove>
     {
         public Move Move { get; private set; }
 
-        public double ScoreBeforeMove { get; private set; }
-
         public double ScoreAfterMove { get; private set; }
 
-        public double ScoreDelta
-        {
-            get
-            {
-                return ScoreAfterMove - ScoreBeforeMove;
-            }
-        }
-
-        public EvaluatedMove(Move move, double scoreBeforeMove, double scoreAfterMove)
+        public EvaluatedMove(Move move, double scoreAfterMove)
         {
             if (null == move)
             {
@@ -52,8 +42,6 @@ namespace Mzinga.Core
             }
 
             Move = move;
-
-            ScoreBeforeMove = scoreBeforeMove;
             ScoreAfterMove = scoreAfterMove;
         }
 
@@ -64,7 +52,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("evaluatedMove");
             }
 
-            return ScoreDelta.CompareTo(evaluatedMove.ScoreDelta);
+            return ScoreAfterMove.CompareTo(evaluatedMove.ScoreAfterMove);
         }
     }
 }

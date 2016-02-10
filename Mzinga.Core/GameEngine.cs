@@ -28,6 +28,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Mzinga.Core.AI;
+
 namespace Mzinga.Core
 {
     public delegate void ConsoleOut(string format, params object[] arg);
@@ -39,7 +41,7 @@ namespace Mzinga.Core
 
         private GameBoard GameBoard;
 
-        private Random Random;
+        private GameAI GameAI;
 
         private Move _cachedBestMove;
 
@@ -59,7 +61,10 @@ namespace Mzinga.Core
 
             ID = id;
             ConsoleOut = consoleOut;
-            Random = new Random();
+
+            MetricWeights mw = GetMetricWeights();
+            GameAI = new GameAI(mw, 2);
+
             ExitRequested = false;
         }
 
@@ -185,6 +190,7 @@ namespace Mzinga.Core
         private void NewGame()
         {
             GameBoard = new GameBoard();
+            _cachedBestMove = null;
 
             GameBoard.BoardChanged += () =>
             {
@@ -319,84 +325,28 @@ namespace Mzinga.Core
 
             if (null == _cachedBestMove)
             {
-                MoveSet validMoves = GameBoard.GetValidMoves();
-
-                EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
-                BoardMetrics metricsBeforeMove = GameBoard.GetBoardMetrics();
-                double scoreBeforeMove = CalculateBoardScore(metricsBeforeMove);
-
-                foreach (Move move in validMoves)
-                {
-                    EvaluatedMove evaluatedMove = Evaluate(move, metricsBeforeMove, scoreBeforeMove);
-                    evaluatedMoves.Add(evaluatedMove);
-                }
-
-                List<EvaluatedMove> bestMoves = new List<EvaluatedMove>(evaluatedMoves.GetBestMoves());
-
-                int randIndex = Random.Next(bestMoves.Count);
-                _cachedBestMove = bestMoves[randIndex].Move;
+                _cachedBestMove = GameAI.GetBestMove(GameBoard);
             }
 
             return _cachedBestMove;
         }
 
-        private EvaluatedMove Evaluate(Move move, BoardMetrics metricsBeforeMove, double scoreBeforeMove)
+        private MetricWeights GetMetricWeights()
         {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
+            MetricWeights mw = new MetricWeights();
 
-            if (null == metricsBeforeMove)
-            {
-                throw new ArgumentNullException("metricsBeforeMove");
-            }
+            // Basic Queen Management
+            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, -5.0); // Your Queen has company!
+            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, -23.0); // Your Queen is pinned!
 
-            BoardMetrics metricsAfterMove = GameBoard.TryMove(move);
-            double scoreAfterMove = CalculateBoardScore(metricsAfterMove);
+            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, 17.0); // Surround the enemy Queen!
+            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, 42.0); // The enemy Queen is pinned!
 
-            return new EvaluatedMove(move, scoreBeforeMove, scoreAfterMove);
-        }
+            // Give edge to opening up more moves
+            mw.Set(Player.Maximizing, PlayerWeight.ValidMoveWeight, 0.01);
+            mw.Set(Player.Minimizing, PlayerWeight.ValidMoveWeight, -0.33);
 
-        private double CalculateBoardScore(BoardMetrics boardMetrics)
-        {
-            if (null == boardMetrics)
-            {
-                throw new ArgumentNullException("boardMetrics");
-            }
-
-            Color currentTurnColor = GameBoard.CurrentTurnColor;
-            Color opponentTurnColor = (Color)(1 - (int)currentTurnColor);
-
-            PieceName currentQueen = currentTurnColor == Color.White ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee;
-            PieceName opponentQueen = opponentTurnColor == Color.White ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee;
-
-            BoardState boardState = boardMetrics.BoardState;
-
-            if ((currentTurnColor == Color.White && boardState == BoardState.WhiteWins) ||
-                (currentTurnColor == Color.Black && boardState == BoardState.BlackWins))
-            {
-                return Double.MaxValue;
-            }
-            else if ((currentTurnColor == Color.White && boardState == BoardState.BlackWins) ||
-                     (currentTurnColor == Color.Black && boardState == BoardState.WhiteWins))
-            {
-                return Double.MinValue;
-            }
-            else if (boardState == BoardState.Draw)
-            {
-                return 0;
-            }
-
-            double score = 0;
-
-            int currentQueenNeighbors = boardMetrics.TurnMetrics[currentTurnColor].PieceMetrics[currentQueen].NeighborCount;
-            int opponentQueenNeighbors = boardMetrics.TurnMetrics[opponentTurnColor].PieceMetrics[opponentQueen].NeighborCount;
-
-            score += 10.0 * opponentQueenNeighbors; // Attack the enemy Queen!
-            score -= 5.0 * currentQueenNeighbors; // Protect your Queen!
-
-            return score;
+            return mw;
         }
     }
 

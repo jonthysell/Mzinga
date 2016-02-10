@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mzinga.Core
 {
@@ -33,22 +34,84 @@ namespace Mzinga.Core
     {
         public BoardState BoardState { get; private set; }
 
-        public IDictionary<Color, TurnMetrics> TurnMetrics
+        public int ValidMoveCount
         {
             get
             {
-                return _turnMetrics;
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidMoveCount; });
             }
         }
-        private Dictionary<Color, TurnMetrics> _turnMetrics;
+
+        public int ValidPlacementCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidPlacementCount; });
+            }
+        }
+
+        public int ValidMovementCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidMovementCount; });
+            }
+        }
+
+        public int PieceCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PieceCount; });
+            }
+        }
+
+        public int PiecesInPlayCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesInPlayCount; });
+            }
+        }
+
+        public int PiecesInHandCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesInHandCount; });
+            }
+        }
+
+        public int PiecesPinnedCount
+        {
+            get
+            {
+                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesPinnedCount; });
+            }
+        }
+
+        public PlayerMetrics this[Color playerColor]
+        {
+            get
+            {
+                return Get(playerColor);
+            }
+        }
+
+        private Dictionary<Color, PlayerMetrics> _playerMetrics;
 
         public BoardMetrics(BoardState boardState)
         {
             BoardState = boardState;
 
-            _turnMetrics = new Dictionary<Color, TurnMetrics>();
-            _turnMetrics.Add(Color.White, new TurnMetrics(Color.White));
-            _turnMetrics.Add(Color.Black, new TurnMetrics(Color.Black));
+            _playerMetrics = new Dictionary<Color, PlayerMetrics>();
+            _playerMetrics.Add(Color.White, new PlayerMetrics(Color.White));
+            _playerMetrics.Add(Color.Black, new PlayerMetrics(Color.Black));
+        }
+
+        public PlayerMetrics Get(Color playerColor)
+        {
+            return _playerMetrics[playerColor];
         }
     }
 }

@@ -32,9 +32,81 @@ namespace Mzinga.Core
     {
         public PieceName PieceName { get; private set; }
 
-        public int MoveCount { get; set; }
+        public int ValidMoveCount
+        {
+            get
+            {
+                return _validMoveCount;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _validMoveCount = value;
+            }
+        }
+        private int _validMoveCount;
 
-        public int NeighborCount { get; set; }
+        public int ValidPlacementCount
+        {
+            get
+            {
+                return InHand * ValidMoveCount;
+            }
+        }
+
+        public int ValidMovementCount
+        {
+            get
+            {
+                return InPlay * ValidMoveCount;
+            }
+        }
+
+        public int NeighborCount
+        {
+            get
+            {
+                return _neighborCount;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _neighborCount = value;
+            }
+        }
+        private int _neighborCount;
+
+        public bool IsInPlay { get; set; }
+
+        public int InHand
+        {
+            get
+            {
+                return IsInPlay ? 0 : 1;
+            }
+        }
+
+        public int InPlay
+        {
+            get
+            {
+                return IsInPlay ? 1 : 0;
+            }
+        }
+
+        public int IsPinned
+        {
+            get
+            {
+                return (IsInPlay && ValidMovementCount == 0) ? 1 : 0;
+            }
+        }
 
         public PieceMetrics(PieceName pieceName)
         {
@@ -45,7 +117,7 @@ namespace Mzinga.Core
 
             PieceName = pieceName;
 
-            MoveCount = 0;
+            ValidMoveCount = 0;
             NeighborCount = 0;
         }
 
@@ -61,7 +133,9 @@ namespace Mzinga.Core
                 throw new ArgumentOutOfRangeException("pieceMetrics");
             }
 
-            MoveCount = pieceMetrics.MoveCount;
+            IsInPlay = pieceMetrics.IsInPlay;
+
+            ValidMoveCount = pieceMetrics.ValidMoveCount;
             NeighborCount = pieceMetrics.NeighborCount;
         }
     }

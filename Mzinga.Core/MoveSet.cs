@@ -44,6 +44,14 @@ namespace Mzinga.Core
 
         private List<Move> _moves;
 
+        public Move this[int index]
+        {
+            get
+            {
+                return _moves[index];
+            }
+        }
+
         public MoveSet()
         {
             _moves = new List<Move>();
@@ -67,11 +75,6 @@ namespace Mzinga.Core
 
         public void Add(IEnumerable<Move> moves)
         {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
             foreach (Move move in moves)
             {
                 Add(move);

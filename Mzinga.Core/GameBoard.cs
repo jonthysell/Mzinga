@@ -73,14 +73,6 @@ namespace Mzinga.Core
             return clone;
         }
 
-        public BoardMetrics TryMove(Move move)
-        {
-            Play(move);
-            BoardMetrics result = GetBoardMetrics();
-            UndoLastMove();
-            return result;
-        }
-
         public void Play(Move move)
         {
             if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
@@ -161,14 +153,7 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move);
             }
 
-            Position originalPosition = targetPiece.Position;
-
-            targetPiece.Move(move.Position);
-
-            _boardHistory.Add(move, originalPosition);
-
-            CurrentTurn++;
-            OnBoardChanged();
+            TrustedPlay(move);
         }
 
         public void Pass()
@@ -185,7 +170,28 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(pass, "You can't pass when you have valid moves.");
             }
 
-            _boardHistory.Add(pass, null);
+            TrustedPlay(pass);
+        }
+
+        internal void TrustedPlay(Move move)
+        {
+            if (null == move)
+            {
+                throw new ArgumentNullException("move");
+            }
+
+            Position originalPosition = null;
+
+            if (!move.IsPass)
+            {
+                Piece targetPiece = GetPiece(move.PieceName);
+
+                originalPosition = targetPiece.Position;
+
+                MovePiece(targetPiece, move.Position);
+            }
+
+            _boardHistory.Add(move, originalPosition);
 
             CurrentTurn++;
             OnBoardChanged();
@@ -203,7 +209,7 @@ namespace Mzinga.Core
             if (!item.Move.IsPass)
             {
                 Piece targetPiece = GetPiece(item.Move.PieceName);
-                targetPiece.Move(item.OriginalPosition);
+                MovePiece(targetPiece, item.OriginalPosition);
             }
             
             CurrentTurn--;

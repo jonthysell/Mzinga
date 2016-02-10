@@ -266,7 +266,7 @@ namespace Mzinga.Core
                 return false;
             }
 
-            return X == pos.X && Y == pos.Y && Z == pos.Z && Stack == pos.Stack;
+            return Q == pos.Q && R == pos.R && Stack == pos.Stack;
         }
 
         public override bool Equals(object obj)
@@ -276,7 +276,11 @@ namespace Mzinga.Core
 
         public override int GetHashCode()
         {
-            return ToString().GetHashCode();
+            int hash = 17;
+            hash = hash * 31 + Q;
+            hash = hash * 31 + R;
+            hash = hash * 31 + Stack;
+            return hash;
         }
 
         public static bool operator ==(Position a, Position b)

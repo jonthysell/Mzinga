@@ -1,5 +1,5 @@
 ﻿// 
-// TurnMetrics.cs
+// EvaluatedMoveCollection.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,67 +25,74 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace Mzinga.Core
+namespace Mzinga.Core.AI
 {
-    public class TurnMetrics
+    public class EvaluatedMoveCollection
     {
-        public Color TurnColor { get; private set; }
-
-        public IDictionary<PieceName, PieceMetrics> PieceMetrics
-        {
-            get
-            {
-                return _pieceMetrics;
-            }
-        }
-        private Dictionary<PieceName, PieceMetrics> _pieceMetrics;
-
-        public int TotalMoveCount
+        public int Count
         {
             get
             {
                 int count = 0;
 
-                foreach (PieceMetrics pieceMetrics in PieceMetrics.Values)
+                foreach (double score in _evaluatedMoves.Keys)
                 {
-                    count += pieceMetrics.MoveCount;
+                    if (null != _evaluatedMoves[score])
+                    {
+                        count += _evaluatedMoves[score].Count;
+                    }
                 }
 
                 return count;
             }
         }
 
-        public TurnMetrics(Color turnColor)
+        private Dictionary<double, List<EvaluatedMove>> _evaluatedMoves;
+
+        public EvaluatedMoveCollection()
         {
-            TurnColor = turnColor;
+            _evaluatedMoves = new Dictionary<double, List<EvaluatedMove>>();
+        }
 
-            _pieceMetrics = new Dictionary<PieceName,PieceMetrics>();
-
-            IEnumerable<PieceName> pieceNames = TurnColor == Color.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
-            foreach (PieceName pieceName in pieceNames)
+        public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
+        {
+            foreach (EvaluatedMove evaluatedMove in evaluatedMoves)
             {
-                _pieceMetrics.Add(pieceName, new PieceMetrics(pieceName));
+                Add(evaluatedMove);
             }
         }
 
-        public void CopyFrom(TurnMetrics turnMetrics)
+        public void Add(EvaluatedMove evaluatedMove)
         {
-            if (null == turnMetrics)
+            if (null == evaluatedMove)
             {
-                throw new ArgumentNullException("turnMetrics");
+                throw new ArgumentNullException("evaluatedMove");
             }
 
-            if (TurnColor != turnMetrics.TurnColor)
+            double score = evaluatedMove.ScoreAfterMove;
+
+            if (!_evaluatedMoves.ContainsKey(score))
             {
-                throw new ArgumentOutOfRangeException("turnMetrics");
+                _evaluatedMoves[score] = new List<EvaluatedMove>();
             }
 
-            foreach (PieceName pieceName in _pieceMetrics.Keys)
+            _evaluatedMoves[score].Add(evaluatedMove);
+        }
+
+        public IEnumerable<EvaluatedMove> GetBestMoves()
+        {
+            if (_evaluatedMoves.Count == 0)
             {
-                _pieceMetrics[pieceName].CopyFrom(turnMetrics.PieceMetrics[pieceName]);
+                return null;
             }
+
+            double maxScore = _evaluatedMoves.Keys.Max();
+            return _evaluatedMoves[maxScore].AsEnumerable<EvaluatedMove>();
         }
     }
 }

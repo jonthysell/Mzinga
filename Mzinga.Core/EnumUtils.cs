@@ -187,6 +187,17 @@ namespace Mzinga.Core
 
         #region BugTypes
 
+        public static IEnumerable<BugType> BugTypes
+        {
+            get
+            {
+                for (int i = 0; i < NumBugTypes; i++)
+                {
+                    yield return (BugType)i;
+                }
+            }
+        }
+
         public static BugType GetBugType(PieceName pieceName)
         {
             switch (pieceName)

@@ -64,17 +64,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\GameAI.cs" />
+    <Compile Include="AI\GameAIBase.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardMetrics.cs" />
-    <Compile Include="EvaluatedMove.cs" />
+    <Compile Include="AI\MetricWeights.cs" />
+    <Compile Include="AI\EvaluatedMove.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="GameEngine.cs" />
     <Compile Include="EnumUtils.cs" />
-    <Compile Include="EvaluatedMoveCollection.cs" />
+    <Compile Include="AI\EvaluatedMoveCollection.cs" />
     <Compile Include="MoveSet.cs" />
     <Compile Include="BoardHistory.cs" />
     <Compile Include="Piece.cs" />
-    <Compile Include="TurnMetrics.cs" />
+    <Compile Include="PlayerMetrics.cs" />
     <Compile Include="PieceMetrics.cs" />
     <Compile Include="PiecePositionBase.cs" />
     <Compile Include="Move.cs" />

@@ -37,7 +37,23 @@ namespace Mzinga.Core
 
         public BoardState BoardState { get; protected set; }
 
-        public int CurrentTurn { get; protected set; }
+        public int CurrentTurn
+        {
+            get
+            {
+                return _currentTurn;
+            }
+            protected set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _currentTurn = value;
+                ResetValidMovesCache();
+            }
+        }
+        private int _currentTurn;
 
         public Color CurrentTurnColor
         {
@@ -133,6 +149,8 @@ namespace Mzinga.Core
 
         private Piece[] _pieces;
 
+        private Dictionary<Position, List<Piece>> _piecesByPosition;
+
         #endregion
 
         #region Piece State Properties
@@ -171,9 +189,12 @@ namespace Mzinga.Core
 
         #endregion
 
+        private MoveSet _cachedValidMoves;
+
         public Board()
         {
             _pieces = new Piece[EnumUtils.NumPieceNames];
+            _piecesByPosition = new Dictionary<Position, List<Piece>>();
 
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
@@ -228,7 +249,7 @@ namespace Mzinga.Core
                 if (parsedPiece.InPlay)
                 {
                     Piece piece = GetPiece(parsedPiece.PieceName);
-                    piece.Move(parsedPiece.Position);
+                    MovePiece(piece, parsedPiece.Position);
                 }
             }
 
@@ -265,11 +286,16 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("position");
             }
 
-            foreach (Piece piece in PiecesInPlay)
+            Position key = GetKey(position);
+
+            if (_piecesByPosition.ContainsKey(key))
             {
-                if (piece.Position == position)
+                foreach (Piece piece in _piecesByPosition[key])
                 {
-                    return piece;
+                    if (piece.Position == position)
+                    {
+                        return piece;
+                    }
                 }
             }
 
@@ -285,20 +311,84 @@ namespace Mzinga.Core
 
             Piece topPiece = null;
 
-            foreach (Piece piece in PiecesInPlay)
+            Position key = GetKey(position);
+
+            if (_piecesByPosition.ContainsKey(key))
             {
-                if (piece.Position.X == position.X &&
-                    piece.Position.Y == position.Y &&
-                    piece.Position.Z == position.Z)
+                foreach (Piece piece in _piecesByPosition[key])
                 {
-                    if (null == topPiece || piece.Position.Stack > topPiece.Position.Stack)
+                    if (piece.Position.X == position.X &&
+                        piece.Position.Y == position.Y &&
+                        piece.Position.Z == position.Z)
                     {
-                        topPiece = piece;
+                        if (null == topPiece || piece.Position.Stack > topPiece.Position.Stack)
+                        {
+                            topPiece = piece;
+                        }
                     }
                 }
             }
 
             return topPiece;
+        }
+
+        protected void MovePiece(Piece piece, Position newPosition)
+        {
+            if (null == piece)
+            {
+                throw new ArgumentNullException("piece");
+            }
+
+            if (piece.InPlay)
+            {
+                RemoveFromPieceByPosition(piece);
+            }
+
+            piece.Move(newPosition);
+
+            if (piece.InPlay)
+            {
+                AddToPieceByPosition(piece);
+            }
+        }
+
+        protected void AddToPieceByPosition(Piece piece)
+        {
+            if (null == piece)
+            {
+                throw new ArgumentNullException("piece");
+            }
+
+            Position key = GetKey(piece.Position);
+
+            if (!_piecesByPosition.ContainsKey(key))
+            {
+                _piecesByPosition[key] = new List<Piece>();
+            }
+
+            _piecesByPosition[key].Add(piece);
+
+        }
+
+        protected void RemoveFromPieceByPosition(Piece piece)
+        {
+            if (null == piece)
+            {
+                throw new ArgumentNullException("piece");
+            }
+
+            Position key = GetKey(piece.Position);
+
+            _piecesByPosition[key].Remove(piece);
+        }
+
+        private Position GetKey(Position position)
+        {
+            if (null == position)
+            {
+                throw new ArgumentNullException("position");
+            }
+            return position.GetShifted(0, 0, 0, -position.Stack);
         }
 
         public bool PieceIsOnTop(Piece targetPiece)
@@ -392,35 +482,75 @@ namespace Mzinga.Core
         {
             BoardMetrics boardMetrics = new BoardMetrics(BoardState);
 
+            // Save off current valid moves since we'll be returning to it
+            MoveSet allMoves = GetValidMoves();
+
             // Get the metrics for the current turn
-            TurnMetrics currentTurnMetrics = GetCurrentTurnMetrics();
-            boardMetrics.TurnMetrics[CurrentTurnColor].CopyFrom(currentTurnMetrics);
+            PlayerMetrics currentPlayerMetrics = GetCurrentPlayerMetrics();
+            boardMetrics[CurrentTurnColor].CopyFrom(currentPlayerMetrics);
 
             // Spoof going to the next turn to get the opponent's metrics
             CurrentTurn++;
-            TurnMetrics opponentTurnMetrics = GetCurrentTurnMetrics();
-            boardMetrics.TurnMetrics[CurrentTurnColor].CopyFrom(opponentTurnMetrics);
+            PlayerMetrics opponentPlayerMetrics = GetCurrentPlayerMetrics();
+            boardMetrics[CurrentTurnColor].CopyFrom(opponentPlayerMetrics);
             CurrentTurn--;
+
+            // Returned, so reload saved valid moves into cache
+            _cachedValidMoves = allMoves;
 
             return boardMetrics;
         }
 
-        public TurnMetrics GetCurrentTurnMetrics()
+        public PlayerMetrics GetCurrentPlayerMetrics()
         {
-            TurnMetrics turnMetrics = new TurnMetrics(CurrentTurnColor);
+            PlayerMetrics playerMetrics = new PlayerMetrics(CurrentTurnColor);
 
             foreach (Piece piece in CurrentTurnPieces)
             {
-                PieceMetrics pieceMetrics = turnMetrics.PieceMetrics[piece.PieceName];
+                PieceMetrics pieceMetrics = GetPieceMetrics(piece);
+                playerMetrics[piece.PieceName].CopyFrom(pieceMetrics);
 
-                pieceMetrics.NeighborCount = CountNeighbors(piece.PieceName);
-
-                // Move metrics
-                MoveSet validMoves = GetValidMoves(piece);
-                pieceMetrics.MoveCount = validMoves.Count;
+                playerMetrics.ValidMoveCount += pieceMetrics.ValidMoveCount;
+                playerMetrics.ValidPlacementCount += pieceMetrics.ValidPlacementCount;
+                playerMetrics.ValidMovementCount += pieceMetrics.ValidMovementCount;
+                playerMetrics.PiecesInPlayCount += pieceMetrics.InPlay;
+                playerMetrics.PiecesInHandCount += pieceMetrics.InHand;
+                playerMetrics.PiecesPinnedCount += pieceMetrics.IsPinned;
             }
 
-            return turnMetrics;
+            return playerMetrics;
+        }
+
+        public PieceMetrics GetPieceMetrics(PieceName pieceName)
+        {
+            if (pieceName == PieceName.INVALID)
+            {
+                throw new ArgumentOutOfRangeException("pieceName");
+            }
+
+            Piece targetPiece = GetPiece(pieceName);
+
+            return GetPieceMetrics(targetPiece);
+        }
+
+        private PieceMetrics GetPieceMetrics(Piece targetPiece)
+        {
+            if (null == targetPiece)
+            {
+                throw new ArgumentOutOfRangeException("targetPiece");
+            }
+
+            PieceMetrics pieceMetrics = new PieceMetrics(targetPiece.PieceName);
+
+            // Move metrics
+            MoveSet validMoves = GetValidMoves(targetPiece);
+            pieceMetrics.ValidMoveCount = validMoves.Count;
+
+            pieceMetrics.NeighborCount = CountNeighbors(targetPiece.PieceName);
+
+            pieceMetrics.IsInPlay = targetPiece.InPlay;
+
+            return pieceMetrics;
         }
 
         public int CountNeighbors(PieceName pieceName)
@@ -448,28 +578,39 @@ namespace Mzinga.Core
 
         public MoveSet GetValidMoves()
         {
-            MoveSet moves = new MoveSet();
-
-            if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
+            if (null == _cachedValidMoves)
             {
-                foreach (Piece piece in AllPieces)
+                MoveSet moves = new MoveSet();
+
+                if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
                 {
-                    moves.Add(GetValidMoves(piece));
+                    foreach (Piece piece in CurrentTurnPieces)
+                    {
+                        moves.Add(GetValidMoves(piece));
+                    }
+
+                    if (moves.Count == 0)
+                    {
+                        moves.Add(Move.Pass);
+                    }
                 }
 
-                if (moves.Count == 0)
-                {
-                    moves.Add(Move.Pass);
-                }
+                _cachedValidMoves = moves;
             }
 
-            return moves;
+            return _cachedValidMoves;
         }
 
         public MoveSet GetValidMoves(PieceName pieceName)
         {
-            Piece piece = GetPiece(pieceName);
-            return GetValidMoves(piece);
+            if (null == _cachedValidMoves)
+            {
+                GetValidMoves();
+            }
+
+            MoveSet moves = new MoveSet();
+            moves.Add(_cachedValidMoves.Where<Move>((move) => { return move.PieceName == pieceName; }));
+            return moves;
         }
 
         protected MoveSet GetValidMoves(Piece targetPiece)
@@ -781,9 +922,9 @@ namespace Mzinga.Core
                         if (validMoves.Add(move))
                         {
                             Position preSlidePosition = targetPiece.Position;
-                            targetPiece.Move(move.Position);
+                            MovePiece(targetPiece, move.Position);
                             GetValidSlides(targetPiece, startingPosition, currentRange + 1, maxRange, validMoves);
-                            targetPiece.Move(preSlidePosition);
+                            MovePiece(targetPiece, preSlidePosition);
                         }
                     }
                 }
@@ -814,13 +955,13 @@ namespace Mzinga.Core
             {
                 // Temporarily remove piece from board
                 Position originalPosition = targetPiece.Position;
-                targetPiece.Move(null);
+                MovePiece(targetPiece, null);
 
                 // Determine if the hive is broken
                 bool isOneHive = IsOneHive();
 
                 // Return piece to the board
-                targetPiece.Move(originalPosition);
+                MovePiece(targetPiece, originalPosition);
 
                 return isOneHive;
             }
@@ -867,6 +1008,11 @@ namespace Mzinga.Core
             }
 
             return true;
+        }
+
+        protected void ResetValidMovesCache()
+        {
+            _cachedValidMoves = null;
         }
 
         #endregion
