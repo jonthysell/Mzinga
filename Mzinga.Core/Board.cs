@@ -793,28 +793,11 @@ namespace Mzinga.Core
                 // "Take-off" beetle
                 currentHeight--;
 
-                if (currentHeight == destinationHeight && destinationHeight == 0)
+                if (!(currentHeight == 0 && destinationHeight == 0 && topLeftNeighborHeight == 0 && topRightNeighborHeight == 0))
                 {
-                    if ((topLeftNeighborHeight == 0 && topRightNeighborHeight != 0) ||
-                        (topLeftNeighborHeight != 0 && topRightNeighborHeight == 0))
+                    // Logic from http://boardgamegeek.com/wiki/page/Hive_FAQ#toc9
+                    if (!(destinationHeight < topLeftNeighborHeight && destinationHeight < topRightNeighborHeight && currentHeight < topLeftNeighborHeight && currentHeight < topRightNeighborHeight))
                     {
-                        // Slide on bottom
-                        validMoves.Add(targetMove);
-                    }
-                }
-                else
-                {
-                    if ((topLeftNeighborHeight <= destinationHeight && topRightNeighborHeight <= destinationHeight) ||
-                            (topLeftNeighborHeight > destinationHeight && topRightNeighborHeight == destinationHeight) ||
-                            (topLeftNeighborHeight == destinationHeight && topRightNeighborHeight > destinationHeight))
-                    {
-                        // Slide on top
-                        validMoves.Add(targetMove);
-                    }
-                    else if ((topLeftNeighborHeight > destinationHeight && topRightNeighborHeight > destinationHeight) &&
-                             (topLeftNeighborHeight <= currentHeight && topRightNeighborHeight <= currentHeight))
-                    {
-                        // Step up and out or down and in
                         validMoves.Add(targetMove);
                     }
                 }

@@ -92,6 +92,11 @@ namespace Mzinga.Core.AI
                     evaluatedMove = new EvaluatedMove(validMove, scoreAfterMove);
 
                     alpha = Math.Max(alpha, scoreAfterMove);
+
+                    if (beta <= alpha)
+                    {
+                        break;
+                    }
                 }
 
                 evaluatedMoves.Add(evaluatedMove);

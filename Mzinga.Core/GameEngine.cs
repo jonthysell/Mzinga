@@ -63,7 +63,7 @@ namespace Mzinga.Core
             ConsoleOut = consoleOut;
 
             MetricWeights mw = GetMetricWeights();
-            GameAI = new GameAI(mw, 2);
+            GameAI = new GameAI(mw, 4);
 
             ExitRequested = false;
         }

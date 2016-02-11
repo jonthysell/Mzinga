@@ -84,12 +84,12 @@ namespace Mzinga.Core.AI
             if ((maxColor == Color.White && gameBoard.BoardState == BoardState.WhiteWins) ||
                 (maxColor == Color.Black && gameBoard.BoardState == BoardState.BlackWins))
             {
-                return Double.MaxValue;
+                return Double.PositiveInfinity;
             }
             else if ((maxColor == Color.White && gameBoard.BoardState == BoardState.BlackWins) ||
                      (maxColor == Color.Black && gameBoard.BoardState == BoardState.WhiteWins))
             {
-                return Double.MinValue;
+                return Double.NegativeInfinity;
             }
             else if (gameBoard.BoardState == BoardState.Draw)
             {
