@@ -325,7 +325,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.GameInProgress;
+                    return AppVM.EngineWrapper.CanFindBestMove;
                 });
             }
         }
@@ -346,7 +346,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.GameInProgress;
+                    return AppVM.EngineWrapper.CanPlayBestMove;
                 });
             }
         }

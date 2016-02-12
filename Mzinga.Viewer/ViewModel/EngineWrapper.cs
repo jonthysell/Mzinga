@@ -131,24 +131,13 @@ namespace Mzinga.Viewer.ViewModel
         }
         private Position _targetPosition = null;
 
-        public Move TargetMove
-        {
-            get
-            {
-                if (TargetPiece != PieceName.INVALID && null != TargetPosition)
-                {
-                    return new Move(TargetPiece, TargetPosition);
-                }
-
-                return null;
-            }
-        }
+        public Move TargetMove { get; private set; }
 
         public bool CanPlayTargetMove
         {
             get
             {
-                return CanPlayMove(TargetMove);
+                return CanPlayMove(TargetMove) && !TargetMove.IsPass;
             }
         }
 
@@ -206,6 +195,22 @@ namespace Mzinga.Viewer.ViewModel
                 }
 
                 return 0;
+            }
+        }
+
+        public bool CanFindBestMove
+        {
+            get
+            {
+                return CurrentTurnIsHuman && GameInProgress && null != ValidMoves && ValidMoves.Count > 0;
+            }
+        }
+
+        public bool CanPlayBestMove
+        {
+            get
+            {
+                return CurrentTurnIsHuman && GameInProgress && null != ValidMoves && ValidMoves.Count > 0;
             }
         }
 
@@ -299,14 +304,19 @@ namespace Mzinga.Viewer.ViewModel
 
         public void PlayTargetMove()
         {
-            Move move = TargetMove;
-
-            if (null == move)
+            if (null == TargetMove)
             {
                 throw new Exception("Please select a valid piece and destination first.");
             }
 
-            SendCommand("play {0}", move);
+            if (TargetMove.IsPass)
+            {
+                Pass();
+            }
+            else
+            {
+                SendCommand("play {0}", TargetMove);
+            }
         }
 
         public void Pass()
@@ -326,7 +336,7 @@ namespace Mzinga.Viewer.ViewModel
 
         public void PlayBestMove()
         {
-            SendCommand("play");
+            AutoPlayBestMove();
         }
 
         public void FindBestMove()
@@ -461,8 +471,10 @@ namespace Mzinga.Viewer.ViewModel
                     if (!String.IsNullOrWhiteSpace(firstLine))
                     {
                         Move bestMove = new Move(firstLine);
+
                         TargetPiece = bestMove.PieceName;
                         TargetPosition = bestMove.Position;
+                        TargetMove = bestMove;
                     }
                     else
                     {
@@ -519,9 +531,14 @@ namespace Mzinga.Viewer.ViewModel
         private void OnBoardUpdate(Board board)
         {
             TargetPiece = PieceName.INVALID;
+            ValidMoves = null;
 
-            SendCommand("validmoves");
             SendCommand("history");
+
+            if (GameInProgress)
+            {
+                SendCommand("validmoves");
+            }
 
             if (null != BoardUpdated)
             {
@@ -532,7 +549,15 @@ namespace Mzinga.Viewer.ViewModel
                 ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
                  (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)))
             {
-                Task.Run(() =>
+                AutoPlayBestMove();
+            }
+        }
+
+        private void AutoPlayBestMove()
+        {
+            Task.Run(() =>
+            {
+                try
                 {
                     DateTime start = DateTime.Now;
 
@@ -546,17 +571,13 @@ namespace Mzinga.Viewer.ViewModel
                         Thread.Sleep(timeToWaitMs);
                     }
 
-                    if (null == TargetMove)
-                    {
-                        // FindBestMove must have returned a Pass
-                        Pass();
-                    }
-                    else
-                    {
-                        PlayTargetMove();
-                    }
-                });
-            }
+                    PlayTargetMove();
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            });
         }
 
         private void OnEngineTextUpdate(string engineText)
@@ -579,6 +600,12 @@ namespace Mzinga.Viewer.ViewModel
 
         private void OnTargetPositionUpdate(Position position)
         {
+            TargetMove = null;
+            if (TargetPiece != PieceName.INVALID && null != TargetPosition)
+            {
+                TargetMove = new Move(TargetPiece, TargetPosition);
+            }
+
             if (null != TargetPositionUpdated)
             {
                 TargetPositionUpdated(position);

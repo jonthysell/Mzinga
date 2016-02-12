@@ -38,7 +38,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidMoveCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidMoveCount; });
             }
         }
 
@@ -46,7 +46,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidPlacementCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidPlacementCount; });
             }
         }
 
@@ -54,7 +54,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.ValidMovementCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidMovementCount; });
             }
         }
 
@@ -62,7 +62,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PieceCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PieceCount; });
             }
         }
 
@@ -70,7 +70,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesInPlayCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesInPlayCount; });
             }
         }
 
@@ -78,7 +78,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesInHandCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesInHandCount; });
             }
         }
 
@@ -86,7 +86,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((turnMetrics) => { return turnMetrics.PiecesPinnedCount; });
+                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesPinnedCount; });
             }
         }
 

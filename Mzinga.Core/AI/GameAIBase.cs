@@ -32,21 +32,47 @@ using Mzinga.Core;
 
 namespace Mzinga.Core.AI
 {
-    public abstract class GameAIBase
+    public abstract class GameAIBase : IGameAI
     {
         public MetricWeights MetricWeights { get; private set; }
 
+        public TimeSpan MaxTime
+        {
+            get
+            {
+                return _maxTime;
+            }
+            set
+            {
+                if (value < TimeSpan.Zero)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _maxTime = value;
+            }
+        }
+        private TimeSpan _maxTime;
+
+        public bool HasTimeLeft
+        {
+            get
+            {
+                if (StartTime.HasValue)
+                {
+                    return (DateTime.Now - StartTime.Value) < MaxTime;
+                }
+
+                return false;
+            }
+        }
+
+        public DateTime? StartTime { get; protected set; }
+
         protected Random Random;
 
-        public GameAIBase(MetricWeights metricWeights)
+        public GameAIBase()
         {
-            if (null == metricWeights)
-            {
-                throw new ArgumentNullException("metricWeights");
-            }
-
-            MetricWeights = metricWeights;
-
+            MetricWeights = new MetricWeights();
             Random = new Random();
         }
 

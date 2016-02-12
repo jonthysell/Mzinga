@@ -41,7 +41,7 @@ namespace Mzinga.Core
 
         private GameBoard GameBoard;
 
-        private GameAI GameAI;
+        private IGameAI _gameAI;
 
         private Move _cachedBestMove;
 
@@ -62,8 +62,7 @@ namespace Mzinga.Core
             ID = id;
             ConsoleOut = consoleOut;
 
-            MetricWeights mw = GetMetricWeights();
-            GameAI = new GameAI(mw, 4);
+            InitGameAI();
 
             ExitRequested = false;
         }
@@ -207,6 +206,11 @@ namespace Mzinga.Core
                 throw new NoBoardException();
             }
 
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
             Move bestMove = GetBestMove();
 
             GameBoard.Play(bestMove);
@@ -220,6 +224,11 @@ namespace Mzinga.Core
                 throw new NoBoardException();
             }
 
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
             GameBoard.Play(new Move(moveString));
             ConsoleOut(GameBoard.ToString());
         }
@@ -231,6 +240,11 @@ namespace Mzinga.Core
                 throw new NoBoardException();
             }
 
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
             GameBoard.Pass();
             ConsoleOut(GameBoard.ToString());
         }
@@ -240,6 +254,11 @@ namespace Mzinga.Core
             if (null == GameBoard)
             {
                 throw new NoBoardException();
+            }
+
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
             }
 
             MoveSet validMoves = GameBoard.GetValidMoves();
@@ -258,6 +277,11 @@ namespace Mzinga.Core
                 throw new ArgumentNullException(pieceName);
             }
 
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
             MoveSet validMoves = GameBoard.GetValidMoves(EnumUtils.ParseShortName(pieceName));
             ConsoleOut(validMoves.ToString());
         }
@@ -267,6 +291,11 @@ namespace Mzinga.Core
             if (null == GameBoard)
             {
                 throw new NoBoardException();
+            }
+
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
             }
 
             Move bestMove = GetBestMove();
@@ -325,34 +354,45 @@ namespace Mzinga.Core
 
             if (null == _cachedBestMove)
             {
-                _cachedBestMove = GameAI.GetBestMove(GameBoard);
+                _cachedBestMove = _gameAI.GetBestMove(GameBoard);
             }
 
             return _cachedBestMove;
         }
 
-        private MetricWeights GetMetricWeights()
+        private void InitGameAI()
         {
-            MetricWeights mw = new MetricWeights();
+            GameAI ai = new GameAI();
+
+            ai.MaxDepth = GameAI.IterativeDepth;
+            ai.AlphaBetaPruning = true;
+            ai.MaxTime = TimeSpan.FromSeconds(1.0);
+
+            MetricWeights mw = ai.MetricWeights;
 
             // Basic Queen Management
             mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, -5.0); // Your Queen has company!
-            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, -23.0); // Your Queen is pinned!
+            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, -42.0); // Your Queen is pinned!
 
-            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, 17.0); // Surround the enemy Queen!
-            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, 42.0); // The enemy Queen is pinned!
+            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, 7.0); // Surround the enemy Queen!
+            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, 23.0); // The enemy Queen is pinned!
 
             // Give edge to opening up more moves
-            mw.Set(Player.Maximizing, PlayerWeight.ValidMoveWeight, 0.01);
-            mw.Set(Player.Minimizing, PlayerWeight.ValidMoveWeight, -0.33);
+            mw.Set(Player.Maximizing, PlayerWeight.ValidMoveWeight, 0.001);
+            mw.Set(Player.Minimizing, PlayerWeight.ValidMoveWeight, -0.01);
 
-            return mw;
+            _gameAI = ai;
         }
     }
 
     public class NoBoardException : Exception
     {
         public NoBoardException() : base("You must start a game before you can do that.") { }
+    }
+
+    public class GameIsOverException : Exception
+    {
+        public GameIsOverException() : base("You can't do that, the game is over.") { }
     }
 
     public class UndoTooFewMoves : Exception

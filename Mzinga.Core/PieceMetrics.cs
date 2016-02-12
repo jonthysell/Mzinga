@@ -38,7 +38,7 @@ namespace Mzinga.Core
             {
                 return _validMoveCount;
             }
-            set
+            internal set
             {
                 if (value < 0)
                 {
@@ -71,7 +71,7 @@ namespace Mzinga.Core
             {
                 return _neighborCount;
             }
-            set
+            internal set
             {
                 if (value < 0)
                 {
@@ -82,7 +82,7 @@ namespace Mzinga.Core
         }
         private int _neighborCount;
 
-        public bool IsInPlay { get; set; }
+        public bool IsInPlay { get; internal set; }
 
         public int InHand
         {
@@ -121,7 +121,7 @@ namespace Mzinga.Core
             NeighborCount = 0;
         }
 
-        public void CopyFrom(PieceMetrics pieceMetrics)
+        internal void CopyFrom(PieceMetrics pieceMetrics)
         {
             if (null == pieceMetrics)
             {

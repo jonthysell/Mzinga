@@ -35,19 +35,19 @@ namespace Mzinga.Core
     {
         public Color PlayerColor { get; private set; }
 
-        public int ValidMoveCount { get; set; }
+        public int ValidMoveCount { get; private set; }
 
-        public int ValidPlacementCount { get; set; }
+        public int ValidPlacementCount { get; private set; }
 
-        public int ValidMovementCount { get; set; }
+        public int ValidMovementCount { get; private set; }
 
         public int PieceCount { get; private set; }
 
-        public int PiecesInPlayCount { get; set; }
+        public int PiecesInPlayCount { get; private set; }
 
-        public int PiecesInHandCount { get; set; }
+        public int PiecesInHandCount { get; private set; }
 
-        public int PiecesPinnedCount { get; set; }
+        public int PiecesPinnedCount { get; private set; }
 
         public IEnumerable<PieceName> PieceNames
         {
@@ -79,13 +79,7 @@ namespace Mzinga.Core
                 _pieceMetrics.Add(pieceName, new PieceMetrics(pieceName));
             }
 
-            ValidMoveCount = 0;
-            ValidPlacementCount = 0;
-            ValidMovementCount = 0;
-            PieceCount = _pieceMetrics.Count;
-            PiecesInPlayCount = 0;
-            PiecesInHandCount = 0;
-            PiecesPinnedCount = 0;
+            ResetMetrics();
         }
 
         public PieceMetrics Get(PieceName pieceName)
@@ -103,7 +97,7 @@ namespace Mzinga.Core
             return _pieceMetrics[pieceName];
         }
 
-        public void CopyFrom(PlayerMetrics playerMetrics)
+        internal void CopyFrom(PlayerMetrics playerMetrics)
         {
             if (null == playerMetrics)
             {
@@ -115,9 +109,53 @@ namespace Mzinga.Core
                 throw new ArgumentOutOfRangeException("playerMetrics");
             }
 
+            foreach (PieceName pieceName in playerMetrics.PieceNames)
+            {
+                CopyFrom(playerMetrics[pieceName]);
+            }
+
+            ValidMoveCount = playerMetrics.ValidMoveCount;
+            ValidPlacementCount = playerMetrics.ValidPlacementCount;
+            ValidMovementCount = playerMetrics.ValidMovementCount;
+            PieceCount = playerMetrics.PieceCount;
+            PiecesInPlayCount = playerMetrics.PiecesInPlayCount;
+            PiecesInHandCount = playerMetrics.PiecesInHandCount;
+            PiecesPinnedCount = playerMetrics.PiecesPinnedCount;
+        }
+
+        internal void CopyFrom(PieceMetrics pieceMetrics)
+        {
+            if (null == pieceMetrics)
+            {
+                throw new ArgumentNullException("pieceMetrics");
+            }
+
+            PieceMetrics pm = Get(pieceMetrics.PieceName);
+            pm.CopyFrom(pieceMetrics);
+        }
+
+        internal void ResetMetrics()
+        {
+            ValidMoveCount = 0;
+            ValidPlacementCount = 0;
+            ValidMovementCount = 0;
+            PieceCount = 0;
+            PiecesInPlayCount = 0;
+            PiecesInHandCount = 0;
+            PiecesPinnedCount = 0;
+        }
+
+        internal void RecalculateMetrics()
+        {
+            ResetMetrics();
             foreach (PieceName pieceName in PieceNames)
             {
-                _pieceMetrics[pieceName].CopyFrom(playerMetrics[pieceName]);
+                ValidMoveCount += _pieceMetrics[pieceName].ValidMoveCount;
+                ValidPlacementCount += _pieceMetrics[pieceName].ValidPlacementCount;
+                ValidMovementCount += _pieceMetrics[pieceName].ValidMovementCount;
+                PiecesInPlayCount += _pieceMetrics[pieceName].InPlay;
+                PiecesInHandCount += _pieceMetrics[pieceName].InHand;
+                PiecesPinnedCount += _pieceMetrics[pieceName].IsPinned;
             }
         }
     }

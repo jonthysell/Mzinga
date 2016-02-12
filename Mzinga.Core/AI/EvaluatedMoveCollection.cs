@@ -32,31 +32,46 @@ using System.Text;
 
 namespace Mzinga.Core.AI
 {
-    public class EvaluatedMoveCollection
+    public class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
     {
         public int Count
         {
             get
             {
-                int count = 0;
-
-                foreach (double score in _evaluatedMoves.Keys)
-                {
-                    if (null != _evaluatedMoves[score])
-                    {
-                        count += _evaluatedMoves[score].Count;
-                    }
-                }
-
-                return count;
+                return _evaluatedMoves.Count;
             }
         }
 
-        private Dictionary<double, List<EvaluatedMove>> _evaluatedMoves;
-
-        public EvaluatedMoveCollection()
+        public EvaluatedMove this[int index]
         {
-            _evaluatedMoves = new Dictionary<double, List<EvaluatedMove>>();
+            get
+            {
+                return _evaluatedMoves[index];
+            }
+        }
+
+        public bool SortAscending { get; private set; }
+
+        public double BestScore { get; private set; }
+
+        private IComparer<EvaluatedMove> _comparer;
+
+        private List<EvaluatedMove> _evaluatedMoves;
+
+        public EvaluatedMoveCollection(bool sortAscending = false)
+        {
+            SortAscending = sortAscending;
+
+            _evaluatedMoves = new List<EvaluatedMove>();
+
+            if (SortAscending)
+            {
+                _comparer = new EvaluatedMoveAscendingComparer();
+            }
+            else
+            {
+                _comparer = new EvaluatedMoveDescendingComparer();
+            }
         }
 
         public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
@@ -67,32 +82,133 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public void Add(EvaluatedMove evaluatedMove)
+        public bool Add(EvaluatedMove evaluatedMove)
         {
             if (null == evaluatedMove)
             {
                 throw new ArgumentNullException("evaluatedMove");
             }
 
-            double score = evaluatedMove.ScoreAfterMove;
+            int index = SearchFor(evaluatedMove);
 
-            if (!_evaluatedMoves.ContainsKey(score))
+            if (index < 0)
             {
-                _evaluatedMoves[score] = new List<EvaluatedMove>();
+                index = ~index;
+
+                if (index == 0)
+                {
+                    BestScore = evaluatedMove.ScoreAfterMove;
+                }
+
+                if (index == _evaluatedMoves.Count)
+                {
+                    _evaluatedMoves.Add(evaluatedMove);
+                }
+                else
+                {
+                    _evaluatedMoves.Insert(index, evaluatedMove);
+                }
+
+                return true;
             }
 
-            _evaluatedMoves[score].Add(evaluatedMove);
+            return false;
         }
 
         public IEnumerable<EvaluatedMove> GetBestMoves()
         {
-            if (_evaluatedMoves.Count == 0)
+            foreach (EvaluatedMove evaluatedMove in this)
             {
-                return null;
+                if (evaluatedMove.ScoreAfterMove != BestScore)
+                {
+                    break;
+                }
+
+                yield return evaluatedMove;
+            }
+        }
+
+        public IEnumerator<EvaluatedMove> GetEnumerator()
+        {
+            foreach (EvaluatedMove evaluatedMove in _evaluatedMoves)
+            {
+                yield return evaluatedMove;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        private int SearchFor(EvaluatedMove evaluatedMove)
+        {
+            List<EvaluatedMove> tempList = new List<EvaluatedMove>(_evaluatedMoves);
+            return Array.BinarySearch<EvaluatedMove>(tempList.ToArray(), evaluatedMove, _comparer);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (EvaluatedMove evaluatedMove in this)
+            {
+                sb.AppendFormat("{0}{1}", evaluatedMove.Move, EvaluatedMoveStringSeparator);
             }
 
-            double maxScore = _evaluatedMoves.Keys.Max();
-            return _evaluatedMoves[maxScore].AsEnumerable<EvaluatedMove>();
+            return sb.ToString().TrimEnd(EvaluatedMoveStringSeparator);
+        }
+
+        public const char EvaluatedMoveStringSeparator = ';';
+
+        private class EvaluatedMoveAscendingComparer : IComparer<EvaluatedMove>
+        {
+            public int Compare(EvaluatedMove a, EvaluatedMove b)
+            {
+                if (null == a)
+                {
+                    throw new ArgumentNullException("a");
+                }
+
+                if (null == b)
+                {
+                    throw new ArgumentNullException("b");
+                }
+
+                int result = a.CompareTo(b);
+
+                if (result == 0)
+                {
+                    result = a.Move.CompareTo(b.Move);
+                }
+
+                return result;
+            }
+        }
+
+        private class EvaluatedMoveDescendingComparer : IComparer<EvaluatedMove>
+        {
+            public int Compare(EvaluatedMove a, EvaluatedMove b)
+            {
+                if (null == a)
+                {
+                    throw new ArgumentNullException("a");
+                }
+
+                if (null == b)
+                {
+                    throw new ArgumentNullException("b");
+                }
+
+                int result = b.CompareTo(a);
+
+                if (result == 0)
+                {
+                    result = a.Move.CompareTo(b.Move);
+                }
+
+                return result;
+            }
         }
     }
 }

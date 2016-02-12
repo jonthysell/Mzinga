@@ -1,5 +1,5 @@
 ﻿// 
-// EvaluatedMove.cs
+// IGameAI.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,46 +25,23 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Mzinga.Core;
 
 namespace Mzinga.Core.AI
 {
-    public class EvaluatedMove : IComparable<EvaluatedMove>
+    public interface IGameAI
     {
-        public Move Move { get; private set; }
+        MetricWeights MetricWeights { get; }
 
-        public double ScoreAfterMove { get; private set; }
+        TimeSpan MaxTime { get; set; }
+        bool HasTimeLeft { get;  }
+        DateTime? StartTime { get; }
 
-        public int Depth { get; private set; }
-
-        public EvaluatedMove(Move move, double scoreAfterMove = UnevaluatedMoveScore, int depth = 0)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            Move = move;
-            ScoreAfterMove = scoreAfterMove;
-            Depth = depth;
-        }
-
-        public int CompareTo(EvaluatedMove evaluatedMove)
-        {
-            if (null == evaluatedMove)
-            {
-                throw new ArgumentNullException("evaluatedMove");
-            }
-
-            return ScoreAfterMove.CompareTo(evaluatedMove.ScoreAfterMove);
-        }
-
-        public override string ToString()
-        {
-            return String.Format("{1}{0}{2}{0}{3}", EvaluatedMoveStringSeparator, Move, Depth, ScoreAfterMove);
-        }
-
-        public const char EvaluatedMoveStringSeparator = ';';
-
-        private const double UnevaluatedMoveScore = Double.MinValue;
+        Move GetBestMove(GameBoard gameBoard);
     }
 }

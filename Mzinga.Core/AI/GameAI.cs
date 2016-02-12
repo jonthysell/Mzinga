@@ -42,7 +42,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value < 0)
+                if (value < -1)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -52,60 +52,119 @@ namespace Mzinga.Core.AI
         }
         private int _maxDepth;
 
-        public GameAI(MetricWeights metricWeights, int maxDepth = 0) : base(metricWeights)
+        public bool AlphaBetaPruning { get; set; }
+
+        public GameAI() : base()
         {
-            MaxDepth = maxDepth;
+            MaxDepth = 0;
+            AlphaBetaPruning = false;
+            MaxTime = TimeSpan.Zero;
         }
 
         protected override EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)
         {
-            EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
+            if (null == gameBoard)
+            {
+                throw new ArgumentNullException("gameBoard");
+            }
+
+            StartTime = DateTime.Now;
 
             MoveSet validMoves = gameBoard.GetValidMoves();
 
-            if (validMoves.Count == 1)
+            EvaluatedMoveCollection movesToEvaluate = new EvaluatedMoveCollection();
+
+            foreach (Move move in validMoves)
             {
-                evaluatedMoves.Add(new EvaluatedMove(validMoves[0], 0));
-                return evaluatedMoves;
+                movesToEvaluate.Add(new EvaluatedMove(move));
             }
+
+            // No choices, don't bother evaluating
+            if (movesToEvaluate.Count <= 1 || MaxDepth == 0)
+            {
+                return movesToEvaluate;
+            }
+
+            // Non-iterative search (can't bound on time)
+            if (MaxDepth > 0)
+            {
+                return EvaluateMovesToDepth(gameBoard, movesToEvaluate, MaxDepth);
+            }
+
+            // Iterative search
+            int depth = 0;
+            while (HasTimeLeft)
+            {
+                depth++;
+
+                // "Re-sort" moves to evaluate based on the next iteration
+                movesToEvaluate = EvaluateMovesToDepth(gameBoard, movesToEvaluate, depth);
+            }
+
+            StartTime = null;
+
+            return movesToEvaluate;
+        }
+
+        private EvaluatedMoveCollection EvaluateMovesToDepth(GameBoard gameBoard, EvaluatedMoveCollection movesToEvaluate, int maxDepth)
+        {
+            if (null == gameBoard)
+            {
+                throw new ArgumentNullException("gameBoard");
+            }
+
+            if (null == movesToEvaluate)
+            {
+                throw new ArgumentNullException("movesToEvaluate");
+            }
+
+            if (maxDepth <= 0)
+            {
+                throw new ArgumentOutOfRangeException("maxDepth");
+            }
+
+            EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
             Color maxColor = gameBoard.CurrentTurnColor;
 
             double alpha = Double.NegativeInfinity;
             double beta = Double.PositiveInfinity;
 
-            foreach (Move validMove in validMoves)
+            foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
-                EvaluatedMove evaluatedMove;
-
-                if (MaxDepth == 0)
+                if (!HasTimeLeft)
                 {
-                    evaluatedMove = new EvaluatedMove(validMove, 0);
-                }
-                else
-                {
-                    gameBoard.TrustedPlay(validMove);
-
-                    double scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, false, 1, alpha, beta);
-                    gameBoard.UndoLastMove();
-
-                    evaluatedMove = new EvaluatedMove(validMove, scoreAfterMove);
-
-                    alpha = Math.Max(alpha, scoreAfterMove);
-
-                    if (beta <= alpha)
-                    {
-                        break;
-                    }
+                    break;
                 }
 
+                gameBoard.TrustedPlay(moveToEvaluate.Move);
+                double scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, false, maxDepth, 1, alpha, beta);
+                gameBoard.UndoLastMove();
+
+                EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, scoreAfterMove, maxDepth);
                 evaluatedMoves.Add(evaluatedMove);
+
+                alpha = Math.Max(alpha, scoreAfterMove);
+
+                if (AlphaBetaPruning && beta <= alpha)
+                {
+                    break;
+                }                
+            }
+
+            // We must have cut-off early, add the remaining moves to the end (possibly for the next iteration)
+            if (evaluatedMoves.Count < movesToEvaluate.Count)
+            {
+                for (int i = evaluatedMoves.Count; i < movesToEvaluate.Count; i++)
+                {
+                    evaluatedMoves.Add(movesToEvaluate[i]);
+                }
             }
 
             return evaluatedMoves;
         }
 
-        private double EvaluateBoardAfterMove(GameBoard gameBoard, Color maxColor, bool maxPlayer, int depth, double alpha, double beta)
+        private double EvaluateBoardAfterMove(GameBoard gameBoard, Color maxColor, bool maxPlayer, int maxDepth, int depth, double alpha, double beta)
         {
             if (null == gameBoard)
             {
@@ -113,7 +172,7 @@ namespace Mzinga.Core.AI
             }
 
             // Leaf, search no more
-            if (depth == MaxDepth)
+            if (depth == maxDepth)
             {
                 return CalculateBoardScore(gameBoard, maxColor);
             }
@@ -132,7 +191,7 @@ namespace Mzinga.Core.AI
             {
                 gameBoard.TrustedPlay(validMove);
 
-                double scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, !maxPlayer, depth + 1, alpha, beta);
+                double scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, !maxPlayer, maxDepth, depth + 1, alpha, beta);
                 
                 gameBoard.UndoLastMove();
 
@@ -147,7 +206,7 @@ namespace Mzinga.Core.AI
                     beta = Math.Min(beta, score);
                 }
 
-                if (beta <= alpha)
+                if (AlphaBetaPruning && beta <= alpha)
                 {
                     break;
                 }
@@ -155,5 +214,7 @@ namespace Mzinga.Core.AI
 
             return score;
         }
+
+        public const int IterativeDepth = -1;
     }
 }

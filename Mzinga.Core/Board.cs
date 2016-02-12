@@ -508,15 +508,10 @@ namespace Mzinga.Core
             foreach (Piece piece in CurrentTurnPieces)
             {
                 PieceMetrics pieceMetrics = GetPieceMetrics(piece);
-                playerMetrics[piece.PieceName].CopyFrom(pieceMetrics);
-
-                playerMetrics.ValidMoveCount += pieceMetrics.ValidMoveCount;
-                playerMetrics.ValidPlacementCount += pieceMetrics.ValidPlacementCount;
-                playerMetrics.ValidMovementCount += pieceMetrics.ValidMovementCount;
-                playerMetrics.PiecesInPlayCount += pieceMetrics.InPlay;
-                playerMetrics.PiecesInHandCount += pieceMetrics.InHand;
-                playerMetrics.PiecesPinnedCount += pieceMetrics.IsPinned;
+                playerMetrics.CopyFrom(pieceMetrics);
             }
+
+            playerMetrics.RecalculateMetrics();
 
             return playerMetrics;
         }
