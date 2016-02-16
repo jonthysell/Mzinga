@@ -61,7 +61,7 @@ namespace Mzinga.Core
         {
             if (String.IsNullOrWhiteSpace(moveSetString))
             {
-                throw new ArgumentOutOfRangeException("moveSetString");
+                throw new ArgumentNullException("moveSetString");
             }
 
             string[] split = moveSetString.Split(MoveSet.MoveStringSeparator);
@@ -75,6 +75,11 @@ namespace Mzinga.Core
 
         public void Add(IEnumerable<Move> moves)
         {
+            if (null == moves)
+            {
+                throw new ArgumentNullException("moves");
+            }
+
             foreach (Move move in moves)
             {
                 Add(move);
