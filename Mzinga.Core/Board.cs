@@ -149,7 +149,7 @@ namespace Mzinga.Core
 
         private Piece[] _pieces;
 
-        private Dictionary<Position, List<Piece>> _piecesByPosition;
+        private Dictionary<Position, Piece> _piecesByPosition;
 
         #endregion
 
@@ -194,7 +194,7 @@ namespace Mzinga.Core
         public Board()
         {
             _pieces = new Piece[EnumUtils.NumPieceNames];
-            _piecesByPosition = new Dictionary<Position, List<Piece>>();
+            _piecesByPosition = new Dictionary<Position, Piece>();
 
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
@@ -286,17 +286,10 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("position");
             }
 
-            Position key = GetKey(position);
-
-            if (_piecesByPosition.ContainsKey(key))
+            Piece piece;
+            if (_piecesByPosition.TryGetValue(position, out piece))
             {
-                foreach (Piece piece in _piecesByPosition[key])
-                {
-                    if (piece.Position == position)
-                    {
-                        return piece;
-                    }
-                }
+                return piece;
             }
 
             return null;
@@ -309,24 +302,23 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("position");
             }
 
+            if (position.Stack > 0)
+            {
+                position = position.GetShifted(0, 0, 0, -position.Stack);
+            }
+
             Piece topPiece = null;
 
-            Position key = GetKey(position);
-
-            if (_piecesByPosition.ContainsKey(key))
+            while (true)
             {
-                foreach (Piece piece in _piecesByPosition[key])
+                Piece piece = GetPiece(position);
+                if (null == piece)
                 {
-                    if (piece.Position.X == position.X &&
-                        piece.Position.Y == position.Y &&
-                        piece.Position.Z == position.Z)
-                    {
-                        if (null == topPiece || piece.Position.Stack > topPiece.Position.Stack)
-                        {
-                            topPiece = piece;
-                        }
-                    }
+                    break;
                 }
+
+                topPiece = piece;
+                position = position.GetShifted(0, 0, 0, 1);
             }
 
             return topPiece;
@@ -359,15 +351,12 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("piece");
             }
 
-            Position key = GetKey(piece.Position);
-
-            if (!_piecesByPosition.ContainsKey(key))
+            if (null == piece.Position)
             {
-                _piecesByPosition[key] = new List<Piece>();
+                throw new ArgumentOutOfRangeException("piece");
             }
 
-            _piecesByPosition[key].Add(piece);
-
+            _piecesByPosition[piece.Position] = piece;
         }
 
         protected void RemoveFromPieceByPosition(Piece piece)
@@ -377,18 +366,12 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("piece");
             }
 
-            Position key = GetKey(piece.Position);
-
-            _piecesByPosition[key].Remove(piece);
-        }
-
-        private Position GetKey(Position position)
-        {
-            if (null == position)
+            if (null == piece.Position)
             {
-                throw new ArgumentNullException("position");
+                throw new ArgumentOutOfRangeException("piece");
             }
-            return position.GetShifted(0, 0, 0, -position.Stack);
+
+            _piecesByPosition[piece.Position] = null;
         }
 
         public bool PieceIsOnTop(Piece targetPiece)
@@ -398,18 +381,14 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("targetPiece");
             }
 
-            foreach (Piece piece in PiecesInPlay)
+            if (targetPiece.InHand)
             {
-                if (piece.Position.X == targetPiece.Position.X &&
-                    piece.Position.Y == targetPiece.Position.Y &&
-                    piece.Position.Z == targetPiece.Position.Z &&
-                    piece.Position.Stack > targetPiece.Position.Stack)
-                {
-                    return false;
-                }
+                return true;
             }
 
-            return true;
+            Position positionAbove = targetPiece.Position.GetShifted(0, 0, 0, 1);
+
+            return !HasPieceAt(positionAbove);
         }
 
         public bool IsOneHive()

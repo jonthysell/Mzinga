@@ -42,19 +42,11 @@ namespace Mzinga.Core
             }
         }
 
-        private List<Move> _moves;
-
-        public Move this[int index]
-        {
-            get
-            {
-                return _moves[index];
-            }
-        }
+        private HashSet<Move> _moves;
 
         public MoveSet()
         {
-            _moves = new List<Move>();
+            _moves = new HashSet<Move>();
         }
 
         public MoveSet(string moveSetString) : this()
@@ -93,25 +85,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("move");
             }
 
-            int index = SearchFor(move);
-
-            if (index < 0)
-            {
-                index = ~index;
-
-                if (index == _moves.Count)
-                {
-                    _moves.Add(move);
-                }
-                else
-                {
-                    _moves.Insert(index, move);
-                }
-
-                return true;
-            }
-
-            return false;
+            return _moves.Add(move);
         }
 
         public void Remove(IEnumerable<Move> moves)
@@ -134,15 +108,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("move");
             }
 
-            int index = SearchFor(move);
-
-            if (index >= 0)
-            {
-                _moves.RemoveAt(index);
-                return true;
-            }
-
-            return false;
+            return _moves.Remove(move);
         }
 
         public bool Contains(Move move)
@@ -152,13 +118,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("move");
             }
 
-            return SearchFor(move) >= 0;
-        }
-
-        private int SearchFor(Move move)
-        {
-            List<Move> tempList = new List<Move>(_moves);
-            return Array.BinarySearch<Move>(tempList.ToArray(), move);
+            return _moves.Contains(move);
         }
 
         public IEnumerator<Move> GetEnumerator()

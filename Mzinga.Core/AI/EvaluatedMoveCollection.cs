@@ -62,7 +62,7 @@ namespace Mzinga.Core.AI
         {
             SortAscending = sortAscending;
 
-            _evaluatedMoves = new List<EvaluatedMove>();
+            _evaluatedMoves = new List<EvaluatedMove>(DefaultCapacity);
 
             if (SortAscending)
             {
@@ -143,8 +143,7 @@ namespace Mzinga.Core.AI
 
         private int SearchFor(EvaluatedMove evaluatedMove)
         {
-            List<EvaluatedMove> tempList = new List<EvaluatedMove>(_evaluatedMoves);
-            return Array.BinarySearch<EvaluatedMove>(tempList.ToArray(), evaluatedMove, _comparer);
+            return _evaluatedMoves.BinarySearch(evaluatedMove, _comparer);
         }
 
         public override string ToString()
@@ -158,6 +157,8 @@ namespace Mzinga.Core.AI
 
             return sb.ToString().TrimEnd(EvaluatedMoveStringSeparator);
         }
+
+        private const int DefaultCapacity = 256;
 
         public const char EvaluatedMoveStringSeparator = ';';
 

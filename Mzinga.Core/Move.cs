@@ -140,7 +140,15 @@ namespace Mzinga.Core
 
         public override int GetHashCode()
         {
-            return ToString().GetHashCode();
+            int hash = 17;
+
+            if (PieceName != PieceName.INVALID)
+            {
+                hash = hash * 31 + (int)PieceName;
+                hash = hash * 31 + Position.GetHashCode();
+            }
+
+            return hash;
         }
 
         public static bool operator ==(Move a, Move b)

@@ -73,7 +73,7 @@ namespace Mzinga.Core
             {
                 for (int i = 0; i < _neighborDeltas.Length; i++)
                 {
-                    yield return NeighborAt((Direction)i);
+                    yield return NeighborAt(i);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace Mzinga.Core
         public Position NeighborAt(Direction direction, int deltaStack = 0)
         {
             int dirIndex = (int)direction;
-            return GetShifted(_neighborDeltas[dirIndex][0], _neighborDeltas[dirIndex][1], _neighborDeltas[dirIndex][2], deltaStack);
+            return NeighborAt(dirIndex, deltaStack);
         }
 
         public Position NeighborAt(Direction[] directions, int deltaStack = 0)
@@ -142,6 +142,11 @@ namespace Mzinga.Core
             }
 
             return neighbor;
+        }
+
+        private Position NeighborAt(int dirIndex, int deltaStack = 0)
+        {
+            return GetShifted(_neighborDeltas[dirIndex][0], _neighborDeltas[dirIndex][1], _neighborDeltas[dirIndex][2], deltaStack);
         }
 
         public Position GetShifted(int deltaX, int deltaY, int deltaZ, int deltaStack = 0)
