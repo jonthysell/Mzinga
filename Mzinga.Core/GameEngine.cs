@@ -366,7 +366,7 @@ namespace Mzinga.Core
 
             ai.MaxDepth = GameAI.IterativeDepth;
             ai.AlphaBetaPruning = true;
-            ai.MaxTime = TimeSpan.FromSeconds(1.0);
+            ai.MaxTime = TimeSpan.FromSeconds(5.0);
 
             MetricWeights mw = ai.MetricWeights;
 

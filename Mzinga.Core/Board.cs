@@ -189,7 +189,10 @@ namespace Mzinga.Core
 
         #endregion
 
+        private MoveSet[] _cachedValidMovesByPiece;
         private MoveSet _cachedValidMoves;
+
+        private HashSet<Position> _cachedValidPlacementPositions;
 
         public Board()
         {
@@ -463,6 +466,8 @@ namespace Mzinga.Core
 
             // Save off current valid moves since we'll be returning to it
             MoveSet allMoves = GetValidMoves();
+            MoveSet[] allMovesByPiece = _cachedValidMovesByPiece;
+            HashSet<Position> validPlacements = _cachedValidPlacementPositions;
 
             // Get the metrics for the current turn
             PlayerMetrics currentPlayerMetrics = GetCurrentPlayerMetrics();
@@ -476,6 +481,8 @@ namespace Mzinga.Core
 
             // Returned, so reload saved valid moves into cache
             _cachedValidMoves = allMoves;
+            _cachedValidMovesByPiece = allMovesByPiece;
+            _cachedValidPlacementPositions = validPlacements;
 
             return boardMetrics;
         }
@@ -577,14 +584,13 @@ namespace Mzinga.Core
 
         public MoveSet GetValidMoves(PieceName pieceName)
         {
-            if (null == _cachedValidMoves)
+            if (null == _cachedValidMovesByPiece[(int)pieceName])
             {
-                GetValidMoves();
+                Piece targetPiece = GetPiece(pieceName);
+                _cachedValidMovesByPiece[(int)pieceName] = GetValidMoves(targetPiece);
             }
 
-            MoveSet moves = new MoveSet();
-            moves.Add(_cachedValidMoves.Where<Move>((move) => { return move.PieceName == pieceName; }));
-            return moves;
+            return _cachedValidMovesByPiece[(int)pieceName];
         }
 
         protected MoveSet GetValidMoves(Piece targetPiece)
@@ -657,35 +663,51 @@ namespace Mzinga.Core
 
             MoveSet validMoves = new MoveSet();
 
-            foreach (Piece piece in PiecesInPlay)
-            {
-                if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetPiece.Color)
-                {
-                    // Piece is in play, on the bottom, and the top is the right color, look through neighbors
-                    foreach (Position neighbor in piece.Position.Neighbors)
-                    {
-                        if (!HasPieceAt(neighbor))
-                        {
-                            // Neighboring position is a potential, verify its neighbors are empty or same color
-                            bool validPlacement = true;
-                            foreach (Position surroundingPosition in neighbor.Neighbors)
-                            {
-                                Piece surroundingPiece = GetPieceOnTop(surroundingPosition);
-                                if (null != surroundingPiece && surroundingPiece.Color != targetPiece.Color)
-                                {
-                                    validPlacement = false;
-                                    break;
-                                }
-                            }
+            Color targetColor = CurrentTurnColor;
 
-                            if (validPlacement)
+            if (targetPiece.Color != targetColor)
+            {
+                return validMoves;
+            }
+
+            if (null == _cachedValidPlacementPositions)
+            {
+                _cachedValidPlacementPositions = new HashSet<Position>();
+
+                foreach (Piece piece in PiecesInPlay)
+                {
+                    if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetPiece.Color)
+                    {
+                        // Piece is in play, on the bottom, and the top is the right color, look through neighbors
+                        foreach (Position neighbor in piece.Position.Neighbors)
+                        {
+                            if (!HasPieceAt(neighbor))
                             {
-                                Move move = new Move(targetPiece.PieceName, neighbor);
-                                validMoves.Add(move);
+                                // Neighboring position is a potential, verify its neighbors are empty or same color
+                                bool validPlacement = true;
+                                foreach (Position surroundingPosition in neighbor.Neighbors)
+                                {
+                                    Piece surroundingPiece = GetPieceOnTop(surroundingPosition);
+                                    if (null != surroundingPiece && surroundingPiece.Color != targetPiece.Color)
+                                    {
+                                        validPlacement = false;
+                                        break;
+                                    }
+                                }
+
+                                if (validPlacement)
+                                {
+                                    _cachedValidPlacementPositions.Add(neighbor);
+                                }
                             }
                         }
                     }
                 }
+            }
+
+            foreach (Position validPlacement in _cachedValidPlacementPositions)
+            {
+                validMoves.Add(new Move(targetPiece.PieceName, validPlacement));
             }
 
             return validMoves;
@@ -970,6 +992,8 @@ namespace Mzinga.Core
         protected void ResetValidMovesCache()
         {
             _cachedValidMoves = null;
+            _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
+            _cachedValidPlacementPositions = null;
         }
 
         #endregion

@@ -58,7 +58,6 @@ namespace Mzinga.Core.AI
         {
             MaxDepth = 0;
             AlphaBetaPruning = false;
-            MaxTime = TimeSpan.Zero;
         }
 
         protected override EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)

@@ -74,6 +74,7 @@ namespace Mzinga.Core.AI
         {
             MetricWeights = new MetricWeights();
             Random = new Random();
+            MaxTime = TimeSpan.Zero;
         }
 
         public Move GetBestMove(GameBoard gameBoard)
