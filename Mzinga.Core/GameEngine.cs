@@ -196,6 +196,8 @@ namespace Mzinga.Core
                 _cachedBestMove = null;
             };
 
+            _gameAI.ClearTranspositionTables();
+
             ConsoleOut(GameBoard.ToString());
         }
 
@@ -365,8 +367,10 @@ namespace Mzinga.Core
             GameAI ai = new GameAI();
 
             ai.MaxDepth = GameAI.IterativeDepth;
+            ai.MaxTime = TimeSpan.FromSeconds(1.0);
+
             ai.AlphaBetaPruning = true;
-            ai.MaxTime = TimeSpan.FromSeconds(5.0);
+            ai.TranspositionTable = true;
 
             MetricWeights mw = ai.MetricWeights;
 

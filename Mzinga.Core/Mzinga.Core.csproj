@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\BestMoveMetrics.cs" />
     <Compile Include="AI\GameAI.cs" />
     <Compile Include="AI\GameAIBase.cs" />
     <Compile Include="AI\IGameAI.cs" />

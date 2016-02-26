@@ -36,7 +36,7 @@ namespace Mzinga.Core.AI
     {
         public MetricWeights MetricWeights { get; private set; }
 
-        public TimeSpan MaxTime
+        public TimeSpan? MaxTime
         {
             get
             {
@@ -51,22 +51,48 @@ namespace Mzinga.Core.AI
                 _maxTime = value;
             }
         }
-        private TimeSpan _maxTime;
+        private TimeSpan? _maxTime;
 
-        public bool HasTimeLeft
+        public DateTime? StartTime { get; protected set; }
+
+        public TimeSpan? ElapsedTime
         {
             get
             {
                 if (StartTime.HasValue)
                 {
-                    return (DateTime.Now - StartTime.Value) < MaxTime;
+                    return (DateTime.Now - StartTime.Value);
+                }
+
+                return null;
+            }
+        }
+
+        public bool HasTimeLeft
+        {
+            get
+            {
+                if (!MaxTime.HasValue)
+                {
+                    return true;
+                }
+
+                TimeSpan? elapsedTime = ElapsedTime;
+                if (elapsedTime.HasValue)
+                {
+                    return elapsedTime.Value < MaxTime.Value;
                 }
 
                 return false;
             }
         }
 
-        public DateTime? StartTime { get; protected set; }
+        public BestMoveMetrics BestMoveMetrics { get; private set; }
+
+        public bool TranspositionTable { get; set; }
+
+        private Dictionary<string, double>[] _cachedBoardScores;
+        private Dictionary<string, BoardMetrics> _cachedBoardMetrics;
 
         protected Random Random;
 
@@ -74,7 +100,16 @@ namespace Mzinga.Core.AI
         {
             MetricWeights = new MetricWeights();
             Random = new Random();
+
             MaxTime = TimeSpan.Zero;
+
+            TranspositionTable = false;
+            _cachedBoardScores = new Dictionary<string, double>[]
+            {
+                new Dictionary<string, double>(),
+                new Dictionary<string, double>()
+            };
+            _cachedBoardMetrics = new Dictionary<string, BoardMetrics>();
         }
 
         public Move GetBestMove(GameBoard gameBoard)
@@ -84,6 +119,10 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("gameBoard");
             }
 
+            StartTime = DateTime.Now;
+
+            BestMoveMetrics = new BestMoveMetrics();
+
             EvaluatedMoveCollection evaluatedMoves = EvaluateMoves(gameBoard);
 
             if (evaluatedMoves.Count == 0)
@@ -91,10 +130,28 @@ namespace Mzinga.Core.AI
                 return null;
             }
 
+            foreach (EvaluatedMove evaluatedMove in evaluatedMoves)
+            {
+                BestMoveMetrics.IncrementMoves(evaluatedMove.Depth);
+            }
+
+            BestMoveMetrics.ElapsedTime = ElapsedTime.Value;
+
+            StartTime = null;
+
             List<EvaluatedMove> bestMoves = new List<EvaluatedMove>(evaluatedMoves.GetBestMoves());
 
             int randIndex = Random.Next(bestMoves.Count);
             return bestMoves[randIndex].Move;
+        }
+
+        public void ClearTranspositionTables()
+        {
+            _cachedBoardMetrics.Clear();
+            for (int i = 0; i < 2; i++)
+            {
+                _cachedBoardScores[i].Clear();
+            }
         }
 
         protected abstract EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard);
@@ -123,9 +180,37 @@ namespace Mzinga.Core.AI
                 return MetricWeights.DrawScore;
             }
 
-            BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
-
+            string key = null;
             double score = 0;
+            BoardMetrics boardMetrics = null;
+
+            if (TranspositionTable)
+            {
+                key = gameBoard.GetTranspositionKey();
+
+                if (_cachedBoardScores[(int)maxColor].TryGetValue(key, out score))
+                {
+                    BestMoveMetrics.CachedBoardScoreHits++;
+                    return score;
+                }
+                
+                if (_cachedBoardMetrics.TryGetValue(key, out boardMetrics))
+                {
+                    BestMoveMetrics.CachedBoardMetricHits++;
+                }
+                else
+                {
+                    boardMetrics = null;
+                }
+            }
+
+            if (null == boardMetrics)
+            {
+                boardMetrics = gameBoard.GetBoardMetrics();
+                BestMoveMetrics.BoardMetricsCalculated++;
+            }
+
+            score = 0;
 
             // Add max player scores
             score += MetricWeights.Get(Player.Maximizing, PlayerWeight.ValidMoveWeight) * boardMetrics[maxColor].ValidMoveCount;
@@ -159,6 +244,14 @@ namespace Mzinga.Core.AI
             {
                 BugType bugType = EnumUtils.GetBugType(pieceName);
                 score += CalculatePieceScore(Player.Minimizing, boardMetrics[minColor][pieceName]);
+            }
+
+            BestMoveMetrics.BoardScoresCalculated++;
+
+            if (TranspositionTable)
+            {
+                _cachedBoardMetrics[key] = boardMetrics;
+                _cachedBoardScores[(int)maxColor].Add(key, score);
             }
 
             return score;

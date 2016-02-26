@@ -38,10 +38,15 @@ namespace Mzinga.Core.AI
     {
         MetricWeights MetricWeights { get; }
 
-        TimeSpan MaxTime { get; set; }
-        bool HasTimeLeft { get;  }
+        TimeSpan? MaxTime { get; set; }
         DateTime? StartTime { get; }
 
+        bool HasTimeLeft { get; }
+
+        bool TranspositionTable { get; set; }
+
         Move GetBestMove(GameBoard gameBoard);
+
+        void ClearTranspositionTables();
     }
 }

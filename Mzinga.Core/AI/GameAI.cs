@@ -67,8 +67,6 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("gameBoard");
             }
 
-            StartTime = DateTime.Now;
-
             MoveSet validMoves = gameBoard.GetValidMoves();
 
             EvaluatedMoveCollection movesToEvaluate = new EvaluatedMoveCollection();
@@ -99,8 +97,6 @@ namespace Mzinga.Core.AI
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = EvaluateMovesToDepth(gameBoard, movesToEvaluate, depth);
             }
-
-            StartTime = null;
 
             return movesToEvaluate;
         }
@@ -147,6 +143,7 @@ namespace Mzinga.Core.AI
 
                 if (AlphaBetaPruning && beta <= alpha)
                 {
+                    BestMoveMetrics.AlphaBetaCuts++;
                     break;
                 }                
             }
@@ -207,6 +204,7 @@ namespace Mzinga.Core.AI
 
                 if (AlphaBetaPruning && beta <= alpha)
                 {
+                    BestMoveMetrics.AlphaBetaCuts++;
                     break;
                 }
             }

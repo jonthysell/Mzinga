@@ -998,6 +998,41 @@ namespace Mzinga.Core
 
         #endregion
 
+        public string GetTranspositionKey()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            bool first = true;
+            int qDelta = 0;
+            int rDelta = 0;
+
+            foreach (KeyValuePair<Position, Piece> kvp in _piecesByPosition.OrderBy(kvp => kvp.Key))
+            {
+                if (null != kvp.Value)
+                {
+                    Piece piece = kvp.Value;
+                    sb.Append(EnumUtils.GetShortName(piece.PieceName, false));
+
+                    Position pos = kvp.Key;
+
+                    if (first)
+                    {
+                        qDelta = -pos.Q;
+                        rDelta = -pos.R;
+                        first = false;
+                    }
+
+                    sb.AppendFormat("{0},{1}", pos.Q + qDelta, pos.R + rDelta);
+                    if (pos.Stack > 0)
+                    {
+                        sb.AppendFormat(",{0}", pos.Stack);
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

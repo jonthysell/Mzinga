@@ -88,14 +88,14 @@ namespace Mzinga.Core
             }
         }
 
-        public static string GetShortName(PieceName pieceName)
+        public static string GetShortName(PieceName pieceName, bool includeNumber = true)
         {
             if (pieceName == PieceName.INVALID)
             {
                 return "";
             }
 
-            return PieceShortName[(int)pieceName];
+            return includeNumber ? PieceShortName[(int)pieceName] : PieceShortNameNoNumber[(int)pieceName];
         }
 
         public static PieceName ParseShortName(string nameString)
@@ -142,6 +142,32 @@ namespace Mzinga.Core
             "BA1",
             "BA2",
             "BA3"
+        };
+
+        public static string[] PieceShortNameNoNumber = new string[]
+        {
+            "WQ",
+            "WS",
+            "WS",
+            "WB",
+            "WB",
+            "WG",
+            "WG",
+            "WG",
+            "WA",
+            "WA",
+            "WA",
+            "BQ",
+            "BS",
+            "BS",
+            "BB",
+            "BB",
+            "BG",
+            "BG",
+            "BG",
+            "BA",
+            "BA",
+            "BA"
         };
 
         public const int NumPieceNames = 22;
