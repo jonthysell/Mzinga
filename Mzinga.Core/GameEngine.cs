@@ -41,7 +41,7 @@ namespace Mzinga.Core
 
         private GameBoard GameBoard;
 
-        private IGameAI _gameAI;
+        private GameAI _gameAI;
 
         private Move _cachedBestMove;
 

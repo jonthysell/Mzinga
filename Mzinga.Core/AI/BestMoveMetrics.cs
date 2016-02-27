@@ -44,8 +44,6 @@ namespace Mzinga.Core.AI
 
         public int CachedBoardScoreHits { get; set; }
 
-        public int CachedBoardMetricHits { get; set; }
-
         public int BoardScoresCalculated { get; set; }
 
         public int BoardMetricsCalculated { get; set; }
@@ -62,7 +60,6 @@ namespace Mzinga.Core.AI
 
             AlphaBetaCuts = 0;
             CachedBoardScoreHits = 0;
-            CachedBoardMetricHits = 0;
             BoardScoresCalculated = 0;
             BoardMetricsCalculated = 0;
         }
