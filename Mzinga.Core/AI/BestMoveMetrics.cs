@@ -46,7 +46,13 @@ namespace Mzinga.Core.AI
 
         public int BoardScoresCalculated { get; set; }
 
-        public int BoardMetricsCalculated { get; set; }
+        public double BoardScoreCacheUsage
+        {
+            get
+            {
+                return (double)CachedBoardScoreHits / (double)(CachedBoardScoreHits + BoardScoresCalculated);
+            }
+        }
 
         public BestMoveMetrics()
         {
@@ -61,7 +67,6 @@ namespace Mzinga.Core.AI
             AlphaBetaCuts = 0;
             CachedBoardScoreHits = 0;
             BoardScoresCalculated = 0;
-            BoardMetricsCalculated = 0;
         }
 
         public void IncrementMoves(int depth)
