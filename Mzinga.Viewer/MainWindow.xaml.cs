@@ -76,6 +76,8 @@ namespace Mzinga.Viewer
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
 
+        private double StackShiftRatio = 0.1;
+
         private Board LastBoard;
 
         private SolidColorBrush WhiteBrush;
@@ -176,7 +178,7 @@ namespace Mzinga.Viewer
                                 position = targetPosition;
                             }
 
-                            Point center = GetPoint(position, size);
+                            Point center = GetPoint(position, size, true);
 
                             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
@@ -219,7 +221,7 @@ namespace Mzinga.Viewer
 
                     if (selectedPiece.InPlay)
                     {
-                        Point center = GetPoint(selectedPiece.Position, size);
+                        Point center = GetPoint(selectedPiece.Position, size, true);
 
                         Polygon hex = GetHex(center, size, HexType.SelectedPiece);
                         BoardCanvas.Children.Add(hex);
@@ -252,7 +254,7 @@ namespace Mzinga.Viewer
                 // Highlight the target position
                 if (null != targetPosition)
                 {
-                    Point center = GetPoint(targetPosition, size);
+                    Point center = GetPoint(targetPosition, size, true);
 
                     Polygon hex = GetHex(center, size, HexType.SelectedMove);
                     BoardCanvas.Children.Add(hex);
@@ -320,7 +322,7 @@ namespace Mzinga.Viewer
             return new Point(maxX, maxY);
         }
 
-        private Point GetPoint(Position position, double size)
+        private Point GetPoint(Position position, double size, bool stackShift = false)
         {
             if (null == position)
             {
@@ -334,6 +336,12 @@ namespace Mzinga.Viewer
 
             double x = size * 1.5 * position.Q;
             double y = size * Math.Sqrt(3.0) * (position.R + (0.5 * position.Q));
+
+            if (stackShift && position.Stack > 0)
+            {
+                x += size * 1.5 * StackShiftRatio * position.Stack;
+                y -= size * Math.Sqrt(3.0) * StackShiftRatio * position.Stack;
+            }
 
             return new Point(x, y);
         }
