@@ -367,7 +367,7 @@ namespace Mzinga.Core
             GameAI ai = new GameAI();
 
             ai.MaxDepth = GameAI.IterativeDepth;
-            ai.MaxTime = TimeSpan.FromSeconds(5.0);
+            ai.MaxTime = TimeSpan.FromSeconds(1.0);
 
             ai.AlphaBetaPruning = true;
             ai.TranspositionTable = true;
