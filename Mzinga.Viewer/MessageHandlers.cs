@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
 
@@ -38,6 +39,7 @@ namespace Mzinga.Viewer
         {
             Messenger.Default.Register<ExceptionMessage>(recipient, (message) => MessageHandlers.ShowException(message));
             Messenger.Default.Register<InformationMessage>(recipient, (message) => MessageHandlers.ShowInformation(message));
+            Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => MessageHandlers.ShowConfirmation(message));
             Messenger.Default.Register<NewGameMessage>(recipient, (message) => MessageHandlers.ShowNewGame(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => MessageHandlers.ShowEngineConsole(message));
         }
@@ -46,6 +48,7 @@ namespace Mzinga.Viewer
         {
             Messenger.Default.Unregister<ExceptionMessage>(recipient);
             Messenger.Default.Unregister<InformationMessage>(recipient);
+            Messenger.Default.Unregister<ConfirmationMessage>(recipient);
             Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
@@ -71,6 +74,12 @@ namespace Mzinga.Viewer
             };
             window.ShowDialog();
             message.Process();
+        }
+
+        private static void ShowConfirmation(ConfirmationMessage message)
+        {
+            DialogResult dialogResult = MessageBox.Show(message.Message, "Mzinga", MessageBoxButtons.YesNo);
+            message.Process(dialogResult == DialogResult.Yes);
         }
 
         private static void ShowNewGame(NewGameMessage message)

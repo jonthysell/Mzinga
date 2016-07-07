@@ -1,5 +1,5 @@
 ﻿// 
-// AppViewModel.cs
+// IdleBoolToWaitCursorConverter.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,60 +25,48 @@
 // THE SOFTWARE.
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
+using System.Windows.Input;
+using System.Windows.Data;
+using System.Windows.Markup;
 
-using GalaSoft.MvvmLight;
-
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.Viewer
 {
-    public delegate void DoOnUIThread(Action action);
-
-    public class AppViewModel : ViewModelBase
+    public class IdleBoolToWaitCursorConverter : MarkupExtension, IValueConverter
     {
-        public static AppViewModel Instance { get; private set; }
-
-        public string ProgramTitle
+        private static IdleBoolToWaitCursorConverter _converter = null;
+        public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            get
+            if (_converter == null)
             {
-                AssemblyName name = Assembly.GetEntryAssembly().GetName();
-                return String.Format("{0} v{1}", name.Name, name.Version.ToString());
+                _converter = new IdleBoolToWaitCursorConverter();
             }
+            return _converter;
         }
 
-        public string FullVersion
+        #region IValueConverter Members
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            get
+            if (null != value as bool?)
             {
-                AssemblyName name = Assembly.GetEntryAssembly().GetName();
-                return name.Version.ToString();
+                if (!(bool)value)
+                {
+                    return Cursors.Wait;
+                }
             }
+            return Cursors.Arrow;
         }
 
-        public DoOnUIThread DoOnUIThread { get; private set; }
-
-        public EngineWrapper EngineWrapper { get; private set; }
-
-        public static void Init(DoOnUIThread doOnUIThread)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (null != Instance)
-            {
-                throw new NotSupportedException();
-            }
-
-            Instance = new AppViewModel(doOnUIThread);
+            return value;
         }
 
-        private AppViewModel(DoOnUIThread doOnUIThread)
-        {
-            if (null == doOnUIThread)
-            {
-                throw new ArgumentNullException("doOnUIThread");
-            }
-
-            DoOnUIThread = doOnUIThread;
-
-            EngineWrapper = new EngineWrapper("Mzinga.Engine.exe");
-        }
+        #endregion
     }
 }

@@ -59,6 +59,24 @@ namespace Mzinga.Viewer.ViewModel
         }
     }
 
+    public class ConfirmationMessage : MessageBase
+    {
+        public string Message { get; private set; }
+
+        private Action<bool> Callback;
+
+        public ConfirmationMessage(string message, Action<bool> callback) : base()
+        {
+            Message = message;
+            Callback = callback;
+        }
+
+        public void Process(bool confirmation)
+        {
+            Callback(confirmation);
+        }
+    }
+
     public class NewGameMessage : MessageBase
     {
         public NewGameViewModel NewGameVM { get; private set; }

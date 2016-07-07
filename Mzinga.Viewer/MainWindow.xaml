@@ -4,11 +4,12 @@
         xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
         Icon="{DynamicResource MzingaIcon}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="600" Width="800">
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="600" Width="800"
+        Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}" ForceCursor="True">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <Grid>
+    <Grid IsEnabled="{Binding IsIdle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -38,6 +39,11 @@
                     <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding ShowEngineConsole}" Content="Show Console" Margin="5" Style="{DynamicResource CleanButton}" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Settings" FontWeight="Bold" Margin="5">
+                <StackPanel>
+                    <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}" Content="Update Check" Margin="5" Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>

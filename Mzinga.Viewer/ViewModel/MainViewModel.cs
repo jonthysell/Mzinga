@@ -55,6 +55,20 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public bool IsIdle
+        {
+            get
+            {
+                return _isIdle;
+            }
+            protected set
+            {
+                _isIdle = value;
+                RaisePropertyChanged("IsIdle");
+            }
+        }
+        private bool _isIdle;
+
         public Board Board
         {
             get
@@ -369,6 +383,32 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public RelayCommand CheckForUpdatesAsync
+        {
+            get
+            {
+                return new RelayCommand(async () =>
+                {
+                    try
+                    {
+                        IsIdle = false;
+                        await UpdateUtils.UpdateCheckAsync(true, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                    finally
+                    {
+                        IsIdle = true;
+                    }
+                }, () =>
+                {
+                    return !UpdateUtils.IsCheckingforUpdate;
+                });
+            }
+        }
+
         public MainViewModel()
         {
             AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
@@ -384,6 +424,8 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
             };
+
+            IsIdle = true;
         }
 
         private void OnBoardUpdated(Board board)
