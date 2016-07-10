@@ -28,9 +28,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+using Mzinga.Core;
 using Mzinga.Core.AI;
 
-namespace Mzinga.Core
+namespace Mzinga.Engine
 {
     public delegate void ConsoleOut(string format, params object[] arg);
 
@@ -62,7 +63,7 @@ namespace Mzinga.Core
             ID = id;
             ConsoleOut = consoleOut;
 
-            InitGameAI();
+            _gameAI = GameAI.GetDefaultGameAI();
 
             ExitRequested = false;
         }
@@ -360,32 +361,6 @@ namespace Mzinga.Core
             }
 
             return _cachedBestMove;
-        }
-
-        private void InitGameAI()
-        {
-            GameAI ai = new GameAI();
-
-            ai.MaxDepth = GameAI.IterativeDepth;
-            ai.MaxTime = TimeSpan.FromSeconds(1.0);
-
-            ai.AlphaBetaPruning = true;
-            ai.TranspositionTable = true;
-
-            MetricWeights mw = ai.MetricWeights;
-
-            // Basic Queen Management
-            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, -5.0); // Your Queen has company!
-            mw.Set(Player.Maximizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, -42.0); // Your Queen is pinned!
-
-            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.NeighborWeight, 7.0); // Surround the enemy Queen!
-            mw.Set(Player.Minimizing, BugType.QueenBee, BugTypeWeight.IsPinnedWeight, 23.0); // The enemy Queen is pinned!
-
-            // Give edge to opening up more moves
-            mw.Set(Player.Maximizing, PlayerWeight.ValidMoveWeight, 0.001);
-            mw.Set(Player.Minimizing, PlayerWeight.ValidMoveWeight, -0.01);
-
-            _gameAI = ai;
         }
     }
 

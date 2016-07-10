@@ -71,7 +71,6 @@
     <Compile Include="AI\MetricWeights.cs" />
     <Compile Include="AI\EvaluatedMove.cs" />
     <Compile Include="GameBoard.cs" />
-    <Compile Include="GameEngine.cs" />
     <Compile Include="EnumUtils.cs" />
     <Compile Include="AI\EvaluatedMoveCollection.cs" />
     <Compile Include="MoveSet.cs" />
