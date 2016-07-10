@@ -12,27 +12,35 @@ The goal is not to simply implement Hive in code, but to establish a standard wa
 
 Mzinga is developed in C# for .NET 4.5.
 
-### Mzinga.Core ###
+### Mzinga.Core.dll ###
 
-Mzinga.Core implements all of the rules of the core Hive game (no expansion pieces), and in that respect it is complete. It also contains the game AI, though it is currently very weak.
+Mzinga.Core implements all of the rules of the core Hive game (no expansion pieces), and in that respect it is complete. It also contains the game AI, though playable, is not very strong.
 
 Expansion pieces will be added eventually, but most future investment in Mzinga.Core will be to improve the game AI.
 
-### Mzinga.CoreTest ###
+### Mzinga.Engine.exe ###
+
+Mzinga.Engine is a command-line interface which can read input commands, send them to Mzinga.Core and output the results. Through it you can actually play a game of Hive. It's very thin (all of the real logic is in Mzinga.Core) and is therefore complete.
+
+### Mzinga.Viewer.exe ###
+
+Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a graphically rendered gameboard and allows users to play games with Mzinga.Engine.
+
+Future investment includes continuing to expose Mzinga.Engine functionality and improving the usability for players.
+
+## Other Components ##
+
+### Mzinga.CoreTest.dll ###
 
 Mzinga.CoreTest contains unit tests for Mzinga.Core.
 
 Future investment includes increasing code coverage with more tests.
 
-### Mzinga.Engine ###
+### Mzinga.Trainer.exe ###
 
-Mzinga.Engine is a command-line interface which can read input commands, send them to Mzinga.Core and output the results. Through it you can actually play a game of Hive. It's very thin (all of the real logic is in Mzinga.Core) and is therefore complete.
+Mzinga.Trainer is a command-line utility with the goal to improve Mzinga's AI. Through it you can execute bulk AI vs. AI games.
 
-### Mzinga.Viewer ###
-
-Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a graphically rendered gameboard and allows users to play games with Mzinga.Engine.
-
-Future investment includes continuing to expose Mzinga.Engine functionality and improving the usability for players.
+## Copyright ##
 
 Mzinga Copyright © 2015, 2016 Jon Thysell.
 

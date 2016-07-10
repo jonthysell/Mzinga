@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Viewer", "Mzinga.Vie
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Mzinga Setup", "Mzinga Setup\Mzinga Setup.wixproj", "{EB905695-D35D-4B73-AE9C-DDFF734604F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Trainer", "Mzinga.Trainer\Mzinga.Trainer.csproj", "{9824E8FD-6155-4C02-A3A4-5D39355F01FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,16 @@ Global
 		{EB905695-D35D-4B73-AE9C-DDFF734604F8}.Release|Mixed Platforms.Build.0 = Release|x86
 		{EB905695-D35D-4B73-AE9C-DDFF734604F8}.Release|x86.ActiveCfg = Release|x86
 		{EB905695-D35D-4B73-AE9C-DDFF734604F8}.Release|x86.Build.0 = Release|x86
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
