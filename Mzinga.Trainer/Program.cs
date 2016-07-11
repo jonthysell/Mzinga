@@ -25,13 +25,7 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Mzinga.Core;
-using Mzinga.Core.AI;
+using System.Reflection;
 
 namespace Mzinga.Trainer
 {
@@ -39,6 +33,49 @@ namespace Mzinga.Trainer
     {
         static void Main(string[] args)
         {
+            try
+            {
+                if (args.Length == 0)
+                {
+                    ShowHelp();
+                }
+                else
+                {
+                    switch (args[0].ToLower())
+                    {
+                        case "generate":
+                            Trainer.Generate(Int32.Parse(args[1]), Double.Parse(args[2]), Double.Parse(args[3]), args[4]);
+                            break;
+                        case "battle":
+                            Trainer.Battle(args[1], args[2]);
+                            break;
+                        case "battleroyale":
+                            Trainer.BattleRoyale(args[1]);
+                            break;
+                        default:
+                            ShowHelp();
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error: {0}", ex.Message);
+                Console.Error.WriteLine(ex.StackTrace);
+            }
+        }
+
+        static void ShowHelp()
+        {
+            Console.WriteLine("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+            Console.WriteLine();
+
+            Console.WriteLine("Commands:");
+            Console.WriteLine("generate [count] [minWeight] [maxWeight] [path]");
+            Console.WriteLine("battle [whiteprofilepath] [blackprofilepath]");
+            Console.WriteLine("battleroyale [path]");
+
+            Console.WriteLine();
         }
     }
 }

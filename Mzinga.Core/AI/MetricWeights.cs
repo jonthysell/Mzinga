@@ -31,31 +31,13 @@ namespace Mzinga.Core.AI
 {
     public class MetricWeights
     {
-        public double DrawScore
-        {
-            get
-            {
-                return Get("DrawScore", 0.0);
-            }
-        }
-
-        public double this[string key]
-        {
-            get
-            {
-                return Get(key);
-            }
-        }
-
-        private Dictionary<string, double> _weights;
+        public double DrawScore { get; set; }
 
         private double?[] _playerWeights;
         private double?[] _bugTypeWeights;
 
         public MetricWeights()
         {
-            _weights = new Dictionary<string, double>();
-
             _playerWeights = new double?[NumPlayers * NumPlayerWeights];
             _bugTypeWeights = new double?[NumPlayers * EnumUtils.NumBugTypes * NumBugTypeWeights];
         }
@@ -72,65 +54,94 @@ namespace Mzinga.Core.AI
             return _bugTypeWeights[key].HasValue ? _bugTypeWeights[key].Value : defaultValue;
         }
 
-        public double Get(string key, double defaultValue = 0.0)
-        {
-            if (String.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentNullException("key");
-            }
-
-            double value;
-            if (TryGet(key, out value))
-            {
-                return value;
-            }
-
-            return defaultValue;
-        }
-
-        public bool TryGet(string key, out double result)
-        {
-            if (_weights.ContainsKey(key))
-            {
-                result = _weights[key];
-                return true;
-            }
-
-            result = default(double);
-            return false;
-        }
-
-        internal void Set(Player player, PlayerWeight playerWeight, double value)
+        public void Set(Player player, PlayerWeight playerWeight, double value)
         {
             int key = GetKey(player, playerWeight);
             _playerWeights[key] = value;
         }
 
-        internal void Set(Player player, BugType bugType, BugTypeWeight bugTypeWeight, double value)
+        public void Set(Player player, BugType bugType, BugTypeWeight bugTypeWeight, double value)
         {
             int key = GetKey(player, bugType, bugTypeWeight);
             _bugTypeWeights[key] = value;
         }
 
-        internal void Set(string key, double value)
+        public static bool TryParseKeyName(string key, out Player player, out PlayerWeight playerWeight)
         {
-            _weights[key] = value;
+            if (!String.IsNullOrWhiteSpace(key))
+            {
+                try
+                {
+                    string[] split = key.Split(KeySeperator[0]);
+
+                    if (Enum.TryParse<Player>(split[0], out player))
+                    {
+                        if (Enum.TryParse<PlayerWeight>(split[1], out playerWeight))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
+
+            player = default(Player);
+            playerWeight = default(PlayerWeight);
+            return false;
         }
 
-        private int GetKey(Player player, PlayerWeight playerWeight)
+        public static bool TryParseKeyName(string key, out Player player, out BugType bugType, out BugTypeWeight bugTypeWeight)
+        {
+            if (!String.IsNullOrWhiteSpace(key))
+            {
+                try
+                {
+                    string[] split = key.Split(KeySeperator[0]);
+
+                    if (Enum.TryParse<Player>(split[0], out player))
+                    {
+                        if (Enum.TryParse<BugType>(split[1], out bugType))
+                        {
+                            if (Enum.TryParse<BugTypeWeight>(split[2], out bugTypeWeight))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                catch (Exception) { }
+            }
+
+            player = default(Player);
+            bugType = default(BugType);
+            bugTypeWeight = default(BugTypeWeight);
+            return false;
+        }
+
+        public static string GetKeyName(Player player, PlayerWeight playerWeight)
+        {
+            return String.Join(KeySeperator, player.ToString(), playerWeight.ToString());
+        }
+
+        public static string GetKeyName(Player player, BugType bugType, BugTypeWeight bugTypeWeight)
+        {
+            return String.Join(KeySeperator, player.ToString(), bugType.ToString(), bugTypeWeight.ToString());
+        }
+
+        private static int GetKey(Player player, PlayerWeight playerWeight)
         {
             return ((int)player * NumPlayerWeights) + (int)playerWeight;
         }
 
-        private int GetKey(Player player, BugType bugType, BugTypeWeight bugTypeWeight)
+        private static int GetKey(Player player, BugType bugType, BugTypeWeight bugTypeWeight)
         {
             return ((int)player * EnumUtils.NumBugTypes * NumBugTypeWeights) + ((int)bugType * NumBugTypeWeights) + (int)bugTypeWeight;
         }
 
         private const string KeySeperator = ".";
-        private const int NumPlayers = 2;
-        private const int NumPlayerWeights = 6;
-        private const int NumBugTypeWeights = 7;
+        public const int NumPlayers = 2;
+        public const int NumPlayerWeights = 6;
+        public const int NumBugTypeWeights = 7;
     }
 
     public enum Player

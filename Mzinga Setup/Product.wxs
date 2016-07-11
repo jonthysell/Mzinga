@@ -78,6 +78,9 @@
       <Component>
         <File Source="$(var.Mzinga.Engine.TargetPath)" />
       </Component>
+      <Component>
+        <File Source="$(var.Mzinga.Trainer.TargetPath)" />
+      </Component>
       <Component Id="ProductComponent.WpfApp">
         <File Id="MzingaViewerApp" Source="$(var.Mzinga.Viewer.TargetPath)" KeyPath="yes" />
         <File Id="MzingaReadme" Name="Readme.txt" Source="$(var.SolutionDir)\README.md" />

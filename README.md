@@ -38,7 +38,7 @@ Future investment includes increasing code coverage with more tests.
 
 ### Mzinga.Trainer.exe ###
 
-Mzinga.Trainer is a command-line utility with the goal to improve Mzinga's AI. Through it you can execute bulk AI vs. AI games.
+Mzinga.Trainer is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
 
 ## Copyright ##
 
