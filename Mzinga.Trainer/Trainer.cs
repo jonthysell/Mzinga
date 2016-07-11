@@ -138,7 +138,6 @@ namespace Mzinga.Trainer
             }
 
             timeElapsed = DateTime.Now - startTime;
-
             Console.WriteLine("{0} > Tournament End.", timeElapsed);
 
             Profile best = remaining.Dequeue();
