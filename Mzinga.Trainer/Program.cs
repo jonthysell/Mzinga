@@ -81,6 +81,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("generate [count] [minWeight] [maxWeight] [path]");
             Console.WriteLine("battle [whiteprofilepath] [blackprofilepath]");
             Console.WriteLine("battleroyale [path]");
+            Console.WriteLine("tournament [path]");
 
             Console.WriteLine();
         }
