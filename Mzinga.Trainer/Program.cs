@@ -43,14 +43,21 @@ namespace Mzinga.Trainer
                 {
                     switch (args[0].ToLower())
                     {
+                        case "g":
                         case "generate":
                             Trainer.Generate(Int32.Parse(args[1]), Double.Parse(args[2]), Double.Parse(args[3]), args[4]);
                             break;
+                        case "b":
                         case "battle":
                             Trainer.Battle(args[1], args[2]);
                             break;
+                        case "br":
                         case "battleroyale":
                             Trainer.BattleRoyale(args[1]);
+                            break;
+                        case "t":
+                        case "tournament":
+                            Trainer.Tournament(args[1]);
                             break;
                         default:
                             ShowHelp();

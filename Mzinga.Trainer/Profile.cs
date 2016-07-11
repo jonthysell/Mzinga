@@ -36,6 +36,14 @@ namespace Mzinga.Trainer
 {
     public class Profile
     {
+        public string Nickname
+        {
+            get
+            {
+                return String.Format("{0}({1})", Id.ToString().Substring(0, 8), EloRating);
+            }
+        }
+
         public Guid Id { get; private set; }
 
         public int Generation { get; private set; }

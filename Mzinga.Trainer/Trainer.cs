@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
@@ -61,6 +62,90 @@ namespace Mzinga.Trainer
             }
         }
 
+        public static void Tournament(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            List<Profile> profiles = LoadProfiles(path);
+
+            DateTime startTime = DateTime.Now;
+            TimeSpan timeElapsed = TimeSpan.Zero;
+
+            Console.WriteLine("{0} > Tournament Start.", timeElapsed);
+
+            Queue<Profile> remaining = new Queue<Profile>(profiles);
+
+            while (remaining.Count > 1)
+            {
+                Profile whiteProfile = remaining.Dequeue();
+
+                Profile blackProfile = remaining.Dequeue();
+
+                BoardState roundResult = BoardState.Draw;
+
+                timeElapsed = DateTime.Now - startTime;
+                Console.WriteLine("{0} > Tournament Match Start.", timeElapsed);
+
+                int rounds = 0;
+                while (roundResult == BoardState.Draw)
+                {
+                    timeElapsed = DateTime.Now - startTime;
+                    Console.WriteLine("{0} > Tournament Round {1} Start.", timeElapsed, rounds + 1);
+
+                    roundResult = Battle(whiteProfile, blackProfile);
+
+                    timeElapsed = DateTime.Now - startTime;
+                    Console.WriteLine("{0} > Tournament Round {1} End.", timeElapsed, rounds + 1);
+
+                    rounds++;
+
+                    if (rounds >= 10 && roundResult == BoardState.Draw)
+                    {
+                        roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
+
+                        timeElapsed = DateTime.Now - startTime;
+                        Console.WriteLine("{0} > Tournament Match Draw-out.", timeElapsed);
+                    }
+                }
+
+                timeElapsed = DateTime.Now - startTime;
+                Console.WriteLine("{0} > Tournament Match End, {1}.", timeElapsed, roundResult);
+
+                if (roundResult == BoardState.WhiteWins)
+                {
+                    remaining.Enqueue(whiteProfile);
+                }
+                else if (roundResult == BoardState.BlackWins)
+                {
+                    remaining.Enqueue(blackProfile);
+                }
+
+                // Save Profiles
+                string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
+                using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                {
+                    whiteProfile.WriteXml(fs);
+                }
+
+                string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
+                using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                {
+                    blackProfile.WriteXml(fs);
+                }
+            }
+
+            timeElapsed = DateTime.Now - startTime;
+
+            Console.WriteLine("{0} > Tournament End.", timeElapsed);
+
+            Profile best = remaining.Dequeue();
+
+            Console.WriteLine("Tournament Winner: {0} ({1})", best.Id, best.EloRating);
+        }
+
         public static void BattleRoyale(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
@@ -70,7 +155,12 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            // Run the tournament
+            DateTime startTime = DateTime.Now;
+            TimeSpan timeElapsed = TimeSpan.Zero;
+
+            Console.WriteLine("{0} > Battle Royale Start.", timeElapsed);
+
+            // Run the battle royale
             foreach (Profile whiteProfile in profiles)
             {
                 foreach (Profile blackProfile in profiles)
@@ -94,6 +184,15 @@ namespace Mzinga.Trainer
                     }
                 }
             }
+
+            timeElapsed = DateTime.Now - startTime;
+
+            Console.WriteLine("{0} > Battle Royale End.", timeElapsed);
+
+            Profile best = (profiles.OrderBy(profile => profile.EloRating)).Last();
+
+            Console.WriteLine("Battle Royale Highest ELO: {0} ({1})", best.Id, best.EloRating);
+
         }
 
         public static void Battle(string whiteProfilePath, string blackProfilePath)
@@ -175,7 +274,9 @@ namespace Mzinga.Trainer
 
             TimeSpan timeLimit = TimeSpan.FromMinutes(1.0);
 
-            Console.WriteLine("{0} > Battle start, {1} vs. {2}.", timeElapsed, whiteProfile.Id, blackProfile.Id);
+            Console.WriteLine("{0} > Battle start, {1} vs. {2}.", timeElapsed, whiteProfile.Nickname, blackProfile.Nickname);
+
+            List<string> boardKeys = new List<string>();
 
             // Play Game
             while (gameBoard.GameInProgress)
@@ -183,7 +284,20 @@ namespace Mzinga.Trainer
                 Move move = gameBoard.CurrentTurnColor == Color.White ? whiteAI.GetBestMove(gameBoard) : blackAI.GetBestMove(gameBoard);
                 gameBoard.Play(move);
 
+                boardKeys.Add(gameBoard.GetTranspositionKey());
+
                 timeElapsed = DateTime.Now - startTime;
+
+                if (boardKeys.Count >= 6)
+                {
+                    int lastIndex = boardKeys.Count - 1;
+                    if (boardKeys[lastIndex] == boardKeys[lastIndex - 4] && boardKeys[lastIndex - 1] == boardKeys[lastIndex - 5])
+                    {
+                        Console.WriteLine("{0} > Battle loop-out.", timeElapsed);
+                        break;
+                    }
+                }
+
                 if (timeElapsed > timeLimit)
                 {
                     Console.WriteLine("{0} > Battle time-out.", timeElapsed);
@@ -227,7 +341,7 @@ namespace Mzinga.Trainer
 
             // Output Results
             Console.WriteLine("{0} > Battle end, {1}", timeElapsed, boardState);
-            Console.WriteLine("{0} > Battle end, {1} / {2}", timeElapsed, whiteProfile.Id, blackProfile.Id);
+            Console.WriteLine("{0} > Battle end, {1} / {2}", timeElapsed, whiteProfile.Nickname, blackProfile.Nickname);
 
             return boardState;
         }
