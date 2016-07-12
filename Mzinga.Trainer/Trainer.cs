@@ -41,14 +41,17 @@ namespace Mzinga.Trainer
         {
             get
             {
-                return _startTime;
+                return _startTime.Value;
             }
             private set
             {
-                _startTime = value;
+                if (!_startTime.HasValue)
+                {
+                    _startTime = value;
+                }
             }
         }
-        private static DateTime _startTime;
+        private static DateTime? _startTime = null;
 
         public static void Generate(int count, double minWeight, double maxWeight, string path)
         {
@@ -76,11 +79,16 @@ namespace Mzinga.Trainer
             }
         }
 
-        public static void Tournament(string path)
+        public static void Tournament(string path, int maxDraws)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
+            }
+
+            if (maxDraws < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxDraws");
             }
 
             StartTime = DateTime.Now;
@@ -111,7 +119,7 @@ namespace Mzinga.Trainer
 
                     rounds++;
 
-                    if (rounds >= 10 && roundResult == BoardState.Draw)
+                    if (rounds >= maxDraws && roundResult == BoardState.Draw)
                     {
                         roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
                         Log("Tournament match draw-out.");
@@ -150,11 +158,16 @@ namespace Mzinga.Trainer
             Log("Tournament Winner: {0} ({1})", best.Id, best.EloRating);
         }
 
-        public static void BattleRoyale(string path)
+        public static void BattleRoyale(string path, int maxDraws)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
+            }
+
+            if (maxDraws < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxDraws");
             }
 
             StartTime = DateTime.Now;
@@ -169,7 +182,29 @@ namespace Mzinga.Trainer
                 {
                     if (whiteProfile != blackProfile)
                     {
-                        Battle(whiteProfile, blackProfile);
+                        BoardState roundResult = BoardState.Draw;
+
+                        Log("Battle Royale match start.");
+
+                        int rounds = 0;
+                        while (roundResult == BoardState.Draw)
+                        {
+                            Log("Battle Royale round {0} start.", rounds + 1);
+
+                            roundResult = Battle(whiteProfile, blackProfile);
+
+                            Log("Battle Royale round {0} end.", rounds + 1);
+
+                            rounds++;
+
+                            if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                            {
+                                roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
+                                Log("Battle Royale match draw-out.");
+                            }
+                        }
+
+                        Log("Battle Royale match end, {0}.", roundResult);
 
                         // Save Profiles
                         string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
@@ -189,7 +224,7 @@ namespace Mzinga.Trainer
 
             Log("Battle Royale end.");
 
-            Profile best = (profiles.OrderBy(profile => profile.EloRating)).Last();
+            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
             Log("Battle Royale highest ELO: {0} ({1})", best.Id, best.EloRating);
 
@@ -346,6 +381,114 @@ namespace Mzinga.Trainer
             Log("Battle end, {0} vs. {1}", whiteProfile.Nickname, blackProfile.Nickname);
 
             return boardState;
+        }
+
+        public static void Cull(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Cull start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+
+            int keepCount = Math.Max(CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
+
+            for (int i = keepCount; i < profiles.Count; i++)
+            {
+                File.Delete(Path.Combine(path, profiles[i].Id + ".xml"));
+            }
+
+            Log("Cull end.");
+        }
+
+        private const int CullMinKeepCount = 4;
+
+        public static void Mate(string path, double mix)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (mix < 0.0 || mix > 1.0)
+            {
+                throw new ArgumentOutOfRangeException("mix");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Mate start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+
+            foreach (Profile parentA in profiles)
+            {
+                foreach (Profile parentB in profiles)
+                {
+                    if (parentA != parentB)
+                    {
+                        Profile child = Profile.Mate(parentA, parentB, mix);
+
+                        using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
+                        {
+                            child.WriteXml(fs);
+                        }
+                    }
+                }
+            }
+
+            Log("Mate end.");
+        }
+
+        public static void Lifecycle(string path, int generations, int battles)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (generations < 1)
+            {
+                throw new ArgumentOutOfRangeException("generations");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Lifecycle start.");
+
+            for (int i = 0; i < generations; i++)
+            {
+                Log("Lifecycle generation {0} start.", i + 1);
+
+                // Battle
+                if (battles != 0)
+                {
+                    for (int j = 0; j < Math.Abs(battles); j++)
+                    {
+                        if (battles < 0)
+                        {
+                            Tournament(path, 1);
+                        }
+                        else if (battles > 0)
+                        {
+                            BattleRoyale(path, 1);
+                        }
+                    }
+                }
+
+                // Cull
+                Cull(path);
+
+                // Mate
+                Mate(path, 0.05);
+
+                Log("Lifecycle generation {0} end.", i + 1);
+            }
+
+            Log("Lifecycle end.");
         }
 
         private static List<Profile> LoadProfiles(string path)

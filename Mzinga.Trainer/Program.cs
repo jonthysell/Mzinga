@@ -41,11 +41,28 @@ namespace Mzinga.Trainer
                 }
                 else
                 {
+                    int maxDraws;
+
                     switch (args[0].ToLower())
                     {
                         case "g":
                         case "generate":
                             Trainer.Generate(Int32.Parse(args[1]), Double.Parse(args[2]), Double.Parse(args[3]), args[4]);
+                            break;
+                        case "c":
+                        case "cull":
+                            Trainer.Cull(args[1]);
+                            break;
+                        case "m":
+                        case "mate":
+                            double mix = args.Length > 2 && Double.TryParse(args[2], out mix) ? mix : 0.05;
+                            Trainer.Mate(args[1], mix);
+                            break;
+                        case "l":
+                        case "lifecycle":
+                            int generations = args.Length > 2 && Int32.TryParse(args[2], out generations) ? generations : 1;
+                            int battles = args.Length > 3 && Int32.TryParse(args[3], out battles) ? battles : -1;
+                            Trainer.Lifecycle(args[1], generations, battles);
                             break;
                         case "b":
                         case "battle":
@@ -53,11 +70,13 @@ namespace Mzinga.Trainer
                             break;
                         case "br":
                         case "battleroyale":
-                            Trainer.BattleRoyale(args[1]);
+                            int brMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : 1;
+                            Trainer.BattleRoyale(args[1], brMaxDraws);
                             break;
                         case "t":
                         case "tournament":
-                            Trainer.Tournament(args[1]);
+                            int tMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : 1;
+                            Trainer.Tournament(args[1], tMaxDraws);
                             break;
                         default:
                             ShowHelp();
@@ -79,9 +98,12 @@ namespace Mzinga.Trainer
 
             Console.WriteLine("Commands:");
             Console.WriteLine("generate [count] [minWeight] [maxWeight] [path]");
+            Console.WriteLine("cull [path]");
+            Console.WriteLine("mate [path] ([mix])");
+            Console.WriteLine("lifecycle [path] ([generations]) ([battles])");
             Console.WriteLine("battle [whiteprofilepath] [blackprofilepath]");
-            Console.WriteLine("battleroyale [path]");
-            Console.WriteLine("tournament [path]");
+            Console.WriteLine("battleroyale [path] ([maxdraws])");
+            Console.WriteLine("tournament [path] ([maxdraws])");
 
             Console.WriteLine();
         }

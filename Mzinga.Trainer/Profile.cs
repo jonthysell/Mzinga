@@ -150,35 +150,24 @@ namespace Mzinga.Trainer
 
                 writer.WriteStartElement("MetricWeights");
 
-                for (int playerInt = 0; playerInt < MetricWeights.NumPlayers; playerInt++ )
+                MetricWeights.IterateOverWeights((player, playerWeight) =>
                 {
-                    Player player = (Player)playerInt;
-                    for (int playerWeightInt = 0; playerWeightInt < MetricWeights.NumPlayerWeights; playerWeightInt++)
-                    {
-                        PlayerWeight playerWeight = (PlayerWeight)playerWeightInt;
-                        string key = MetricWeights.GetKeyName(player, playerWeight);
-                        double value = MetricWeights.Get(player, playerWeight);
+                    string key = MetricWeights.GetKeyName(player, playerWeight);
+                    double value = MetricWeights.Get(player, playerWeight);
 
-                        writer.WriteStartElement(key);
-                        writer.WriteValue(value);
-                        writer.WriteEndElement();
-                    }
+                    writer.WriteStartElement(key);
+                    writer.WriteValue(value);
+                    writer.WriteEndElement();
+                },
+                (player, bugType, bugTypeWeight) =>
+                {
+                    string key = MetricWeights.GetKeyName(player, bugType, bugTypeWeight);
+                    double value = MetricWeights.Get(player, bugType, bugTypeWeight);
 
-                    for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)
-                    {
-                        BugType bugType = (BugType)bugTypeInt;
-                        for (int bugTypeWeightInt = 0; bugTypeWeightInt < MetricWeights.NumBugTypeWeights; bugTypeWeightInt++)
-                        {
-                            BugTypeWeight bugTypeWeight = (BugTypeWeight)bugTypeWeightInt;
-                            string key = MetricWeights.GetKeyName(player, bugType, bugTypeWeight);
-                            double value = MetricWeights.Get(player, bugType, bugTypeWeight);
-
-                            writer.WriteStartElement(key);
-                            writer.WriteValue(value);
-                            writer.WriteEndElement();
-                        }
-                    }
-                }
+                    writer.WriteStartElement(key);
+                    writer.WriteValue(value);
+                    writer.WriteEndElement();
+                });
 
                 writer.WriteEndElement();
 
@@ -309,35 +298,68 @@ namespace Mzinga.Trainer
             return new Profile(id, generation, eloRating, metricWeights, creationTimestamp, DateTime.Now);
         }
 
+        public static Profile Mate(Profile parentA, Profile parentB, double mix)
+        {
+            if (null == parentA)
+            {
+                throw new ArgumentNullException("parentA");
+            }
+
+            if (null == parentB)
+            {
+                throw new ArgumentNullException("parentB");
+            }
+
+            if (mix < 0.0 || mix > 1.0)
+            {
+                throw new ArgumentOutOfRangeException("mix");
+            }
+
+            Guid id = Guid.NewGuid();
+            int eloRating = EloUtils.DefaultRating;
+            int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
+
+            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, mix);
+
+            DateTime creationTimestamp = DateTime.Now;
+
+            return new Profile(id, generation, eloRating, metricWeights, creationTimestamp, DateTime.Now);
+        }
+
         private static MetricWeights GenerateMetricWeights(double minWeight, double maxWeight)
         {
             MetricWeights mw = new MetricWeights();
 
-            for (int playerInt = 0; playerInt < MetricWeights.NumPlayers; playerInt++)
+            MetricWeights.IterateOverWeights((player, playerWeight) =>
             {
-                Player player = (Player)playerInt;
-                for (int playerWeightInt = 0; playerWeightInt < MetricWeights.NumPlayerWeights; playerWeightInt++)
-                {
-                    PlayerWeight playerWeight = (PlayerWeight)playerWeightInt;
+                double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
+                mw.Set(player, playerWeight, value);
+            },
+            (player, bugType, bugTypeWeight) =>
+            {
+                double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
+                mw.Set(player, bugType, bugTypeWeight, value);
+            });
 
-                    double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
+            return mw;
+        }
 
-                    mw.Set(player, playerWeight, value);
-                }
+        private static MetricWeights MixMetricWeights(MetricWeights mwA, MetricWeights mwB, double mix)
+        {
+            MetricWeights mw = new MetricWeights();
 
-                for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)
-                {
-                    BugType bugType = (BugType)bugTypeInt;
-                    for (int bugTypeWeightInt = 0; bugTypeWeightInt < MetricWeights.NumBugTypeWeights; bugTypeWeightInt++)
-                    {
-                        BugTypeWeight bugTypeWeight = (BugTypeWeight)bugTypeWeightInt;
-
-                        double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
-
-                        mw.Set(player, bugType, bugTypeWeight, value);
-                    }
-                }
-            }
+            MetricWeights.IterateOverWeights((player, playerWeight) =>
+            {
+                double value = 0.5 * (mwA.Get(player, playerWeight) + mwB.Get(player, playerWeight));
+                value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                mw.Set(player, playerWeight, value);
+            },
+            (player, bugType, bugTypeWeight) =>
+            {
+                double value = 0.5 * (mwA.Get(player, bugType, bugTypeWeight) + mwB.Get(player, bugType, bugTypeWeight));
+                value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                mw.Set(player, bugType, bugTypeWeight, value);
+            });
 
             return mw;
         }

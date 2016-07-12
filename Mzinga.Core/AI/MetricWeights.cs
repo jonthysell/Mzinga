@@ -128,6 +128,38 @@ namespace Mzinga.Core.AI
             return String.Join(KeySeperator, player.ToString(), bugType.ToString(), bugTypeWeight.ToString());
         }
 
+        public static void IterateOverWeights(Action<Player, PlayerWeight> playerWeightAction, Action<Player, BugType, BugTypeWeight> bugTypeWeightAction)
+        {
+            for (int playerInt = 0; playerInt < NumPlayers; playerInt++)
+            {
+                Player player = (Player)playerInt;
+
+                if (null != playerWeightAction)
+                {
+                    for (int playerWeightInt = 0; playerWeightInt < MetricWeights.NumPlayerWeights; playerWeightInt++)
+                    {
+                        PlayerWeight playerWeight = (PlayerWeight)playerWeightInt;
+
+                        playerWeightAction(player, playerWeight);
+                    }
+                }
+
+                if (null != bugTypeWeightAction)
+                {
+                    for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)
+                    {
+                        BugType bugType = (BugType)bugTypeInt;
+                        for (int bugTypeWeightInt = 0; bugTypeWeightInt < NumBugTypeWeights; bugTypeWeightInt++)
+                        {
+                            BugTypeWeight bugTypeWeight = (BugTypeWeight)bugTypeWeightInt;
+
+                            bugTypeWeightAction(player, bugType, bugTypeWeight);
+                        }
+                    }
+                }
+            }
+        }
+
         private static int GetKey(Player player, PlayerWeight playerWeight)
         {
             return ((int)player * NumPlayerWeights) + (int)playerWeight;
