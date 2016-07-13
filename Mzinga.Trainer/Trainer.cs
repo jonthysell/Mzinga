@@ -100,6 +100,9 @@ namespace Mzinga.Trainer
             List<Profile> profiles = LoadProfiles(path);
             Queue<Profile> remaining = new Queue<Profile>(profiles);
 
+            TimeSpan timeRemaining;
+            double progress;
+
             while (remaining.Count > 1)
             {
                 Profile whiteProfile = remaining.Dequeue();
@@ -151,8 +154,6 @@ namespace Mzinga.Trainer
                     blackProfile.WriteXml(fs);
                 }
 
-                TimeSpan timeRemaining;
-                double progress;
                 GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
                 Log("Tournament progress: {0:P2} ETA {1}.", progress, timeRemaining);
             }
@@ -187,6 +188,9 @@ namespace Mzinga.Trainer
             int completed = 0;
             int remaining = total;
 
+            TimeSpan timeRemaining;
+            double progress;
+
             // Run the battle royale
             foreach (Profile whiteProfile in profiles)
             {
@@ -211,8 +215,8 @@ namespace Mzinga.Trainer
 
                             if (rounds >= maxDraws && roundResult == BoardState.Draw)
                             {
-                                roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
                                 Log("Battle Royale match draw-out.");
+                                break;
                             }
                         }
 
@@ -233,8 +237,6 @@ namespace Mzinga.Trainer
                             blackProfile.WriteXml(fs);
                         }
 
-                        TimeSpan timeRemaining;
-                        double progress;
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
                         Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
                     }
