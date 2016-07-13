@@ -93,7 +93,7 @@ namespace Mzinga.Trainer
 
         static void ShowHelp()
         {
-            Console.WriteLine("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+            Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
             Console.WriteLine();
 
             Console.WriteLine("Commands:");
