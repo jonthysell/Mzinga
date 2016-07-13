@@ -65,6 +65,9 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("path");
             }
 
+            StartTime = DateTime.Now;
+            Log("Generate start.");
+
             Directory.CreateDirectory(path);
 
             List<Profile> profiles = Profile.Generate(count, minWeight, maxWeight);
@@ -78,6 +81,8 @@ namespace Mzinga.Trainer
                 }
                 Log("Generated {0}.", profile.Nickname);
             }
+
+            Log("Generate end.");
         }
 
         public static void Tournament(string path, int maxDraws)
