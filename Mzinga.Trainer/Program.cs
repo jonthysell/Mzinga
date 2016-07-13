@@ -55,13 +55,13 @@ namespace Mzinga.Trainer
                             break;
                         case "m":
                         case "mate":
-                            double mix = args.Length > 2 && Double.TryParse(args[2], out mix) ? mix : 0.05;
+                            double mix = args.Length > 2 && Double.TryParse(args[2], out mix) ? mix : TrainerSettings.DefaultMix;
                             Trainer.Mate(args[1], mix);
                             break;
                         case "l":
                         case "lifecycle":
-                            int generations = args.Length > 2 && Int32.TryParse(args[2], out generations) ? generations : 1;
-                            int battles = args.Length > 3 && Int32.TryParse(args[3], out battles) ? battles : -1;
+                            int generations = args.Length > 2 && Int32.TryParse(args[2], out generations) ? generations : TrainerSettings.DefaultLifecycleGenerations;
+                            int battles = args.Length > 3 && Int32.TryParse(args[3], out battles) ? battles : TrainerSettings.DefaultLifecycleBattles;
                             Trainer.Lifecycle(args[1], generations, battles);
                             break;
                         case "b":
@@ -70,12 +70,12 @@ namespace Mzinga.Trainer
                             break;
                         case "br":
                         case "battleroyale":
-                            int brMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : 1;
+                            int brMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : TrainerSettings.DefaultMaxDraws;
                             Trainer.BattleRoyale(args[1], brMaxDraws);
                             break;
                         case "t":
                         case "tournament":
-                            int tMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : 1;
+                            int tMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : TrainerSettings.DefaultMaxDraws;
                             Trainer.Tournament(args[1], tMaxDraws);
                             break;
                         default:

@@ -76,6 +76,7 @@ namespace Mzinga.Trainer
                 {
                     profile.WriteXml(fs);
                 }
+                Log("Generated {0}.", profile.Nickname);
             }
         }
 
@@ -92,6 +93,8 @@ namespace Mzinga.Trainer
             }
 
             StartTime = DateTime.Now;
+
+            DateTime tournamentStart = DateTime.Now;
             Log("Tournament start.");
 
             List<Profile> profiles = LoadProfiles(path);
@@ -99,8 +102,6 @@ namespace Mzinga.Trainer
 
             while (remaining.Count > 1)
             {
-                Log("Tournament remaining: {0}.", remaining.Count);
-
                 Profile whiteProfile = remaining.Dequeue();
                 Profile blackProfile = remaining.Dequeue();
 
@@ -149,6 +150,11 @@ namespace Mzinga.Trainer
                 {
                     blackProfile.WriteXml(fs);
                 }
+
+                TimeSpan timeRemaining;
+                double progress;
+                GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
+                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeRemaining);
             }
 
             Log("Tournament end.");
@@ -171,9 +177,15 @@ namespace Mzinga.Trainer
             }
 
             StartTime = DateTime.Now;
+
+            DateTime brStart = DateTime.Now;
             Log("Battle Royale start.");
 
             List<Profile> profiles = LoadProfiles(path);
+
+            int total = profiles.Count * (profiles.Count - 1);
+            int completed = 0;
+            int remaining = total;
 
             // Run the battle royale
             foreach (Profile whiteProfile in profiles)
@@ -205,6 +217,8 @@ namespace Mzinga.Trainer
                         }
 
                         Log("Battle Royale match end, {0}.", roundResult);
+                        completed++;
+                        remaining--;
 
                         // Save Profiles
                         string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
@@ -218,6 +232,11 @@ namespace Mzinga.Trainer
                         {
                             blackProfile.WriteXml(fs);
                         }
+
+                        TimeSpan timeRemaining;
+                        double progress;
+                        GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
+                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
                     }
                 }
             }
@@ -293,20 +312,20 @@ namespace Mzinga.Trainer
 
             // Create AIs
             GameAI whiteAI = new GameAI(whiteProfile.MetricWeights);
-            whiteAI.MaxDepth = GameAI.IterativeDepth;
-            whiteAI.MaxTime = TimeSpan.FromSeconds(1.0);
+            whiteAI.MaxDepth = TrainerSettings.DefaultMaxDepth;
+            whiteAI.MaxTime = TrainerSettings.DefaultMaxTime;
 
-            whiteAI.AlphaBetaPruning = true;
-            whiteAI.TranspositionTable = true;
+            whiteAI.AlphaBetaPruning = TrainerSettings.DefaultUseAlphaBetaPruning;
+            whiteAI.TranspositionTable = TrainerSettings.DefaultUseTranspositionTable;
 
             GameAI blackAI = new GameAI(blackProfile.MetricWeights);
-            blackAI.MaxDepth = GameAI.IterativeDepth;
-            blackAI.MaxTime = TimeSpan.FromSeconds(1.0);
+            blackAI.MaxDepth = TrainerSettings.DefaultMaxDepth;
+            blackAI.MaxTime = TrainerSettings.DefaultMaxTime;
 
-            blackAI.AlphaBetaPruning = true;
-            blackAI.TranspositionTable = true;
+            blackAI.AlphaBetaPruning = TrainerSettings.DefaultUseAlphaBetaPruning;
+            blackAI.TranspositionTable = TrainerSettings.DefaultUseTranspositionTable;
 
-            TimeSpan timeLimit = TimeSpan.FromMinutes(1.0);
+            TimeSpan timeLimit = TrainerSettings.DefaultBattleTimeLimit;
 
             Log("Battle start, {0} vs. {1}.", whiteProfile.Nickname, blackProfile.Nickname);
 
@@ -339,10 +358,6 @@ namespace Mzinga.Trainer
                 {
                     Log("Battle time-out.");
                     break;
-                }
-                else if ((int)battleElapsed.TotalSeconds % 10 == 0)
-                {
-                    Log("Battle in-progress.");
                 }
             }
 
@@ -396,17 +411,16 @@ namespace Mzinga.Trainer
             List<Profile> profiles = LoadProfiles(path);
             profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
 
-            int keepCount = Math.Max(CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
+            int keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
 
             for (int i = keepCount; i < profiles.Count; i++)
-            {
+            {                
                 File.Delete(Path.Combine(path, profiles[i].Id + ".xml"));
+                Log("Culled {0}.", profiles[i].Nickname);
             }
 
             Log("Cull end.");
         }
-
-        private const int CullMinKeepCount = 4;
 
         public static void Mate(string path, double mix)
         {
@@ -432,6 +446,8 @@ namespace Mzinga.Trainer
                     if (parentA != parentB)
                     {
                         Profile child = Profile.Mate(parentA, parentB, mix);
+
+                        Log("Mated {0} and {1} to sire {2}.", parentA.Nickname, parentB.Nickname, child.Nickname);
 
                         using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
                         {
@@ -470,11 +486,11 @@ namespace Mzinga.Trainer
                     {
                         if (battles < 0)
                         {
-                            Tournament(path, 1);
+                            Tournament(path, TrainerSettings.DefaultMaxDraws);
                         }
                         else if (battles > 0)
                         {
-                            BattleRoyale(path, 1);
+                            BattleRoyale(path, TrainerSettings.DefaultMaxDraws);
                         }
                     }
                 }
@@ -483,7 +499,7 @@ namespace Mzinga.Trainer
                 Cull(path);
 
                 // Mate
-                Mate(path, 0.05);
+                Mate(path, TrainerSettings.DefaultMix);
 
                 Log("Lifecycle generation {0} end.", i + 1);
             }
@@ -516,6 +532,42 @@ namespace Mzinga.Trainer
         {
             TimeSpan elapsedTime = DateTime.Now - StartTime;
             Console.WriteLine(String.Format("{0} > {1}", elapsedTime, String.Format(format, args)));
+        }
+
+        private static void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
+        {
+            if (completed < 0)
+            {
+                throw new ArgumentOutOfRangeException("completed");
+            }
+
+            if (remaining < 0)
+            {
+                throw new ArgumentOutOfRangeException("remaining");
+            }
+
+            double total = (double)(completed + remaining);
+
+            if (completed == 0)
+            {
+                progress = 0.0;
+                timeRemaining = TimeSpan.MaxValue;
+            }
+            else if (remaining == 0)
+            {
+                progress = 1.0;
+                timeRemaining = TimeSpan.Zero;
+            }
+            else
+            {
+                TimeSpan elapsedTime = DateTime.Now - startTime;
+
+                double elapsedMs = elapsedTime.TotalMilliseconds;
+                double avgMs = elapsedMs / (double)completed;
+
+                progress = (double)completed / total;
+                timeRemaining = TimeSpan.FromMilliseconds(avgMs * (double)remaining);
+            }
         }
     }
 }

@@ -316,7 +316,7 @@ namespace Mzinga.Trainer
             }
 
             Guid id = Guid.NewGuid();
-            int eloRating = EloUtils.DefaultRating;
+            int eloRating = (int)Math.Round(0.5 * (parentA.EloRating + parentB.EloRating));
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
             MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, mix);
@@ -351,13 +351,27 @@ namespace Mzinga.Trainer
             MetricWeights.IterateOverWeights((player, playerWeight) =>
             {
                 double value = 0.5 * (mwA.Get(player, playerWeight) + mwB.Get(player, playerWeight));
-                value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                if (value == 0.0)
+                {
+                    value = (-1.0 * mix) + (Random.NextDouble() * 2.0 * mix);
+                }
+                else
+                {
+                    value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                }
                 mw.Set(player, playerWeight, value);
             },
             (player, bugType, bugTypeWeight) =>
             {
                 double value = 0.5 * (mwA.Get(player, bugType, bugTypeWeight) + mwB.Get(player, bugType, bugTypeWeight));
-                value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                if (value == 0.0)
+                {
+                    value = (-1.0 * mix) + (Random.NextDouble() * 2.0 * mix);
+                }
+                else
+                {
+                    value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                }
                 mw.Set(player, bugType, bugTypeWeight, value);
             });
 
