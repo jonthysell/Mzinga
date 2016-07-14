@@ -72,6 +72,34 @@ namespace Mzinga.Trainer
             }
         }
 
+        public static int DefaultCullKeepCount
+        {
+            get
+            {
+                return CullKeepMax;
+            }
+        }
+
+        public const int CullKeepMax = -1;
+
+        public static int MateMinParentCount
+        {
+            get
+            {
+                return 2;
+            }
+        }
+
+        public static int DefaultMateParentCount
+        {
+            get
+            {
+                return MateParentMax;
+            }
+        }
+
+        public const int MateParentMax = -1;
+
         public static int DefaultMaxDepth
         {
             get

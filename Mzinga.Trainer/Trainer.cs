@@ -405,11 +405,16 @@ namespace Mzinga.Trainer
             return boardState;
         }
 
-        public static void Cull(string path)
+        public static void Cull(string path, int keepCount)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
+            }
+
+            if (keepCount < TrainerSettings.DefaultCullKeepCount && keepCount != TrainerSettings.CullKeepMax)
+            {
+                throw new ArgumentOutOfRangeException("keepCount");
             }
 
             StartTime = DateTime.Now;
@@ -418,7 +423,10 @@ namespace Mzinga.Trainer
             List<Profile> profiles = LoadProfiles(path);
             profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
 
-            int keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
+            if (keepCount == TrainerSettings.CullKeepMax)
+            {
+                keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
+            }
 
             for (int i = keepCount; i < profiles.Count; i++)
             {                
@@ -429,7 +437,7 @@ namespace Mzinga.Trainer
             Log("Cull end.");
         }
 
-        public static void Mate(string path, double mix)
+        public static void Mate(string path, double mix, int parentCount)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -441,10 +449,25 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("mix");
             }
 
+            if (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax)
+            {
+                throw new ArgumentOutOfRangeException("parentCount");
+            }
+
             StartTime = DateTime.Now;
             Log("Mate start.");
 
             List<Profile> profiles = LoadProfiles(path);
+
+            if (parentCount == TrainerSettings.MateParentMax)
+            {
+                parentCount = profiles.Count;
+            }
+
+            if (profiles.Count > parentCount)
+            {
+                profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating).Take(parentCount));
+            }
 
             foreach (Profile parentA in profiles)
             {
@@ -503,10 +526,10 @@ namespace Mzinga.Trainer
                 }
 
                 // Cull
-                Cull(path);
+                Cull(path, TrainerSettings.DefaultCullKeepCount);
 
                 // Mate
-                Mate(path, TrainerSettings.DefaultMix);
+                Mate(path, TrainerSettings.DefaultMix, TrainerSettings.DefaultMateParentCount);
 
                 Log("Lifecycle generation {0} end.", i + 1);
             }

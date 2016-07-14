@@ -51,12 +51,14 @@ namespace Mzinga.Trainer
                             break;
                         case "c":
                         case "cull":
-                            Trainer.Cull(args[1]);
+                            int keepCount = args.Length > 2 && Int32.TryParse(args[2], out keepCount) ? keepCount : TrainerSettings.DefaultCullKeepCount;
+                            Trainer.Cull(args[1], keepCount);
                             break;
                         case "m":
                         case "mate":
                             double mix = args.Length > 2 && Double.TryParse(args[2], out mix) ? mix : TrainerSettings.DefaultMix;
-                            Trainer.Mate(args[1], mix);
+                            int parentCount = args.Length > 2 && Int32.TryParse(args[2], out parentCount) ? parentCount : TrainerSettings.DefaultMateParentCount;
+                            Trainer.Mate(args[1], mix, parentCount);
                             break;
                         case "l":
                         case "lifecycle":
