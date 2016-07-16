@@ -354,10 +354,17 @@ namespace Mzinga.Trainer
                 keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
             }
 
-            for (int i = keepCount; i < profiles.Count; i++)
-            {                
-                File.Delete(Path.Combine(path, profiles[i].Id + ".xml"));
-                Log("Culled {0}.", profiles[i].Nickname);
+            for (int i = 0; i < profiles.Count; i++)
+            {
+                if (i < keepCount)
+                {
+                    Log("Kept {0}.", profiles[i].Nickname);
+                }
+                else
+                {
+                    File.Delete(Path.Combine(path, profiles[i].Id + ".xml"));
+                    Log("Culled {0}.", profiles[i].Nickname);
+                }
             }
 
             Log("Cull end.");
@@ -444,11 +451,21 @@ namespace Mzinga.Trainer
             }
 
             StartTime = DateTime.Now;
+
+            DateTime lifecycleStart = DateTime.Now;
             Log("Lifecycle start.");
+
+            Enumerate();
+
+            TimeSpan timeRemaining;
+            double progress;
 
             for (int i = 0; i < generations; i++)
             {
-                Log("Lifecycle generation {0} start.", i + 1);
+                if (generations > 1)
+                {
+                    Log("Lifecycle generation {0} start.", i + 1);
+                }
 
                 // Battle
                 if (battles != 0)
@@ -472,7 +489,15 @@ namespace Mzinga.Trainer
                 // Mate
                 Mate(path, TrainerSettings.MateMix, TrainerSettings.MateParentCount);
 
-                Log("Lifecycle generation {0} end.", i + 1);
+                Enumerate();
+
+                if (generations > 1)
+                {
+                    Log("Lifecycle generation {0} end.", i + 1);
+
+                    GetProgress(lifecycleStart, i + 1, generations - (i + 1), out progress, out timeRemaining);
+                    Log("Lifecycle progress: {0:P2} ETA {1}.", progress, timeRemaining);
+                }
             }
 
             Log("Lifecycle end.");
@@ -572,7 +597,6 @@ namespace Mzinga.Trainer
                 BoardState roundResult = BoardState.Draw;
 
                 Log("Tournament match start.");
-
 
                 if (maxDraws == 1)
                 {
