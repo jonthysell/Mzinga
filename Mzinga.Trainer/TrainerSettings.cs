@@ -32,112 +32,279 @@ namespace Mzinga.Trainer
 {
     public class TrainerSettings
     {
-        public static double DefaultMix
+        public string ProfilesPath
         {
             get
             {
-                return 0.05;
+                return _profilesPath;
+            }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException();
+                }
+                _profilesPath = value;
             }
         }
+        private string _profilesPath = null;
 
-        public static int DefaultLifecycleGenerations
+        public string WhiteProfilePath
         {
             get
             {
-                return 1;
+                return _whiteProfilePath;
+            }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException();
+                }
+                _whiteProfilePath = value;
             }
         }
+        private string _whiteProfilePath = null;
 
-        public static int DefaultLifecycleBattles
+        public string BlackProfilePath
         {
             get
             {
-                return 1;
+                return _blackProfilePath;
+            }
+            set
+            {
+                if (String.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException();
+                }
+                _blackProfilePath = value;
             }
         }
+        private string _blackProfilePath = null;
 
-        public static int DefaultMaxDraws
+        public int CullKeepCount
         {
             get
             {
-                return 1;
+                return _cullKeepCount;
             }
-        }
-
-        public static int CullMinKeepCount
-        {
-            get
+            set
             {
-                return 4;
+                if (value < CullMinKeepCount && value != CullKeepMax)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _cullKeepCount = value;
             }
         }
+        private int _cullKeepCount = CullKeepMax;
 
-        public static int DefaultCullKeepCount
-        {
-            get
-            {
-                return CullKeepMax;
-            }
-        }
-
+        public const int CullMinKeepCount = 2;
         public const int CullKeepMax = -1;
 
-        public static int MateMinParentCount
+        public int GenerateCount
         {
             get
             {
-                return 2;
+                return _GenerateCount;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _GenerateCount = value;
             }
         }
+        private int _GenerateCount = 1;
 
-        public static int DefaultMateParentCount
+        public double GenerateMinWeight
         {
             get
             {
-                return MateParentMax;
+                return _generateMinWeight;
+            }
+            set
+            {
+                _generateMinWeight = value;
             }
         }
+        private double _generateMinWeight = -100.0;
 
+        public double GenerateMaxWeight
+        {
+            get
+            {
+                return _generateMaxWeight;
+            }
+            set
+            {
+                _generateMaxWeight = value;
+            }
+        }
+        private double _generateMaxWeight = 100.0;
+       
+        public int LifecycleGenerations
+        {
+            get
+            {
+                return _lifecycleGenerations;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _lifecycleGenerations = value;
+            }
+        }
+        private int _lifecycleGenerations = 1;
+
+        public int LifecycleBattles
+        {
+            get
+            {
+                return _defaultLifecycleBattles;
+            }
+            set
+            {
+                _defaultLifecycleBattles = value;
+            }
+        }
+        private int _defaultLifecycleBattles = 1;
+
+        public int MaxDraws
+        {
+            get
+            {
+                return _maxDraws;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _maxDraws = value;
+            }
+        }
+        private int _maxDraws = 1;
+
+        public double MateMix
+        {
+            get
+            {
+                return _mateMix;
+            }
+            set
+            {
+                if (value < 0.0 || value > 1.0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _mateMix = value;
+            }
+        }
+        private double _mateMix = 0.05;
+
+        public int MateParentCount
+        {
+            get
+            {
+                return _mateParentCount;
+            }
+            set
+            {
+                if (value < MateMinParentCount && value != MateParentMax)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _mateParentCount = value;
+            }
+        }
+        private int _mateParentCount = MateParentMax;
+
+        public const int MateMinParentCount = 2;
         public const int MateParentMax = -1;
 
-        public static int DefaultMaxDepth
+        public int MaxDepth
         {
             get
             {
-                return GameAI.IterativeDepth;
+                return _maxDepth;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    value = GameAI.IterativeDepth;
+                }
+                _maxDepth = value;
             }
         }
+        public int _maxDepth = GameAI.IterativeDepth;
 
-        public static bool DefaultUseAlphaBetaPruning
+        public bool UseAlphaBetaPruning
         {
             get
             {
-                return true;
+                return _useAlphaBetaPruning;
+            }
+            set
+            {
+                _useAlphaBetaPruning = value;
             }
         }
+        private bool _useAlphaBetaPruning = true;
 
-        public static bool DefaultUseTranspositionTable
+        public bool UseTranspositionTable
         {
             get
             {
-                return true;
+                return _useTranspositionTable;
+            }
+            set
+            {
+                _useTranspositionTable = value;
             }
         }
+        private bool _useTranspositionTable = true;
 
-        public static TimeSpan DefaultMaxTime
+        public TimeSpan TurnMaxTime
         {
             get
             {
-                return TimeSpan.FromSeconds(5.0);
+                if (!_turnMaxTime.HasValue)
+                {
+                    _turnMaxTime = TimeSpan.FromSeconds(5.0);
+                }
+                return _turnMaxTime.Value;
+            }
+            set
+            {
+                _turnMaxTime = value;
             }
         }
+        private TimeSpan? _turnMaxTime = null;
 
-        public static TimeSpan DefaultBattleTimeLimit
+        public TimeSpan BattleTimeLimit
         {
             get
             {
-                return TimeSpan.FromMinutes(5.0);
+                if (!_battleTimeLimit.HasValue)
+                {
+                    _battleTimeLimit = TimeSpan.FromMinutes(5.0);
+                }
+                return _battleTimeLimit.Value;
+            }
+            set
+            {
+                _battleTimeLimit = value;
             }
         }
+        private TimeSpan? _battleTimeLimit = null;
     }
 }

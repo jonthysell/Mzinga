@@ -41,44 +41,35 @@ namespace Mzinga.Trainer
                 }
                 else
                 {
-                    int maxDraws;
+                    Trainer t = new Trainer();
 
-                    switch (args[0].ToLower())
+                    Command cmd = ParseArguments(args, t.TrainerSettings);
+
+                    switch (cmd)
                     {
-                        case "g":
-                        case "generate":
-                            Trainer.Generate(Int32.Parse(args[1]), Double.Parse(args[2]), Double.Parse(args[3]), args[4]);
+                        case Command.Battle:
+                            t.Battle();
                             break;
-                        case "c":
-                        case "cull":
-                            int keepCount = args.Length > 2 && Int32.TryParse(args[2], out keepCount) ? keepCount : TrainerSettings.DefaultCullKeepCount;
-                            Trainer.Cull(args[1], keepCount);
+                        case Command.BattleRoyale:
+                            t.BattleRoyale();
                             break;
-                        case "m":
-                        case "mate":
-                            double mix = args.Length > 2 && Double.TryParse(args[2], out mix) ? mix : TrainerSettings.DefaultMix;
-                            int parentCount = args.Length > 2 && Int32.TryParse(args[2], out parentCount) ? parentCount : TrainerSettings.DefaultMateParentCount;
-                            Trainer.Mate(args[1], mix, parentCount);
+                        case Command.Cull:
+                            t.Cull();
                             break;
-                        case "l":
-                        case "lifecycle":
-                            int generations = args.Length > 2 && Int32.TryParse(args[2], out generations) ? generations : TrainerSettings.DefaultLifecycleGenerations;
-                            int battles = args.Length > 3 && Int32.TryParse(args[3], out battles) ? battles : TrainerSettings.DefaultLifecycleBattles;
-                            Trainer.Lifecycle(args[1], generations, battles);
+                        case Command.Enumerate:
+                            t.Enumerate();
                             break;
-                        case "b":
-                        case "battle":
-                            Trainer.Battle(args[1], args[2]);
+                        case Command.Generate:
+                            t.Generate();
                             break;
-                        case "br":
-                        case "battleroyale":
-                            int brMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : TrainerSettings.DefaultMaxDraws;
-                            Trainer.BattleRoyale(args[1], brMaxDraws);
+                        case Command.Lifecycle:
+                            t.Lifecycle();
                             break;
-                        case "t":
-                        case "tournament":
-                            int tMaxDraws = args.Length > 2 && Int32.TryParse(args[2], out maxDraws) ? maxDraws : TrainerSettings.DefaultMaxDraws;
-                            Trainer.Tournament(args[1], tMaxDraws);
+                        case Command.Mate:
+                            t.Mate();
+                            break;
+                        case Command.Tournament:
+                            t.Tournament();
                             break;
                         default:
                             ShowHelp();
@@ -98,16 +89,210 @@ namespace Mzinga.Trainer
             Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
             Console.WriteLine();
 
-            Console.WriteLine("Commands:");
-            Console.WriteLine("generate [count] [minWeight] [maxWeight] [path]");
-            Console.WriteLine("cull [path]");
-            Console.WriteLine("mate [path] ([mix])");
-            Console.WriteLine("lifecycle [path] ([generations]) ([battles])");
-            Console.WriteLine("battle [whiteprofilepath] [blackprofilepath]");
-            Console.WriteLine("battleroyale [path] ([maxdraws])");
-            Console.WriteLine("tournament [path] ([maxdraws])");
+            Console.WriteLine("Usage:");
+            Console.WriteLine("Mzinga.Trainer.exe [command] ([parametername] [parametervalue]...)");
+            Console.WriteLine();
 
+            Console.WriteLine("Example:");
+            Console.WriteLine("Mzinga.Trainer.exe enumerate -ProfilesPath c:\\profiles\\");
+            Console.WriteLine();
+
+            Console.WriteLine("Commands:");
+
+            Console.WriteLine("battle                 Fight a single battle between two profiles");
+            Console.WriteLine("battleroyale           Fight every profile against each other");
+            Console.WriteLine("cull                   Delete the lowest ranking profiles");
+            Console.WriteLine("enumerate              List all of the profiles");
+            Console.WriteLine("generate               Create new random profiles");
+            Console.WriteLine("lifecycle              Battle, cull, mate cycle for profiles");
+            Console.WriteLine("mate                   Mate every profile with each other");
+            Console.WriteLine("tournament             Fight an elimination-style tournament");
+            Console.WriteLine();
+
+            Console.WriteLine("Parameters:");
+
+            Console.WriteLine("-ProfilesPath          Where the profiles are stored");
+            Console.WriteLine("-WhiteProfilePath      The white profile in a single battle");
+            Console.WriteLine("-BlackProfilePath      The black profile in a single battle");
+            Console.WriteLine("-CullKeepCount         How many to profiles to keep when culling");
+            Console.WriteLine("-GenerateCount         How many profiles to generate");
+            Console.WriteLine("-GenerateMinWeight     The minimum weight value for random profiles");
+            Console.WriteLine("-GenerateMaxWeight     The maximum weight value for random profiles");
+            Console.WriteLine("-LifecycleGenerations  The number of generations to run");
+            Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
+            Console.WriteLine("-MaxDraws              The max number of times to rety battles that end in a draw");
+            Console.WriteLine("-MateMix               The pecentage amount to mix up weights in children profiles");
+            Console.WriteLine("-MateParentCount       The number of profiles to mate");
+            Console.WriteLine("-MaxDepth              The maximum ply depth of the AI search");
+            Console.WriteLine("-UseAlphaBetaPruning   Whether or not to use alpha-beta pruning");
+            Console.WriteLine("-UseTranspositionTable Whether or not to use a transposition table");
+            Console.WriteLine("-TurnMaxTime           The maximum time to let the AI think on its turn");
+            Console.WriteLine("-BattleTimeLimit       The maximum time to let a battle run before declaring a draw");
             Console.WriteLine();
         }
+
+        static Command ParseArguments(string[] args, TrainerSettings trainerSettings)
+        {
+            if (null == args || args.Length == 0)
+            {
+                throw new ArgumentNullException("args");
+            }
+
+            if (null == trainerSettings)
+            {
+                throw new ArgumentNullException("trainerSettings");
+            }
+
+            Command cmd = Command.Unknown;
+            switch (args[0].ToLower())
+            {
+                case "b":
+                case "battle":
+                    cmd = Command.Battle;
+                    break;
+                case "br":
+                case "battleroyale":
+                    cmd = Command.BattleRoyale;
+                    break;
+                case "c":
+                case "cull":
+                    cmd = Command.Cull;
+                    break;
+                case "e":
+                case "enumerate":
+                    cmd = Command.Enumerate;
+                    break;
+                case "g":
+                case "generate":
+                    cmd = Command.Generate;
+                    break;
+                case "l":
+                case "lifecycle":
+                    cmd = Command.Lifecycle;
+                    break;
+                case "m":
+                case "mate":
+                    cmd = Command.Mate;
+                    break;
+                case "t":
+                case "tournament":
+                    cmd = Command.Tournament;
+                    break;
+            }
+
+            if (cmd == Command.Unknown)
+            {
+                throw new Exception(String.Format("Unknown command: {0}", args[0]));
+            }
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                switch (args[i].ToLower())
+                {
+                    case "-pp":
+                    case "-profilespath":
+                        trainerSettings.ProfilesPath = args[i + 1];
+                        i++;
+                        break;
+                    case "-wpp":
+                    case "-whiteprofilepath":
+                        trainerSettings.WhiteProfilePath = args[i + 1];
+                        i++;
+                        break;
+                    case "-bpp":
+                    case "-blackprofilepath":
+                        trainerSettings.BlackProfilePath = args[i + 1];
+                        i++;
+                        break;
+                    case "-ckc":
+                    case "-cullkeepcount":
+                        trainerSettings.CullKeepCount = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-gc":
+                    case "-generatecount":
+                        trainerSettings.GenerateCount = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-gminw":
+                    case "-generateminweight":
+                        trainerSettings.GenerateMinWeight = Double.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-gmaxw":
+                    case "-generatemaxweight":
+                        trainerSettings.GenerateMaxWeight = Double.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-lg":
+                    case "-lifecyclegenerations":
+                        trainerSettings.LifecycleGenerations = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-lc":
+                    case "-lifecyclebattles":
+                        trainerSettings.LifecycleBattles = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-mdraws":
+                    case "-maxdraws":
+                        trainerSettings.MaxDraws = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-mm":
+                    case "-matemix":
+                        trainerSettings.MateMix = Double.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-mpc":
+                    case "-mateparentcount":
+                        trainerSettings.MateParentCount = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-mdepth":
+                    case "-maxdepth":
+                        trainerSettings.MaxDepth = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-uabp":
+                    case "-usealphabetapruning":
+                        trainerSettings.UseAlphaBetaPruning = Boolean.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-utt":
+                    case "-usetranspositiontable":
+                        trainerSettings.UseTranspositionTable = Boolean.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-tmt":
+                    case "-turnmaxtime":
+                        trainerSettings.TurnMaxTime = TimeSpan.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-btl":
+                    case "-battletimelimit":
+                        trainerSettings.BattleTimeLimit = TimeSpan.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    default:
+                        throw new Exception(String.Format("Unknown parameter: {0}", args[i]));
+                }
+            }
+
+            return cmd;
+        }
+    }
+
+    public enum Command
+    {
+        Unknown = -1,
+        Battle,
+        BattleRoyale,
+        Cull,
+        Enumerate,
+        Generate,
+        Lifecycle,
+        Mate,
+        Tournament
     }
 }

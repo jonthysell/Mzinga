@@ -36,8 +36,7 @@ namespace Mzinga.Trainer
 {
     public class Trainer
     {
-
-        public static DateTime StartTime
+        public DateTime StartTime
         {
             get
             {
@@ -51,212 +50,36 @@ namespace Mzinga.Trainer
                 }
             }
         }
-        private static DateTime? _startTime = null;
+        private DateTime? _startTime = null;
 
-        public static void Generate(int count, double minWeight, double maxWeight, string path)
+        public TrainerSettings TrainerSettings
         {
-            if (count < 1)
+            get
             {
-                throw new ArgumentOutOfRangeException("count");
+                return _settings;
             }
-
-            if (String.IsNullOrWhiteSpace(path))
+            set
             {
-                throw new ArgumentNullException("path");
-            }
-
-            StartTime = DateTime.Now;
-            Log("Generate start.");
-
-            Directory.CreateDirectory(path);
-
-            List<Profile> profiles = Profile.Generate(count, minWeight, maxWeight);
-
-            foreach (Profile profile in profiles)
-            {
-                string filename = Path.Combine(path, profile.Id + ".xml");
-                using (FileStream fs = new FileStream(filename, FileMode.Create))
+                if (null == value)
                 {
-                    profile.WriteXml(fs);
+                    throw new ArgumentNullException();
                 }
-                Log("Generated {0}.", profile.Nickname);
+                _settings = value;
             }
+        }
+        private TrainerSettings _settings;
 
-            Log("Generate end.");
+        public Trainer()
+        {
+            TrainerSettings = new TrainerSettings();
         }
 
-        public static void Tournament(string path, int maxDraws)
+        public void Battle()
         {
-            if (String.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (maxDraws < 1)
-            {
-                throw new ArgumentOutOfRangeException("maxDraws");
-            }
-
-            StartTime = DateTime.Now;
-
-            DateTime tournamentStart = DateTime.Now;
-            Log("Tournament start.");
-
-            List<Profile> profiles = LoadProfiles(path);
-            Queue<Profile> remaining = new Queue<Profile>(profiles);
-
-            TimeSpan timeRemaining;
-            double progress;
-
-            while (remaining.Count > 1)
-            {
-                Profile whiteProfile = remaining.Dequeue();
-                Profile blackProfile = remaining.Dequeue();
-
-                BoardState roundResult = BoardState.Draw;
-
-                Log("Tournament match start.");
-
-                int rounds = 0;
-                while (roundResult == BoardState.Draw)
-                {
-                    Log("Tournament round {0} start.", rounds + 1);
-
-                    roundResult = Battle(whiteProfile, blackProfile);
-
-                    Log("Tournament round {0} end.", rounds + 1);
-
-                    rounds++;
-
-                    if (rounds >= maxDraws && roundResult == BoardState.Draw)
-                    {
-                        roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
-                        Log("Tournament match draw-out.");
-                    }
-                }
-
-                Log("Tournament match end, {0}.", roundResult);
-
-                if (roundResult == BoardState.WhiteWins)
-                {
-                    remaining.Enqueue(whiteProfile);
-                }
-                else if (roundResult == BoardState.BlackWins)
-                {
-                    remaining.Enqueue(blackProfile);
-                }
-
-                // Save Profiles
-                string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
-                {
-                    whiteProfile.WriteXml(fs);
-                }
-
-                string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
-                {
-                    blackProfile.WriteXml(fs);
-                }
-
-                GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
-                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeRemaining);
-            }
-
-            Log("Tournament end.");
-
-            Profile best = remaining.Dequeue();
-
-            Log("Tournament Winner: {0} ({1})", best.Id, best.EloRating);
+            Battle(TrainerSettings.WhiteProfilePath, TrainerSettings.BlackProfilePath);
         }
 
-        public static void BattleRoyale(string path, int maxDraws)
-        {
-            if (String.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (maxDraws < 1)
-            {
-                throw new ArgumentOutOfRangeException("maxDraws");
-            }
-
-            StartTime = DateTime.Now;
-
-            DateTime brStart = DateTime.Now;
-            Log("Battle Royale start.");
-
-            List<Profile> profiles = LoadProfiles(path);
-
-            int total = profiles.Count * (profiles.Count - 1);
-            int completed = 0;
-            int remaining = total;
-
-            TimeSpan timeRemaining;
-            double progress;
-
-            // Run the battle royale
-            foreach (Profile whiteProfile in profiles)
-            {
-                foreach (Profile blackProfile in profiles)
-                {
-                    if (whiteProfile != blackProfile)
-                    {
-                        BoardState roundResult = BoardState.Draw;
-
-                        Log("Battle Royale match start.");
-
-                        int rounds = 0;
-                        while (roundResult == BoardState.Draw)
-                        {
-                            Log("Battle Royale round {0} start.", rounds + 1);
-
-                            roundResult = Battle(whiteProfile, blackProfile);
-
-                            Log("Battle Royale round {0} end.", rounds + 1);
-
-                            rounds++;
-
-                            if (rounds >= maxDraws && roundResult == BoardState.Draw)
-                            {
-                                Log("Battle Royale match draw-out.");
-                                break;
-                            }
-                        }
-
-                        Log("Battle Royale match end, {0}.", roundResult);
-                        completed++;
-                        remaining--;
-
-                        // Save Profiles
-                        string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                        using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
-                        {
-                            whiteProfile.WriteXml(fs);
-                        }
-
-                        string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                        using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
-                        {
-                            blackProfile.WriteXml(fs);
-                        }
-
-                        GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
-                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
-                    }
-                }
-            }
-
-            Log("Battle Royale end.");
-
-            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
-
-            Log("Battle Royale highest ELO: {0} ({1})", best.Id, best.EloRating);
-
-        }
-
-        public static void Battle(string whiteProfilePath, string blackProfilePath)
+        private void Battle(string whiteProfilePath, string blackProfilePath)
         {
             if (String.IsNullOrWhiteSpace(whiteProfilePath))
             {
@@ -297,7 +120,105 @@ namespace Mzinga.Trainer
             }
         }
 
-        public static BoardState Battle(Profile whiteProfile, Profile blackProfile)
+        public void BattleRoyale()
+        {
+            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws);
+        }
+
+        private void BattleRoyale(string path, int maxDraws)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (maxDraws < 1)
+            {
+                throw new ArgumentOutOfRangeException("maxDraws");
+            }
+
+            StartTime = DateTime.Now;
+
+            DateTime brStart = DateTime.Now;
+            Log("Battle Royale start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+
+            int total = profiles.Count * (profiles.Count - 1);
+            int completed = 0;
+            int remaining = total;
+
+            TimeSpan timeRemaining;
+            double progress;
+
+            // Run the battle royale
+            foreach (Profile whiteProfile in profiles)
+            {
+                foreach (Profile blackProfile in profiles)
+                {
+                    if (whiteProfile != blackProfile)
+                    {
+                        BoardState roundResult = BoardState.Draw;
+
+                        Log("Battle Royale match start.");
+
+                        if (maxDraws == 1)
+                        {
+                            roundResult = Battle(whiteProfile, blackProfile);
+                        }
+                        else
+                        {
+                            int rounds = 0;
+                            while (roundResult == BoardState.Draw)
+                            {
+                                Log("Battle Royale round {0} start.", rounds + 1);
+
+                                roundResult = Battle(whiteProfile, blackProfile);
+
+                                Log("Battle Royale round {0} end.", rounds + 1);
+
+                                rounds++;
+
+                                if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                                {
+                                    Log("Battle Royale match draw-out.");
+                                    break;
+                                }
+                            }
+                        }
+
+                        Log("Battle Royale match end, {0}.", roundResult);
+                        completed++;
+                        remaining--;
+
+                        // Save Profiles
+                        string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
+                        using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                        {
+                            whiteProfile.WriteXml(fs);
+                        }
+
+                        string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
+                        using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                        {
+                            blackProfile.WriteXml(fs);
+                        }
+
+                        GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
+                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
+                    }
+                }
+            }
+
+            Log("Battle Royale end.");
+
+            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
+
+            Log("Battle Royale highest ELO: {0} ({1})", best.Id, best.EloRating);
+
+        }
+ 
+        private BoardState Battle(Profile whiteProfile, Profile blackProfile)
         {
             if (null == whiteProfile)
             {
@@ -319,20 +240,20 @@ namespace Mzinga.Trainer
 
             // Create AIs
             GameAI whiteAI = new GameAI(whiteProfile.MetricWeights);
-            whiteAI.MaxDepth = TrainerSettings.DefaultMaxDepth;
-            whiteAI.MaxTime = TrainerSettings.DefaultMaxTime;
+            whiteAI.MaxDepth = TrainerSettings.MaxDepth;
+            whiteAI.MaxTime = TrainerSettings.TurnMaxTime;
 
-            whiteAI.AlphaBetaPruning = TrainerSettings.DefaultUseAlphaBetaPruning;
-            whiteAI.TranspositionTable = TrainerSettings.DefaultUseTranspositionTable;
+            whiteAI.AlphaBetaPruning = TrainerSettings.UseAlphaBetaPruning;
+            whiteAI.TranspositionTable = TrainerSettings.UseTranspositionTable;
 
             GameAI blackAI = new GameAI(blackProfile.MetricWeights);
-            blackAI.MaxDepth = TrainerSettings.DefaultMaxDepth;
-            blackAI.MaxTime = TrainerSettings.DefaultMaxTime;
+            blackAI.MaxDepth = TrainerSettings.MaxDepth;
+            blackAI.MaxTime = TrainerSettings.TurnMaxTime;
 
-            blackAI.AlphaBetaPruning = TrainerSettings.DefaultUseAlphaBetaPruning;
-            blackAI.TranspositionTable = TrainerSettings.DefaultUseTranspositionTable;
+            blackAI.AlphaBetaPruning = TrainerSettings.UseAlphaBetaPruning;
+            blackAI.TranspositionTable = TrainerSettings.UseTranspositionTable;
 
-            TimeSpan timeLimit = TrainerSettings.DefaultBattleTimeLimit;
+            TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
             Log("Battle start, {0} vs. {1}.", whiteProfile.Nickname, blackProfile.Nickname);
 
@@ -405,14 +326,19 @@ namespace Mzinga.Trainer
             return boardState;
         }
 
-        public static void Cull(string path, int keepCount)
+        public void Cull()
+        {
+            Cull(TrainerSettings.ProfilesPath, TrainerSettings.CullKeepCount);
+        }
+
+        private void Cull(string path, int keepCount)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
 
-            if (keepCount < TrainerSettings.DefaultCullKeepCount && keepCount != TrainerSettings.CullKeepMax)
+            if (keepCount < TrainerSettings.CullMinKeepCount && keepCount != TrainerSettings.CullKeepMax)
             {
                 throw new ArgumentOutOfRangeException("keepCount");
             }
@@ -437,7 +363,127 @@ namespace Mzinga.Trainer
             Log("Cull end.");
         }
 
-        public static void Mate(string path, double mix, int parentCount)
+        public void Enumerate()
+        {
+            Enumerate(TrainerSettings.ProfilesPath);
+        }
+
+        private void Enumerate(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Enumerate start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+
+            foreach (Profile p in profiles)
+            {
+                Log("{0}, Elo: {1}, CDate: {2}, UDate: {3}", p.Id, p.EloRating, p.CreationTimestamp, p.LastUpdatedTimestamp);
+            }
+
+            Log("Enumerate end.");
+        }
+
+        public void Generate()
+        {
+            Generate(TrainerSettings.ProfilesPath, TrainerSettings.GenerateCount, TrainerSettings.GenerateMinWeight, TrainerSettings.GenerateMaxWeight);
+        }
+
+        private void Generate(string path, int count, double minWeight, double maxWeight)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (count < 1)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Generate start.");
+
+            Directory.CreateDirectory(path);
+
+            List<Profile> profiles = Profile.Generate(count, minWeight, maxWeight);
+
+            foreach (Profile profile in profiles)
+            {
+                string filename = Path.Combine(path, profile.Id + ".xml");
+                using (FileStream fs = new FileStream(filename, FileMode.Create))
+                {
+                    profile.WriteXml(fs);
+                }
+                Log("Generated {0}.", profile.Nickname);
+            }
+
+            Log("Generate end.");
+        }
+        
+        public void Lifecycle()
+        {
+            Lifecycle(TrainerSettings.ProfilesPath, TrainerSettings.LifecycleGenerations, TrainerSettings.LifecycleBattles);
+        }
+
+        private void Lifecycle(string path, int generations, int battles)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (generations < 1)
+            {
+                throw new ArgumentOutOfRangeException("generations");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Lifecycle start.");
+
+            for (int i = 0; i < generations; i++)
+            {
+                Log("Lifecycle generation {0} start.", i + 1);
+
+                // Battle
+                if (battles != 0)
+                {
+                    for (int j = 0; j < Math.Abs(battles); j++)
+                    {
+                        if (battles < 0)
+                        {
+                            Tournament(path, TrainerSettings.MaxDraws);
+                        }
+                        else if (battles > 0)
+                        {
+                            BattleRoyale(path, TrainerSettings.MaxDraws);
+                        }
+                    }
+                }
+
+                // Cull
+                Cull(path, TrainerSettings.CullKeepCount);
+
+                // Mate
+                Mate(path, TrainerSettings.MateMix, TrainerSettings.MateParentCount);
+
+                Log("Lifecycle generation {0} end.", i + 1);
+            }
+
+            Log("Lifecycle end.");
+        }
+
+        public void Mate()
+        {
+            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMix, TrainerSettings.MateParentCount);
+        }
+
+        private void Mate(string path, double mix, int parentCount)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -490,54 +536,105 @@ namespace Mzinga.Trainer
             Log("Mate end.");
         }
 
-        public static void Lifecycle(string path, int generations, int battles)
+        public void Tournament()
+        {
+            Tournament(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws);
+        }
+
+        private void Tournament(string path, int maxDraws)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
 
-            if (generations < 1)
+            if (maxDraws < 1)
             {
-                throw new ArgumentOutOfRangeException("generations");
+                throw new ArgumentOutOfRangeException("maxDraws");
             }
 
             StartTime = DateTime.Now;
-            Log("Lifecycle start.");
 
-            for (int i = 0; i < generations; i++)
+            DateTime tournamentStart = DateTime.Now;
+            Log("Tournament start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+            Queue<Profile> remaining = new Queue<Profile>(profiles);
+
+            TimeSpan timeRemaining;
+            double progress;
+
+            while (remaining.Count > 1)
             {
-                Log("Lifecycle generation {0} start.", i + 1);
+                Profile whiteProfile = remaining.Dequeue();
+                Profile blackProfile = remaining.Dequeue();
 
-                // Battle
-                if (battles != 0)
+                BoardState roundResult = BoardState.Draw;
+
+                Log("Tournament match start.");
+
+
+                if (maxDraws == 1)
                 {
-                    for (int j = 0; j < Math.Abs(battles); j++)
+                    roundResult = Battle(whiteProfile, blackProfile);
+                }
+                else
+                {
+                    int rounds = 0;
+                    while (roundResult == BoardState.Draw)
                     {
-                        if (battles < 0)
+                        Log("Tournament round {0} start.", rounds + 1);
+
+                        roundResult = Battle(whiteProfile, blackProfile);
+
+                        Log("Tournament round {0} end.", rounds + 1);
+
+                        rounds++;
+
+                        if (rounds >= maxDraws && roundResult == BoardState.Draw)
                         {
-                            Tournament(path, TrainerSettings.DefaultMaxDraws);
-                        }
-                        else if (battles > 0)
-                        {
-                            BattleRoyale(path, TrainerSettings.DefaultMaxDraws);
+                            roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
+                            Log("Tournament match draw-out.");
                         }
                     }
                 }
 
-                // Cull
-                Cull(path, TrainerSettings.DefaultCullKeepCount);
+                Log("Tournament match end, {0}.", roundResult);
 
-                // Mate
-                Mate(path, TrainerSettings.DefaultMix, TrainerSettings.DefaultMateParentCount);
+                if (roundResult == BoardState.WhiteWins)
+                {
+                    remaining.Enqueue(whiteProfile);
+                }
+                else if (roundResult == BoardState.BlackWins)
+                {
+                    remaining.Enqueue(blackProfile);
+                }
 
-                Log("Lifecycle generation {0} end.", i + 1);
+                // Save Profiles
+                string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
+                using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                {
+                    whiteProfile.WriteXml(fs);
+                }
+
+                string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
+                using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                {
+                    blackProfile.WriteXml(fs);
+                }
+
+                GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
+                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeRemaining);
             }
 
-            Log("Lifecycle end.");
+            Log("Tournament end.");
+
+            Profile best = remaining.Dequeue();
+
+            Log("Tournament Winner: {0} ({1})", best.Id, best.EloRating);
         }
 
-        private static List<Profile> LoadProfiles(string path)
+        private List<Profile> LoadProfiles(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -558,13 +655,13 @@ namespace Mzinga.Trainer
             return profiles;
         }
 
-        private static void Log(string format, params object[] args)
+        private void Log(string format, params object[] args)
         {
             TimeSpan elapsedTime = DateTime.Now - StartTime;
             Console.WriteLine(String.Format("{0} > {1}", elapsedTime, String.Format(format, args)));
         }
 
-        private static void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
+        private void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
         {
             if (completed < 0)
             {
