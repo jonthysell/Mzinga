@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Mzinga.Core.AI
 {
@@ -64,6 +65,77 @@ namespace Mzinga.Core.AI
         {
             int key = GetKey(player, bugType, bugTypeWeight);
             _bugTypeWeights[key] = value;
+        }
+
+        public void CopyFrom(MetricWeights source)
+        {
+            if (null == source)
+            {
+                throw new ArgumentNullException("source");
+            }
+
+            DrawScore = source.DrawScore;
+
+            MetricWeights.IterateOverWeights((player, playerWeight) =>
+            {
+                double value = source.Get(player, playerWeight);
+                Set(player, playerWeight, value);
+            },
+            (player, bugType, bugTypeWeight) =>
+            {
+                double value = source.Get(player, bugType, bugTypeWeight);
+                Set(player, bugType, bugTypeWeight, value);
+            });
+        }
+
+        public MetricWeights Clone()
+        {
+            MetricWeights clone = new MetricWeights();
+            clone.CopyFrom(this);
+
+            return clone;
+        }
+
+        public static MetricWeights ReadMetricWeightsXml(XmlReader xmlReader)
+        {
+            if (null == xmlReader)
+            {
+                throw new ArgumentNullException("xmlReader");
+            }
+
+            MetricWeights mw = new MetricWeights();
+
+            while (xmlReader.Read())
+            {
+                if (xmlReader.IsStartElement() && xmlReader.Name != "MetricWeights")
+                {
+                    string key = xmlReader.Name;
+                    double value = xmlReader.ReadElementContentAsDouble();
+
+                    if (key == "DrawScore")
+                    {
+                        mw.DrawScore = value;
+                    }
+                    else
+                    {
+                        Player player;
+                        PlayerWeight playerWeight;
+                        BugType bugType;
+                        BugTypeWeight bugTypeWeight;
+
+                        if (MetricWeights.TryParseKeyName(key, out player, out playerWeight))
+                        {
+                            mw.Set(player, playerWeight, value);
+                        }
+                        else if (MetricWeights.TryParseKeyName(key, out player, out bugType, out bugTypeWeight))
+                        {
+                            mw.Set(player, bugType, bugTypeWeight, value);
+                        }
+                    }
+                }
+            }
+
+            return mw;
         }
 
         public static bool TryParseKeyName(string key, out Player player, out PlayerWeight playerWeight)

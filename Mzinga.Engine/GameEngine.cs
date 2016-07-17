@@ -39,6 +39,7 @@ namespace Mzinga.Engine
     {
         public string ID { get; private set; }
         public ConsoleOut ConsoleOut { get; private set; }
+        public GameEngineConfig Config { get; private set; }
 
         private GameBoard GameBoard;
 
@@ -48,11 +49,16 @@ namespace Mzinga.Engine
 
         public bool ExitRequested { get; private set; }
 
-        public GameEngine(string id, ConsoleOut consoleOut)
+        public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
         {
             if (String.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException("id");
+            }
+
+            if (null == config)
+            {
+                throw new ArgumentNullException("config");
             }
 
             if (null == consoleOut)
@@ -61,9 +67,10 @@ namespace Mzinga.Engine
             }
 
             ID = id;
+            Config = config;
             ConsoleOut = consoleOut;
 
-            _gameAI = GameAI.GetDefaultGameAI();
+            _gameAI = Config.GetGameAI();
 
             ExitRequested = false;
         }

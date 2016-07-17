@@ -150,6 +150,10 @@ namespace Mzinga.Trainer
 
                 writer.WriteStartElement("MetricWeights");
 
+                writer.WriteStartElement("DrawScore");
+                writer.WriteValue(MetricWeights.DrawScore);
+                writer.WriteEndElement();
+
                 MetricWeights.IterateOverWeights((player, playerWeight) =>
                 {
                     string key = MetricWeights.GetKeyName(player, playerWeight);
@@ -215,7 +219,7 @@ namespace Mzinga.Trainer
                                 lastUpdateTimestamp = reader.ReadElementContentAsDateTime();
                                 break;
                             case "MetricWeights":
-                                metricWeights = ReadMetricWeightsXml(reader.ReadSubtree());
+                                metricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
                                 break;
                         }
                     }
@@ -223,48 +227,6 @@ namespace Mzinga.Trainer
             }
 
             return new Profile(id, generation, eloRating, metricWeights, creationTimestamp, lastUpdateTimestamp);
-        }
-
-        private static MetricWeights ReadMetricWeightsXml(XmlReader xmlReader)
-        {
-            if (null == xmlReader)
-            {
-                throw new ArgumentNullException("xmlReader");
-            }
-
-            MetricWeights mw = new MetricWeights();
-
-            while (xmlReader.Read())
-            {
-                if (xmlReader.IsStartElement() && xmlReader.Name != "MetricWeights")
-                {
-                    string key = xmlReader.Name;
-                    double value = xmlReader.ReadElementContentAsDouble();
-
-                    if (key == "DrawScore")
-                    {
-                        mw.DrawScore = value;
-                    }
-                    else
-                    {
-                        Player player;
-                        PlayerWeight playerWeight;
-                        BugType bugType;
-                        BugTypeWeight bugTypeWeight;
-
-                        if (MetricWeights.TryParseKeyName(key, out player, out playerWeight))
-                        {
-                            mw.Set(player, playerWeight, value);
-                        }
-                        else if (MetricWeights.TryParseKeyName(key, out player, out bugType, out bugTypeWeight))
-                        {
-                            mw.Set(player, bugType, bugTypeWeight, value);
-                        }
-                    }
-                }
-            }
-
-            return mw;
         }
 
         public static List<Profile> Generate(int count, double minWeight, double maxWeight)
