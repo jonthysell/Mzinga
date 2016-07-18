@@ -541,7 +541,7 @@ namespace Mzinga.Trainer
 
         public void Mate()
         {
-            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMinMix,, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
+            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMinMix, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
         }
 
         private void Mate(string path, double minMix, double maxMix, int parentCount)
