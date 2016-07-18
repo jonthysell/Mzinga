@@ -122,7 +122,8 @@ namespace Mzinga.Trainer
             Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
             Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
             Console.WriteLine("-MaxDraws              The max number of times to retry battles that end in a draw");
-            Console.WriteLine("-MateMix               The pecentage amount to mix up weights in children profiles");
+            Console.WriteLine("-MateMinMix            The min multiplier to mix up weights in children profiles");
+            Console.WriteLine("-MateMaxMix            The max multiplier to mix up weights in children profiles");
             Console.WriteLine("-MateParentCount       The number of profiles to mate");
             Console.WriteLine("-MateShuffleParents    Whether or not to have random parents mate");
             Console.WriteLine("-MaxDepth              The maximum ply depth of the AI search");
@@ -246,9 +247,14 @@ namespace Mzinga.Trainer
                         trainerSettings.MaxDraws = Int32.Parse(args[i + 1]);
                         i++;
                         break;
-                    case "-mm":
-                    case "-matemix":
-                        trainerSettings.MateMix = Double.Parse(args[i + 1]);
+                    case "-mminm":
+                    case "-mateminmix":
+                        trainerSettings.MateMinMix = Double.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-mmaxm":
+                    case "-matemaxmix":
+                        trainerSettings.MateMaxMix = Double.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mpc":

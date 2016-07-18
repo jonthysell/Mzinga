@@ -523,7 +523,7 @@ namespace Mzinga.Trainer
                 Cull(path, TrainerSettings.CullKeepCount);
 
                 // Mate
-                Mate(path, TrainerSettings.MateMix, TrainerSettings.MateParentCount);
+                Mate(path, TrainerSettings.MateMinMix, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
 
                 Enumerate();
 
@@ -541,19 +541,19 @@ namespace Mzinga.Trainer
 
         public void Mate()
         {
-            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMix, TrainerSettings.MateParentCount);
+            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMinMix,, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
         }
 
-        private void Mate(string path, double mix, int parentCount)
+        private void Mate(string path, double minMix, double maxMix, int parentCount)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
 
-            if (mix < 0.0 || mix > 1.0)
+            if (minMix > maxMix)
             {
-                throw new ArgumentOutOfRangeException("mix");
+                throw new ArgumentOutOfRangeException("minMix");
             }
 
             if (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax)
@@ -588,7 +588,7 @@ namespace Mzinga.Trainer
                 {
                     if (parentA != parentB)
                     {
-                        Profile child = Profile.Mate(parentA, parentB, mix);
+                        Profile child = Profile.Mate(parentA, parentB, minMix, maxMix);
 
                         Log("Mated {0} and {1} to sire {2}.", parentA.Nickname, parentB.Nickname, child.Nickname);
 

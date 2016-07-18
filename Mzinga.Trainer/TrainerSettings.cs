@@ -212,23 +212,31 @@ namespace Mzinga.Trainer
 
         public const int MaxMaxBattles = -1;
 
-
-        public double MateMix
+        public double MateMinMix
         {
             get
             {
-                return _mateMix;
+                return _mateMinMix;
             }
             set
             {
-                if (value < 0.0 || value > 1.0)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                _mateMix = value;
+                _mateMinMix = value;
             }
         }
-        private double _mateMix = 0.05;
+        private double _mateMinMix = 0.95;
+
+        public double MateMaxMix
+        {
+            get
+            {
+                return _mateMaxMix;
+            }
+            set
+            {
+                _mateMaxMix = value;
+            }
+        }
+        private double _mateMaxMix = 1.05;
 
         public int MateParentCount
         {

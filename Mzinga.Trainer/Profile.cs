@@ -260,7 +260,7 @@ namespace Mzinga.Trainer
             return new Profile(id, generation, eloRating, metricWeights, creationTimestamp, DateTime.Now);
         }
 
-        public static Profile Mate(Profile parentA, Profile parentB, double mix)
+        public static Profile Mate(Profile parentA, Profile parentB, double minMix, double maxMix)
         {
             if (null == parentA)
             {
@@ -272,16 +272,16 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("parentB");
             }
 
-            if (mix < 0.0 || mix > 1.0)
+            if (minMix > maxMix)
             {
-                throw new ArgumentOutOfRangeException("mix");
+                throw new ArgumentOutOfRangeException("minMix");
             }
 
             Guid id = Guid.NewGuid();
             int eloRating = (int)Math.Round(0.5 * (parentA.EloRating + parentB.EloRating));
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
-            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, mix);
+            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, minMix, maxMix);
 
             DateTime creationTimestamp = DateTime.Now;
 
@@ -306,7 +306,7 @@ namespace Mzinga.Trainer
             return mw;
         }
 
-        private static MetricWeights MixMetricWeights(MetricWeights mwA, MetricWeights mwB, double mix)
+        private static MetricWeights MixMetricWeights(MetricWeights mwA, MetricWeights mwB, double minMix, double maxMix)
         {
             MetricWeights mw = new MetricWeights();
 
@@ -315,11 +315,11 @@ namespace Mzinga.Trainer
                 double value = 0.5 * (mwA.Get(player, playerWeight) + mwB.Get(player, playerWeight));
                 if (value == 0.0)
                 {
-                    value = (-1.0 * mix) + (Random.NextDouble() * 2.0 * mix);
+                    value = minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix));
                 }
                 else
                 {
-                    value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                    value = value * (minMix + (Random.NextDouble() * (maxMix - minMix)));
                 }
                 mw.Set(player, playerWeight, value);
             },
@@ -328,11 +328,11 @@ namespace Mzinga.Trainer
                 double value = 0.5 * (mwA.Get(player, bugType, bugTypeWeight) + mwB.Get(player, bugType, bugTypeWeight));
                 if (value == 0.0)
                 {
-                    value = (-1.0 * mix) + (Random.NextDouble() * 2.0 * mix);
+                    value = minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix));
                 }
                 else
                 {
-                    value = value * ((1.0 - mix) + (Random.NextDouble() * 2.0 * mix));
+                    value = value * (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
                 }
                 mw.Set(player, bugType, bugTypeWeight, value);
             });
