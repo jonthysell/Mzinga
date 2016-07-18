@@ -161,6 +161,7 @@ namespace Mzinga.Trainer
             Log("Battle Royale start.");
 
             List<Profile> profiles = LoadProfiles(path);
+
             int combinations = profiles.Count * (profiles.Count - 1);
 
             if (maxBattles == TrainerSettings.MaxMaxBattles)
@@ -174,18 +175,21 @@ namespace Mzinga.Trainer
             int completed = 0;
             int remaining = total;
 
+            List<Profile> whiteProfiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            List<Profile> blackProfiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderBy(profile => profile.EloRating));
+
             TimeSpan timeRemaining;
             double progress;
 
             // Run the battle royale
-            foreach (Profile whiteProfile in profiles)
+            foreach (Profile whiteProfile in whiteProfiles)
             {
                 if (remaining == 0)
                 {
                     break;
                 }
 
-                foreach (Profile blackProfile in profiles)
+                foreach (Profile blackProfile in blackProfiles)
                 {
                     if (remaining == 0)
                     {
@@ -626,6 +630,8 @@ namespace Mzinga.Trainer
             Log("Tournament start.");
 
             List<Profile> profiles = LoadProfiles(path);
+            profiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+
             Queue<Profile> remaining = new Queue<Profile>(profiles);
 
             TimeSpan timeRemaining;

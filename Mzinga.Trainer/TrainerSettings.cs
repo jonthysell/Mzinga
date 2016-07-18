@@ -212,6 +212,19 @@ namespace Mzinga.Trainer
 
         public const int MaxMaxBattles = -1;
 
+        public bool BattleShuffleProfiles
+        {
+            get
+            {
+                return _battleShuffleProfiles;
+            }
+            set
+            {
+                _battleShuffleProfiles = value;
+            }
+        }
+        private bool _battleShuffleProfiles = false;
+
         public double MateMinMix
         {
             get
