@@ -120,9 +120,11 @@ namespace Mzinga.Trainer
             Console.WriteLine("-GenerateMaxWeight     The maximum weight value for random profiles");
             Console.WriteLine("-LifecycleGenerations  The number of generations to run");
             Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
-            Console.WriteLine("-MaxDraws              The max number of times to rety battles that end in a draw");
+            Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
+            Console.WriteLine("-MaxDraws              The max number of times to retry battles that end in a draw");
             Console.WriteLine("-MateMix               The pecentage amount to mix up weights in children profiles");
             Console.WriteLine("-MateParentCount       The number of profiles to mate");
+            Console.WriteLine("-MateShuffleParents    Whether or not to have random parents mate");
             Console.WriteLine("-MaxDepth              The maximum ply depth of the AI search");
             Console.WriteLine("-UseAlphaBetaPruning   Whether or not to use alpha-beta pruning");
             Console.WriteLine("-UseTranspositionTable Whether or not to use a transposition table");
@@ -234,6 +236,11 @@ namespace Mzinga.Trainer
                         trainerSettings.LifecycleBattles = Int32.Parse(args[i + 1]);
                         i++;
                         break;
+                    case "-mb":
+                    case "-maxbattles":
+                        trainerSettings.MaxBattles = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
                     case "-mdraws":
                     case "-maxdraws":
                         trainerSettings.MaxDraws = Int32.Parse(args[i + 1]);
@@ -247,6 +254,11 @@ namespace Mzinga.Trainer
                     case "-mpc":
                     case "-mateparentcount":
                         trainerSettings.MateParentCount = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-msp":
+                    case "-mateshuffleparents":
+                        trainerSettings.MateShuffleParents = Boolean.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mdepth":

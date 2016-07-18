@@ -193,6 +193,26 @@ namespace Mzinga.Trainer
         }
         private int _maxDraws = 1;
 
+        public int MaxBattles
+        {
+            get
+            {
+                return _maxBattles;
+            }
+            set
+            {
+                if (value < 1 && value != MaxMaxBattles)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _maxBattles = value;
+            }
+        }
+        private int _maxBattles = 1;
+
+        public const int MaxMaxBattles = -1;
+
+
         public double MateMix
         {
             get
@@ -229,6 +249,19 @@ namespace Mzinga.Trainer
 
         public const int MateMinParentCount = 2;
         public const int MateParentMax = -1;
+
+        public bool MateShuffleParents
+        {
+            get
+            {
+                return _mateShuffleParents;
+            }
+            set
+            {
+                _mateShuffleParents = value;
+            }
+        }
+        private bool _mateShuffleParents = false;
 
         public int MaxDepth
         {

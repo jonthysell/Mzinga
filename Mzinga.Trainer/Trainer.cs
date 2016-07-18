@@ -69,6 +69,19 @@ namespace Mzinga.Trainer
         }
         private TrainerSettings _settings;
 
+        public Random Random
+        {
+            get
+            {
+                if (null == _random)
+                {
+                    _random = new Random();
+                }
+                return _random;
+            }
+        }
+        private Random _random;
+
         public Trainer()
         {
             TrainerSettings = new TrainerSettings();
@@ -122,14 +135,19 @@ namespace Mzinga.Trainer
 
         public void BattleRoyale()
         {
-            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws);
+            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws);
         }
 
-        private void BattleRoyale(string path, int maxDraws)
+        private void BattleRoyale(string path, int maxBattles, int maxDraws)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
+            }
+
+            if (maxBattles < 1 && maxBattles != TrainerSettings.MaxMaxBattles)
+            {
+                throw new ArgumentOutOfRangeException("maxBattles");
             }
 
             if (maxDraws < 1)
@@ -143,8 +161,16 @@ namespace Mzinga.Trainer
             Log("Battle Royale start.");
 
             List<Profile> profiles = LoadProfiles(path);
+            int combinations = profiles.Count * (profiles.Count - 1);
 
-            int total = profiles.Count * (profiles.Count - 1);
+            if (maxBattles == TrainerSettings.MaxMaxBattles)
+            {
+                maxBattles = combinations;
+            }
+
+            maxBattles = Math.Min(maxBattles, combinations);
+
+            int total = maxBattles;
             int completed = 0;
             int remaining = total;
 
@@ -154,8 +180,18 @@ namespace Mzinga.Trainer
             // Run the battle royale
             foreach (Profile whiteProfile in profiles)
             {
+                if (remaining == 0)
+                {
+                    break;
+                }
+
                 foreach (Profile blackProfile in profiles)
                 {
+                    if (remaining == 0)
+                    {
+                        break;
+                    }
+
                     if (whiteProfile != blackProfile)
                     {
                         BoardState roundResult = BoardState.Draw;
@@ -478,7 +514,7 @@ namespace Mzinga.Trainer
                         }
                         else if (battles > 0)
                         {
-                            BattleRoyale(path, TrainerSettings.MaxDraws);
+                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws);
                         }
                     }
                 }
@@ -535,14 +571,20 @@ namespace Mzinga.Trainer
                 parentCount = profiles.Count;
             }
 
-            if (profiles.Count > parentCount)
+            parentCount = Math.Min(parentCount, profiles.Count);
+
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+
+            if (TrainerSettings.MateShuffleParents)
             {
-                profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating).Take(parentCount));
+                profiles = Shuffle(profiles);
             }
 
-            foreach (Profile parentA in profiles)
+            List<Profile> parents = new List<Profile>(profiles.Take(parentCount));
+
+            foreach (Profile parentA in parents)
             {
-                foreach (Profile parentB in profiles)
+                foreach (Profile parentB in parents)
                 {
                     if (parentA != parentB)
                     {
@@ -677,6 +719,28 @@ namespace Mzinga.Trainer
             }
 
             return profiles;
+        }
+
+        private List<Profile> Shuffle(List<Profile> profiles)
+        {
+            if (null == profiles)
+            {
+                throw new ArgumentNullException("profiles");
+            }
+
+            List<Profile> unshuffled = new List<Profile>(profiles);
+
+            List<Profile> shuffled = new List<Profile>(profiles.Count);
+
+            while (unshuffled.Count > 0)
+            {
+                int randIndex = Random.Next(unshuffled.Count);
+                Profile p = unshuffled[randIndex];
+                unshuffled.RemoveAt(randIndex);
+                shuffled.Add(p);
+            }
+
+            return shuffled;
         }
 
         private void Log(string format, params object[] args)
