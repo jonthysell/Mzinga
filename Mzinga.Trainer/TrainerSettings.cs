@@ -208,7 +208,7 @@ namespace Mzinga.Trainer
                 _maxBattles = value;
             }
         }
-        private int _maxBattles = 1;
+        private int _maxBattles = MaxMaxBattles;
 
         public const int MaxMaxBattles = -1;
 
