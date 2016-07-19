@@ -231,7 +231,7 @@ namespace Mzinga.Trainer
             {
                 if (!_bulkBattleTimeLimit.HasValue)
                 {
-                    _bulkBattleTimeLimit = TimeSpan.FromDays(7.0);
+                    _bulkBattleTimeLimit = TimeSpan.MaxValue;
                 }
                 return _bulkBattleTimeLimit.Value;
             }
