@@ -135,10 +135,10 @@ namespace Mzinga.Trainer
 
         public void BattleRoyale()
         {
-            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws);
+            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit);
         }
 
-        private void BattleRoyale(string path, int maxBattles, int maxDraws)
+        private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit)
         {
             if (String.IsNullOrWhiteSpace(path))
             {
@@ -248,7 +248,7 @@ namespace Mzinga.Trainer
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
 
-                        timeoutRemaining = TrainerSettings.BulkBattleTimeLimit - (DateTime.Now - brStart);
+                        timeoutRemaining = timeLimit - (DateTime.Now - brStart);
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
                         Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
@@ -530,7 +530,7 @@ namespace Mzinga.Trainer
                         }
                         else if (battles > 0)
                         {
-                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws);
+                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit);
                         }
                     }
                 }
