@@ -181,7 +181,7 @@ namespace Mzinga.Trainer
             TimeSpan timeRemaining;
             double progress;
 
-            TimeSpan battleElapsed = DateTime.Now - brStart;
+            TimeSpan timeoutRemaining;
 
             // Run the battle royale
             foreach (Profile whiteProfile in whiteProfiles)
@@ -247,10 +247,13 @@ namespace Mzinga.Trainer
                         }
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
-                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
 
-                        battleElapsed = DateTime.Now - brStart;
-                        if (battleElapsed >= TrainerSettings.BulkBattleTimeLimit)
+                        timeoutRemaining = TrainerSettings.BulkBattleTimeLimit - (DateTime.Now - brStart);
+
+                        GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
+                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
+
+                        if (timeoutRemaining <= TimeSpan.Zero)
                         {
                             Log("Battle Royale time-out.");
                             break;
