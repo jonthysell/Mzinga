@@ -315,12 +315,9 @@ namespace Mzinga.Trainer
                 double value = 0.5 * (mwA.Get(player, playerWeight) + mwB.Get(player, playerWeight));
                 if (value == 0.0)
                 {
-                    value = minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix));
+                    value = -0.01 + (Random.NextDouble() * 0.02);
                 }
-                else
-                {
-                    value = value * (minMix + (Random.NextDouble() * (maxMix - minMix)));
-                }
+                value = value * (minMix + (Random.NextDouble() * (maxMix - minMix)));
                 mw.Set(player, playerWeight, value);
             },
             (player, bugType, bugTypeWeight) =>
@@ -328,12 +325,9 @@ namespace Mzinga.Trainer
                 double value = 0.5 * (mwA.Get(player, bugType, bugTypeWeight) + mwB.Get(player, bugType, bugTypeWeight));
                 if (value == 0.0)
                 {
-                    value = minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix));
+                    value = -0.01 + (Random.NextDouble() * 0.02);
                 }
-                else
-                {
-                    value = value * (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
-                }
+                value = value * (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
                 mw.Set(player, bugType, bugTypeWeight, value);
             });
 
