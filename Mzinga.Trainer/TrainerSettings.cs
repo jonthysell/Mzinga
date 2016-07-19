@@ -225,6 +225,23 @@ namespace Mzinga.Trainer
         }
         private bool _battleShuffleProfiles = false;
 
+        public TimeSpan BulkBattleTimeLimit
+        {
+            get
+            {
+                if (!_bulkBattleTimeLimit.HasValue)
+                {
+                    _bulkBattleTimeLimit = TimeSpan.FromDays(7.0);
+                }
+                return _bulkBattleTimeLimit.Value;
+            }
+            set
+            {
+                _bulkBattleTimeLimit = value;
+            }
+        }
+        private TimeSpan? _bulkBattleTimeLimit = null;
+
         public double MateMinMix
         {
             get

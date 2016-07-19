@@ -122,6 +122,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
             Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
             Console.WriteLine("-BattleShuffleProfiles Whether or not to have profiles fight in random order");
+            Console.WriteLine("-BulkBattleTimeLimit   The max time for battle royales");
             Console.WriteLine("-MaxDraws              The max number of times to retry battles that end in a draw");
             Console.WriteLine("-MateMinMix            The min multiplier to mix up weights in children profiles");
             Console.WriteLine("-MateMaxMix            The max multiplier to mix up weights in children profiles");
@@ -251,6 +252,11 @@ namespace Mzinga.Trainer
                     case "-mdraws":
                     case "-maxdraws":
                         trainerSettings.MaxDraws = Int32.Parse(args[i + 1]);
+                        i++;
+                        break;
+                    case "-bbtl":
+                    case "-bulkbattletimelimit":
+                        trainerSettings.BulkBattleTimeLimit = TimeSpan.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mminm":

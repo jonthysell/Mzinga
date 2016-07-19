@@ -181,6 +181,8 @@ namespace Mzinga.Trainer
             TimeSpan timeRemaining;
             double progress;
 
+            TimeSpan battleElapsed = DateTime.Now - brStart;
+
             // Run the battle royale
             foreach (Profile whiteProfile in whiteProfiles)
             {
@@ -246,6 +248,13 @@ namespace Mzinga.Trainer
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
                         Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeRemaining);
+
+                        battleElapsed = DateTime.Now - brStart;
+                        if (battleElapsed >= TrainerSettings.BulkBattleTimeLimit)
+                        {
+                            Log("Battle Royale time-out.");
+                            break;
+                        }
                     }
                 }
             }
@@ -254,7 +263,7 @@ namespace Mzinga.Trainer
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
-            Log("Battle Royale highest ELO: {0} ({1})", best.Id, best.EloRating);
+            Log("Battle Royale highest Elo: {0} ({1})", best.Id, best.EloRating);
 
         }
  
