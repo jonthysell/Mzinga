@@ -181,7 +181,7 @@ namespace Mzinga.Trainer
             TimeSpan timeRemaining;
             double progress;
 
-            TimeSpan timeoutRemaining;
+            TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - brStart);
 
             // Run the battle royale
             foreach (Profile whiteProfile in whiteProfiles)
@@ -255,10 +255,15 @@ namespace Mzinga.Trainer
 
                         if (timeoutRemaining <= TimeSpan.Zero)
                         {
-                            Log("Battle Royale time-out.");
                             break;
                         }
                     }
+                }
+
+                if (timeoutRemaining <= TimeSpan.Zero)
+                {
+                    Log("Battle Royale time-out.");
+                    break;
                 }
             }
 
