@@ -680,10 +680,15 @@ namespace Mzinga.Trainer
 
                         if (rounds >= maxDraws && roundResult == BoardState.Draw)
                         {
-                            roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
                             Log("Tournament match draw-out.");
+                            break;
                         }
                     }
+                }
+
+                if (roundResult == BoardState.Draw)
+                {
+                    roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
                 }
 
                 Log("Tournament match end, {0}.", roundResult);
