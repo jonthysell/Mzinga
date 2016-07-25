@@ -322,9 +322,6 @@ namespace Mzinga.Trainer
             // Play Game
             while (gameBoard.GameInProgress)
             {
-                Move move = gameBoard.CurrentTurnColor == Color.White ? whiteAI.GetBestMove(gameBoard) : blackAI.GetBestMove(gameBoard);
-                gameBoard.Play(move);
-
                 boardKeys.Add(gameBoard.GetTranspositionKey());
 
                 if (boardKeys.Count >= 6)
@@ -338,19 +335,23 @@ namespace Mzinga.Trainer
                 }
 
                 battleElapsed = DateTime.Now - battleStart;
-
                 if (battleElapsed > timeLimit)
                 {
                     Log("Battle time-out.");
                     break;
                 }
+
+                Move move = gameBoard.CurrentTurnColor == Color.White ? whiteAI.GetBestMove(gameBoard) : blackAI.GetBestMove(gameBoard);
+                gameBoard.Play(move);
             }
+
+            BoardState boardState = gameBoard.GameInProgress ? BoardState.Draw : gameBoard.BoardState;
 
             // Load Results
             double whiteScore = 0.0;
             double blackScore = 0.0;
 
-            switch (gameBoard.BoardState)
+            switch (boardState)
             {
                 case BoardState.WhiteWins:
                     whiteScore = 1.0;
@@ -361,7 +362,6 @@ namespace Mzinga.Trainer
                     blackScore = 1.0;
                     break;
                 case BoardState.Draw:
-                case BoardState.InProgress:
                     whiteScore = 0.5;
                     blackScore = 0.5;
                     break;
@@ -373,8 +373,6 @@ namespace Mzinga.Trainer
 
             whiteProfile.UpdateRating(whiteRating);
             blackProfile.UpdateRating(blackRating);
-
-            BoardState boardState = gameBoard.BoardState == BoardState.InProgress ? BoardState.Draw : gameBoard.BoardState;
 
             // Output Results
             Log("Battle end, {0}", boardState);
