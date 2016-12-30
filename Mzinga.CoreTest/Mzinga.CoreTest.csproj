@@ -75,6 +75,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
+      <Link>Properties\SharedInfo.cs</Link>
+    </Compile>
     <Compile Include="MoveSetTests.cs" />
     <Compile Include="MoveTests.cs" />
     <Compile Include="PieceTests.cs" />

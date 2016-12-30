@@ -51,6 +51,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
+      <Link>Properties\SharedInfo.cs</Link>
+    </Compile>
     <Compile Include="EloUtils.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Program.cs" />

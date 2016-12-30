@@ -71,6 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
+      <Link>Properties\SharedInfo.cs</Link>
+    </Compile>
     <Compile Include="GameEngine.cs" />
     <Compile Include="GameEngineConfig.cs" />
     <Compile Include="Program.cs" />
