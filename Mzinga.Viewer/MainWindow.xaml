@@ -1,11 +1,17 @@
-﻿<Window x:Class="Mzinga.Viewer.MainWindow"
+<Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        ForceCursor="True"
+        Height="600"
+        Icon="{DynamicResource MzingaIcon}"
+        MinHeight="480"
+        MinWidth="640"
+        Title="{Binding Title}"
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        x:Class="Mzinga.Viewer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModel"
-        Icon="{DynamicResource MzingaIcon}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinHeight="480" MinWidth="640" Height="600" Width="800"
-        Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}" ForceCursor="True">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -21,56 +27,132 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="3">
-            <GroupBox Header="Game" FontWeight="Bold" Margin="5">
+        <StackPanel Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="3">
+            <GroupBox FontWeight="Bold"
+                      Header="Game"
+                      Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding NewGame}" Content="New Game" Margin="5" Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding NewGame}"
+                            Content="New Game"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Play" FontWeight="Bold" Margin="5">
+            <GroupBox FontWeight="Bold"
+                      Header="Play"
+                      Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding PlayTarget}" Content="Play" Margin="5" Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding Pass}" Content="Pass" Margin="5" Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding UndoLastMove}" Content="Undo Move" Margin="5" Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding PlayTarget}"
+                            Content="Play"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding Pass}"
+                            Content="Pass"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding UndoLastMove}"
+                            Content="Undo Move"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Engine" FontWeight="Bold" Margin="5">
+            <GroupBox FontWeight="Bold"
+                      Header="Engine"
+                      Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding PlayBestMove}" Content="Play Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding FindBestMove}" Content="Find Best Move" Margin="5" Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding ShowEngineConsole}" Content="Show Console" Margin="5" Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding PlayBestMove}"
+                            Content="Play Best Move"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding FindBestMove}"
+                            Content="Find Best Move"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding ShowEngineConsole}"
+                            Content="Show Console"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Settings" FontWeight="Bold" Margin="5">
+            <GroupBox FontWeight="Bold"
+                      Header="Settings"
+                      Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}" Content="Update Check" Margin="5" Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
+                            Content="Update Check"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="1" Name="BlackHandStackPanel" Background="White" Orientation="Horizontal" />
-        <Canvas Grid.Row="1" Grid.Column="1" Name="BoardCanvas" Background="White" ClipToBounds="True" MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown" SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Grid.Row="2" Grid.Column="1" Name="WhiteHandStackPanel" Background="White" Orientation="Horizontal" />
-        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
-            <GroupBox Header="History" FontWeight="Bold" Margin="5">
-                <local:ScrollingTextBox Text="{Binding BoardHistory, Mode=OneWay}" IsReadOnly="True" Padding="5" BorderBrush="Transparent" MinWidth="120" TextWrapping="NoWrap" FontWeight="Normal" FontFamily="Lucida Console" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+        <StackPanel Background="White"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Name="BlackHandStackPanel"
+                    Orientation="Horizontal" />
+        <Canvas Background="White"
+                ClipToBounds="True"
+                Grid.Column="1"
+                Grid.Row="1"
+                MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown"
+                Name="BoardCanvas"
+                SizeChanged="BoardCanvas_SizeChanged" />
+        <StackPanel Background="White"
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Name="WhiteHandStackPanel"
+                    Orientation="Horizontal" />
+        <Grid Grid.Column="2"
+              Grid.Row="0"
+              Grid.RowSpan="3">
+            <GroupBox FontWeight="Bold"
+                      Header="History"
+                      Margin="5">
+                <local:ScrollingTextBox BorderBrush="Transparent"
+                                        FontFamily="Lucida Console"
+                                        FontWeight="Normal"
+                                        IsReadOnly="True"
+                                        MinWidth="120"
+                                        Padding="5"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        Text="{Binding BoardHistory, Mode=OneWay}"
+                                        TextWrapping="NoWrap" />
             </GroupBox>
         </Grid>
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="5">
+        <Grid Grid.Column="0"
+              Grid.ColumnSpan="3"
+              Grid.Row="3"
+              Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Label FontWeight="Bold" Content="State:" />
-                <Label  Content="{Binding GameState}" />
+            <StackPanel Grid.Column="0"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Label Content="State:"
+                       FontWeight="Bold" />
+                <Label Content="{Binding GameState}" />
             </StackPanel>
-            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Label FontWeight="Bold" Content="Moves:" />
+            <StackPanel Grid.Column="1"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Label Content="Moves:"
+                       FontWeight="Bold" />
                 <Label Content="{Binding ValidMoves}" />
             </StackPanel>
-            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Label FontWeight="Bold" Content="Target:" />
+            <StackPanel Grid.Column="2"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Label Content="Target:"
+                       FontWeight="Bold" />
                 <Label Content="{Binding TargetMove}" />
             </StackPanel>
         </Grid>

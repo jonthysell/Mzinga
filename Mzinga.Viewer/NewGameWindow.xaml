@@ -1,27 +1,68 @@
-﻿<Window x:Class="Mzinga.Viewer.NewGameWindow"
+<Window Icon="{DynamicResource MzingaIcon}"
+        MinHeight="100"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        Title="{Binding Title}"
+        Width="300"
+        WindowStartupLocation="CenterScreen"
+        x:Class="Mzinga.Viewer.NewGameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Icon="{DynamicResource MzingaIcon}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" Width="300" MinHeight="100" SizeToContent="Height" ResizeMode="NoResize">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Image Source="{StaticResource MzingaIcon}" Height="32" Width="32" Margin="15" VerticalAlignment="Top" />
-            <StackPanel Orientation="Vertical" Margin="5">
+            <Image Height="32"
+                   Margin="15"
+                   Source="{StaticResource MzingaIcon}"
+                   VerticalAlignment="Top"
+                   Width="32" />
+            <StackPanel Margin="5"
+                        Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="White:" Width="50" FontWeight="Bold" Margin="5" />
-                    <RadioButton Content="Human" GroupName="WhitePlayerType" IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" Margin="5" VerticalAlignment="Center" />
-                    <RadioButton Content="Computer" GroupName="WhitePlayerType" IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" Margin="5" VerticalAlignment="Center" />
+                    <Label Content="White:"
+                           FontWeight="Bold"
+                           Margin="5"
+                           Width="50" />
+                    <RadioButton Content="Human"
+                                 GroupName="WhitePlayerType"
+                                 IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                 Margin="5"
+                                 VerticalAlignment="Center" />
+                    <RadioButton Content="Computer"
+                                 GroupName="WhitePlayerType"
+                                 IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                 Margin="5"
+                                 VerticalAlignment="Center" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Label Content="Black:" Width="50" FontWeight="Bold" Margin="5" />
-                    <RadioButton Content="Human" GroupName="BlackPlayerType" IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" Margin="5" VerticalAlignment="Center" />
-                    <RadioButton Content="Computer" GroupName="BlackPlayerType" IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" Margin="5" VerticalAlignment="Center" />
+                    <Label Content="Black:"
+                           FontWeight="Bold"
+                           Margin="5"
+                           Width="50" />
+                    <RadioButton Content="Human"
+                                 GroupName="BlackPlayerType"
+                                 IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                 Margin="5"
+                                 VerticalAlignment="Center" />
+                    <RadioButton Content="Computer"
+                                 GroupName="BlackPlayerType"
+                                 IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                 Margin="5"
+                                 VerticalAlignment="Center" />
                 </StackPanel>
             </StackPanel>
         </StackPanel>
         <WrapPanel FlowDirection="RightToLeft">
-            <Button Command="{Binding Accept}" Content="OK" Width="75" Margin="5" IsDefault="True" Style="{DynamicResource CleanButton}" />
-            <Button Command="{Binding Reject}" Content="Cancel" Width="75" Margin="5" Style="{DynamicResource CleanButton}" />
+            <Button Command="{Binding Accept}"
+                    Content="OK"
+                    IsDefault="True"
+                    Margin="5"
+                    Style="{DynamicResource CleanButton}"
+                    Width="75" />
+            <Button Command="{Binding Reject}"
+                    Content="Cancel"
+                    Margin="5"
+                    Style="{DynamicResource CleanButton}"
+                    Width="75" />
         </WrapPanel>
     </StackPanel>
 </Window>
