@@ -27,7 +27,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Mzinga.Core
@@ -54,7 +53,7 @@ namespace Mzinga.Core
 
         public MoveSet(string moveSetString) : this()
         {
-            if (String.IsNullOrWhiteSpace(moveSetString))
+            if (string.IsNullOrWhiteSpace(moveSetString))
             {
                 throw new ArgumentNullException("moveSetString");
             }
@@ -149,7 +148,7 @@ namespace Mzinga.Core
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         public override string ToString()
@@ -167,6 +166,7 @@ namespace Mzinga.Core
         public const char MoveStringSeparator = ';';
     }
 
+    [Serializable]
     public class MoveSetIsLockedException : Exception
     {
         public MoveSetIsLockedException() : base("MoveSet is locked and cannot be modified.") { }

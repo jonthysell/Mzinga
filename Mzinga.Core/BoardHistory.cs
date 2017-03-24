@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,12 +56,12 @@ namespace Mzinga.Core
 
         public BoardHistory(string boardHistoryString) : this()
         {
-            if (String.IsNullOrWhiteSpace(boardHistoryString))
+            if (string.IsNullOrWhiteSpace(boardHistoryString))
             {
                 throw new ArgumentOutOfRangeException("boardHistoryString");
             }
 
-            string[] split = boardHistoryString.Split(BoardHistory.BoardHistoryItemStringSeparator);
+            string[] split = boardHistoryString.Split(BoardHistoryItemStringSeparator);
 
             for (int i = 0; i < split.Length; i++)
             {
@@ -98,7 +98,7 @@ namespace Mzinga.Core
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
 
         public override string ToString()
@@ -134,7 +134,7 @@ namespace Mzinga.Core
 
         public BoardHistoryItem(string boardHistoryItemString)
         {
-            if (String.IsNullOrWhiteSpace(boardHistoryItemString))
+            if (string.IsNullOrWhiteSpace(boardHistoryItemString))
             {
                 throw new ArgumentNullException("boardHistoryItemString");
             }
@@ -174,7 +174,7 @@ namespace Mzinga.Core
                     return Move.ToString();
                 default:
                     Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
-                    return String.Format("{0} > {1}", startingPiece, Move);
+                    return string.Format("{0} > {1}", startingPiece, Move);
             }
         }
     }

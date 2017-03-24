@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -94,12 +94,12 @@ namespace Mzinga.Trainer
 
         private void Battle(string whiteProfilePath, string blackProfilePath)
         {
-            if (String.IsNullOrWhiteSpace(whiteProfilePath))
+            if (string.IsNullOrWhiteSpace(whiteProfilePath))
             {
                 throw new ArgumentNullException("whiteProfilePath");
             }
 
-            if (String.IsNullOrWhiteSpace(blackProfilePath))
+            if (string.IsNullOrWhiteSpace(blackProfilePath))
             {
                 throw new ArgumentNullException("blackProfilePath");
             }
@@ -140,7 +140,7 @@ namespace Mzinga.Trainer
 
         private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -388,7 +388,7 @@ namespace Mzinga.Trainer
 
         private void Cull(string path, int keepCount)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -432,7 +432,7 @@ namespace Mzinga.Trainer
 
         private void Enumerate(string path)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -458,7 +458,7 @@ namespace Mzinga.Trainer
 
         private void Generate(string path, int count, double minWeight, double maxWeight)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -495,7 +495,7 @@ namespace Mzinga.Trainer
 
         private void Lifecycle(string path, int generations, int battles)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -565,7 +565,7 @@ namespace Mzinga.Trainer
 
         private void Mate(string path, double minMix, double maxMix, int parentCount)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -629,7 +629,7 @@ namespace Mzinga.Trainer
 
         private void Tournament(string path, int maxDraws)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -728,7 +728,7 @@ namespace Mzinga.Trainer
 
         private List<Profile> LoadProfiles(string path)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }
@@ -772,7 +772,7 @@ namespace Mzinga.Trainer
         private void Log(string format, params object[] args)
         {
             TimeSpan elapsedTime = DateTime.Now - StartTime;
-            Console.WriteLine(String.Format("{0} > {1}", elapsedTime, String.Format(format, args)));
+            Console.WriteLine(string.Format("{0} > {1}", elapsedTime, string.Format(format, args)));
         }
 
         private void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
@@ -787,7 +787,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("remaining");
             }
 
-            double total = (double)(completed + remaining);
+            double total = completed + remaining;
 
             if (completed == 0)
             {
@@ -804,10 +804,10 @@ namespace Mzinga.Trainer
                 TimeSpan elapsedTime = DateTime.Now - startTime;
 
                 double elapsedMs = elapsedTime.TotalMilliseconds;
-                double avgMs = elapsedMs / (double)completed;
+                double avgMs = elapsedMs / completed;
 
-                progress = (double)completed / total;
-                timeRemaining = TimeSpan.FromMilliseconds(avgMs * (double)remaining);
+                progress = completed / total;
+                timeRemaining = TimeSpan.FromMilliseconds(avgMs * remaining);
             }
         }
     }

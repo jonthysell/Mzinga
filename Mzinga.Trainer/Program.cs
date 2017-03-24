@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -187,7 +187,7 @@ namespace Mzinga.Trainer
 
             if (cmd == Command.Unknown)
             {
-                throw new Exception(String.Format("Unknown command: {0}", args[0]));
+                throw new Exception(string.Format("Unknown command: {0}", args[0]));
             }
 
             for (int i = 1; i < args.Length; i++)
@@ -211,37 +211,37 @@ namespace Mzinga.Trainer
                         break;
                     case "-ckc":
                     case "-cullkeepcount":
-                        trainerSettings.CullKeepCount = Int32.Parse(args[i + 1]);
+                        trainerSettings.CullKeepCount = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-gc":
                     case "-generatecount":
-                        trainerSettings.GenerateCount = Int32.Parse(args[i + 1]);
+                        trainerSettings.GenerateCount = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-gminw":
                     case "-generateminweight":
-                        trainerSettings.GenerateMinWeight = Double.Parse(args[i + 1]);
+                        trainerSettings.GenerateMinWeight = double.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-gmaxw":
                     case "-generatemaxweight":
-                        trainerSettings.GenerateMaxWeight = Double.Parse(args[i + 1]);
+                        trainerSettings.GenerateMaxWeight = double.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-lg":
                     case "-lifecyclegenerations":
-                        trainerSettings.LifecycleGenerations = Int32.Parse(args[i + 1]);
+                        trainerSettings.LifecycleGenerations = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-lc":
                     case "-lifecyclebattles":
-                        trainerSettings.LifecycleBattles = Int32.Parse(args[i + 1]);
+                        trainerSettings.LifecycleBattles = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mb":
                     case "-maxbattles":
-                        trainerSettings.MaxBattles = Int32.Parse(args[i + 1]);
+                        trainerSettings.MaxBattles = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-bsp":
@@ -251,7 +251,7 @@ namespace Mzinga.Trainer
                         break;
                     case "-mdraws":
                     case "-maxdraws":
-                        trainerSettings.MaxDraws = Int32.Parse(args[i + 1]);
+                        trainerSettings.MaxDraws = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-bbtl":
@@ -261,17 +261,17 @@ namespace Mzinga.Trainer
                         break;
                     case "-mminm":
                     case "-mateminmix":
-                        trainerSettings.MateMinMix = Double.Parse(args[i + 1]);
+                        trainerSettings.MateMinMix = double.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mmaxm":
                     case "-matemaxmix":
-                        trainerSettings.MateMaxMix = Double.Parse(args[i + 1]);
+                        trainerSettings.MateMaxMix = double.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-mpc":
                     case "-mateparentcount":
-                        trainerSettings.MateParentCount = Int32.Parse(args[i + 1]);
+                        trainerSettings.MateParentCount = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-msp":
@@ -281,7 +281,7 @@ namespace Mzinga.Trainer
                         break;
                     case "-mdepth":
                     case "-maxdepth":
-                        trainerSettings.MaxDepth = Int32.Parse(args[i + 1]);
+                        trainerSettings.MaxDepth = int.Parse(args[i + 1]);
                         i++;
                         break;
                     case "-uabp":
@@ -305,7 +305,7 @@ namespace Mzinga.Trainer
                         i++;
                         break;
                     default:
-                        throw new Exception(String.Format("Unknown parameter: {0}", args[i]));
+                        throw new Exception(string.Format("Unknown parameter: {0}", args[i]));
                 }
             }
 

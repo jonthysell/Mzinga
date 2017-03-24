@@ -103,7 +103,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return piece.Color == CurrentTurnColor; });
+                return _pieces.Where((piece) => { return piece.Color == CurrentTurnColor; });
             }
         }
 
@@ -111,7 +111,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return piece.Color == Color.White; });
+                return _pieces.Where((piece) => { return piece.Color == Color.White; });
             }
         }
 
@@ -119,7 +119,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return (piece.Color == Color.White && piece.InHand); });
+                return _pieces.Where((piece) => { return (piece.Color == Color.White && piece.InHand); });
             }
         }
 
@@ -127,7 +127,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return piece.Color == Color.Black; });
+                return _pieces.Where((piece) => { return piece.Color == Color.Black; });
             }
         }
 
@@ -135,7 +135,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return (piece.Color == Color.Black && piece.InHand); });
+                return _pieces.Where((piece) => { return (piece.Color == Color.Black && piece.InHand); });
             }
         }
 
@@ -143,7 +143,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _pieces.Where<Piece>((piece) => { return piece.InPlay; });
+                return _pieces.Where((piece) => { return piece.InPlay; });
             }
         }
 
@@ -210,17 +210,17 @@ namespace Mzinga.Core
 
         public Board(string boardString) : this()
         {
-            if (String.IsNullOrWhiteSpace(boardString))
+            if (string.IsNullOrWhiteSpace(boardString))
             {
                 throw new ArgumentOutOfRangeException("boardString");
             }
 
-            string[] split = boardString.Split(Board.BoardStringSeparator);
+            string[] split = boardString.Split(BoardStringSeparator);
 
             string boardStateString = split[0];
 
             BoardState boardState;
-            if (!Enum.TryParse<BoardState>(boardStateString, out boardState))
+            if (!Enum.TryParse(boardStateString, out boardState))
             {
                 throw new ArgumentException("Couldn't parse board state.", "boardString");
             }
@@ -231,7 +231,7 @@ namespace Mzinga.Core
             string currentTurnColorString = currentTurnSplit[0];
 
             Color currentTurnColor;
-            if (!Enum.TryParse<Color>(currentTurnColorString, out currentTurnColor))
+            if (!Enum.TryParse(currentTurnColorString, out currentTurnColor))
             {
                 throw new ArgumentException("Couldn't parse current turn color.", "boardString");
             }
@@ -239,7 +239,7 @@ namespace Mzinga.Core
             string currentPlayerTurnString = currentTurnSplit[1];
 
             int currentPlayerTurn;
-            if (!Int32.TryParse(currentPlayerTurnString, out currentPlayerTurn))
+            if (!int.TryParse(currentPlayerTurnString, out currentPlayerTurn))
             {
                 throw new ArgumentException("Couldn't parse current player turn.", "boardString");
             }
@@ -1059,6 +1059,7 @@ namespace Mzinga.Core
         BlackWins
     }
 
+    [Serializable]
     public class InvalidMoveException : Exception
     {
         public Move Move { get; private set; }

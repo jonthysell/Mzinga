@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -521,11 +521,11 @@ namespace Mzinga.CoreTest
 
                 if (coordinate[3] == 0)
                 {
-                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2]), p.ToString());
+                    Assert.AreEqual(string.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2]), p.ToString());
                 }
                 else
                 {
-                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2], coordinate[3]), p.ToString());
+                    Assert.AreEqual(string.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], coordinate[1], coordinate[2], coordinate[3]), p.ToString());
                 }
             }
         }
@@ -542,11 +542,11 @@ namespace Mzinga.CoreTest
 
                 if (coordinate[2] == 0)
                 {
-                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1]), p.ToString());
+                    Assert.AreEqual(string.Format("{1}{0}{2}{0}{3}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1]), p.ToString());
                 }
                 else
                 {
-                    Assert.AreEqual(String.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1], coordinate[2]), p.ToString());
+                    Assert.AreEqual(string.Format("{1}{0}{2}{0}{3}{0}{4}", Position.PositionStringSeparator, coordinate[0], y, coordinate[1], coordinate[2]), p.ToString());
                 }
             }
         }
@@ -623,13 +623,13 @@ namespace Mzinga.CoreTest
             new int[] { -1, 1, 0, 1},
             new int[] { 0, 1, -1, 1},
             new int[] { 0, -1, 1, 1},
-            new int[] { 0, 0, 0, Int32.MaxValue},
-            new int[] { Int32.MaxValue, 0, -Int32.MaxValue, Int32.MaxValue},
-            new int[] { -Int32.MaxValue, 0, Int32.MaxValue, Int32.MaxValue},
-            new int[] { Int32.MaxValue, -Int32.MaxValue, 0, Int32.MaxValue},
-            new int[] { -Int32.MaxValue, Int32.MaxValue, 0, Int32.MaxValue},
-            new int[] { 0, Int32.MaxValue, -Int32.MaxValue, Int32.MaxValue},
-            new int[] { 0, -Int32.MaxValue, Int32.MaxValue, Int32.MaxValue},
+            new int[] { 0, 0, 0, int.MaxValue},
+            new int[] { int.MaxValue, 0, -int.MaxValue, int.MaxValue},
+            new int[] { -int.MaxValue, 0, int.MaxValue, int.MaxValue},
+            new int[] { int.MaxValue, -int.MaxValue, 0, int.MaxValue},
+            new int[] { -int.MaxValue, int.MaxValue, 0, int.MaxValue},
+            new int[] { 0, int.MaxValue, -int.MaxValue, int.MaxValue},
+            new int[] { 0, -int.MaxValue, int.MaxValue, int.MaxValue},
         };
 
         private int[][] _validQRCoordinates = new int[][]
@@ -648,19 +648,19 @@ namespace Mzinga.CoreTest
             new int[] { -1, 0, 1},
             new int[] { 0, -1, 1},
             new int[] { 0, 1, 1},
-            new int[] { 0, 0, Int32.MaxValue},
-            new int[] { Int32.MaxValue, -Int32.MaxValue, Int32.MaxValue},
-            new int[] { -Int32.MaxValue, Int32.MaxValue, Int32.MaxValue},
-            new int[] { Int32.MaxValue, 0, Int32.MaxValue},
-            new int[] { -Int32.MaxValue, 0, Int32.MaxValue},
-            new int[] { 0, -Int32.MaxValue, Int32.MaxValue},
-            new int[] { 0, Int32.MaxValue, Int32.MaxValue},
+            new int[] { 0, 0, int.MaxValue},
+            new int[] { int.MaxValue, -int.MaxValue, int.MaxValue},
+            new int[] { -int.MaxValue, int.MaxValue, int.MaxValue},
+            new int[] { int.MaxValue, 0, int.MaxValue},
+            new int[] { -int.MaxValue, 0, int.MaxValue},
+            new int[] { 0, -int.MaxValue, int.MaxValue},
+            new int[] { 0, int.MaxValue, int.MaxValue},
         };
 
         private int[][] _invalidXYZCoordinates = new int[][]
         {
             new int[] { 0, 0, 0, -1},
-            new int[] { 0, 0, 0, -Int32.MaxValue},
+            new int[] { 0, 0, 0, -int.MaxValue},
             new int[] { 1, 0, 0, 0},
             new int[] { 0, 1, 0, 0},
             new int[] { 0, 0, 1, 0},
@@ -675,26 +675,26 @@ namespace Mzinga.CoreTest
             new int[] { 0, -1, -1, 0},
             new int[] { -1, 0, -1, 0},
             new int[] { -1, -1, -1, 0},
-            new int[] { Int32.MaxValue, 0, 0, 0},
-            new int[] { 0, Int32.MaxValue, 0, 0},
-            new int[] { 0, 0, Int32.MaxValue, 0},
-            new int[] { Int32.MaxValue, Int32.MaxValue, 0, 0},
-            new int[] { 0, Int32.MaxValue, Int32.MaxValue, 0},
-            new int[] { Int32.MaxValue, 0, Int32.MaxValue, 0},
-            new int[] { Int32.MaxValue, Int32.MaxValue, Int32.MaxValue, 0},
-            new int[] { -Int32.MaxValue, 0, 0, 0},
-            new int[] { 0, -Int32.MaxValue, 0, 0},
-            new int[] { 0, 0, -Int32.MaxValue, 0},
-            new int[] { -Int32.MaxValue, -Int32.MaxValue, 0, 0},
-            new int[] { 0, -Int32.MaxValue, -Int32.MaxValue, 0},
-            new int[] { -Int32.MaxValue, 0, -Int32.MaxValue, 0},
-            new int[] { -Int32.MaxValue, -Int32.MaxValue, -Int32.MaxValue, 0},
+            new int[] { int.MaxValue, 0, 0, 0},
+            new int[] { 0, int.MaxValue, 0, 0},
+            new int[] { 0, 0, int.MaxValue, 0},
+            new int[] { int.MaxValue, int.MaxValue, 0, 0},
+            new int[] { 0, int.MaxValue, int.MaxValue, 0},
+            new int[] { int.MaxValue, 0, int.MaxValue, 0},
+            new int[] { int.MaxValue, int.MaxValue, int.MaxValue, 0},
+            new int[] { -int.MaxValue, 0, 0, 0},
+            new int[] { 0, -int.MaxValue, 0, 0},
+            new int[] { 0, 0, -int.MaxValue, 0},
+            new int[] { -int.MaxValue, -int.MaxValue, 0, 0},
+            new int[] { 0, -int.MaxValue, -int.MaxValue, 0},
+            new int[] { -int.MaxValue, 0, -int.MaxValue, 0},
+            new int[] { -int.MaxValue, -int.MaxValue, -int.MaxValue, 0},
         };
 
         private int[][] _invalidQRCoordinates = new int[][]
         {
             new int[] { 0, 0, -1},
-            new int[] { 0, 0, -Int32.MaxValue},
+            new int[] { 0, 0, -int.MaxValue},
         };
 
         private string[] _invalidPositionStrings = new string[]

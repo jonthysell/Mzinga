@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ using System;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 
 namespace Mzinga.Viewer.ViewModel
 {
@@ -58,7 +57,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return String.Format(Resources.Strings.ExceptionViewModelDetailsFormat, Exception.ToString());
+                return string.Format(Resources.Strings.ExceptionViewModelDetailsFormat, Exception.ToString());
             }
         }
 
@@ -70,10 +69,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        if (null != RequestClose)
-                        {
-                            RequestClose();
-                        }
+                        RequestClose?.Invoke();
                     }
                     catch (Exception ex)
                     {

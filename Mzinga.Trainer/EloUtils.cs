@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,8 +52,8 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("blackScore");
             }
 
-            double qWhite = Math.Pow(10, (double)whiteRating / 400.0);
-            double qBlack = Math.Pow(10, (double)blackRating / 400.0);
+            double qWhite = Math.Pow(10, whiteRating / 400.0);
+            double qBlack = Math.Pow(10, blackRating / 400.0);
 
             double eWhite = qWhite / (qWhite + qBlack);
             double eBlack = qBlack / (qWhite + qBlack);

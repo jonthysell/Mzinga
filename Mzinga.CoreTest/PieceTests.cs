@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ namespace Mzinga.CoreTest
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
-                string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+                string pieceString = string.Format("{0}[]", EnumUtils.GetShortName(pieceName));
 
                 Piece p = new Piece(pieceString);
                 VerifyPieceProperties(p, pieceName, null);
@@ -78,7 +78,7 @@ namespace Mzinga.CoreTest
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
-                string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+                string pieceString = string.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
 
                 Piece p = new Piece(pieceString);
                 VerifyPieceProperties(p, pieceName, Position.Origin);
@@ -123,7 +123,7 @@ namespace Mzinga.CoreTest
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
-                string pieceString = String.Format("{0}[]", EnumUtils.GetShortName(pieceName));
+                string pieceString = string.Format("{0}[]", EnumUtils.GetShortName(pieceName));
 
                 Piece p = new Piece(pieceString);
                 Assert.IsNotNull(p);
@@ -137,7 +137,7 @@ namespace Mzinga.CoreTest
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
-                string pieceString = String.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
+                string pieceString = string.Format("{0}[{1}]", EnumUtils.GetShortName(pieceName), Position.Origin);
 
                 Piece p = new Piece(pieceString);
                 Assert.IsNotNull(p);

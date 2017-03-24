@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -37,11 +36,11 @@ namespace Mzinga.Viewer
     {
         public static void RegisterMessageHandlers(object recipient)
         {
-            Messenger.Default.Register<ExceptionMessage>(recipient, (message) => MessageHandlers.ShowException(message));
-            Messenger.Default.Register<InformationMessage>(recipient, (message) => MessageHandlers.ShowInformation(message));
-            Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => MessageHandlers.ShowConfirmation(message));
-            Messenger.Default.Register<NewGameMessage>(recipient, (message) => MessageHandlers.ShowNewGame(message));
-            Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => MessageHandlers.ShowEngineConsole(message));
+            Messenger.Default.Register<ExceptionMessage>(recipient, (message) => ShowException(message));
+            Messenger.Default.Register<InformationMessage>(recipient, (message) => ShowInformation(message));
+            Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => ShowConfirmation(message));
+            Messenger.Default.Register<NewGameMessage>(recipient, (message) => ShowNewGame(message));
+            Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
         }
 
         public static void UnregisterMessageHandlers(object recipient)

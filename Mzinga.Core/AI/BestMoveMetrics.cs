@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ namespace Mzinga.Core.AI
         {
             get
             {
-                return (double)CachedBoardScoreHits / (double)(CachedBoardScoreHits + BoardScoresCalculated);
+                return CachedBoardScoreHits / (double)(CachedBoardScoreHits + BoardScoresCalculated);
             }
         }
 
@@ -58,8 +58,8 @@ namespace Mzinga.Core.AI
         {
             MovesEvaluated = 0;
 
-            MinDepth = Int32.MaxValue;
-            MaxDepth = Int32.MinValue;
+            MinDepth = int.MaxValue;
+            MaxDepth = int.MinValue;
             AverageDepth = 0.0;
 
             ElapsedTime = TimeSpan.Zero;
@@ -84,7 +84,7 @@ namespace Mzinga.Core.AI
 
             MovesEvaluated++;
 
-            AverageDepth = totalDepth / (double)MovesEvaluated;
+            AverageDepth = totalDepth / MovesEvaluated;
         }
     }
 }

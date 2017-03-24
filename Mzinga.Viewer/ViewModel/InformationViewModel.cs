@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ using System;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 
 namespace Mzinga.Viewer.ViewModel
 {
@@ -42,7 +41,7 @@ namespace Mzinga.Viewer.ViewModel
             }
             private set
             {
-                if (String.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ArgumentNullException();
                 }
@@ -59,7 +58,7 @@ namespace Mzinga.Viewer.ViewModel
             }
             private set
             {
-                if (String.IsNullOrWhiteSpace(value))
+                if (string.IsNullOrWhiteSpace(value))
                 {
                     throw new ArgumentNullException();
                 }
@@ -76,10 +75,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        if (null != RequestClose)
-                        {
-                            RequestClose();
-                        }
+                        RequestClose?.Invoke();
                     }
                     catch (Exception ex)
                     {
@@ -102,10 +98,7 @@ namespace Mzinga.Viewer.ViewModel
 
         public void ProcessClose()
         {
-            if (null != Callback)
-            {
-                Callback();
-            }
+            Callback?.Invoke();
         }
     }
 }

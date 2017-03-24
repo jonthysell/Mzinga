@@ -76,7 +76,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return PieceNames.Where<PieceName>((pieceName) => { return EnumUtils.GetColor(pieceName) == Color.White; });
+                return PieceNames.Where((pieceName) => { return GetColor(pieceName) == Color.White; });
             }
         }
 
@@ -84,7 +84,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return PieceNames.Where<PieceName>((pieceName) => { return EnumUtils.GetColor(pieceName) == Color.Black; });
+                return PieceNames.Where((pieceName) => { return GetColor(pieceName) == Color.Black; });
             }
         }
 
@@ -100,7 +100,7 @@ namespace Mzinga.Core
 
         public static PieceName ParseShortName(string nameString)
         {
-            if (String.IsNullOrWhiteSpace(nameString))
+            if (string.IsNullOrWhiteSpace(nameString))
             {
                 throw new ArgumentNullException("nameString");
             }

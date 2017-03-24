@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
-using Mzinga.Core;
 
 namespace Mzinga.Core.AI
 {
@@ -247,8 +244,8 @@ namespace Mzinga.Core.AI
 
             Color maxColor = gameBoard.CurrentTurnColor;
 
-            double alpha = Double.NegativeInfinity;
-            double beta = Double.PositiveInfinity;
+            double alpha = double.NegativeInfinity;
+            double beta = double.PositiveInfinity;
 
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
@@ -312,7 +309,7 @@ namespace Mzinga.Core.AI
                 return CalculateBoardScore(gameBoard, maxColor);
             }
 
-            double score = maxPlayer ? Double.NegativeInfinity : Double.PositiveInfinity;
+            double score = maxPlayer ? double.NegativeInfinity : double.PositiveInfinity;
 
             foreach (Move validMove in validMoves)
             {
@@ -365,12 +362,12 @@ namespace Mzinga.Core.AI
             if ((maxColor == Color.White && gameBoard.BoardState == BoardState.WhiteWins) ||
                 (maxColor == Color.Black && gameBoard.BoardState == BoardState.BlackWins))
             {
-                return Double.PositiveInfinity;
+                return double.PositiveInfinity;
             }
             else if ((maxColor == Color.White && gameBoard.BoardState == BoardState.BlackWins) ||
                      (maxColor == Color.Black && gameBoard.BoardState == BoardState.WhiteWins))
             {
-                return Double.NegativeInfinity;
+                return double.NegativeInfinity;
             }
             else if (gameBoard.BoardState == BoardState.Draw)
             {

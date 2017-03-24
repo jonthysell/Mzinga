@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mzinga.Core
 {
@@ -238,10 +237,7 @@ namespace Mzinga.Core
                 BoardState = CurrentTurn == 0 ? BoardState.NotStarted : BoardState.InProgress;
             }
 
-            if (null != BoardChanged)
-            {
-                BoardChanged();
-            }
+            BoardChanged?.Invoke();
         }
 
         public GameBoard GetNormalized()

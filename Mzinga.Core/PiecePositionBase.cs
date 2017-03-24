@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Mzinga.Core
@@ -60,13 +59,13 @@ namespace Mzinga.Core
         {
             if (!TryParse(pieceString, out pieceName, out position))
             {
-                throw new ArgumentException(String.Format("Unable to parse \"{0}\".", pieceString));
+                throw new ArgumentException(string.Format("Unable to parse \"{0}\".", pieceString));
             }
         }
 
         protected static bool TryParse(string pieceString, out PieceName pieceName, out Position position)
         {
-            if (String.IsNullOrWhiteSpace(pieceString))
+            if (string.IsNullOrWhiteSpace(pieceString))
             {
                 throw new ArgumentNullException("pieceString");
             }
@@ -94,7 +93,7 @@ namespace Mzinga.Core
 
         public override string ToString()
         {
-            return String.Format("{0}[{1}]", EnumUtils.GetShortName(PieceName), null != Position ? Position.ToString() : "");
+            return string.Format("{0}[{1}]", EnumUtils.GetShortName(PieceName), null != Position ? Position.ToString() : "");
         }
 
         protected const string PieceRegex = @"([a-z0-9]{2,3})\[([0-9\-,]*)\]";

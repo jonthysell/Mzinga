@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Xml;
 
 namespace Mzinga.Core.AI
@@ -140,7 +139,7 @@ namespace Mzinga.Core.AI
 
         public static bool TryParseKeyName(string key, out Player player, out PlayerWeight playerWeight)
         {
-            if (!String.IsNullOrWhiteSpace(key))
+            if (!string.IsNullOrWhiteSpace(key))
             {
                 try
                 {
@@ -164,7 +163,7 @@ namespace Mzinga.Core.AI
 
         public static bool TryParseKeyName(string key, out Player player, out BugType bugType, out BugTypeWeight bugTypeWeight)
         {
-            if (!String.IsNullOrWhiteSpace(key))
+            if (!string.IsNullOrWhiteSpace(key))
             {
                 try
                 {
@@ -192,12 +191,12 @@ namespace Mzinga.Core.AI
 
         public static string GetKeyName(Player player, PlayerWeight playerWeight)
         {
-            return String.Join(KeySeperator, player.ToString(), playerWeight.ToString());
+            return string.Join(KeySeperator, player.ToString(), playerWeight.ToString());
         }
 
         public static string GetKeyName(Player player, BugType bugType, BugTypeWeight bugTypeWeight)
         {
-            return String.Join(KeySeperator, player.ToString(), bugType.ToString(), bugTypeWeight.ToString());
+            return string.Join(KeySeperator, player.ToString(), bugType.ToString(), bugTypeWeight.ToString());
         }
 
         public static void IterateOverWeights(Action<Player, PlayerWeight> playerWeightAction, Action<Player, BugType, BugTypeWeight> bugTypeWeightAction)

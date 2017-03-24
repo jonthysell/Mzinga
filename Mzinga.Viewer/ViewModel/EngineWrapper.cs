@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,8 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -261,7 +259,7 @@ namespace Mzinga.Viewer.ViewModel
 
         private void StartEngine(string engineName)
         {
-            if (String.IsNullOrWhiteSpace(engineName))
+            if (string.IsNullOrWhiteSpace(engineName))
             {
                 throw new ArgumentNullException("engineName");
             }
@@ -346,12 +344,12 @@ namespace Mzinga.Viewer.ViewModel
 
         public void SendCommand(string command, params object[] args)
         {
-            if (String.IsNullOrWhiteSpace(command))
+            if (string.IsNullOrWhiteSpace(command))
             {
                 throw new ArgumentNullException("command");
             }
 
-            command = String.Format(command, args);
+            command = string.Format(command, args);
 
             EngineCommand cmd = IdentifyCommand(command);
 
@@ -367,7 +365,7 @@ namespace Mzinga.Viewer.ViewModel
 
         private EngineCommand IdentifyCommand(string command)
         {
-            if (String.IsNullOrWhiteSpace(command))
+            if (string.IsNullOrWhiteSpace(command))
             {
                 throw new ArgumentNullException("command");
             }
@@ -435,12 +433,12 @@ namespace Mzinga.Viewer.ViewModel
                 }
             }
 
-            if (!String.IsNullOrWhiteSpace(errorMessage))
+            if (!string.IsNullOrWhiteSpace(errorMessage))
             {
                 throw new EngineException(errorMessage);
             }
 
-            if (!String.IsNullOrWhiteSpace(invalidMoveMessage))
+            if (!string.IsNullOrWhiteSpace(invalidMoveMessage))
             {
                 throw new InvalidMoveException(invalidMoveMessage);
             }
@@ -462,13 +460,13 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !String.IsNullOrWhiteSpace(firstLine) ? new Board(firstLine) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? new Board(firstLine) : null;
                     break;
                 case EngineCommand.ValidMoves:
-                    ValidMoves = !String.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
+                    ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
-                    if (!String.IsNullOrWhiteSpace(firstLine))
+                    if (!string.IsNullOrWhiteSpace(firstLine))
                     {
                         Move bestMove = new Move(firstLine);
 
@@ -482,7 +480,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                     break;
                 case EngineCommand.History:
-                    BoardHistory = !String.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
+                    BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
                     break;
                 case EngineCommand.Info:
                 case EngineCommand.Help:
@@ -540,10 +538,7 @@ namespace Mzinga.Viewer.ViewModel
                 SendCommand("validmoves");
             }
 
-            if (null != BoardUpdated)
-            {
-                BoardUpdated(board);
-            }
+            BoardUpdated?.Invoke(board);
 
             if (GameInProgress &&
                 ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
@@ -582,20 +577,14 @@ namespace Mzinga.Viewer.ViewModel
 
         private void OnEngineTextUpdate(string engineText)
         {
-            if (null != EngineTextUpdated)
-            {
-                EngineTextUpdated(engineText);
-            }
+            EngineTextUpdated?.Invoke(engineText);
         }
 
         private void OnTargetPieceUpdate(PieceName pieceName)
         {
             TargetPosition = null;
 
-            if (null != TargetPieceUpdated)
-            {
-                TargetPieceUpdated(pieceName);
-            }
+            TargetPieceUpdated?.Invoke(pieceName);
         }
 
         private void OnTargetPositionUpdate(Position position)
@@ -606,10 +595,7 @@ namespace Mzinga.Viewer.ViewModel
                 TargetMove = new Move(TargetPiece, TargetPosition);
             }
 
-            if (null != TargetPositionUpdated)
-            {
-                TargetPositionUpdated(position);
-            }
+            TargetPositionUpdated?.Invoke(position);
         }
 
         private enum EngineCommand

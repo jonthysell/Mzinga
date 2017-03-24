@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,16 +28,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Mzinga.Core;
@@ -149,8 +143,8 @@ namespace Mzinga.Viewer
 
             if (null != board)
             {
-                Point minPoint = new Point(Double.MaxValue, Double.MaxValue);
-                Point maxPoint = new Point(Double.MinValue, Double.MinValue);
+                Point minPoint = new Point(double.MaxValue, double.MaxValue);
+                Point maxPoint = new Point(double.MinValue, double.MinValue);
 
                 int maxStack;
                 int numPieces;

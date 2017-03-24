@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,9 +170,9 @@ namespace Mzinga.Core
             {
                 throw new ArgumentOutOfRangeException("hexRadius");
             }
-            else if (Double.IsInfinity(cursorX) || Double.IsInfinity(cursorY) || hexRadius == 0) // No hexes on board
+            else if (double.IsInfinity(cursorX) || double.IsInfinity(cursorY) || hexRadius == 0) // No hexes on board
             {
-                return Position.Origin;
+                return Origin;
             }
 
             // Convert cursor to axial
@@ -229,7 +229,7 @@ namespace Mzinga.Core
         {
             try
             {
-                if (String.IsNullOrWhiteSpace(positionString))
+                if (string.IsNullOrWhiteSpace(positionString))
                 {
                     position = null;
                     return true;
@@ -241,18 +241,18 @@ namespace Mzinga.Core
 
                 if (split.Length == 2)
                 {
-                    int q = Int32.Parse(split[0]);
-                    int r = Int32.Parse(split[1]);
+                    int q = int.Parse(split[0]);
+                    int r = int.Parse(split[1]);
 
                     position = new Position(q, r, 0);
                     return true;
                 }
                 else if (split.Length >= 3)
                 {
-                    int x = Int32.Parse(split[0]);
-                    int y = Int32.Parse(split[1]);
-                    int z = Int32.Parse(split[2]);
-                    int stack = split.Length > 3 ? Int32.Parse(split[3]) : 0;
+                    int x = int.Parse(split[0]);
+                    int y = int.Parse(split[1]);
+                    int z = int.Parse(split[2]);
+                    int stack = split.Length > 3 ? int.Parse(split[3]) : 0;
 
                     position = new Position(x, y, z, stack);
                     return true;
@@ -290,9 +290,9 @@ namespace Mzinga.Core
 
         public static bool operator ==(Position a, Position b)
         {
-            if (object.ReferenceEquals(a, null))
+            if (ReferenceEquals(a, null))
             {
-                return object.ReferenceEquals(b, null);
+                return ReferenceEquals(b, null);
             }
 
             return a.Equals(b);
@@ -307,10 +307,10 @@ namespace Mzinga.Core
         {
             if (Stack > 0)
             {
-                return String.Format("{1}{0}{2}{0}{3}{0}{4}", PositionStringSeparator, X, Y, Z, Stack);
+                return string.Format("{1}{0}{2}{0}{3}{0}{4}", PositionStringSeparator, X, Y, Z, Stack);
             }
 
-            return String.Format("{1}{0}{2}{0}{3}", PositionStringSeparator, X, Y, Z);
+            return string.Format("{1}{0}{2}{0}{3}", PositionStringSeparator, X, Y, Z);
         }
 
         public int CompareTo(Position position)

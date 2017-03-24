@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,6 @@ using System;
 using System.IO;
 using System.Reflection;
 
-using Mzinga.Core;
-
 namespace Mzinga.Engine
 {
     public class Program
@@ -38,7 +36,7 @@ namespace Mzinga.Engine
         {
             get
             {
-                return String.Format("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                return string.Format("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
             }
         }
 
@@ -52,7 +50,7 @@ namespace Mzinga.Engine
             while (!engine.ExitRequested)
             {
                 string command = Console.In.ReadLine();
-                if (!String.IsNullOrWhiteSpace(command))
+                if (!string.IsNullOrWhiteSpace(command))
                 {
                     engine.ParseCommand(command);
                 }
@@ -66,7 +64,7 @@ namespace Mzinga.Engine
 
         static GameEngineConfig LoadConfig(string path)
         {
-            if (String.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentNullException("path");
             }

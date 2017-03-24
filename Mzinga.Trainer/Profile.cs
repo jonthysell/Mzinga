@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.Trainer
@@ -40,7 +39,7 @@ namespace Mzinga.Trainer
         {
             get
             {
-                return String.Format("{0}({1})", Id.ToString().Substring(0, 8), EloRating);
+                return string.Format("{0}({1})", Id.ToString().Substring(0, 8), EloRating);
             }
         }
 

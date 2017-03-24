@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,11 +60,11 @@ namespace Mzinga.Core.AI
 
         public override string ToString()
         {
-            return String.Format("{1}{0}{2}{0}{3}", EvaluatedMoveStringSeparator, Move, Depth, ScoreAfterMove);
+            return string.Format("{1}{0}{2}{0}{3}", EvaluatedMoveStringSeparator, Move, Depth, ScoreAfterMove);
         }
 
         public const char EvaluatedMoveStringSeparator = ';';
 
-        private const double UnevaluatedMoveScore = Double.MinValue;
+        private const double UnevaluatedMoveScore = double.MinValue;
     }
 }

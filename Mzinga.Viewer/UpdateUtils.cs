@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,12 +27,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Windows;
 
 using GalaSoft.MvvmLight.Messaging;
 
@@ -96,10 +94,10 @@ namespace Mzinga.Viewer
                 {
                     if (confirmUpdate)
                     {
-                        string message = String.Format("Mzinga v{0} is available. Would you like to update now?", latestVersion.Version);
+                        string message = string.Format("Mzinga v{0} is available. Would you like to update now?", latestVersion.Version);
                         AppVM.DoOnUIThread(() =>
                         {
-                            Messenger.Default.Send<ConfirmationMessage>(new ConfirmationMessage(message, (confirmed) =>
+                            Messenger.Default.Send(new ConfirmationMessage(message, (confirmed) =>
                             {
                                 if (confirmed)
                                 {
@@ -119,7 +117,7 @@ namespace Mzinga.Viewer
                     {
                         AppVM.DoOnUIThread(() =>
                         {
-                            Messenger.Default.Send<InformationMessage>(new InformationMessage("Mzinga is up-to-date."));
+                            Messenger.Default.Send(new InformationMessage("Mzinga is up-to-date."));
                         });
                     }
                 }
@@ -166,11 +164,11 @@ namespace Mzinga.Viewer
             AppVM.DoOnUIThread(() =>
             {
                 Process p = new Process();
-                p.StartInfo = new ProcessStartInfo("cmd.exe", String.Format("/c {0}", cmdFile));
+                p.StartInfo = new ProcessStartInfo("cmd.exe", string.Format("/c {0}", cmdFile));
                 p.StartInfo.CreateNoWindow = true;
                 p.Start();
 
-                App.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
             });
         }
 
@@ -203,7 +201,7 @@ namespace Mzinga.Viewer
 
         public static ulong LongVersion(string version)
         {
-            if (String.IsNullOrWhiteSpace(version))
+            if (string.IsNullOrWhiteSpace(version))
             {
                 throw new ArgumentNullException("version");
             }
@@ -265,12 +263,12 @@ namespace Mzinga.Viewer
 
         public InstallerInfo(string version, string url, ReleaseChannel releaseChannel)
         {
-            if (String.IsNullOrWhiteSpace(version))
+            if (string.IsNullOrWhiteSpace(version))
             {
                 throw new ArgumentNullException("version");
             }
 
-            if (String.IsNullOrWhiteSpace(url))
+            if (string.IsNullOrWhiteSpace(url))
             {
                 throw new ArgumentNullException("url");
             }

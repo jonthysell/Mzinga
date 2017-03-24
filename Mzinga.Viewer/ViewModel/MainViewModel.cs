@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.ObjectModel;
 using System.Text;
 
 using Mzinga.Core;
@@ -240,7 +239,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send<NewGameMessage>(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, (settings) =>
+                        Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, (settings) =>
                             {
                                 try
                                 {
@@ -373,7 +372,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send<EngineConsoleMessage>(new EngineConsoleMessage());
+                        Messenger.Default.Send(new EngineConsoleMessage());
                     }
                     catch (Exception ex)
                     {
@@ -444,13 +443,13 @@ namespace Mzinga.Viewer.ViewModel
                 switch (board.BoardState)
                 {
                     case BoardState.WhiteWins:
-                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
+                        Messenger.Default.Send(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
                         break;
                     case BoardState.BlackWins:
-                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
+                        Messenger.Default.Send(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
                         break;
                     case BoardState.Draw:
-                        Messenger.Default.Send<InformationMessage>(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
+                        Messenger.Default.Send(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
                         break;
                 }
             });

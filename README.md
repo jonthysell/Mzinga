@@ -42,6 +42,6 @@ Mzinga.Trainer is a command-line utility with the goal to improve Mzinga's AI. T
 
 ## Copyright ##
 
-Mzinga Copyright © 2015, 2016 Jon Thysell.
+Mzinga Copyright © 2015, 2016, 2017 Jon Thysell.
 
 Hive Copyright © 2010 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see http://www.hivegame.com.

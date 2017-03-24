@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Mzinga.Core
 {
@@ -44,7 +42,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return (this.CompareTo(Move.Pass) == 0);
+                return (CompareTo(Move.Pass) == 0);
             }
         }
 
@@ -61,7 +59,7 @@ namespace Mzinga.Core
 
         public Move(string moveString) : this()
         {
-            if (String.IsNullOrWhiteSpace(moveString))
+            if (string.IsNullOrWhiteSpace(moveString))
             {
                 throw new ArgumentNullException("moveString");
             }
@@ -153,9 +151,9 @@ namespace Mzinga.Core
 
         public static bool operator ==(Move a, Move b)
         {
-            if (object.ReferenceEquals(a, null))
+            if (ReferenceEquals(a, null))
             {
-                return object.ReferenceEquals(b, null);
+                return ReferenceEquals(b, null);
             }
 
             return a.Equals(b);

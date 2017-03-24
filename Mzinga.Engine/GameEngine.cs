@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
@@ -51,7 +49,7 @@ namespace Mzinga.Engine
 
         public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
         {
-            if (String.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException("id");
             }
@@ -77,7 +75,7 @@ namespace Mzinga.Engine
 
         public void ParseCommand(string command)
         {
-            if (String.IsNullOrWhiteSpace(command))
+            if (string.IsNullOrWhiteSpace(command))
             {
                 throw new ArgumentNullException("command");
             }
@@ -138,7 +136,7 @@ namespace Mzinga.Engine
                         }
                         else
                         {
-                            Undo(Int32.Parse(split[1]));
+                            Undo(int.Parse(split[1]));
                         }
                         
                         break;
@@ -282,7 +280,7 @@ namespace Mzinga.Engine
                 throw new NoBoardException();
             }
 
-            if (String.IsNullOrWhiteSpace(pieceName))
+            if (string.IsNullOrWhiteSpace(pieceName))
             {
                 throw new ArgumentNullException(pieceName);
             }

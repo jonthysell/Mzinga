@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ namespace Mzinga.Viewer.ViewModel
             get
             {
                 AssemblyName name = Assembly.GetEntryAssembly().GetName();
-                return String.Format("{0} v{1}", name.Name, name.Version.ToString());
+                return string.Format("{0} v{1}", name.Name, name.Version.ToString());
             }
         }
 
