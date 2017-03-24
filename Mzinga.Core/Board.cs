@@ -524,7 +524,7 @@ namespace Mzinga.Core
             PieceMetrics pieceMetrics = new PieceMetrics(targetPiece.PieceName);
 
             // Move metrics
-            MoveSet validMoves = GetValidMoves(targetPiece);
+            MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
             pieceMetrics.ValidMoveCount = validMoves.Count;
 
             pieceMetrics.NeighborCount = CountNeighbors(targetPiece.PieceName);
@@ -567,7 +567,7 @@ namespace Mzinga.Core
                 {
                     foreach (Piece piece in CurrentTurnPieces)
                     {
-                        moves.Add(GetValidMoves(piece));
+                        moves.Add(GetValidMoves(piece.PieceName));
                     }
 
                     if (moves.Count == 0)
@@ -587,13 +587,13 @@ namespace Mzinga.Core
             if (null == _cachedValidMovesByPiece[(int)pieceName])
             {
                 Piece targetPiece = GetPiece(pieceName);
-                _cachedValidMovesByPiece[(int)pieceName] = GetValidMoves(targetPiece);
+                _cachedValidMovesByPiece[(int)pieceName] = GetValidMovesInternal(targetPiece);
             }
 
             return _cachedValidMovesByPiece[(int)pieceName];
         }
 
-        protected MoveSet GetValidMoves(Piece targetPiece)
+        private MoveSet GetValidMovesInternal(Piece targetPiece)
         {
             if (null == targetPiece)
             {
@@ -1006,27 +1006,23 @@ namespace Mzinga.Core
             int qDelta = 0;
             int rDelta = 0;
 
-            foreach (KeyValuePair<Position, Piece> kvp in _piecesByPosition.OrderBy(kvp => kvp.Key))
+            foreach (Piece piece in PiecesInPlay)
             {
-                if (null != kvp.Value)
+                sb.Append(EnumUtils.GetShortName(piece.PieceName, true));
+
+                Position pos = piece.Position;
+
+                if (first)
                 {
-                    Piece piece = kvp.Value;
-                    sb.Append(EnumUtils.GetShortName(piece.PieceName, false));
+                    qDelta = -pos.Q;
+                    rDelta = -pos.R;
+                    first = false;
+                }
 
-                    Position pos = kvp.Key;
-
-                    if (first)
-                    {
-                        qDelta = -pos.Q;
-                        rDelta = -pos.R;
-                        first = false;
-                    }
-
-                    sb.AppendFormat("{0},{1}", pos.Q + qDelta, pos.R + rDelta);
-                    if (pos.Stack > 0)
-                    {
-                        sb.AppendFormat(",{0}", pos.Stack);
-                    }
+                sb.AppendFormat("{0},{1}", pos.Q + qDelta, pos.R + rDelta);
+                if (pos.Stack > 0)
+                {
+                    sb.AppendFormat(",{0}", pos.Stack);
                 }
             }
 

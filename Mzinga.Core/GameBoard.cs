@@ -146,7 +146,7 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move, "You can't move there because a piece already exists at that position.");
             }
 
-            MoveSet validMoves = GetValidMoves(targetPiece);
+            MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
 
             if (!validMoves.Contains(move))
             {
