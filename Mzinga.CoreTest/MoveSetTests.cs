@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -373,6 +373,79 @@ namespace Mzinga.CoreTest
             Assert.IsNotNull(ms);
 
             ms.Remove(nullMoves);
+        }
+
+        [TestMethod]
+        public void MoveSet_LockIsLockedTest()
+        {
+            MoveSet ms = new MoveSet();
+            Assert.IsNotNull(ms);
+
+            Assert.IsFalse(ms.IsLocked);
+            ms.Lock();
+            Assert.IsTrue(ms.IsLocked);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MoveSetIsLockedException))]
+        public void MoveSet_CantAddAfterLockedTest()
+        {
+            MoveSet ms = new MoveSet();
+            Assert.IsNotNull(ms);
+
+            ms.Lock();
+
+            ms.Add(Move.Pass);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MoveSetIsLockedException))]
+        public void MoveSet_CantAddByEnumerableAfterLockedTest()
+        {
+            Move[] movesToAdd = new Move[]
+            {
+                Move.Pass
+            };
+
+            MoveSet ms = new MoveSet();
+            Assert.IsNotNull(ms);
+
+            ms.Lock();
+
+            ms.Add(movesToAdd);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MoveSetIsLockedException))]
+        public void MoveSet_CantRemoveAfterLockedTest()
+        {
+            MoveSet ms = new MoveSet();
+            Assert.IsNotNull(ms);
+
+            ms.Add(Move.Pass);
+
+            ms.Lock();
+
+            ms.Remove(Move.Pass);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(MoveSetIsLockedException))]
+        public void MoveSet_CantRemoveByEnumerableAfterLockedTest()
+        {
+            Move[] movesToAdd = new Move[]
+            {
+                Move.Pass
+            };
+
+            MoveSet ms = new MoveSet();
+            Assert.IsNotNull(ms);
+
+            ms.Add(movesToAdd);
+
+            ms.Lock();
+
+            ms.Remove(movesToAdd);
         }
 
         [TestMethod]

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,9 +44,12 @@ namespace Mzinga.Core
 
         private HashSet<Move> _moves;
 
+        public bool IsLocked { get; private set; }
+
         public MoveSet()
         {
             _moves = new HashSet<Move>();
+            IsLocked = false;
         }
 
         public MoveSet(string moveSetString) : this()
@@ -85,6 +88,11 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("move");
             }
 
+            if (IsLocked)
+            {
+                throw new MoveSetIsLockedException();
+            }
+
             return _moves.Add(move);
         }
 
@@ -108,6 +116,11 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("move");
             }
 
+            if (IsLocked)
+            {
+                throw new MoveSetIsLockedException();
+            }
+
             return _moves.Remove(move);
         }
 
@@ -119,6 +132,11 @@ namespace Mzinga.Core
             }
 
             return _moves.Contains(move);
+        }
+
+        public void Lock()
+        {
+            IsLocked = true;
         }
 
         public IEnumerator<Move> GetEnumerator()
@@ -147,5 +165,10 @@ namespace Mzinga.Core
         }
 
         public const char MoveStringSeparator = ';';
+    }
+
+    public class MoveSetIsLockedException : Exception
+    {
+        public MoveSetIsLockedException() : base("MoveSet is locked and cannot be modified.") { }
     }
 }

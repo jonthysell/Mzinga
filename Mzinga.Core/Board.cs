@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -577,6 +577,7 @@ namespace Mzinga.Core
                 }
 
                 _cachedValidMoves = moves;
+                _cachedValidMoves.Lock();
             }
 
             return _cachedValidMoves;
@@ -588,6 +589,7 @@ namespace Mzinga.Core
             {
                 Piece targetPiece = GetPiece(pieceName);
                 _cachedValidMovesByPiece[(int)pieceName] = GetValidMovesInternal(targetPiece);
+                _cachedValidMovesByPiece[(int)pieceName].Lock();
             }
 
             return _cachedValidMovesByPiece[(int)pieceName];

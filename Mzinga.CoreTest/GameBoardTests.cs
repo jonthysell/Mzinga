@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,6 +71,24 @@ namespace Mzinga.CoreTest
 
             MoveSet validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesAreLockedTest()
+        {
+            GameBoard b = new GameBoard();
+            Assert.IsNotNull(b);
+
+            MoveSet validMoves1 = b.GetValidMoves();
+            Assert.IsNotNull(validMoves1);
+            Assert.IsTrue(validMoves1.IsLocked);
+
+            b.Play(new Move(PieceName.WhiteSpider1, Position.Origin));
+            b.Play(new Move(PieceName.BlackSpider1, Position.Origin.NeighborAt(Direction.Up)));
+
+            MoveSet validMoves2 = b.GetValidMoves();
+            Assert.IsNotNull(validMoves2);
+            Assert.IsTrue(validMoves2.IsLocked);
         }
 
         [TestMethod]
