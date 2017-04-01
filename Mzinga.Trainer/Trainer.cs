@@ -609,14 +609,7 @@ namespace Mzinga.Trainer
                 profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
             }
 
-            if (shuffleParents)
-            {
-                profiles = Shuffle(profiles);
-            }
-            else
-            {
-                profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
-            }
+            profiles = shuffleParents ? Shuffle(profiles) : Seed(profiles);
 
             if (parentCount == TrainerSettings.MateParentMax)
             {
@@ -674,43 +667,7 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            Queue<Profile> remaining = new Queue<Profile>(profiles.Count);
-
-            if (shuffleProfiles)
-            {
-                // Blind draw
-                profiles = Shuffle(profiles);
-            }
-            else
-            {
-                // Seeded
-                LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
-                List<Profile> profilesSeeded = new List<Profile>(sortedProfiles.Count);
-
-                bool first = true;
-                while (sortedProfiles.Count > 0)
-                {
-                    if (first)
-                    {
-                        profilesSeeded.Add(sortedProfiles.First.Value);
-                        sortedProfiles.RemoveFirst();
-                    }
-                    else
-                    {
-                        profilesSeeded.Add(sortedProfiles.Last.Value);
-                        sortedProfiles.RemoveLast();
-                    }
-
-                    first = !first;
-                }
-
-                profiles = profilesSeeded;
-            }
-
-            foreach (Profile p in profiles)
-            {
-                remaining.Enqueue(p);
-            }
+            Queue<Profile> remaining = new Queue<Profile>(shuffleProfiles ? Shuffle(profiles) : Seed(profiles));
 
             TimeSpan timeRemaining;
             double progress;
@@ -845,6 +802,36 @@ namespace Mzinga.Trainer
             }
 
             return shuffled;
+        }
+
+        private List<Profile> Seed(List<Profile> profiles)
+        {
+            if (null == profiles)
+            {
+                throw new ArgumentNullException("profiles");
+            }
+
+            LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            List<Profile> seeded = new List<Profile>(sortedProfiles.Count);
+
+            bool first = true;
+            while (sortedProfiles.Count > 0)
+            {
+                if (first)
+                {
+                    seeded.Add(sortedProfiles.First.Value);
+                    sortedProfiles.RemoveFirst();
+                }
+                else
+                {
+                    seeded.Add(sortedProfiles.Last.Value);
+                    sortedProfiles.RemoveLast();
+                }
+
+                first = !first;
+            }
+
+            return seeded;
         }
 
         private void Log(string format, params object[] args)
