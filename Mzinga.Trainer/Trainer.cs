@@ -73,11 +73,7 @@ namespace Mzinga.Trainer
         {
             get
             {
-                if (null == _random)
-                {
-                    _random = new Random();
-                }
-                return _random;
+                return _random ?? (_random = new Random());
             }
         }
         private Random _random;
@@ -351,19 +347,26 @@ namespace Mzinga.Trainer
             double whiteScore = 0.0;
             double blackScore = 0.0;
 
+            GameResult whiteResult = GameResult.Loss;
+            GameResult blackResult = GameResult.Loss;
+
             switch (boardState)
             {
                 case BoardState.WhiteWins:
                     whiteScore = 1.0;
                     blackScore = 0.0;
+                    whiteResult = GameResult.Win;
                     break;
                 case BoardState.BlackWins:
                     whiteScore = 0.0;
                     blackScore = 1.0;
+                    blackResult = GameResult.Win;
                     break;
                 case BoardState.Draw:
                     whiteScore = 0.5;
                     blackScore = 0.5;
+                    whiteResult = GameResult.Draw;
+                    blackResult = GameResult.Draw;
                     break;
             }
 
@@ -371,8 +374,8 @@ namespace Mzinga.Trainer
             int blackRating;
             EloUtils.UpdateRatings(whiteProfile.EloRating, blackProfile.EloRating, whiteScore, blackScore, out whiteRating, out blackRating);
 
-            whiteProfile.UpdateRating(whiteRating);
-            blackProfile.UpdateRating(blackRating);
+            whiteProfile.UpdateRecord(whiteRating, whiteResult);
+            blackProfile.UpdateRecord(blackRating, blackResult);
 
             // Output Results
             Log("Battle end, {0}", boardState);
@@ -383,10 +386,10 @@ namespace Mzinga.Trainer
 
         public void Cull()
         {
-            Cull(TrainerSettings.ProfilesPath, TrainerSettings.CullKeepCount);
+            Cull(TrainerSettings.ProfilesPath, TrainerSettings.CullKeepCount, TrainerSettings.ProvisionalRules);
         }
 
-        private void Cull(string path, int keepCount)
+        private void Cull(string path, int keepCount, bool provisionalRules)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -402,6 +405,12 @@ namespace Mzinga.Trainer
             Log("Cull start.");
 
             List<Profile> profiles = LoadProfiles(path);
+
+            if (provisionalRules)
+            {
+                profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
+            }
+
             profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
 
             if (keepCount == TrainerSettings.CullKeepMax)
@@ -409,16 +418,20 @@ namespace Mzinga.Trainer
                 keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
             }
 
-            for (int i = 0; i < profiles.Count; i++)
+            int count = 0;
+            foreach (Profile p in profiles)
             {
-                if (i < keepCount)
+                if (count < keepCount)
                 {
-                    Log("Kept {0}.", profiles[i].Nickname);
+                    Log("Kept {0}.", p.Nickname);
+                    count++;
                 }
                 else
                 {
-                    File.Delete(Path.Combine(path, profiles[i].Id + ".xml"));
-                    Log("Culled {0}.", profiles[i].Nickname);
+                    string sourceFile = Path.Combine(path, p.Id + ".xml");
+                    string destFile = Path.Combine(path, "culled", p.Id + ".xml");
+                    File.Move(sourceFile, destFile);
+                    Log("Culled {0}.", p.Nickname);
                 }
             }
 
@@ -539,10 +552,10 @@ namespace Mzinga.Trainer
                 }
 
                 // Cull
-                Cull(path, TrainerSettings.CullKeepCount);
+                Cull(path, TrainerSettings.CullKeepCount, TrainerSettings.ProvisionalRules);
 
                 // Mate
-                Mate(path, TrainerSettings.MateMinMix, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
+                Mate(path);
 
                 Enumerate();
 
@@ -560,10 +573,15 @@ namespace Mzinga.Trainer
 
         public void Mate()
         {
-            Mate(TrainerSettings.ProfilesPath, TrainerSettings.MateMinMix, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount);
+            Mate(TrainerSettings.ProfilesPath);
         }
 
-        private void Mate(string path, double minMix, double maxMix, int parentCount)
+        private void Mate(string path)
+        {
+            Mate(path, TrainerSettings.MateMinMix, TrainerSettings.MateMaxMix, TrainerSettings.MateParentCount, TrainerSettings.MateShuffleParents, TrainerSettings.ProvisionalRules);
+        }
+
+        private void Mate(string path, double minMix, double maxMix, int parentCount, bool shuffleParents, bool provisionalRules)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -585,18 +603,27 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
+            if (provisionalRules)
+            {
+                profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
+            }
+
+            if (shuffleParents)
+            {
+                profiles = Shuffle(profiles);
+            }
+            else
+            {
+                profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            }
+
             if (parentCount == TrainerSettings.MateParentMax)
             {
                 parentCount = profiles.Count;
             }
-
-            parentCount = Math.Min(parentCount, profiles.Count);
-
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
-
-            if (TrainerSettings.MateShuffleParents)
+            else
             {
-                profiles = Shuffle(profiles);
+                parentCount = Math.Min(parentCount, profiles.Count);
             }
 
             List<Profile> parents = new List<Profile>(profiles.Take(parentCount));
@@ -810,5 +837,22 @@ namespace Mzinga.Trainer
                 timeRemaining = TimeSpan.FromMilliseconds(avgMs * remaining);
             }
         }
+
+        private bool IsProvisional(Profile profile)
+        {
+            if (null == profile)
+            {
+                throw new ArgumentNullException("profile");
+            }
+
+            return profile.TotalGames < TrainerSettings.ProvisionalGameCount;
+        }
+    }
+
+    public enum GameResult
+    {
+        Loss,
+        Draw,
+        Win
     }
 }

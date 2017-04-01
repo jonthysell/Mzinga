@@ -36,11 +36,7 @@ namespace Mzinga.Core
         {
             get
             {
-                if (null == _origin)
-                {
-                    _origin = new Position(0, 0, 0, 0);
-                }
-                return _origin;
+                return _origin ?? (_origin = new Position(0, 0, 0, 0));
             }
         }
         private static Position _origin;
@@ -344,7 +340,7 @@ namespace Mzinga.Core
             return Stack.CompareTo(position.Stack);
         }
 
-        private static int[][] _neighborDeltas = new int[][]
+        private static readonly int[][] _neighborDeltas = new int[][]
         {
             new int[] { 0, 1, -1 },
             new int[] { 1, 0, -1 },

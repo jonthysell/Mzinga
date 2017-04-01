@@ -123,6 +123,8 @@ namespace Mzinga.Trainer
             Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
             Console.WriteLine("-BattleShuffleProfiles Whether or not to have profiles fight in random order");
             Console.WriteLine("-BulkBattleTimeLimit   The max time for battle royales");
+            Console.WriteLine("-ProvisionalRules      Whether or not to use provisional rules");
+            Console.WriteLine("-ProvisionalGameCount  The total number of games a profile is provisional");
             Console.WriteLine("-MaxDraws              The max number of times to retry battles that end in a draw");
             Console.WriteLine("-MateMinMix            The min multiplier to mix up weights in children profiles");
             Console.WriteLine("-MateMaxMix            The max multiplier to mix up weights in children profiles");
@@ -196,113 +198,99 @@ namespace Mzinga.Trainer
                 {
                     case "-pp":
                     case "-profilespath":
-                        trainerSettings.ProfilesPath = args[i + 1];
-                        i++;
+                        trainerSettings.ProfilesPath = args[++i];
                         break;
                     case "-wpp":
                     case "-whiteprofilepath":
-                        trainerSettings.WhiteProfilePath = args[i + 1];
-                        i++;
+                        trainerSettings.WhiteProfilePath = args[++i];
                         break;
                     case "-bpp":
                     case "-blackprofilepath":
-                        trainerSettings.BlackProfilePath = args[i + 1];
-                        i++;
+                        trainerSettings.BlackProfilePath = args[++i];
                         break;
                     case "-ckc":
                     case "-cullkeepcount":
-                        trainerSettings.CullKeepCount = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.CullKeepCount = int.Parse(args[++i]);
                         break;
                     case "-gc":
                     case "-generatecount":
-                        trainerSettings.GenerateCount = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.GenerateCount = int.Parse(args[++i]);
                         break;
                     case "-gminw":
                     case "-generateminweight":
-                        trainerSettings.GenerateMinWeight = double.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.GenerateMinWeight = double.Parse(args[++i]);
                         break;
                     case "-gmaxw":
                     case "-generatemaxweight":
-                        trainerSettings.GenerateMaxWeight = double.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.GenerateMaxWeight = double.Parse(args[++i]);
                         break;
                     case "-lg":
                     case "-lifecyclegenerations":
-                        trainerSettings.LifecycleGenerations = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.LifecycleGenerations = int.Parse(args[++i]);
                         break;
                     case "-lc":
                     case "-lifecyclebattles":
-                        trainerSettings.LifecycleBattles = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.LifecycleBattles = int.Parse(args[++i]);
                         break;
                     case "-mb":
                     case "-maxbattles":
-                        trainerSettings.MaxBattles = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MaxBattles = int.Parse(args[++i]);
                         break;
                     case "-bsp":
                     case "-battleshuffleprofiles":
-                        trainerSettings.BattleShuffleProfiles = Boolean.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.BattleShuffleProfiles = bool.Parse(args[++i]);
                         break;
                     case "-mdraws":
                     case "-maxdraws":
-                        trainerSettings.MaxDraws = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MaxDraws = int.Parse(args[++i]);
                         break;
                     case "-bbtl":
                     case "-bulkbattletimelimit":
-                        trainerSettings.BulkBattleTimeLimit = TimeSpan.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.BulkBattleTimeLimit = TimeSpan.Parse(args[++i]);
+                        break;
+                    case "-pr":
+                    case "-provisionalrules":
+                        trainerSettings.ProvisionalRules = bool.Parse(args[++i]);
+                        break;
+                    case "-pgc":
+                    case "-provisionalgamecount":
+                        trainerSettings.ProvisionalGameCount = int.Parse(args[++i]);
                         break;
                     case "-mminm":
                     case "-mateminmix":
-                        trainerSettings.MateMinMix = double.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MateMinMix = double.Parse(args[++i]);
                         break;
                     case "-mmaxm":
                     case "-matemaxmix":
-                        trainerSettings.MateMaxMix = double.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MateMaxMix = double.Parse(args[++i]);
                         break;
                     case "-mpc":
                     case "-mateparentcount":
-                        trainerSettings.MateParentCount = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MateParentCount = int.Parse(args[++i]);
                         break;
                     case "-msp":
                     case "-mateshuffleparents":
-                        trainerSettings.MateShuffleParents = Boolean.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MateShuffleParents = bool.Parse(args[++i]);
                         break;
                     case "-mdepth":
                     case "-maxdepth":
-                        trainerSettings.MaxDepth = int.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.MaxDepth = int.Parse(args[++i]);
                         break;
                     case "-uabp":
                     case "-usealphabetapruning":
-                        trainerSettings.UseAlphaBetaPruning = Boolean.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.UseAlphaBetaPruning = bool.Parse(args[++i]);
                         break;
                     case "-utt":
                     case "-usetranspositiontable":
-                        trainerSettings.UseTranspositionTable = Boolean.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.UseTranspositionTable = bool.Parse(args[++i]);
                         break;
                     case "-tmt":
                     case "-turnmaxtime":
-                        trainerSettings.TurnMaxTime = TimeSpan.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.TurnMaxTime = TimeSpan.Parse(args[++i]);
                         break;
                     case "-btl":
                     case "-battletimelimit":
-                        trainerSettings.BattleTimeLimit = TimeSpan.Parse(args[i + 1]);
-                        i++;
+                        trainerSettings.BattleTimeLimit = TimeSpan.Parse(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));

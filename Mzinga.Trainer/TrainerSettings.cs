@@ -120,31 +120,9 @@ namespace Mzinga.Trainer
         }
         private int _GenerateCount = 1;
 
-        public double GenerateMinWeight
-        {
-            get
-            {
-                return _generateMinWeight;
-            }
-            set
-            {
-                _generateMinWeight = value;
-            }
-        }
-        private double _generateMinWeight = -100.0;
+        public double GenerateMinWeight { get; set; } = -100.0;
 
-        public double GenerateMaxWeight
-        {
-            get
-            {
-                return _generateMaxWeight;
-            }
-            set
-            {
-                _generateMaxWeight = value;
-            }
-        }
-        private double _generateMaxWeight = 100.0;
+        public double GenerateMaxWeight { get; set; } = 100.0;
        
         public int LifecycleGenerations
         {
@@ -163,18 +141,7 @@ namespace Mzinga.Trainer
         }
         private int _lifecycleGenerations = 1;
 
-        public int LifecycleBattles
-        {
-            get
-            {
-                return _defaultLifecycleBattles;
-            }
-            set
-            {
-                _defaultLifecycleBattles = value;
-            }
-        }
-        private int _defaultLifecycleBattles = 1;
+        public int LifecycleBattles { get; set; } = 1;
 
         public int MaxDraws
         {
@@ -212,18 +179,7 @@ namespace Mzinga.Trainer
 
         public const int MaxMaxBattles = -1;
 
-        public bool BattleShuffleProfiles
-        {
-            get
-            {
-                return _battleShuffleProfiles;
-            }
-            set
-            {
-                _battleShuffleProfiles = value;
-            }
-        }
-        private bool _battleShuffleProfiles = false;
+        public bool BattleShuffleProfiles { get; set; } = false;
 
         public TimeSpan BulkBattleTimeLimit
         {
@@ -242,31 +198,13 @@ namespace Mzinga.Trainer
         }
         private TimeSpan? _bulkBattleTimeLimit = null;
 
-        public double MateMinMix
-        {
-            get
-            {
-                return _mateMinMix;
-            }
-            set
-            {
-                _mateMinMix = value;
-            }
-        }
-        private double _mateMinMix = 0.95;
+        public bool ProvisionalRules { get; set; } = true;
 
-        public double MateMaxMix
-        {
-            get
-            {
-                return _mateMaxMix;
-            }
-            set
-            {
-                _mateMaxMix = value;
-            }
-        }
-        private double _mateMaxMix = 1.05;
+        public int ProvisionalGameCount { get; set; } = 30;
+
+        public double MateMinMix { get; set; } = 0.95;
+
+        public double MateMaxMix { get; set; } = 1.05;
 
         public int MateParentCount
         {
@@ -288,18 +226,7 @@ namespace Mzinga.Trainer
         public const int MateMinParentCount = 2;
         public const int MateParentMax = -1;
 
-        public bool MateShuffleParents
-        {
-            get
-            {
-                return _mateShuffleParents;
-            }
-            set
-            {
-                _mateShuffleParents = value;
-            }
-        }
-        private bool _mateShuffleParents = false;
+        public bool MateShuffleParents { get; set; } = false;
 
         public int MaxDepth
         {
@@ -318,31 +245,9 @@ namespace Mzinga.Trainer
         }
         public int _maxDepth = GameAI.IterativeDepth;
 
-        public bool UseAlphaBetaPruning
-        {
-            get
-            {
-                return _useAlphaBetaPruning;
-            }
-            set
-            {
-                _useAlphaBetaPruning = value;
-            }
-        }
-        private bool _useAlphaBetaPruning = true;
+        public bool UseAlphaBetaPruning { get; set; } = true;
 
-        public bool UseTranspositionTable
-        {
-            get
-            {
-                return _useTranspositionTable;
-            }
-            set
-            {
-                _useTranspositionTable = value;
-            }
-        }
-        private bool _useTranspositionTable = true;
+        public bool UseTranspositionTable { get; set; } = true;
 
         public TimeSpan TurnMaxTime
         {
