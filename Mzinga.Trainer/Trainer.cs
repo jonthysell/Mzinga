@@ -131,10 +131,10 @@ namespace Mzinga.Trainer
 
         public void BattleRoyale()
         {
-            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit);
+            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles);
         }
 
-        private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit)
+        private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit, bool shuffleProfiles)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -171,8 +171,8 @@ namespace Mzinga.Trainer
             int completed = 0;
             int remaining = total;
 
-            List<Profile> whiteProfiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
-            List<Profile> blackProfiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderBy(profile => profile.EloRating));
+            List<Profile> whiteProfiles = shuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            List<Profile> blackProfiles = shuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderBy(profile => profile.EloRating));
 
             TimeSpan timeRemaining;
             double progress;
@@ -242,8 +242,6 @@ namespace Mzinga.Trainer
                             blackProfile.WriteXml(fs);
                         }
 
-                        GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
-
                         timeoutRemaining = timeLimit - (DateTime.Now - brStart);
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
@@ -267,7 +265,7 @@ namespace Mzinga.Trainer
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
-            Log("Battle Royale highest Elo: {0} ({1})", best.Id, best.EloRating);
+            Log("Battle Royale highest Elo: {0} ({1})", best.Nickname);
 
         }
  
@@ -543,11 +541,11 @@ namespace Mzinga.Trainer
                     {
                         if (battles < 0)
                         {
-                            Tournament(path, TrainerSettings.MaxDraws);
+                            Tournament(path, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles);
                         }
                         else if (battles > 0)
                         {
-                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit);
+                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles);
                         }
                     }
                 }
@@ -654,10 +652,10 @@ namespace Mzinga.Trainer
 
         public void Tournament()
         {
-            Tournament(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws);
+            Tournament(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles);
         }
 
-        private void Tournament(string path, int maxDraws)
+        private void Tournament(string path, int maxDraws, TimeSpan timeLimit,  bool shuffleProfiles)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -675,12 +673,14 @@ namespace Mzinga.Trainer
             Log("Tournament start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = TrainerSettings.BattleShuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            profiles = shuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
 
             Queue<Profile> remaining = new Queue<Profile>(profiles);
 
             TimeSpan timeRemaining;
             double progress;
+
+            TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
 
             while (remaining.Count > 1)
             {
@@ -745,15 +745,28 @@ namespace Mzinga.Trainer
                     blackProfile.WriteXml(fs);
                 }
 
+                timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
+
                 GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
-                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeRemaining);
+                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
+
+                if (timeoutRemaining <= TimeSpan.Zero)
+                {
+                    Log("Tournament time-out.");
+                    break;
+                }
             }
 
             Log("Tournament end.");
 
-            Profile best = remaining.Dequeue();
+            if (remaining.Count == 1)
+            {
+                Profile winner = remaining.Dequeue();
+                Log("Tournament Winner: {0}", winner.Nickname);
+            }
 
-            Log("Tournament Winner: {0} ({1})", best.Id, best.EloRating);
+            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
+            Log("Tournament highest Elo: {0} ({1})", best.Nickname);
         }
 
         private List<Profile> LoadProfiles(string path)

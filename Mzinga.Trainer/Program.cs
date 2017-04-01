@@ -228,7 +228,7 @@ namespace Mzinga.Trainer
                     case "-lifecyclegenerations":
                         trainerSettings.LifecycleGenerations = int.Parse(args[++i]);
                         break;
-                    case "-lc":
+                    case "-lcb":
                     case "-lifecyclebattles":
                         trainerSettings.LifecycleBattles = int.Parse(args[++i]);
                         break;
