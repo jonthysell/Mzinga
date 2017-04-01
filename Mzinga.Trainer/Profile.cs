@@ -426,7 +426,7 @@ namespace Mzinga.Trainer
             }
 
             Guid id = Guid.NewGuid();
-            int eloRating = (int)Math.Round(0.5 * (parentA.EloRating + parentB.EloRating));
+            int eloRating = EloUtils.DefaultRating;
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
             MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, minMix, maxMix);
