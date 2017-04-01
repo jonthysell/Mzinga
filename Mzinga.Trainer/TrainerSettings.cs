@@ -134,12 +134,14 @@ namespace Mzinga.Trainer
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    value = InfiniteLifeCycleGenerations;
                 }
                 _lifecycleGenerations = value;
             }
         }
         private int _lifecycleGenerations = 1;
+
+        public const int InfiniteLifeCycleGenerations = -1;
 
         public int LifecycleBattles { get; set; } = 1;
 

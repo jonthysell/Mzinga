@@ -513,7 +513,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("path");
             }
 
-            if (generations < 1)
+            if (generations == 0)
             {
                 throw new ArgumentOutOfRangeException("generations");
             }
@@ -528,11 +528,12 @@ namespace Mzinga.Trainer
             TimeSpan timeRemaining;
             double progress;
 
-            for (int i = 0; i < generations; i++)
+            int gen = 1;
+            while (generations == TrainerSettings.InfiniteLifeCycleGenerations || gen <= generations)
             {
-                if (generations > 1)
+                if (generations != 1)
                 {
-                    Log("Lifecycle generation {0} start.", i + 1);
+                    Log("Lifecycle generation {0} start.", gen);
                 }
 
                 // Battle
@@ -559,13 +560,15 @@ namespace Mzinga.Trainer
 
                 Enumerate();
 
-                if (generations > 1)
+                if (generations != 1)
                 {
-                    Log("Lifecycle generation {0} end.", i + 1);
+                    Log("Lifecycle generation {0} end.", gen);
 
-                    GetProgress(lifecycleStart, i + 1, generations - (i + 1), out progress, out timeRemaining);
+                    GetProgress(lifecycleStart, gen, generations - gen, out progress, out timeRemaining);
                     Log("Lifecycle progress: {0:P2} ETA {1}.", progress, timeRemaining);
                 }
+
+                gen++;
             }
 
             Log("Lifecycle end.");
