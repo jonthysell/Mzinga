@@ -673,9 +673,44 @@ namespace Mzinga.Trainer
             Log("Tournament start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = shuffleProfiles ? Shuffle(profiles) : new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
 
-            Queue<Profile> remaining = new Queue<Profile>(profiles);
+            Queue<Profile> remaining = new Queue<Profile>(profiles.Count);
+
+            if (shuffleProfiles)
+            {
+                // Blind draw
+                profiles = Shuffle(profiles);
+            }
+            else
+            {
+                // Seeded
+                LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+                List<Profile> profilesSeeded = new List<Profile>(sortedProfiles.Count);
+
+                bool first = true;
+                while (sortedProfiles.Count > 0)
+                {
+                    if (first)
+                    {
+                        profilesSeeded.Add(sortedProfiles.First.Value);
+                        sortedProfiles.RemoveFirst();
+                    }
+                    else
+                    {
+                        profilesSeeded.Add(sortedProfiles.Last.Value);
+                        sortedProfiles.RemoveLast();
+                    }
+
+                    first = !first;
+                }
+
+                profiles = profilesSeeded;
+            }
+
+            foreach (Profile p in profiles)
+            {
+                remaining.Enqueue(p);
+            }
 
             TimeSpan timeRemaining;
             double progress;
