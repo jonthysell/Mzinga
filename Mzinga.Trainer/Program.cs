@@ -35,6 +35,9 @@ namespace Mzinga.Trainer
         {
             try
             {
+                Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                Console.WriteLine();
+
                 if (args.Length == 0)
                 {
                     ShowHelp();
@@ -86,9 +89,6 @@ namespace Mzinga.Trainer
 
         static void ShowHelp()
         {
-            Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
-            Console.WriteLine();
-
             Console.WriteLine("Usage:");
             Console.WriteLine("Mzinga.Trainer.exe [command] ([parametername] [parametervalue]...)");
             Console.WriteLine();
@@ -106,7 +106,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("generate               Create new random profiles");
             Console.WriteLine("lifecycle              Battle, cull, mate cycle for profiles");
             Console.WriteLine("mate                   Mate every profile with each other");
-            Console.WriteLine("tournament             Fight an elimination-style tournament");
+            Console.WriteLine("tournament             Fight an single elimination tournament");
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -122,9 +122,9 @@ namespace Mzinga.Trainer
             Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
             Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
             Console.WriteLine("-BattleShuffleProfiles Whether or not to have profiles fight in random order");
-            Console.WriteLine("-BulkBattleTimeLimit   The max time for battle royales");
+            Console.WriteLine("-BulkBattleTimeLimit   The max time for tournaments / battle royales");
             Console.WriteLine("-ProvisionalRules      Whether or not to use provisional rules");
-            Console.WriteLine("-ProvisionalGameCount  The total number of games a profile is provisional");
+            Console.WriteLine("-ProvisionalGameCount  The number of games a profile stays provisional");
             Console.WriteLine("-MaxDraws              The max number of times to retry battles that end in a draw");
             Console.WriteLine("-MateMinMix            The min multiplier to mix up weights in children profiles");
             Console.WriteLine("-MateMaxMix            The max multiplier to mix up weights in children profiles");
