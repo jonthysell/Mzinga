@@ -265,7 +265,7 @@ namespace Mzinga.Trainer
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
-            Log("Battle Royale highest Elo: {0} ({1})", best.Nickname);
+            Log("Battle Royale highest Elo: {0}", best.Nickname);
 
         }
  
@@ -561,7 +561,10 @@ namespace Mzinga.Trainer
                 if (generations != 1)
                 {
                     Log("Lifecycle generation {0} end.", gen);
+                }
 
+                if (generations > 0)
+                {
                     GetProgress(lifecycleStart, gen, generations - gen, out progress, out timeRemaining);
                     Log("Lifecycle progress: {0:P2} ETA {1}.", progress, timeRemaining);
                 }
@@ -758,7 +761,7 @@ namespace Mzinga.Trainer
             }
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
-            Log("Tournament highest Elo: {0} ({1})", best.Nickname);
+            Log("Tournament highest Elo: {0}", best.Nickname);
         }
 
         private List<Profile> LoadProfiles(string path)
