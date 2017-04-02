@@ -416,6 +416,11 @@ namespace Mzinga.Trainer
                 keepCount = Math.Max(TrainerSettings.CullMinKeepCount, (int)Math.Round(Math.Sqrt(profiles.Count)));
             }
 
+            if (!Directory.Exists(Path.Combine(path, "culled")))
+            {
+                Directory.CreateDirectory(Path.Combine(path, "culled"));
+            }
+
             int count = 0;
             foreach (Profile p in profiles)
             {
@@ -428,6 +433,7 @@ namespace Mzinga.Trainer
                 {
                     string sourceFile = Path.Combine(path, p.Id + ".xml");
                     string destFile = Path.Combine(path, "culled", p.Id + ".xml");
+
                     File.Move(sourceFile, destFile);
                     Log("Culled {0}.", p.Nickname);
                 }
