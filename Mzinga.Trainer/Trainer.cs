@@ -230,16 +230,22 @@ namespace Mzinga.Trainer
                         remaining--;
 
                         // Save Profiles
-                        string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                        using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                        lock (whiteProfile)
                         {
-                            whiteProfile.WriteXml(fs);
+                            string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
+                            using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                            {
+                                whiteProfile.WriteXml(fs);
+                            }
                         }
 
-                        string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                        using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                        lock (blackProfile)
                         {
-                            blackProfile.WriteXml(fs);
+                            string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
+                            using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                            {
+                                blackProfile.WriteXml(fs);
+                            }
                         }
 
                         timeoutRemaining = timeLimit - (DateTime.Now - brStart);
@@ -268,7 +274,9 @@ namespace Mzinga.Trainer
             Log("Battle Royale highest Elo: {0}", best.Nickname);
 
         }
- 
+
+        private object _eloLock = new object();
+
         private BoardState Battle(Profile whiteProfile, Profile blackProfile)
         {
             if (null == whiteProfile)
@@ -370,10 +378,21 @@ namespace Mzinga.Trainer
 
             int whiteRating;
             int blackRating;
-            EloUtils.UpdateRatings(whiteProfile.EloRating, blackProfile.EloRating, whiteScore, blackScore, out whiteRating, out blackRating);
 
-            whiteProfile.UpdateRecord(whiteRating, whiteResult);
-            blackProfile.UpdateRecord(blackRating, blackResult);
+            lock (_eloLock)
+            {
+                EloUtils.UpdateRatings(whiteProfile.EloRating, blackProfile.EloRating, whiteScore, blackScore, out whiteRating, out blackRating);
+            }
+
+            lock (whiteProfile)
+            {
+                whiteProfile.UpdateRecord(whiteRating, whiteResult);
+            }
+
+            lock (blackProfile)
+            {
+                blackProfile.UpdateRecord(blackRating, blackResult);
+            }
 
             // Output Results
             Log("Battle end, {0}", boardState);
@@ -734,16 +753,22 @@ namespace Mzinga.Trainer
                 }
 
                 // Save Profiles
-                string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                lock (whiteProfile)
                 {
-                    whiteProfile.WriteXml(fs);
+                    string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
+                    using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
+                    {
+                        whiteProfile.WriteXml(fs);
+                    }
                 }
 
-                string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                lock (blackProfile)
                 {
-                    blackProfile.WriteXml(fs);
+                    string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
+                    using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
+                    {
+                        blackProfile.WriteXml(fs);
+                    }
                 }
 
                 timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
