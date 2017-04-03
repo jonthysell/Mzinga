@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
@@ -803,15 +804,19 @@ namespace Mzinga.Trainer
             }
 
             List<Profile> profiles = new List<Profile>();
-
-            foreach (string profilePath in Directory.EnumerateFiles(path, "*.xml"))
+            
+            Parallel.ForEach(Directory.EnumerateFiles(path, "*.xml"), (profilePath) =>
             {
                 using (FileStream fs = new FileStream(profilePath, FileMode.Open))
                 {
                     Profile profile = Profile.ReadXml(fs);
-                    profiles.Add(profile);
+                    lock (profiles)
+                    {
+                        profiles.Add(profile);
+                    }
                 }
             }
+            );
 
             return profiles;
         }
