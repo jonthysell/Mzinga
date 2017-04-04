@@ -548,8 +548,6 @@ namespace Mzinga.Trainer
             DateTime lifecycleStart = DateTime.Now;
             Log("Lifecycle start.");
 
-            Enumerate();
-
             TimeSpan timeRemaining;
             double progress;
 
@@ -582,8 +580,6 @@ namespace Mzinga.Trainer
 
                 // Mate
                 Mate(path);
-
-                Enumerate();
 
                 if (generations != 1)
                 {
