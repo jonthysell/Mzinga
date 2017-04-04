@@ -245,7 +245,7 @@ namespace Mzinga.Trainer
                 _maxDepth = value;
             }
         }
-        public int _maxDepth = GameAI.IterativeDepth;
+        private int _maxDepth = GameAI.IterativeDepth;
 
         public bool UseAlphaBetaPruning { get; set; } = true;
 

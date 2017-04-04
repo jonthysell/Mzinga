@@ -510,15 +510,16 @@ namespace Mzinga.Trainer
 
             Directory.CreateDirectory(path);
 
-            List<Profile> profiles = Profile.Generate(count, minWeight, maxWeight);
-
-            foreach (Profile profile in profiles)
+            for (int i = 0; i < count; i++)
             {
+                Profile profile = Profile.Generate(minWeight, maxWeight);
+
                 string filename = Path.Combine(path, profile.Id + ".xml");
                 using (FileStream fs = new FileStream(filename, FileMode.Create))
                 {
                     profile.WriteXml(fs);
                 }
+
                 Log("Generated {0}.", profile.Nickname);
             }
 

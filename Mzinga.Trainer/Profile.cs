@@ -384,24 +384,6 @@ namespace Mzinga.Trainer
             return new Profile(id, generation, parentA, parentB, eloRating, wins, losses, draws, metricWeights, creationTimestamp, lastUpdateTimestamp);
         }
 
-        public static List<Profile> Generate(int count, double minWeight, double maxWeight)
-        {
-            if (count < 1)
-            {
-                throw new ArgumentOutOfRangeException("count");
-            }
-
-            List<Profile> profiles = new List<Profile>();
-
-            for (int i = 0; i < count; i++)
-            {
-                Profile p = Generate(minWeight, maxWeight);
-                profiles.Add(p);
-            }
-
-            return profiles;
-        }
-
         public static Profile Generate(double minWeight, double maxWeight)
         {
             MetricWeights metricWeights = GenerateMetricWeights(minWeight, maxWeight);
