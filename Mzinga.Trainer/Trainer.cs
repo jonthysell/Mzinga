@@ -620,7 +620,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("minMix");
             }
 
-            if (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax)
+            if ((parentCount % 2 == 1) || (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax))
             {
                 throw new ArgumentOutOfRangeException("parentCount");
             }
@@ -637,31 +637,32 @@ namespace Mzinga.Trainer
 
             profiles = shuffleParents ? Shuffle(profiles) : Seed(profiles);
 
+            int maxParents = profiles.Count - (profiles.Count % 2);
+
             if (parentCount == TrainerSettings.MateParentMax)
             {
-                parentCount = profiles.Count;
-            }
-            else
-            {
-                parentCount = Math.Min(parentCount, profiles.Count);
+                parentCount = maxParents;
             }
 
-            List<Profile> parents = new List<Profile>(profiles.Take(parentCount));
+            parentCount = Math.Max(parentCount, TrainerSettings.MateMinParentCount); // At least 2 parents
+            parentCount = Math.Min(parentCount, maxParents); // No more parents that exist
 
-            foreach (Profile parentA in parents)
+            if (parentCount >= TrainerSettings.MateMinParentCount)
             {
-                foreach (Profile parentB in parents)
+                Queue<Profile> parents = new Queue<Profile>(profiles.Take(parentCount));
+
+                while (parents.Count > 0)
                 {
-                    if (parentA != parentB)
+                    Profile parentA = parents.Dequeue();
+                    Profile parentB = parents.Dequeue();
+
+                    Profile child = Profile.Mate(parentA, parentB, minMix, maxMix);
+
+                    Log("Mated {0} and {1} to sire {2}.", parentA.Nickname, parentB.Nickname, child.Nickname);
+
+                    using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
                     {
-                        Profile child = Profile.Mate(parentA, parentB, minMix, maxMix);
-
-                        Log("Mated {0} and {1} to sire {2}.", parentA.Nickname, parentB.Nickname, child.Nickname);
-
-                        using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
-                        {
-                            child.WriteXml(fs);
-                        }
+                        child.WriteXml(fs);
                     }
                 }
             }
