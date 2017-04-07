@@ -620,7 +620,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("minMix");
             }
 
-            if ((parentCount % 2 == 1) || (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax))
+            if (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax)
             {
                 throw new ArgumentOutOfRangeException("parentCount");
             }
@@ -644,14 +644,13 @@ namespace Mzinga.Trainer
                 parentCount = maxParents;
             }
 
-            parentCount = Math.Max(parentCount, TrainerSettings.MateMinParentCount); // At least 2 parents
             parentCount = Math.Min(parentCount, maxParents); // No more parents that exist
 
             if (parentCount >= TrainerSettings.MateMinParentCount)
             {
                 Queue<Profile> parents = new Queue<Profile>(profiles.Take(parentCount));
 
-                while (parents.Count > 0)
+                while (parents.Count >= 2)
                 {
                     Profile parentA = parents.Dequeue();
                     Profile parentB = parents.Dequeue();
