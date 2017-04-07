@@ -693,17 +693,21 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            Queue<Profile> remaining = new Queue<Profile>(shuffleProfiles ? Shuffle(profiles) : Seed(profiles));
+            Queue<Profile> participants = new Queue<Profile>(shuffleProfiles ? Shuffle(profiles) : Seed(profiles));
+
+            int total = participants.Count - 1;
+            int completed = 0;
+            int remaining = total;
 
             TimeSpan timeRemaining;
             double progress;
 
             TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
 
-            while (remaining.Count > 1)
+            while (participants.Count > 1)
             {
-                Profile whiteProfile = remaining.Dequeue();
-                Profile blackProfile = remaining.Dequeue();
+                Profile whiteProfile = participants.Dequeue();
+                Profile blackProfile = participants.Dequeue();
 
                 BoardState roundResult = BoardState.Draw;
 
@@ -740,14 +744,17 @@ namespace Mzinga.Trainer
                 }
 
                 Log("Tournament match end, {0}.", roundResult);
+                completed++;
+                remaining--;
 
+                // Add winner back into the participant queue
                 if (roundResult == BoardState.WhiteWins)
                 {
-                    remaining.Enqueue(whiteProfile);
+                    participants.Enqueue(whiteProfile);
                 }
                 else if (roundResult == BoardState.BlackWins)
                 {
-                    remaining.Enqueue(blackProfile);
+                    participants.Enqueue(blackProfile);
                 }
 
                 // Save Profiles
@@ -771,7 +778,7 @@ namespace Mzinga.Trainer
 
                 timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
 
-                GetProgress(tournamentStart, profiles.Count - remaining.Count, remaining.Count, out progress, out timeRemaining);
+                GetProgress(tournamentStart, completed, remaining, out progress, out timeRemaining);
                 Log("Tournament progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
 
                 if (timeoutRemaining <= TimeSpan.Zero)
@@ -783,9 +790,9 @@ namespace Mzinga.Trainer
 
             Log("Tournament end.");
 
-            if (remaining.Count == 1)
+            if (participants.Count == 1)
             {
-                Profile winner = remaining.Dequeue();
+                Profile winner = participants.Dequeue();
                 Log("Tournament Winner: {0}", winner.Nickname);
             }
 
