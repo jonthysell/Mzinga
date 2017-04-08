@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 namespace Mzinga.Core.AI
 {
@@ -42,17 +43,42 @@ namespace Mzinga.Core.AI
 
         public int AlphaBetaCuts { get; set; }
 
-        public int CachedBoardScoreHits { get; set; }
+        public int BoardScoreConstantResults { get; set; }
 
-        public int BoardScoresCalculated { get; set; }
-
-        public double BoardScoreCacheUsage
+        public int BoardScoreCalculatedResults
         {
             get
             {
-                return CachedBoardScoreHits / (double)(CachedBoardScoreHits + BoardScoresCalculated);
+                return TranspositionTableMetrics.Misses;
             }
         }
+
+        public int BoardScoreCachedResults
+        {
+            get
+            {
+                return TranspositionTableMetrics.Hits;
+            }
+        }
+
+        public int BoardScoreTotalResults
+        {
+            get
+            {
+                return BoardScoreConstantResults + BoardScoreCalculatedResults + BoardScoreCachedResults;
+            }
+        }
+
+        public CacheMetrics TranspositionTableMetrics
+        {
+            get
+            {
+                return _cacheMetrics["TranspositionTable"];
+            }
+
+        }
+
+        private CacheMetricsSet _cacheMetrics;
 
         public BestMoveMetrics()
         {
@@ -65,8 +91,9 @@ namespace Mzinga.Core.AI
             ElapsedTime = TimeSpan.Zero;
 
             AlphaBetaCuts = 0;
-            CachedBoardScoreHits = 0;
-            BoardScoresCalculated = 0;
+            BoardScoreConstantResults = 0;
+
+            _cacheMetrics = new CacheMetricsSet();
         }
 
         public void IncrementMoves(int depth)

@@ -106,7 +106,31 @@ namespace Mzinga.Core.AI
 
         public bool TranspositionTable { get; set; }
 
-        public BestMoveMetrics BestMoveMetrics { get; private set; }
+        public BestMoveMetrics BestMoveMetrics
+        {
+            get
+            {
+                return _bestMoveMetrics;
+            }
+            private set
+            {
+                if (null != value)
+                {
+                    _bestMoveMetricsHistory.AddLast(value);
+                }
+                _bestMoveMetrics = value;
+            }
+        }
+        private BestMoveMetrics _bestMoveMetrics = null;
+
+        public IEnumerable<BestMoveMetrics> BestMoveMetricsHistory
+        {
+            get
+            {
+                return _bestMoveMetricsHistory;
+            }
+        }
+        private LinkedList<BestMoveMetrics> _bestMoveMetricsHistory;
 
         private Dictionary<string, double>[] _cachedBoardScores;
 
@@ -145,6 +169,9 @@ namespace Mzinga.Core.AI
                 new Dictionary<string, double>(),
                 new Dictionary<string, double>()
             };
+
+            BestMoveMetrics = null;
+            _bestMoveMetricsHistory = new LinkedList<BestMoveMetrics>();
         }
 
         #region Move Evaluation
@@ -362,15 +389,18 @@ namespace Mzinga.Core.AI
             if ((maxColor == Color.White && gameBoard.BoardState == BoardState.WhiteWins) ||
                 (maxColor == Color.Black && gameBoard.BoardState == BoardState.BlackWins))
             {
+                BestMoveMetrics.BoardScoreConstantResults++;
                 return double.PositiveInfinity;
             }
             else if ((maxColor == Color.White && gameBoard.BoardState == BoardState.BlackWins) ||
                      (maxColor == Color.Black && gameBoard.BoardState == BoardState.WhiteWins))
             {
+                BestMoveMetrics.BoardScoreConstantResults++;
                 return double.NegativeInfinity;
             }
             else if (gameBoard.BoardState == BoardState.Draw)
             {
+                BestMoveMetrics.BoardScoreConstantResults++;
                 return MetricWeights.DrawScore;
             }
 
@@ -383,7 +413,7 @@ namespace Mzinga.Core.AI
                 double score;
                 if (_cachedBoardScores[(int)maxColor].TryGetValue(key, out score))
                 {
-                    BestMoveMetrics.CachedBoardScoreHits++;
+                    BestMoveMetrics.TranspositionTableMetrics.Hits++;
                     return score;
                 }
             }
@@ -401,8 +431,7 @@ namespace Mzinga.Core.AI
                 _cachedBoardScores[(int)minColor].Add(key, minScore);
             }
 
-            BestMoveMetrics.BoardScoresCalculated++;
-
+            BestMoveMetrics.TranspositionTableMetrics.Misses++;
             return maxScore;
         }
 

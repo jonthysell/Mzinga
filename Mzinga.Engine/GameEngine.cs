@@ -360,12 +360,7 @@ namespace Mzinga.Engine
                 throw new NoBoardException();
             }
 
-            if (null == _cachedBestMove)
-            {
-                _cachedBestMove = _gameAI.GetBestMove(GameBoard);
-            }
-
-            return _cachedBestMove;
+            return _cachedBestMove ?? (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
         }
     }
 

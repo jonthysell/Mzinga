@@ -63,6 +63,8 @@
     <Compile Include="BoardMetrics.cs" />
     <Compile Include="AI\MetricWeights.cs" />
     <Compile Include="AI\EvaluatedMove.cs" />
+    <Compile Include="CacheMetricsSet.cs" />
+    <Compile Include="CacheMetrics.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="EnumUtils.cs" />
     <Compile Include="AI\EvaluatedMoveCollection.cs" />

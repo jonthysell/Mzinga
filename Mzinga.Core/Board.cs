@@ -189,10 +189,18 @@ namespace Mzinga.Core
 
         #endregion
 
-        private MoveSet[] _cachedValidMovesByPiece;
+        #region Caches
+
         private MoveSet _cachedValidMoves;
+        private MoveSet[] _cachedValidMovesByPiece;
 
         private HashSet<Position> _cachedValidPlacementPositions;
+
+        public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
+
+        public int ValidMoveCacheResets { get; private set; } = 0;
+
+        #endregion
 
         public Board()
         {
@@ -578,6 +586,11 @@ namespace Mzinga.Core
 
                 _cachedValidMoves = moves;
                 _cachedValidMoves.Lock();
+                ValidMoveCacheMetricsSet["ValidMoves"].Misses++;
+            }
+            else
+            {
+                ValidMoveCacheMetricsSet["ValidMoves"].Hits++;
             }
 
             return _cachedValidMoves;
@@ -590,6 +603,11 @@ namespace Mzinga.Core
                 Piece targetPiece = GetPiece(pieceName);
                 _cachedValidMovesByPiece[(int)pieceName] = GetValidMovesInternal(targetPiece);
                 _cachedValidMovesByPiece[(int)pieceName].Lock();
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Misses++;
+            }
+            else
+            {
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hits++;
             }
 
             return _cachedValidMovesByPiece[(int)pieceName];
@@ -621,9 +639,9 @@ namespace Mzinga.Core
                             validMoves.Add(new Move(targetPiece.PieceName, neighbor));
                         }
                     }
-                    else if (targetPiece.InHand && (CurrentPlayerTurn != 4 ||
-                                                    (CurrentPlayerTurn == 4 &&
-                                                     (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && targetPiece.BugType == BugType.QueenBee)))))
+                    else if (targetPiece.InHand && (CurrentPlayerTurn != 4 || // Normal turn OR
+                                                    (CurrentPlayerTurn == 4 && // Turn 4 and AND
+                                                     (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && targetPiece.BugType == BugType.QueenBee))))) // Queen is in play or you're trying to play it
                     {
                         // Look for valid new placements
                         validMoves.Add(GetValidPlacements(targetPiece));
@@ -705,6 +723,12 @@ namespace Mzinga.Core
                         }
                     }
                 }
+
+                ValidMoveCacheMetricsSet["ValidPlacements"].Misses++;
+            }
+            else
+            {
+                ValidMoveCacheMetricsSet["ValidPlacements"].Hits++;
             }
 
             foreach (Position validPlacement in _cachedValidPlacementPositions)
@@ -996,6 +1020,7 @@ namespace Mzinga.Core
             _cachedValidMoves = null;
             _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
             _cachedValidPlacementPositions = null;
+            ValidMoveCacheResets++;
         }
 
         #endregion
