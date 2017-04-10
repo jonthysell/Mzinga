@@ -711,6 +711,8 @@ namespace Mzinga.Trainer
 
                 BoardState roundResult = BoardState.Draw;
 
+                Profile drawWinnerProfile = whiteProfile.EloRating < blackProfile.EloRating ? whiteProfile : blackProfile;
+
                 Log("Tournament match start.");
 
                 if (maxDraws == 1)
@@ -740,7 +742,7 @@ namespace Mzinga.Trainer
 
                 if (roundResult == BoardState.Draw)
                 {
-                    roundResult = whiteProfile.EloRating >= blackProfile.EloRating ? BoardState.WhiteWins : BoardState.BlackWins;
+                    roundResult = (drawWinnerProfile == whiteProfile) ? BoardState.WhiteWins : BoardState.BlackWins;
                 }
 
                 Log("Tournament match end, {0}.", roundResult);
