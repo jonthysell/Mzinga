@@ -46,6 +46,10 @@ namespace Mzinga.Core
             }
         }
 
+        public Piece PieceAbove { get; internal set; } = null;
+
+        public Piece PieceBelow { get; internal set; } = null;
+
         public Piece(PieceName pieceName, Position position = null)
         {
             Init(pieceName, position);

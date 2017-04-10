@@ -252,13 +252,27 @@ namespace Mzinga.Core
 
             CurrentTurn = 2 * (currentPlayerTurn - 1) + (int)currentTurnColor;
 
+            Queue<Piece> parsedPieces = new Queue<Piece>(EnumUtils.NumPieceNames);
+
             for (int i = 2; i < split.Length; i++)
             {
-                Piece parsedPiece = new Piece(split[i]);
+                parsedPieces.Enqueue(new Piece(split[i]));
+            }
+
+            while (parsedPieces.Count > 0)
+            {
+                Piece parsedPiece = parsedPieces.Dequeue();
                 if (parsedPiece.InPlay)
                 {
-                    Piece piece = GetPiece(parsedPiece.PieceName);
-                    MovePiece(piece, parsedPiece.Position);
+                    if (parsedPiece.Position.Stack > 0 && !HasPieceAt(parsedPiece.Position.GetShifted(0, 0, 0, -1)))
+                    {
+                        parsedPieces.Enqueue(parsedPiece);
+                    }
+                    else
+                    {
+                        Piece piece = GetPiece(parsedPiece.PieceName);
+                        MovePiece(piece, parsedPiece.Position);
+                    }
                 }
             }
 
@@ -270,11 +284,6 @@ namespace Mzinga.Core
 
         public bool HasPieceAt(Position position)
         {
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
             return (null != GetPiece(position));
         }
 
@@ -316,18 +325,14 @@ namespace Mzinga.Core
                 position = position.GetShifted(0, 0, 0, -position.Stack);
             }
 
-            Piece topPiece = null;
+            Piece topPiece = GetPiece(position);
 
-            while (true)
+            if (null != topPiece)
             {
-                Piece piece = GetPiece(position);
-                if (null == piece)
+                while (null != topPiece.PieceAbove)
                 {
-                    break;
+                    topPiece = topPiece.PieceAbove;
                 }
-
-                topPiece = piece;
-                position = position.GetShifted(0, 0, 0, 1);
             }
 
             return topPiece;
@@ -343,6 +348,11 @@ namespace Mzinga.Core
             if (piece.InPlay)
             {
                 RemoveFromPieceByPosition(piece);
+                if (null != piece.PieceBelow)
+                {
+                    piece.PieceBelow.PieceAbove = null;
+                    piece.PieceBelow = null;
+                }
             }
 
             piece.Move(newPosition);
@@ -350,6 +360,13 @@ namespace Mzinga.Core
             if (piece.InPlay)
             {
                 AddToPieceByPosition(piece);
+                if (newPosition.Stack > 0)
+                {
+                    Position posBelow = newPosition.GetShifted(0, 0, 0, -1);
+                    Piece pieceBelow = GetPiece(posBelow);
+                    pieceBelow.PieceAbove = piece;
+                    piece.PieceBelow = pieceBelow;
+                }
             }
         }
 
@@ -390,14 +407,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("targetPiece");
             }
 
-            if (targetPiece.InHand)
-            {
-                return true;
-            }
-
-            Position positionAbove = targetPiece.Position.GetShifted(0, 0, 0, 1);
-
-            return !HasPieceAt(positionAbove);
+            return (null == targetPiece.PieceAbove);
         }
 
         public bool IsOneHive()
@@ -448,11 +458,11 @@ namespace Mzinga.Core
                     }
 
                     // Check for all pieces above this one
-                    Piece pieceAbove = GetPiece(currentPiece.Position.GetShifted(0, 0, 0, 1));
+                    Piece pieceAbove = currentPiece.PieceAbove;
                     while (null != pieceAbove)
                     {
                         partOfHive[(int)pieceAbove.PieceName] = true;
-                        pieceAbove = GetPiece(pieceAbove.Position.GetShifted(0, 0, 0, 1));
+                        pieceAbove = pieceAbove.PieceAbove;
                     }
                 }
 
@@ -694,7 +704,7 @@ namespace Mzinga.Core
 
                 foreach (Piece piece in PiecesInPlay)
                 {
-                    if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetPiece.Color)
+                    if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetColor)
                     {
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
                         foreach (Position neighbor in piece.Position.Neighbors)
@@ -706,7 +716,7 @@ namespace Mzinga.Core
                                 foreach (Position surroundingPosition in neighbor.Neighbors)
                                 {
                                     Piece surroundingPiece = GetPieceOnTop(surroundingPosition);
-                                    if (null != surroundingPiece && surroundingPiece.Color != targetPiece.Color)
+                                    if (null != surroundingPiece && surroundingPiece.Color != targetColor)
                                     {
                                         validPlacement = false;
                                         break;
