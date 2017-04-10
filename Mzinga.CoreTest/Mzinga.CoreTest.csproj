@@ -54,6 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -71,6 +72,8 @@
     <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
+    <Compile Include="MetricWeightsTests.cs" />
+    <Compile Include="GameAITests.cs" />
     <Compile Include="MoveSetTests.cs" />
     <Compile Include="MoveTests.cs" />
     <Compile Include="PieceTests.cs" />

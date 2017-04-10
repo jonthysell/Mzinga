@@ -75,7 +75,7 @@ namespace Mzinga.Core.AI
 
             DrawScore = source.DrawScore;
 
-            MetricWeights.IterateOverWeights((player, playerWeight) =>
+            IterateOverWeights((player, playerWeight) =>
             {
                 double value = source.Get(player, playerWeight);
                 Set(player, playerWeight, value);
@@ -122,11 +122,11 @@ namespace Mzinga.Core.AI
                         BugType bugType;
                         BugTypeWeight bugTypeWeight;
 
-                        if (MetricWeights.TryParseKeyName(key, out player, out playerWeight))
+                        if (TryParseKeyName(key, out player, out playerWeight))
                         {
                             mw.Set(player, playerWeight, value);
                         }
-                        else if (MetricWeights.TryParseKeyName(key, out player, out bugType, out bugTypeWeight))
+                        else if (TryParseKeyName(key, out player, out bugType, out bugTypeWeight))
                         {
                             mw.Set(player, bugType, bugTypeWeight, value);
                         }
