@@ -191,10 +191,11 @@ namespace Mzinga.Core
 
         #region Caches
 
-        private MoveSet _cachedValidMoves;
         private MoveSet[] _cachedValidMovesByPiece;
 
         private HashSet<Position> _cachedValidPlacementPositions;
+
+        private Dictionary<string, MoveSet[]> _cachedValidMovesByPieceL2 = new Dictionary<string, MoveSet[]>();
 
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
 
@@ -472,24 +473,21 @@ namespace Mzinga.Core
         {
             BoardMetrics boardMetrics = new BoardMetrics(BoardState);
 
-            // Save off current valid moves since we'll be returning to it
-            MoveSet allMoves = GetValidMoves();
-            MoveSet[] allMovesByPiece = _cachedValidMovesByPiece;
-            HashSet<Position> validPlacements = _cachedValidPlacementPositions;
-
             // Get the metrics for the current turn
             PlayerMetrics currentPlayerMetrics = GetCurrentPlayerMetrics();
             boardMetrics[CurrentTurnColor].CopyFrom(currentPlayerMetrics);
 
+            // Save off current valid placements since we'll be returning to it
+            HashSet<Position> validPlacements = _cachedValidPlacementPositions;
+            _cachedValidPlacementPositions = null;
+
             // Spoof going to the next turn to get the opponent's metrics
-            CurrentTurn++;
+            _currentTurn++;
             PlayerMetrics opponentPlayerMetrics = GetCurrentPlayerMetrics();
             boardMetrics[CurrentTurnColor].CopyFrom(opponentPlayerMetrics);
-            CurrentTurn--;
+            _currentTurn--;
 
-            // Returned, so reload saved valid moves into cache
-            _cachedValidMoves = allMoves;
-            _cachedValidMovesByPiece = allMovesByPiece;
+            // Returned, so reload saved valid placements into cache
             _cachedValidPlacementPositions = validPlacements;
 
             return boardMetrics;
@@ -567,47 +565,73 @@ namespace Mzinga.Core
 
         public MoveSet GetValidMoves()
         {
-            if (null == _cachedValidMoves)
+            MoveSet moves = new MoveSet();
+
+            if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
             {
-                MoveSet moves = new MoveSet();
-
-                if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
+                foreach (Piece piece in CurrentTurnPieces)
                 {
-                    foreach (Piece piece in CurrentTurnPieces)
-                    {
-                        moves.Add(GetValidMoves(piece.PieceName));
-                    }
-
-                    if (moves.Count == 0)
-                    {
-                        moves.Add(Move.Pass);
-                    }
+                    moves.Add(GetValidMoves(piece.PieceName));
                 }
 
-                _cachedValidMoves = moves;
-                _cachedValidMoves.Lock();
-                ValidMoveCacheMetricsSet["ValidMoves"].Misses++;
-            }
-            else
-            {
-                ValidMoveCacheMetricsSet["ValidMoves"].Hits++;
+                if (moves.Count == 0)
+                {
+                    moves.Add(Move.Pass);
+                }
             }
 
-            return _cachedValidMoves;
+            moves.Lock();
+
+            return moves;
         }
 
         public MoveSet GetValidMoves(PieceName pieceName)
         {
-            if (null == _cachedValidMovesByPiece[(int)pieceName])
+            if (null != _cachedValidMovesByPiece)
             {
-                Piece targetPiece = GetPiece(pieceName);
-                _cachedValidMovesByPiece[(int)pieceName] = GetValidMovesInternal(targetPiece);
-                _cachedValidMovesByPiece[(int)pieceName].Lock();
-                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Misses++;
+                ValidMoveCacheMetricsSet["ValidMoves"].Hits++;
             }
             else
             {
+                ValidMoveCacheMetricsSet["ValidMoves"].Misses++;
+
+                // Check if L2 cache for this board exists
+                string key = GetKey();
+                MoveSet[] validMovesByPiece;
+
+                if (_cachedValidMovesByPieceL2.TryGetValue(key, out validMovesByPiece))
+                {
+                    // L2 cache for this board exists
+                    ValidMoveCacheMetricsSet["ValidMovesL2"].Hits++;
+                }
+                else
+                {
+                    // L2 cache for this board does not exist, so create one
+                    ValidMoveCacheMetricsSet["ValidMovesL2"].Misses++;
+                    validMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
+                    _cachedValidMovesByPieceL2.Add(key, validMovesByPiece);
+                }
+
+                _cachedValidMovesByPiece = validMovesByPiece;
+            }
+
+            if (null != _cachedValidMovesByPiece[(int)pieceName])
+            {
+                // MoveSet is cached in L1 cache
                 ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hits++;
+            }
+            else
+            {
+                // MoveSet is not cached in L1 cache
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Misses++;
+
+                // Calculate MoveSet
+                Piece targetPiece = GetPiece(pieceName);
+                MoveSet moves = GetValidMovesInternal(targetPiece);
+                moves.Lock();
+
+                // Populate cache
+                _cachedValidMovesByPiece[(int)pieceName] = moves;
             }
 
             return _cachedValidMovesByPiece[(int)pieceName];
@@ -946,7 +970,7 @@ namespace Mzinga.Core
             Direction right = EnumUtils.RightOf(direction);
             Direction left = EnumUtils.LeftOf(direction);
 
-            return !HasPieceAt(position.NeighborAt(direction)) && HasPieceAt(position.NeighborAt(right)) != HasPieceAt(position.NeighborAt(left));
+            return !HasPieceAt(position.NeighborAt(direction)) && (HasPieceAt(position.NeighborAt(right)) != HasPieceAt(position.NeighborAt(left)));
         }
 
         protected bool CanMoveWithoutBreakingHive(Piece targetPiece)
@@ -958,6 +982,31 @@ namespace Mzinga.Core
 
             if (targetPiece.InPlay && targetPiece.Position.Stack == 0)
             {
+                // Try edge heurestic
+                int edges = 0;
+                bool? lastHasPiece = null;
+                foreach (Position neighbor in targetPiece.Position.Neighbors)
+                {
+                    bool hasPiece = HasPieceAt(neighbor);
+                    if (lastHasPiece.HasValue)
+                    {
+                        if (lastHasPiece.Value != hasPiece)
+                        {
+                            edges++;
+                            if (edges > 2)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    lastHasPiece = hasPiece;
+                }
+
+                if (edges <= 2)
+                {
+                    return true;
+                }
+
                 // Temporarily remove piece from board
                 Position originalPosition = targetPiece.Position;
                 MovePiece(targetPiece, null);
@@ -1017,13 +1066,24 @@ namespace Mzinga.Core
 
         protected void ResetValidMovesCache()
         {
-            _cachedValidMoves = null;
-            _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
+            _cachedValidMovesByPiece = null;
             _cachedValidPlacementPositions = null;
             ValidMoveCacheResets++;
         }
 
         #endregion
+
+        public string GetKey()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Piece piece in PiecesInPlay)
+            {
+                sb.AppendFormat("{0}{1}", piece.ToString(), BoardStringSeparator);
+            }
+
+            return sb.ToString().TrimEnd(BoardStringSeparator);
+        }
 
         public string GetTranspositionKey()
         {
