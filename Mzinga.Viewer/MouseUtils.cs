@@ -26,7 +26,6 @@
 
 // Borrowed from http://tech.pro/tutorial/893/wpf-snippet-reliably-getting-the-mouse-position
 
-using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;

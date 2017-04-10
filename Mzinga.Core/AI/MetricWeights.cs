@@ -145,9 +145,9 @@ namespace Mzinga.Core.AI
                 {
                     string[] split = key.Split(KeySeperator[0]);
 
-                    if (Enum.TryParse<Player>(split[0], out player))
+                    if (Enum.TryParse(split[0], out player))
                     {
-                        if (Enum.TryParse<PlayerWeight>(split[1], out playerWeight))
+                        if (Enum.TryParse(split[1], out playerWeight))
                         {
                             return true;
                         }
@@ -169,11 +169,11 @@ namespace Mzinga.Core.AI
                 {
                     string[] split = key.Split(KeySeperator[0]);
 
-                    if (Enum.TryParse<Player>(split[0], out player))
+                    if (Enum.TryParse(split[0], out player))
                     {
-                        if (Enum.TryParse<BugType>(split[1], out bugType))
+                        if (Enum.TryParse(split[1], out bugType))
                         {
-                            if (Enum.TryParse<BugTypeWeight>(split[2], out bugTypeWeight))
+                            if (Enum.TryParse(split[2], out bugTypeWeight))
                             {
                                 return true;
                             }
@@ -207,7 +207,7 @@ namespace Mzinga.Core.AI
 
                 if (null != playerWeightAction)
                 {
-                    for (int playerWeightInt = 0; playerWeightInt < MetricWeights.NumPlayerWeights; playerWeightInt++)
+                    for (int playerWeightInt = 0; playerWeightInt < NumPlayerWeights; playerWeightInt++)
                     {
                         PlayerWeight playerWeight = (PlayerWeight)playerWeightInt;
 
