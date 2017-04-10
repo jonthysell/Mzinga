@@ -587,32 +587,9 @@ namespace Mzinga.Core
 
         public MoveSet GetValidMoves(PieceName pieceName)
         {
-            if (null != _cachedValidMovesByPiece)
+            if (null == _cachedValidMovesByPiece)
             {
-                ValidMoveCacheMetricsSet["ValidMoves"].Hits++;
-            }
-            else
-            {
-                ValidMoveCacheMetricsSet["ValidMoves"].Misses++;
-
-                // Check if L2 cache for this board exists
-                string key = GetKey();
-                MoveSet[] validMovesByPiece;
-
-                if (_cachedValidMovesByPieceL2.TryGetValue(key, out validMovesByPiece))
-                {
-                    // L2 cache for this board exists
-                    ValidMoveCacheMetricsSet["ValidMovesL2"].Hits++;
-                }
-                else
-                {
-                    // L2 cache for this board does not exist, so create one
-                    ValidMoveCacheMetricsSet["ValidMovesL2"].Misses++;
-                    validMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
-                    _cachedValidMovesByPieceL2.Add(key, validMovesByPiece);
-                }
-
-                _cachedValidMovesByPiece = validMovesByPiece;
+                _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
             }
 
             if (null != _cachedValidMovesByPiece[(int)pieceName])
