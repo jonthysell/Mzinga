@@ -39,5 +39,66 @@ namespace Mzinga.CoreTest
             Board b = new Board();
             Assert.IsNotNull(b);
         }
+
+        [TestMethod]
+        public void Board_CanMoveWithoutBreakingHive_InHandTest()
+        {
+            MockBoard b = new MockBoard();
+
+            VerifyCanMoveWithoutBreakingHive(b, PieceName.WhiteSpider1, true);
+        }
+
+        [TestMethod]
+        public void Board_CanMoveWithoutBreakingHive_OnlyPieceInPlayTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[1];WS1[0,0,0]");
+
+            VerifyCanMoveWithoutBreakingHive(b, PieceName.WhiteSpider1, true);
+        }
+
+        [TestMethod]
+        public void Board_CanMoveWithoutBreakingHive_ClosedCircleTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+
+            foreach (Piece p in b.PiecesInPlay)
+            {
+                VerifyCanMoveWithoutBreakingHive(b, p.PieceName, true);
+            }
+        }
+
+        [TestMethod]
+        public void Board_CanMoveWithoutBreakingHive_OpenCircleTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+
+            foreach (Piece p in b.PiecesInPlay)
+            {
+                VerifyCanMoveWithoutBreakingHive(b, p.PieceName, p.PieceName == PieceName.WhiteGrasshopper1 || p.PieceName == PieceName.BlackQueenBee);
+            }
+        }
+
+        private void VerifyCanMoveWithoutBreakingHive(MockBoard board, PieceName pieceName, bool canMoveExpected)
+        {
+            Assert.IsNotNull(board);
+
+            Piece piece = board.GetPiece(pieceName);
+            Assert.IsNotNull(piece);
+
+            bool canMoveActual = board.CanMoveWithoutBreakingHive(piece);
+            Assert.AreEqual(canMoveExpected, canMoveActual);
+        }
+    }
+
+    public class MockBoard : Board
+    {
+        public MockBoard() : base() { }
+
+        public MockBoard(string boardString) : base(boardString) { }
+
+        public new bool CanMoveWithoutBreakingHive(Piece targetPiece)
+        {
+            return base.CanMoveWithoutBreakingHive(targetPiece);
+        }
     }
 }

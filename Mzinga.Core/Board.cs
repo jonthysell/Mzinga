@@ -221,7 +221,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(boardString))
             {
-                throw new ArgumentOutOfRangeException("boardString");
+                throw new ArgumentNullException("boardString");
             }
 
             string[] split = boardString.Split(BoardStringSeparator);
