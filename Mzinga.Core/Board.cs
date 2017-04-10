@@ -192,10 +192,7 @@ namespace Mzinga.Core
         #region Caches
 
         private MoveSet[] _cachedValidMovesByPiece;
-
         private HashSet<Position> _cachedValidPlacementPositions;
-
-        private Dictionary<string, MoveSet[]> _cachedValidMovesByPieceL2 = new Dictionary<string, MoveSet[]>();
 
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
 
