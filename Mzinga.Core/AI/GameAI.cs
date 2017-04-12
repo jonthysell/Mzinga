@@ -41,7 +41,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value < TimeSpan.Zero)
+                if (value.HasValue && value.Value < TimeSpan.Zero)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
@@ -140,7 +140,7 @@ namespace Mzinga.Core.AI
         {
             MetricWeights = new MetricWeights();            
 
-            MaxTime = TimeSpan.Zero;
+            MaxTime = null;
 
             MaxDepth = 0;
             AlphaBetaPruning = false;

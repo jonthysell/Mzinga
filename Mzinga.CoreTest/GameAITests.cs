@@ -44,34 +44,34 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
+        [TestCategory("Performance")]
         public void GameAI_FirstMovePerfTest()
         {
             GameBoard gb = new GameBoard();
 
-            int sum = 0;
+            TimeSpan sum = TimeSpan.Zero;
             int iterations = 3;
 
             for (int i = 0; i < iterations; i++)
             {
-                GameAI ai = GetTestGameAI(TimeSpan.FromSeconds(10.0));
-                ai.GetBestMove(gb);
+                GameAI ai = GetTestGameAI(5);
+                DateTime start = DateTime.Now;
+                Move m = ai.GetBestMove(gb);
+                DateTime end = DateTime.Now;
 
-                int totalBoardScoreResults = ai.BestMoveMetrics.BoardScoreTotalResults;
-                Trace.WriteLine(string.Format("BoardScoreTotalResults: {0}", totalBoardScoreResults));
-                sum += totalBoardScoreResults;
+                TimeSpan elapsed = end - start;
+                Trace.WriteLine(string.Format("Elapsed: {0}, {1}", elapsed, m));
+                sum += elapsed;
             }
 
-            Trace.WriteLine(string.Format("Average BoardScoreTotalResults: {0}", (int)Math.Round(sum / (double)iterations)));
+            Trace.WriteLine(string.Format("Average Time: {0}", TimeSpan.FromMilliseconds(Math.Round(sum.TotalMilliseconds / iterations))));
         }
 
-        private GameAI GetTestGameAI(TimeSpan maxTime)
+        private GameAI GetTestGameAI(int depth)
         {
             GameAI ai = new GameAI(MetricWeightsTests.TestMetricWeights)
             {
-                MaxTime = maxTime,
-                MaxDepth = GameAI.IterativeDepth,
-                AlphaBetaPruning = true,
-                TranspositionTable = true
+                MaxDepth = depth
             };
 
             return ai;
