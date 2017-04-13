@@ -928,33 +928,30 @@ namespace Mzinga.Core
                 {
                     Position slidePosition = targetPiece.Position.NeighborAt(slideDirection);
 
-                    if (slidePosition != startingPosition && CanSlide(targetPiece.Position, slideDirection))
+                    if (slidePosition != startingPosition && !HasPieceAt(slidePosition))
                     {
-                        Move move = new Move(targetPiece.PieceName, slidePosition);
+                        // Slide position is open
 
-                        if (validMoves.Add(move))
+                        Direction right = EnumUtils.RightOf(slideDirection);
+                        Direction left = EnumUtils.LeftOf(slideDirection);
+
+                        if (HasPieceAt(targetPiece.Position.NeighborAt(right)) != HasPieceAt(targetPiece.Position.NeighborAt(left)))
                         {
-                            Position preSlidePosition = targetPiece.Position;
-                            MovePiece(targetPiece, move.Position);
-                            GetValidSlides(targetPiece, startingPosition, currentRange + 1, maxRange, validMoves);
-                            MovePiece(targetPiece, preSlidePosition);
+                            // Can slide into slide position
+                            Move move = new Move(targetPiece.PieceName, slidePosition);
+
+                            if (validMoves.Add(move))
+                            {
+                                // Sliding from this position has not been tested yet
+                                Position preSlidePosition = targetPiece.Position;
+                                MovePiece(targetPiece, move.Position);
+                                GetValidSlides(targetPiece, startingPosition, currentRange + 1, maxRange, validMoves);
+                                MovePiece(targetPiece, preSlidePosition);
+                            }
                         }
                     }
                 }
             }
-        }
-
-        private bool CanSlide(Position position, Direction direction)
-        {
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
-            Direction right = EnumUtils.RightOf(direction);
-            Direction left = EnumUtils.LeftOf(direction);
-
-            return !HasPieceAt(position.NeighborAt(direction)) && (HasPieceAt(position.NeighborAt(right)) != HasPieceAt(position.NeighborAt(left)));
         }
 
         protected bool CanMoveWithoutBreakingHive(Piece targetPiece)
