@@ -118,7 +118,7 @@ namespace Mzinga.CoreTest
 
             List<Position> actualNeighbors = new List<Position>(position.Neighbors);
 
-            TestUtils.AssertHaveEqualChildren<Position>(expectedNeighbors, actualNeighbors);
+            TestUtils.AssertHaveEqualChildren(expectedNeighbors, actualNeighbors);
         }
 
         [TestMethod]

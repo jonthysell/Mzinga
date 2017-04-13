@@ -81,6 +81,13 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
+        public void Board_GetValidMoves_BeetleStackTest()
+        {
+            VerifyValidMoves("InProgress;White[5];WQ[1,-1,0];WS1[0,0,0];WB1[0,0,0,1];BQ[1,1,-2];BS1[0,1,-1];BB1[0,1,-1,1]",
+                "WQ[1,0,-1];WQ[0,-1,1];WS2[2,-1,-1];WS2[2,-2,0];WS2[1,-2,1];WS2[0,-1,1];WS2[-1,0,1];WB1[0,1,-1,2];WB1[1,0,-1];WB1[1,-1,0,1];WB1[0,-1,1];WB1[-1,0,1];WB1[-1,1,0];WB2[2,-1,-1];WB2[2,-2,0];WB2[1,-2,1];WB2[0,-1,1];WB2[-1,0,1];WG1[2,-1,-1];WG1[2,-2,0];WG1[1,-2,1];WG1[0,-1,1];WG1[-1,0,1];WA1[2,-1,-1];WA1[2,-2,0];WA1[1,-2,1];WA1[0,-1,1];WA1[-1,0,1]");
+        }
+
+        [TestMethod]
         [TestCategory("Performance")]
         public void Board_ValidMoves_PerfTest()
         {
@@ -110,6 +117,26 @@ namespace Mzinga.CoreTest
 
             bool canMoveActual = board.CanMoveWithoutBreakingHive(piece);
             Assert.AreEqual(canMoveExpected, canMoveActual);
+        }
+
+        private void VerifyValidMoves(string boardString, string expectedMovesString)
+        {
+            Board board = new Board(boardString);
+            Assert.IsNotNull(board);
+
+            MoveSet expectedMoves = new MoveSet(expectedMovesString);
+            Assert.IsNotNull(expectedMoves);
+
+            VerifyValidMoves(board, expectedMoves);
+        }
+
+        private void VerifyValidMoves(Board board, MoveSet expectedMoves)
+        {
+            Assert.IsNotNull(board);
+            Assert.IsNotNull(expectedMoves);
+
+            MoveSet actualMoves = board.GetValidMoves();
+            TestUtils.AssertHaveEqualChildren(expectedMoves, actualMoves);
         }
     }
 

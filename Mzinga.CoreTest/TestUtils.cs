@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,9 +49,9 @@ namespace Mzinga.CoreTest
             Assert.IsTrue(exceptionThrown);
         }
 
-        public static void AssertHaveEqualChildren<T>(List<T> expected, List<T> actual)
+        public static void AssertHaveEqualChildren<T>(IEnumerable<T> expected, IEnumerable<T> actual)
         {
-            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.AreEqual(expected.Count(), actual.Count());
 
             foreach (T item in expected)
             {
