@@ -47,31 +47,31 @@ namespace Mzinga.CoreTest
         [TestCategory("Performance")]
         public void GameAI_FirstMovePerfTest()
         {
-            GameBoard gb = new GameBoard();
-
             TimeSpan sum = TimeSpan.Zero;
-            int iterations = 3;
+            int iterations = 10000;
 
             for (int i = 0; i < iterations; i++)
             {
-                GameAI ai = GetTestGameAI(5);
+                GameBoard gb = new GameBoard();
+                GameAI ai = GetTestGameAI();
+
                 DateTime start = DateTime.Now;
                 Move m = ai.GetBestMove(gb);
                 DateTime end = DateTime.Now;
 
                 TimeSpan elapsed = end - start;
-                Trace.WriteLine(string.Format("Elapsed: {0}, {1}", elapsed, m));
                 sum += elapsed;
             }
 
-            Trace.WriteLine(string.Format("Average Time: {0}", TimeSpan.FromMilliseconds(Math.Round(sum.TotalMilliseconds / iterations))));
+            Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
         }
 
-        private GameAI GetTestGameAI(int depth)
+        private GameAI GetTestGameAI(int depth = 2, TimeSpan? maxTime = null)
         {
             GameAI ai = new GameAI(MetricWeightsTests.TestMetricWeights)
             {
-                MaxDepth = depth
+                MaxDepth = depth,
+                MaxTime = maxTime
             };
 
             return ai;
