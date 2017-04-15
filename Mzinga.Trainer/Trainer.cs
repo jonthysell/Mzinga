@@ -252,7 +252,7 @@ namespace Mzinga.Trainer
                         timeoutRemaining = timeLimit - (DateTime.Now - brStart);
 
                         GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
-                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
+                        Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
                         if (timeoutRemaining <= TimeSpan.Zero)
                         {
@@ -272,7 +272,7 @@ namespace Mzinga.Trainer
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
-            Log("Battle Royale highest Elo: {0}", best.Nickname);
+            Log("Battle Royale highest Elo: {0}", ToString(best));
 
         }
 
@@ -315,7 +315,7 @@ namespace Mzinga.Trainer
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
-            Log("Battle start, {0} vs. {1}.", whiteProfile.Nickname, blackProfile.Nickname);
+            Log("Battle start, {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
 
             DateTime battleStart = DateTime.Now;
             TimeSpan battleElapsed = TimeSpan.Zero;
@@ -397,7 +397,7 @@ namespace Mzinga.Trainer
 
             // Output Results
             Log("Battle end, {0}", boardState);
-            Log("Battle end, {0} vs. {1}", whiteProfile.Nickname, blackProfile.Nickname);
+            Log("Battle end, {0} vs. {1}", ToString(whiteProfile), ToString(blackProfile));
 
             return boardState;
         }
@@ -446,7 +446,7 @@ namespace Mzinga.Trainer
             {
                 if (count < keepCount)
                 {
-                    Log("Kept {0}.", p.Nickname);
+                    Log("Kept {0}.", ToString(p));
                     count++;
                 }
                 else
@@ -455,7 +455,7 @@ namespace Mzinga.Trainer
                     string destFile = Path.Combine(path, "culled", p.Id + ".xml");
 
                     File.Move(sourceFile, destFile);
-                    Log("Culled {0}.", p.Nickname);
+                    Log("Culled {0}.", ToString(p));
                 }
             }
 
@@ -482,7 +482,7 @@ namespace Mzinga.Trainer
 
             foreach (Profile p in profiles)
             {
-                Log("{0}, Elo: {1}, CDate: {2}, UDate: {3}", p.Id, p.EloRating, p.CreationTimestamp, p.LastUpdatedTimestamp);
+                Log("{0}", ToString(p));
             }
 
             Log("Enumerate end.");
@@ -520,7 +520,7 @@ namespace Mzinga.Trainer
                     profile.WriteXml(fs);
                 }
 
-                Log("Generated {0}.", profile.Nickname);
+                Log("Generated {0}.", ToString(profile));
             }
 
             Log("Generate end.");
@@ -589,7 +589,7 @@ namespace Mzinga.Trainer
                 if (generations > 0)
                 {
                     GetProgress(lifecycleStart, gen, generations - gen, out progress, out timeRemaining);
-                    Log("Lifecycle progress: {0:P2} ETA {1}.", progress, timeRemaining);
+                    Log("Lifecycle progress: {0:P2} ETA {1}.", progress, ToString(timeRemaining));
                 }
 
                 gen++;
@@ -657,7 +657,7 @@ namespace Mzinga.Trainer
 
                     Profile child = Profile.Mate(parentA, parentB, minMix, maxMix);
 
-                    Log("Mated {0} and {1} to sire {2}.", parentA.Nickname, parentB.Nickname, child.Nickname);
+                    Log("Mated {0} and {1} to sire {2}.", ToString(parentA), ToString(parentB), ToString(child));
 
                     using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
                     {
@@ -781,7 +781,7 @@ namespace Mzinga.Trainer
                 timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
 
                 GetProgress(tournamentStart, completed, remaining, out progress, out timeRemaining);
-                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? timeoutRemaining : timeRemaining);
+                Log("Tournament progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
                 if (timeoutRemaining <= TimeSpan.Zero)
                 {
@@ -795,11 +795,11 @@ namespace Mzinga.Trainer
             if (participants.Count == 1)
             {
                 Profile winner = participants.Dequeue();
-                Log("Tournament Winner: {0}", winner.Nickname);
+                Log("Tournament Winner: {0}", ToString(winner));
             }
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
-            Log("Tournament highest Elo: {0}", best.Nickname);
+            Log("Tournament highest Elo: {0}", ToString(best));
         }
 
         private List<Profile> LoadProfiles(string path)
@@ -882,7 +882,7 @@ namespace Mzinga.Trainer
         private void Log(string format, params object[] args)
         {
             TimeSpan elapsedTime = DateTime.Now - StartTime;
-            Console.WriteLine(string.Format("{0} > {1}", elapsedTime, string.Format(format, args)));
+            Console.WriteLine(string.Format("{0} > {1}", ToString(elapsedTime), string.Format(format, args)));
         }
 
         private void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
@@ -919,6 +919,21 @@ namespace Mzinga.Trainer
                 progress = completed / total;
                 timeRemaining = TimeSpan.FromMilliseconds(avgMs * remaining);
             }
+        }
+
+        private string ToString(TimeSpan ts)
+        {
+            return ts.Days.ToString() + "." + ts.ToString(@"hh\:mm\:ss");
+        }
+
+        private string ToString(Profile profile)
+        {
+            if (null == profile)
+            {
+                throw new ArgumentNullException("profile");
+            }
+
+            return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Id.ToString().Substring(0, 8), profile.EloRating, IsProvisional(profile) ? "?" : " ", profile.Wins, profile.Losses, profile.Draws);
         }
 
         private bool IsProvisional(Profile profile)
