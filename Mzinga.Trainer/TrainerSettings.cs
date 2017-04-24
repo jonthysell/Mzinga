@@ -181,6 +181,25 @@ namespace Mzinga.Trainer
 
         public const int MaxMaxBattles = -1;
 
+        public int MaxConcurrentBattles
+        {
+            get
+            {
+                return _maxConcurrentBattles;
+            }
+            set
+            {
+                if (value < 1 && value != MaxMaxConcurrentBattles)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _maxConcurrentBattles = value;
+            }
+        }
+        private int _maxConcurrentBattles = MaxMaxConcurrentBattles;
+
+        public const int MaxMaxConcurrentBattles = -1;
+
         public bool BattleShuffleProfiles { get; set; } = false;
 
         public TimeSpan BulkBattleTimeLimit

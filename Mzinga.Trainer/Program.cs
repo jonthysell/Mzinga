@@ -121,6 +121,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-LifecycleGenerations  The number of generations to run");
             Console.WriteLine("-LifecycleBattles      The number/type of battles in each generation");
             Console.WriteLine("-MaxBattles            The max number of battles in a battle royale");
+            Console.WriteLine("-MaxConcurrentBattles  The max number of battles at the same time");
             Console.WriteLine("-BattleShuffleProfiles Whether or not to have profiles fight in random order");
             Console.WriteLine("-BulkBattleTimeLimit   The max time for tournaments / battle royales");
             Console.WriteLine("-ProvisionalRules      Whether or not to use provisional rules");
@@ -235,6 +236,10 @@ namespace Mzinga.Trainer
                     case "-mb":
                     case "-maxbattles":
                         trainerSettings.MaxBattles = int.Parse(args[++i]);
+                        break;
+                    case "-mcb":
+                    case "-maxconcurrentbattles":
+                        trainerSettings.MaxConcurrentBattles = int.Parse(args[++i]);
                         break;
                     case "-bsp":
                     case "-battleshuffleprofiles":
