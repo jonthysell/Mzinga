@@ -391,21 +391,39 @@ namespace Mzinga.Trainer
             }
 
             int whiteRating;
+            double whiteK;
+
+            lock (whiteProfile)
+            {
+                whiteRating = whiteProfile.EloRating;
+                whiteK = IsProvisional(whiteProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
+            }
+
             int blackRating;
+            double blackK;
+
+            lock (blackProfile)
+            {
+                blackRating = blackProfile.EloRating;
+                blackK = IsProvisional(blackProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
+            }
+
+            int whiteEndRating;
+            int blackEndRating;
 
             lock (_eloLock)
             {
-                EloUtils.UpdateRatings(whiteProfile.EloRating, blackProfile.EloRating, whiteScore, blackScore, out whiteRating, out blackRating);
+                EloUtils.UpdateRatings(whiteRating, blackRating, whiteScore, blackScore, whiteK, blackK, out whiteEndRating, out blackEndRating);
             }
 
             lock (whiteProfile)
             {
-                whiteProfile.UpdateRecord(whiteRating, whiteResult);
+                whiteProfile.UpdateRecord(whiteEndRating, whiteResult);
             }
 
             lock (blackProfile)
             {
-                blackProfile.UpdateRecord(blackRating, blackResult);
+                blackProfile.UpdateRecord(blackEndRating, blackResult);
             }
 
             // Output Results
