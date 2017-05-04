@@ -127,7 +127,18 @@ namespace Mzinga.Engine
                         }
                         break;
                     case "bestmove":
-                        BestMove();
+                        if (paramCount == 0)
+                        {
+                            BestMove();
+                        }
+                        else if (split[1].ToLower() == "depth")
+                        {
+                            BestMove(int.Parse(split[2]));
+                        }
+                        else if (split[1].ToLower() == "time")
+                        {
+                            BestMove(TimeSpan.Parse(split[2]));
+                        }
                         break;
                     case "undo":
                         if (paramCount == 0)
@@ -138,7 +149,6 @@ namespace Mzinga.Engine
                         {
                             Undo(int.Parse(split[1]));
                         }
-                        
                         break;
                     case "history":
                         History();
@@ -219,7 +229,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            Move bestMove = GetBestMove();
+            Move bestMove = _cachedBestMove ?? (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
 
             GameBoard.Play(bestMove);
             ConsoleOut(GameBoard.ToString());
@@ -306,7 +316,47 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            Move bestMove = GetBestMove();
+            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
+
+            if (null != bestMove)
+            {
+                ConsoleOut(bestMove.ToString());
+            }
+        }
+
+        private void BestMove(int maxDepth)
+        {
+            if (null == GameBoard)
+            {
+                throw new NoBoardException();
+            }
+
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
+            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard, maxDepth));
+
+            if (null != bestMove)
+            {
+                ConsoleOut(bestMove.ToString());
+            }
+        }
+
+        private void BestMove(TimeSpan maxTime)
+        {
+            if (null == GameBoard)
+            {
+                throw new NoBoardException();
+            }
+
+            if (GameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
+            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard, maxTime));
 
             if (null != bestMove)
             {
@@ -351,16 +401,6 @@ namespace Mzinga.Engine
         private void Exit()
         {
             ExitRequested = true;
-        }
-
-        private Move GetBestMove()
-        {
-            if (null == GameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            return _cachedBestMove ?? (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
         }
     }
 

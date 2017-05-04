@@ -95,8 +95,7 @@ namespace Mzinga.Engine
   <GameAI>
     <MaxDepth>-1</MaxDepth>
     <MaxTime>00:00:05</MaxTime>
-    <AlphaBetaPruning>true</AlphaBetaPruning>
-    <TranspositionTable>true</TranspositionTable>
+    <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
     <MetricWeights>
         <DrawScore>0</DrawScore>
         <Maximizing.ValidMoveWeight>-24.963902370786098</Maximizing.ValidMoveWeight>

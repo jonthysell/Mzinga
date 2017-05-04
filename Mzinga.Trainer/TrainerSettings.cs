@@ -26,8 +26,6 @@
 
 using System;
 
-using Mzinga.Core.AI;
-
 namespace Mzinga.Trainer
 {
     public class TrainerSettings
@@ -249,43 +247,11 @@ namespace Mzinga.Trainer
 
         public bool MateShuffleParents { get; set; } = false;
 
-        public int MaxDepth
-        {
-            get
-            {
-                return _maxDepth;
-            }
-            set
-            {
-                if (value < 0)
-                {
-                    value = GameAI.IterativeDepth;
-                }
-                _maxDepth = value;
-            }
-        }
-        private int _maxDepth = GameAI.IterativeDepth;
+        public int TransTableSize { get; set; } = 32;
 
-        public bool UseAlphaBetaPruning { get; set; } = true;
+        public int MaxDepth { get; set; } = -1;
 
-        public bool UseTranspositionTable { get; set; } = true;
-
-        public TimeSpan TurnMaxTime
-        {
-            get
-            {
-                if (!_turnMaxTime.HasValue)
-                {
-                    _turnMaxTime = TimeSpan.FromSeconds(5.0);
-                }
-                return _turnMaxTime.Value;
-            }
-            set
-            {
-                _turnMaxTime = value;
-            }
-        }
-        private TimeSpan? _turnMaxTime = null;
+        public TimeSpan TurnMaxTime { get; set; } = TimeSpan.FromSeconds(5.0);
 
         public TimeSpan BattleTimeLimit
         {

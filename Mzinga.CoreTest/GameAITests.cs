@@ -70,8 +70,8 @@ namespace Mzinga.CoreTest
         {
             GameAI ai = new GameAI(MetricWeightsTests.TestMetricWeights)
             {
-                MaxDepth = depth,
-                MaxTime = maxTime
+                DefaultMaxDepth = depth,
+                DefaultMaxTime = maxTime.HasValue ? maxTime.Value : TimeSpan.MaxValue
             };
 
             return ai;

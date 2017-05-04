@@ -55,7 +55,7 @@ namespace Mzinga.Core
             CacheMetrics cm;
             if (!_cacheMetrics.TryGetValue(name, out cm))
             {
-                cm = new CacheMetrics(name);
+                cm = new CacheMetrics();
                 _cacheMetrics.Add(name, cm);
             }
             return cm;

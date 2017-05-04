@@ -114,6 +114,34 @@ namespace Mzinga.Core.AI
             return false;
         }
 
+        public void Update(EvaluatedMove evaluatedMove)
+        {
+            if (null == evaluatedMove)
+            {
+                throw new ArgumentNullException("evaluatedMove");
+            }
+
+            int foundIndex = -1;
+
+            for (int i = 0; i < _evaluatedMoves.Count; i++)
+            {
+                if (evaluatedMove.Move == _evaluatedMoves[i].Move)
+                {
+                    if (evaluatedMove.Depth > _evaluatedMoves[i].Depth)
+                    {
+                        foundIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (foundIndex >= 0)
+            {
+                _evaluatedMoves.RemoveAt(foundIndex);
+                Add(evaluatedMove);
+            }
+        }
+
         public IEnumerable<EvaluatedMove> GetBestMoves()
         {
             foreach (EvaluatedMove evaluatedMove in this)
@@ -204,7 +232,7 @@ namespace Mzinga.Core.AI
 
                 if (result == 0)
                 {
-                    result = a.Move.CompareTo(b.Move);
+                    result = b.Move.CompareTo(a.Move);
                 }
 
                 return result;

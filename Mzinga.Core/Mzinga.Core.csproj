@@ -59,10 +59,12 @@
   <ItemGroup>
     <Compile Include="AI\BestMoveMetrics.cs" />
     <Compile Include="AI\GameAI.cs" />
+    <Compile Include="AI\TranspositionTable.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardMetrics.cs" />
     <Compile Include="AI\MetricWeights.cs" />
     <Compile Include="AI\EvaluatedMove.cs" />
+    <Compile Include="FixedCache.cs" />
     <Compile Include="CacheMetricsSet.cs" />
     <Compile Include="CacheMetrics.cs" />
     <Compile Include="GameBoard.cs" />

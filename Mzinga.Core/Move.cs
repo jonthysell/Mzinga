@@ -42,7 +42,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return (CompareTo(Move.Pass) == 0);
+                return (CompareTo(Pass) == 0);
             }
         }
 

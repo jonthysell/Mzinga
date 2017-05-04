@@ -31,80 +31,41 @@ namespace Mzinga.Core.AI
 {
     public class GameAI
     {
-        public MetricWeights MetricWeights { get; private set; }
+        public MetricWeights MetricWeights { get; private set; } = new MetricWeights();
 
-        public TimeSpan? MaxTime
+        public int DefaultMaxDepth
         {
             get
             {
-                return _maxTime;
+                return _defaultMaxDepth;
             }
             set
             {
-                if (value.HasValue && value.Value < TimeSpan.Zero)
+                if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    value = int.MaxValue;
                 }
-                _maxTime = value;
+                _defaultMaxDepth = value;
             }
         }
-        private TimeSpan? _maxTime;
+        private int _defaultMaxDepth = 0;
 
-        public DateTime? StartTime { get; protected set; }
-
-        public TimeSpan? ElapsedTime
+        public TimeSpan DefaultMaxTime
         {
             get
             {
-                if (StartTime.HasValue)
-                {
-                    return (DateTime.Now - StartTime.Value);
-                }
-
-                return null;
-            }
-        }
-
-        public bool HasTimeLeft
-        {
-            get
-            {
-                if (!MaxTime.HasValue)
-                {
-                    return true;
-                }
-
-                TimeSpan? elapsedTime = ElapsedTime;
-                if (elapsedTime.HasValue)
-                {
-                    return elapsedTime.Value < MaxTime.Value;
-                }
-
-                return false;
-            }
-        }
-
-        public int MaxDepth
-        {
-            get
-            {
-                return _maxDepth;
+                return _defaultMaxTime;
             }
             set
             {
-                if (value < -1)
+                if (value < TimeSpan.Zero)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    value = TimeSpan.MaxValue;
                 }
-
-                _maxDepth = value;
+                _defaultMaxTime = value;
             }
         }
-        private int _maxDepth;
-
-        public bool AlphaBetaPruning { get; set; }
-
-        public bool TranspositionTable { get; set; }
+        private TimeSpan _defaultMaxTime = TimeSpan.Zero;
 
         public BestMoveMetrics BestMoveMetrics
         {
@@ -130,62 +91,82 @@ namespace Mzinga.Core.AI
                 return _bestMoveMetricsHistory;
             }
         }
-        private LinkedList<BestMoveMetrics> _bestMoveMetricsHistory;
+        private LinkedList<BestMoveMetrics> _bestMoveMetricsHistory = new LinkedList<BestMoveMetrics>();
 
-        private Dictionary<string, double>[] _cachedBoardScores;
+        private TranspositionTable _transpositionTable;
 
-        private Random _random;
+        private FixedCache<string, double> _cachedBoardScores = new FixedCache<string, double>(DefaultBoardScoresCacheSize);
+        private const int DefaultBoardScoresCacheSize = 32768;
 
         public GameAI()
         {
-            MetricWeights = new MetricWeights();            
-
-            MaxTime = null;
-
-            MaxDepth = 0;
-            AlphaBetaPruning = false;
-
-            TranspositionTable = false;
-
-            ResetCaches();
-
-            _random = new Random();
+            _transpositionTable = new TranspositionTable();
         }
 
-        public GameAI(MetricWeights metricWeights) : this()
+        public GameAI(MetricWeights metricWeights) : base()
         {
             if (null == metricWeights)
             {
                 throw new ArgumentNullException("metricWeights");
             }
 
-            MetricWeights = metricWeights;
+            MetricWeights.CopyFrom(metricWeights);
+        }
+
+        public GameAI(int transpositionTableSizeMB)
+        {
+            if (transpositionTableSizeMB <= 0)
+            {
+                throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
+            }
+
+            _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
         }
 
         public void ResetCaches()
         {
-            _cachedBoardScores = new Dictionary<string, double>[]
-            {
-                new Dictionary<string, double>(),
-                new Dictionary<string, double>()
-            };
-
             BestMoveMetrics = null;
-            _bestMoveMetricsHistory = new LinkedList<BestMoveMetrics>();
+            _bestMoveMetricsHistory.Clear();
+            _transpositionTable.Clear();
         }
 
         #region Move Evaluation
 
         public Move GetBestMove(GameBoard gameBoard)
         {
+            return GetBestMove(gameBoard, DefaultMaxDepth, DefaultMaxTime);
+        }
+
+        public Move GetBestMove(GameBoard gameBoard, int maxDepth)
+        {
+            return GetBestMove(gameBoard, maxDepth, TimeSpan.MaxValue);
+        }
+
+        public Move GetBestMove(GameBoard gameBoard, TimeSpan maxTime)
+        {
+            return GetBestMove(gameBoard, int.MaxValue, maxTime);
+        }
+
+        private Move GetBestMove(GameBoard gameBoard, int maxDepth, TimeSpan maxTime)
+        {
             if (null == gameBoard)
             {
                 throw new ArgumentNullException("gameBoard");
             }
 
-            StartTime = DateTime.Now;
+            if (maxDepth < 0)
+            {
+                throw new ArgumentOutOfRangeException("maxDepth");
+            }
 
-            BestMoveMetrics = new BestMoveMetrics();
+            if (maxTime < TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException("maxTime");
+            }
+
+            BestMoveMetrics = new BestMoveMetrics(maxDepth, maxTime);
+
+            BestMoveMetrics.Start();
 
             EvaluatedMoveCollection evaluatedMoves = EvaluateMoves(gameBoard);
 
@@ -199,14 +180,9 @@ namespace Mzinga.Core.AI
                 BestMoveMetrics.IncrementMoves(evaluatedMove.Depth);
             }
 
-            BestMoveMetrics.ElapsedTime = ElapsedTime.Value;
+            BestMoveMetrics.End();
 
-            StartTime = null;
-
-            List<EvaluatedMove> bestMoves = new List<EvaluatedMove>(evaluatedMoves.GetBestMoves());
-
-            int randIndex = _random.Next(bestMoves.Count);
-            return bestMoves[randIndex].Move;
+            return evaluatedMoves[0].Move;
         }
 
         private EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)
@@ -226,81 +202,112 @@ namespace Mzinga.Core.AI
             }
 
             // No choices, don't bother evaluating
-            if (movesToEvaluate.Count <= 1 || MaxDepth == 0)
+            if (movesToEvaluate.Count <= 1 || BestMoveMetrics.MaxSearchDepth == 0)
             {
                 return movesToEvaluate;
             }
 
-            // Non-iterative search
-            if (MaxDepth > 0)
-            {
-                return EvaluateMovesToDepth(gameBoard, movesToEvaluate, MaxDepth);
-            }
-
             // Iterative search
-            int depth = 0;
-            while (HasTimeLeft)
+            int depth = 1;
+            while (BestMoveMetrics.HasTimeLeft && depth <= BestMoveMetrics.MaxSearchDepth)
             {
-                depth++;
-
                 // "Re-sort" moves to evaluate based on the next iteration
-                movesToEvaluate = EvaluateMovesToDepth(gameBoard, movesToEvaluate, depth);
+                movesToEvaluate = EvaluateMovesToDepth(gameBoard, depth, movesToEvaluate);
+                depth++;
             }
 
             return movesToEvaluate;
         }
 
-        private EvaluatedMoveCollection EvaluateMovesToDepth(GameBoard gameBoard, EvaluatedMoveCollection movesToEvaluate, int maxDepth)
+        private EvaluatedMoveCollection EvaluateMovesToDepth(GameBoard gameBoard, int depth, EvaluatedMoveCollection movesToEvaluate)
         {
             if (null == gameBoard)
             {
                 throw new ArgumentNullException("gameBoard");
             }
 
-            if (null == movesToEvaluate)
+            if (depth <= 0)
+            {
+                throw new ArgumentOutOfRangeException("depth");
+            }
+
+            if (null == movesToEvaluate || movesToEvaluate.Count == 0)
             {
                 throw new ArgumentNullException("movesToEvaluate");
             }
 
-            if (maxDepth <= 0)
-            {
-                throw new ArgumentOutOfRangeException("maxDepth");
-            }
-
-            EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
-
-            Color maxColor = gameBoard.CurrentTurnColor;
-
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
 
+            double alphaOriginal = alpha;
+
+            string key = gameBoard.TranspositionKey;
+
+            TranspositionTableEntry tEntry;
+            if (!_transpositionTable.TryLookup(key, out tEntry))
+            {
+                BestMoveMetrics.TranspositionTableMetrics.Misses++;
+            }
+            else
+            {
+                BestMoveMetrics.TranspositionTableMetrics.Hits++;
+
+                if (tEntry.Depth >= depth)
+                {
+                    if (tEntry.Type == TranspositionTableEntryType.LowerBound)
+                    {
+                        alpha = Math.Max(alpha, tEntry.Value);
+                    }
+                    else if (tEntry.Type == TranspositionTableEntryType.UpperBound)
+                    {
+                        beta = Math.Min(beta, tEntry.Value);
+                    }
+
+                    if (tEntry.Type == TranspositionTableEntryType.Exact || alpha >= beta)
+                    {
+                        if (null != tEntry.BestMove)
+                        {
+                            movesToEvaluate.Update(new EvaluatedMove(new Move(tEntry.BestMove), tEntry.Value, tEntry.Depth));
+                            return movesToEvaluate;
+                        }
+                    }
+                }
+            }
+
+            Color maxColor = gameBoard.CurrentTurnColor;
+
+            EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
+
+            double bestValue = double.NegativeInfinity;
+
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
-                if (!HasTimeLeft)
+                if (!BestMoveMetrics.HasTimeLeft)
                 {
                     break;
                 }
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
-                double? scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, false, maxDepth, 1, alpha, beta);
+                double? value = AlphaBetaSearch(gameBoard, depth - 1, alpha, beta, maxColor, false);
                 gameBoard.UndoLastMove();
 
-                if (!scoreAfterMove.HasValue)
+                if (!value.HasValue)
                 {
                     // Time-out occurred during evaluation, so don't save it
                     break;
                 }
 
-                EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, scoreAfterMove.Value, maxDepth);
+                EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, value.Value, depth);
                 evaluatedMoves.Add(evaluatedMove);
 
-                alpha = Math.Max(alpha, scoreAfterMove.Value);
+                bestValue = Math.Max(bestValue, value.Value);
+                alpha = Math.Max(alpha, value.Value);
 
-                if (AlphaBetaPruning && beta <= alpha)
+                if (alpha >= beta)
                 {
                     BestMoveMetrics.AlphaBetaCuts++;
                     break;
-                }                
+                }
             }
 
             // We must have cut-off early, add the remaining moves to the end (possibly for the next iteration)
@@ -312,67 +319,144 @@ namespace Mzinga.Core.AI
                 }
             }
 
+            tEntry = new TranspositionTableEntry();
+
+            if (bestValue <= alphaOriginal)
+            {
+                tEntry.Type = TranspositionTableEntryType.UpperBound;
+            }
+            else
+            {
+                tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
+                tEntry.BestMove = evaluatedMoves[0].Move.ToString();
+            }
+
+            tEntry.Value = bestValue;
+            tEntry.Depth = evaluatedMoves[0].Depth;
+
+            _transpositionTable.Store(key, tEntry);
+
             return evaluatedMoves;
         }
 
-        private double? EvaluateBoardAfterMove(GameBoard gameBoard, Color maxColor, bool maxPlayer, int maxDepth, int depth, double alpha, double beta)
+        private double? AlphaBetaSearch(GameBoard gameBoard, int depth, double alpha, double beta, Color maxColor, bool maxPlayer)
         {
-            if (null == gameBoard)
+            double alphaOriginal = alpha;
+
+            string key = gameBoard.TranspositionKey;
+
+            TranspositionTableEntry tEntry;
+            if (!_transpositionTable.TryLookup(key, out tEntry))
             {
-                throw new ArgumentNullException("gameBoard");
+                BestMoveMetrics.TranspositionTableMetrics.Misses++;
+            }
+            else
+            {
+                BestMoveMetrics.TranspositionTableMetrics.Hits++;
+
+                if (tEntry.Depth >= depth)
+                {
+                    if (tEntry.Type == TranspositionTableEntryType.Exact)
+                    {
+                        return tEntry.Value;
+                    }
+                    else if (tEntry.Type == TranspositionTableEntryType.LowerBound)
+                    {
+                        alpha = Math.Max(alpha, tEntry.Value);
+                    }
+                    else if (tEntry.Type == TranspositionTableEntryType.UpperBound)
+                    {
+                        beta = Math.Min(beta, tEntry.Value);
+                    }
+
+                    if (alpha >= beta)
+                    {
+                        return tEntry.Value;
+                    }
+                }
             }
 
-            // Leaf, search no more
-            if (depth == maxDepth)
+            if (depth == 0 || gameBoard.GameIsOver)
             {
                 return CalculateBoardScore(gameBoard, maxColor);
             }
 
-            MoveSet validMoves = gameBoard.GetValidMoves();
+            double bestValue = maxPlayer ? double.NegativeInfinity : double.PositiveInfinity;
+            Move bestMove = null != tEntry?.BestMove ? new Move(tEntry.BestMove) : null;
 
-            // Dead-end, game-over
-            if (validMoves.Count == 0)
+            List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
+
+            if (null != bestMove)
             {
-                return CalculateBoardScore(gameBoard, maxColor);
+                // Put the best move from a previous search first
+                int bestIndex = moves.IndexOf(bestMove);
+                if (bestIndex > 0)
+                {
+                    moves[bestIndex] = moves[0];
+                    moves[0] = bestMove;
+                }
             }
 
-            double score = maxPlayer ? double.NegativeInfinity : double.PositiveInfinity;
-
-            foreach (Move validMove in validMoves)
+            foreach (Move move in moves)
             {
-                if (!HasTimeLeft)
+                if (!BestMoveMetrics.HasTimeLeft)
                 {
                     return null;
                 }
 
-                gameBoard.TrustedPlay(validMove);
-                double? scoreAfterMove = EvaluateBoardAfterMove(gameBoard, maxColor, !maxPlayer, maxDepth, depth + 1, alpha, beta);
+                gameBoard.TrustedPlay(move);
+                double? value = AlphaBetaSearch(gameBoard, depth - 1, alpha, beta, maxColor, !maxPlayer);
                 gameBoard.UndoLastMove();
 
-                if (!scoreAfterMove.HasValue)
+                if (!value.HasValue)
                 {
                     return null;
                 }
 
                 if (maxPlayer)
                 {
-                    score = Math.Max(score, scoreAfterMove.Value);
-                    alpha = Math.Max(alpha, score);
+                    if (value > bestValue)
+                    {
+                        bestValue = value.Value;
+                        bestMove = move;
+                    }
+                    alpha = Math.Max(alpha, bestValue);
                 }
                 else
                 {
-                    score = Math.Min(score, scoreAfterMove.Value);
-                    beta = Math.Min(beta, score);
+                    if (value < bestValue)
+                    {
+                        bestValue = value.Value;
+                        bestMove = move;
+                    }
+                    beta = Math.Min(beta, bestValue);
                 }
 
-                if (AlphaBetaPruning && beta <= alpha)
+                if (alpha >= beta)
                 {
                     BestMoveMetrics.AlphaBetaCuts++;
                     break;
                 }
             }
 
-            return score;
+            tEntry = new TranspositionTableEntry();
+
+            if (bestValue <= alphaOriginal)
+            {
+                tEntry.Type = TranspositionTableEntryType.UpperBound;
+            }
+            else
+            {
+                tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
+                tEntry.BestMove = bestMove?.ToString();
+            }
+
+            tEntry.Value = bestValue;
+            tEntry.Depth = depth;
+
+            _transpositionTable.Store(key, tEntry);
+
+            return bestValue;
         }
 
         #endregion
@@ -404,35 +488,22 @@ namespace Mzinga.Core.AI
                 return MetricWeights.DrawScore;
             }
 
-            string key = null;
+            string key = gameBoard.TranspositionKey;
 
-            if (TranspositionTable)
+            double score;
+            if (_cachedBoardScores.TryLookup(key, out score))
             {
-                key = gameBoard.GetTranspositionKey();
-
-                double score;
-                if (_cachedBoardScores[(int)maxColor].TryGetValue(key, out score))
-                {
-                    BestMoveMetrics.TranspositionTableMetrics.Hits++;
-                    return score;
-                }
+                return score;
             }
 
             BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
 
-            double maxScore = CalculateBoardScore(boardMetrics, maxColor);
+            score = CalculateBoardScore(boardMetrics, maxColor);
+            BestMoveMetrics.BoardScoreCalculatedResults++;
 
-            if (TranspositionTable)
-            {
-                _cachedBoardScores[(int)maxColor].Add(key, maxScore);
+            _cachedBoardScores.Store(key, score);
 
-                Color minColor = (Color)(1 - (int)maxColor);
-                double minScore = CalculateBoardScore(boardMetrics, minColor);
-                _cachedBoardScores[(int)minColor].Add(key, minScore);
-            }
-
-            BestMoveMetrics.TranspositionTableMetrics.Misses++;
-            return maxScore;
+            return score;
         }
 
         private double CalculateBoardScore(BoardMetrics boardMetrics, Color maxColor)
@@ -499,7 +570,5 @@ namespace Mzinga.Core.AI
         }
 
         #endregion
-
-        public const int IterativeDepth = -1;
     }
 }

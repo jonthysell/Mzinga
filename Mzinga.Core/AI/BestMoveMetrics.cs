@@ -30,6 +30,10 @@ namespace Mzinga.Core.AI
 {
     public class BestMoveMetrics
     {
+        public int MaxSearchDepth { get; private set;  }
+
+        public TimeSpan MaxSearchTime{ get; private set; }
+
         public int MovesEvaluated { get; private set; }
 
         public int MinDepth { get; private set; }
@@ -38,61 +42,84 @@ namespace Mzinga.Core.AI
 
         public double AverageDepth { get; private set; }
 
-        public TimeSpan ElapsedTime { get; set; }
+        public DateTime? StartTime { get; private set; }
+
+        public DateTime? EndTime { get; private set; }
+
+        public TimeSpan ElapsedTime
+        {
+            get
+            {
+                if (StartTime.HasValue)
+                {
+                    if (EndTime.HasValue)
+                    {
+                        return EndTime.Value - StartTime.Value;
+                    }
+                    return DateTime.Now - StartTime.Value;
+                }
+
+                return TimeSpan.Zero;
+            }
+        }
+
+        public bool HasTimeLeft
+        {
+            get
+            {
+                return ElapsedTime < MaxSearchTime;
+            }
+        }
 
         public int AlphaBetaCuts { get; set; }
 
         public int BoardScoreConstantResults { get; set; }
 
-        public int BoardScoreCalculatedResults
-        {
-            get
-            {
-                return TranspositionTableMetrics.Misses;
-            }
-        }
-
-        public int BoardScoreCachedResults
-        {
-            get
-            {
-                return TranspositionTableMetrics.Hits;
-            }
-        }
+        public int BoardScoreCalculatedResults { get; set; }
 
         public int BoardScoreTotalResults
         {
             get
             {
-                return BoardScoreConstantResults + BoardScoreCalculatedResults + BoardScoreCachedResults;
+                return BoardScoreConstantResults + BoardScoreCalculatedResults;
             }
         }
 
-        public CacheMetrics TranspositionTableMetrics
+        public CacheMetrics TranspositionTableMetrics { get; private set; }
+
+        public BestMoveMetrics(int maxSearchDepth, TimeSpan maxSearchTime)
         {
-            get
-            {
-                return _cacheMetrics["TranspositionTable"];
-            }
+            MaxSearchDepth = maxSearchDepth;
+            MaxSearchTime = maxSearchTime;
 
-        }
-
-        private CacheMetricsSet _cacheMetrics;
-
-        public BestMoveMetrics()
-        {
             MovesEvaluated = 0;
 
             MinDepth = int.MaxValue;
             MaxDepth = int.MinValue;
             AverageDepth = 0.0;
 
-            ElapsedTime = TimeSpan.Zero;
-
             AlphaBetaCuts = 0;
             BoardScoreConstantResults = 0;
 
-            _cacheMetrics = new CacheMetricsSet();
+            TranspositionTableMetrics = new CacheMetrics();
+        }
+
+        public void Start()
+        {
+            if (StartTime.HasValue)
+            {
+                throw new InvalidOperationException("Cannot call Start twice!");
+            }
+            StartTime = DateTime.Now;
+        }
+
+        public void End()
+        {
+            if (EndTime.HasValue)
+            {
+                throw new InvalidOperationException("Cannot call End twice!");
+            }
+            EndTime = DateTime.Now;
         }
 
         public void IncrementMoves(int depth)

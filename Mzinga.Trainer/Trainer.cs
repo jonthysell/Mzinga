@@ -312,19 +312,15 @@ namespace Mzinga.Trainer
             GameBoard gameBoard = new GameBoard();
 
             // Create AIs
-            GameAI whiteAI = new GameAI(whiteProfile.MetricWeights);
-            whiteAI.MaxDepth = TrainerSettings.MaxDepth;
-            whiteAI.MaxTime = TrainerSettings.TurnMaxTime;
+            GameAI whiteAI = new GameAI(TrainerSettings.TransTableSize);
+            whiteAI.MetricWeights.CopyFrom(whiteProfile.MetricWeights);
+            whiteAI.DefaultMaxDepth = TrainerSettings.MaxDepth;
+            whiteAI.DefaultMaxTime = TrainerSettings.TurnMaxTime;
 
-            whiteAI.AlphaBetaPruning = TrainerSettings.UseAlphaBetaPruning;
-            whiteAI.TranspositionTable = TrainerSettings.UseTranspositionTable;
-
-            GameAI blackAI = new GameAI(blackProfile.MetricWeights);
-            blackAI.MaxDepth = TrainerSettings.MaxDepth;
-            blackAI.MaxTime = TrainerSettings.TurnMaxTime;
-
-            blackAI.AlphaBetaPruning = TrainerSettings.UseAlphaBetaPruning;
-            blackAI.TranspositionTable = TrainerSettings.UseTranspositionTable;
+            GameAI blackAI = new GameAI(TrainerSettings.TransTableSize);
+            blackAI.MetricWeights.CopyFrom(blackProfile.MetricWeights);
+            blackAI.DefaultMaxDepth = TrainerSettings.MaxDepth;
+            blackAI.DefaultMaxTime = TrainerSettings.TurnMaxTime;
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
@@ -338,7 +334,7 @@ namespace Mzinga.Trainer
             // Play Game
             while (gameBoard.GameInProgress)
             {
-                boardKeys.Add(gameBoard.GetTranspositionKey());
+                boardKeys.Add(gameBoard.TranspositionKey);
 
                 if (boardKeys.Count >= 6)
                 {

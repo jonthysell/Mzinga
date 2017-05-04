@@ -50,7 +50,7 @@ namespace Mzinga.Core
                     throw new ArgumentOutOfRangeException();
                 }
                 _currentTurn = value;
-                ResetValidMovesCache();
+                ResetCaches();
             }
         }
         private int _currentTurn;
@@ -86,6 +86,64 @@ namespace Mzinga.Core
                 return (BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins || BoardState == BoardState.Draw);
             }
         }
+
+        public string BoardString
+        {
+            get
+            {
+                if (null == _boardString)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
+
+                    sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
+
+                    foreach (Piece piece in PiecesInPlay)
+                    {
+                        sb.AppendFormat("{0}{1}", piece.ToString(), BoardStringSeparator);
+                    }
+
+                    _boardString = sb.ToString().TrimEnd(BoardStringSeparator);
+                }
+
+                return _boardString;
+            }
+        }
+
+        private string _boardString = null;
+
+        public string TranspositionKey
+        {
+            get
+            {
+                if (null == _transpositionKey)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.Append(CurrentTurnColor.ToString()[0]);
+
+                    foreach (Piece piece in PiecesInPlay)
+                    {
+                        sb.Append(EnumUtils.GetShortName(piece.PieceName, true));
+
+                        Position pos = piece.Position;
+
+                        sb.AppendFormat("{0},{1}", pos.Q, pos.R);
+                        if (pos.Stack > 0)
+                        {
+                            sb.AppendFormat(",{0}", pos.Stack);
+                        }
+                    }
+
+                    _transpositionKey = sb.ToString();
+                }
+
+                return _transpositionKey;
+            }
+        }
+
+        private string _transpositionKey = null;
 
         #endregion
 
@@ -1045,72 +1103,21 @@ namespace Mzinga.Core
             return true;
         }
 
-        protected void ResetValidMovesCache()
+        protected void ResetCaches()
         {
             _cachedValidMovesByPiece = null;
             _cachedValidPlacementPositions = null;
             ValidMoveCacheResets++;
+
+            _boardString = null;
+            _transpositionKey = null;
         }
 
         #endregion
 
-        public string GetKey()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Piece piece in PiecesInPlay)
-            {
-                sb.AppendFormat("{0}{1}", piece.ToString(), BoardStringSeparator);
-            }
-
-            return sb.ToString().TrimEnd(BoardStringSeparator);
-        }
-
-        public string GetTranspositionKey()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            bool first = true;
-            int qDelta = 0;
-            int rDelta = 0;
-
-            foreach (Piece piece in PiecesInPlay)
-            {
-                sb.Append(EnumUtils.GetShortName(piece.PieceName, true));
-
-                Position pos = piece.Position;
-
-                if (first)
-                {
-                    qDelta = -pos.Q;
-                    rDelta = -pos.R;
-                    first = false;
-                }
-
-                sb.AppendFormat("{0},{1}", pos.Q + qDelta, pos.R + rDelta);
-                if (pos.Stack > 0)
-                {
-                    sb.AppendFormat(",{0}", pos.Stack);
-                }
-            }
-
-            return sb.ToString();
-        }
-
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
-
-            sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
-
-            foreach (Piece piece in PiecesInPlay)
-            {
-                sb.AppendFormat("{0}{1}", piece.ToString(), BoardStringSeparator);
-            }
-
-            return sb.ToString().TrimEnd(BoardStringSeparator);
+            return BoardString;
         }
 
         public const char BoardStringSeparator = ';';

@@ -37,28 +37,17 @@ namespace Mzinga.Engine
 
         #region GameAI
 
-        public bool AlphaBetaPruning { get; private set; }
+        public int? MaxDepth { get; private set; } = null;
 
-        public bool TranspositionTable { get; private set; }
+        public TimeSpan? MaxTime { get; private set; } = null;
 
-        public int MaxDepth { get; private set; }
+        public int? TranspositionTableSizeMB { get; private set; } = null;
 
-        public TimeSpan? MaxTime { get; private set; }
-
-        public MetricWeights MetricWeights { get; private set; }
+        public MetricWeights MetricWeights { get; private set; } = null;
 
         #endregion
 
-        public GameEngineConfig()
-        {
-            AlphaBetaPruning = false;
-            TranspositionTable = false;
-            MaxDepth = 0;
-            MaxTime = null;
-            MetricWeights = new MetricWeights();
-        }
-
-        public GameEngineConfig(Stream inputStream) : this()
+        public GameEngineConfig(Stream inputStream)
         {
             LoadConfig(inputStream);
         }
@@ -106,11 +95,8 @@ namespace Mzinga.Engine
                         case "MaxTime":
                             MaxTime = TimeSpan.Parse(reader.ReadElementContentAsString());
                             break;
-                        case "AlphaBetaPruning":
-                            AlphaBetaPruning = reader.ReadElementContentAsBoolean();
-                            break;
-                        case "TranspositionTable":
-                            TranspositionTable = reader.ReadElementContentAsBoolean();
+                        case "TranspositionTableSizeMB":
+                            TranspositionTableSizeMB = reader.ReadElementContentAsInt();
                             break;
                         case "MetricWeights":
                             MetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
@@ -122,15 +108,22 @@ namespace Mzinga.Engine
 
         public GameAI GetGameAI()
         {
-            GameAI ai = new GameAI();
+            GameAI ai = TranspositionTableSizeMB.HasValue ? new GameAI(TranspositionTableSizeMB.Value) : new GameAI();
 
-            ai.MaxDepth = MaxDepth;
-            ai.MaxTime = MaxTime;
+            if (MaxDepth.HasValue)
+            {
+                ai.DefaultMaxDepth = MaxDepth.Value;
+            }
 
-            ai.AlphaBetaPruning = AlphaBetaPruning;
-            ai.TranspositionTable = TranspositionTable;
+            if (MaxTime.HasValue)
+            {
+                ai.DefaultMaxTime = MaxTime.Value;
+            }
 
-            ai.MetricWeights.CopyFrom(MetricWeights);
+            if (null != MetricWeights)
+            {
+                ai.MetricWeights.CopyFrom(MetricWeights);
+            }
 
             return ai;
         }

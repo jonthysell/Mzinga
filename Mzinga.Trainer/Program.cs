@@ -131,9 +131,8 @@ namespace Mzinga.Trainer
             Console.WriteLine("-MateMaxMix            The max multiplier to mix up weights in children profiles");
             Console.WriteLine("-MateParentCount       The number of profiles to mate");
             Console.WriteLine("-MateShuffleParents    Whether or not to have random parents mate");
+            Console.WriteLine("-TransTableSize        The maximum size of each AI's transposition table in MB");
             Console.WriteLine("-MaxDepth              The maximum ply depth of the AI search");
-            Console.WriteLine("-UseAlphaBetaPruning   Whether or not to use alpha-beta pruning");
-            Console.WriteLine("-UseTranspositionTable Whether or not to use a transposition table");
             Console.WriteLine("-TurnMaxTime           The maximum time to let the AI think on its turn");
             Console.WriteLine("-BattleTimeLimit       The maximum time to let a battle run before declaring a draw");
             Console.WriteLine();
@@ -195,106 +194,102 @@ namespace Mzinga.Trainer
 
             for (int i = 1; i < args.Length; i++)
             {
-                switch (args[i].ToLower())
+                switch (args[i].Substring(1).ToLower())
                 {
-                    case "-pp":
-                    case "-profilespath":
+                    case "pp":
+                    case "profilespath":
                         trainerSettings.ProfilesPath = args[++i];
                         break;
-                    case "-wpp":
-                    case "-whiteprofilepath":
+                    case "wpp":
+                    case "whiteprofilepath":
                         trainerSettings.WhiteProfilePath = args[++i];
                         break;
-                    case "-bpp":
-                    case "-blackprofilepath":
+                    case "bpp":
+                    case "blackprofilepath":
                         trainerSettings.BlackProfilePath = args[++i];
                         break;
-                    case "-ckc":
-                    case "-cullkeepcount":
+                    case "ckc":
+                    case "cullkeepcount":
                         trainerSettings.CullKeepCount = int.Parse(args[++i]);
                         break;
-                    case "-gc":
-                    case "-generatecount":
+                    case "gc":
+                    case "generatecount":
                         trainerSettings.GenerateCount = int.Parse(args[++i]);
                         break;
-                    case "-gminw":
-                    case "-generateminweight":
+                    case "gminw":
+                    case "generateminweight":
                         trainerSettings.GenerateMinWeight = double.Parse(args[++i]);
                         break;
-                    case "-gmaxw":
-                    case "-generatemaxweight":
+                    case "gmaxw":
+                    case "generatemaxweight":
                         trainerSettings.GenerateMaxWeight = double.Parse(args[++i]);
                         break;
-                    case "-lg":
-                    case "-lifecyclegenerations":
+                    case "lg":
+                    case "lifecyclegenerations":
                         trainerSettings.LifecycleGenerations = int.Parse(args[++i]);
                         break;
-                    case "-lb":
-                    case "-lifecyclebattles":
+                    case "lb":
+                    case "lifecyclebattles":
                         trainerSettings.LifecycleBattles = int.Parse(args[++i]);
                         break;
-                    case "-mb":
-                    case "-maxbattles":
+                    case "mb":
+                    case "maxbattles":
                         trainerSettings.MaxBattles = int.Parse(args[++i]);
                         break;
-                    case "-mcb":
-                    case "-maxconcurrentbattles":
+                    case "mcb":
+                    case "maxconcurrentbattles":
                         trainerSettings.MaxConcurrentBattles = int.Parse(args[++i]);
                         break;
-                    case "-bsp":
-                    case "-battleshuffleprofiles":
+                    case "bsp":
+                    case "battleshuffleprofiles":
                         trainerSettings.BattleShuffleProfiles = bool.Parse(args[++i]);
                         break;
-                    case "-mdraws":
-                    case "-maxdraws":
+                    case "mdraws":
+                    case "maxdraws":
                         trainerSettings.MaxDraws = int.Parse(args[++i]);
                         break;
-                    case "-bbtl":
-                    case "-bulkbattletimelimit":
+                    case "bbtl":
+                    case "bulkbattletimelimit":
                         trainerSettings.BulkBattleTimeLimit = TimeSpan.Parse(args[++i]);
                         break;
-                    case "-pr":
-                    case "-provisionalrules":
+                    case "pr":
+                    case "provisionalrules":
                         trainerSettings.ProvisionalRules = bool.Parse(args[++i]);
                         break;
-                    case "-pgc":
-                    case "-provisionalgamecount":
+                    case "pgc":
+                    case "provisionalgamecount":
                         trainerSettings.ProvisionalGameCount = int.Parse(args[++i]);
                         break;
-                    case "-mminm":
-                    case "-mateminmix":
+                    case "mminm":
+                    case "mateminmix":
                         trainerSettings.MateMinMix = double.Parse(args[++i]);
                         break;
-                    case "-mmaxm":
-                    case "-matemaxmix":
+                    case "mmaxm":
+                    case "matemaxmix":
                         trainerSettings.MateMaxMix = double.Parse(args[++i]);
                         break;
-                    case "-mpc":
-                    case "-mateparentcount":
+                    case "mpc":
+                    case "mateparentcount":
                         trainerSettings.MateParentCount = int.Parse(args[++i]);
                         break;
-                    case "-msp":
-                    case "-mateshuffleparents":
+                    case "msp":
+                    case "mateshuffleparents":
                         trainerSettings.MateShuffleParents = bool.Parse(args[++i]);
                         break;
-                    case "-mdepth":
-                    case "-maxdepth":
+                    case "tts":
+                    case "TransTableSize":
+                        trainerSettings.TransTableSize = int.Parse(args[++i]);
+                        break;
+                    case "mdepth":
+                    case "maxdepth":
                         trainerSettings.MaxDepth = int.Parse(args[++i]);
                         break;
-                    case "-uabp":
-                    case "-usealphabetapruning":
-                        trainerSettings.UseAlphaBetaPruning = bool.Parse(args[++i]);
-                        break;
-                    case "-utt":
-                    case "-usetranspositiontable":
-                        trainerSettings.UseTranspositionTable = bool.Parse(args[++i]);
-                        break;
-                    case "-tmt":
-                    case "-turnmaxtime":
+                    case "tmt":
+                    case "turnmaxtime":
                         trainerSettings.TurnMaxTime = TimeSpan.Parse(args[++i]);
                         break;
-                    case "-btl":
-                    case "-battletimelimit":
+                    case "btl":
+                    case "battletimelimit":
                         trainerSettings.BattleTimeLimit = TimeSpan.Parse(args[++i]);
                         break;
                     default:

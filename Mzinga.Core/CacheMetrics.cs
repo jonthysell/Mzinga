@@ -30,12 +30,13 @@ namespace Mzinga.Core
 {
     public class CacheMetrics
     {
-        public string Name { get; private set; }
-
         public int Hits { get; set; } = 0;
         public int Misses { get; set; } = 0;
 
-        public double Usage
+        public int Stores { get; set; } = 0;
+        public int Updates { get; set; } = 0;
+
+        public double HitRatio
         {
             get
             {
@@ -43,25 +44,19 @@ namespace Mzinga.Core
             }
         }
 
-        public CacheMetrics(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            Name = name;
-        }
+        public CacheMetrics() { }
 
         public void Reset()
         {
             Hits = 0;
             Misses = 0;
+            Stores = 0;
+            Updates = 0;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} H: {1} M: {2} U: {3:P2}", Name, Hits, Misses, Usage);
+            return string.Format("H: {0} M: {1} HR: {2:P2}", Hits, Misses, HitRatio);
         }
     }
 }
