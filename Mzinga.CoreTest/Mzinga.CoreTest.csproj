@@ -72,6 +72,7 @@
     <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
+    <Compile Include="TranspositionTableTests.cs" />
     <Compile Include="MetricWeightsTests.cs" />
     <Compile Include="GameAITests.cs" />
     <Compile Include="MoveSetTests.cs" />

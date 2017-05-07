@@ -39,7 +39,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentOutOfRangeException("sizeInBytes");
             }
 
-            return 1 + (int)Math.Round(sizeInBytes / (double)EntrySizeInBytes);
+            return 1 + (int)Math.Round(FillFactor * sizeInBytes / EntrySizeInBytes);
         }
 
         private static bool TranspostionTableReplaceEntryPredicate(TranspositionTableEntry existingEntry, TranspositionTableEntry entry)
@@ -73,12 +73,14 @@ namespace Mzinga.Core.AI
             return false;
         }
 
-        private const long EntrySizeInBytes = (2 * sizeof(int)) // Key pointers x2
-                                            + ((2 * 8 + 4 * 11 + 16 * 9) * sizeof(char)) // Key length (2x Q, 4x B, 16x other)
-                                            + sizeof(int) // Entry pointer
-                                            + TranspositionTableEntry.SizeInBytes; // Entry object
+        private static readonly long EntrySizeInBytes = (2 * IntPtr.Size) // Key pointers x2
+                                                        + ((2 * 8 + 4 * 11 + 16 * 9) * sizeof(char)) // Key length (2x Q, 4x B, 16x other)
+                                                        + IntPtr.Size // Entry pointer
+                                                        + TranspositionTableEntry.SizeInBytes; // Entry object
 
-        private const long DefaultSizeInBytes = 16 * 1024 * 1024;
+        public const long DefaultSizeInBytes = 32 * 1024 * 1024;
+
+        private const double FillFactor = 0.92; // To leave room for unaccounted for overhead and unused dictionary capcacity
     }
 
     public class TranspositionTableEntry
@@ -88,11 +90,11 @@ namespace Mzinga.Core.AI
         public int Depth;
         public string BestMove;
 
-        public const long SizeInBytes = sizeof(TranspositionTableEntryType)
-                                        + sizeof(double) // Value
-                                        + sizeof(int) // Depth
-                                        + sizeof(int) // BestMove pointer
-                                        + (12 * sizeof(char)); // BestMove length
+        public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType)
+                                                    + sizeof(double) // Value
+                                                    + sizeof(int) // Depth
+                                                    + IntPtr.Size // BestMove pointer
+                                                    + (14 * sizeof(char)); // BestMove length
     }
 
     public enum TranspositionTableEntryType : byte

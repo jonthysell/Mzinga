@@ -103,7 +103,7 @@ namespace Mzinga.Core.AI
             _transpositionTable = new TranspositionTable();
         }
 
-        public GameAI(MetricWeights metricWeights) : base()
+        public GameAI(MetricWeights metricWeights) : this()
         {
             if (null == metricWeights)
             {
