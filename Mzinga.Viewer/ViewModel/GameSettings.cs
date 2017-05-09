@@ -34,9 +34,33 @@ namespace Mzinga.Viewer.ViewModel
 
         public PlayerType BlackPlayerType { get; set; } = PlayerType.EngineAI;
 
-        public BestMoveType BestMoveType { get; set; } = BestMoveType.MaxTime;
+        public BestMoveType BestMoveType
+        {
+            get
+            {
+                return _bestMoveType;
+            }
+            set
+            {
+                if (_bestMoveType != value)
+                {
+                    _bestMoveType = value;
+                    if (value == BestMoveType.MaxDepth)
+                    {
+                        BestMoveMaxTime = null;
+                        BestMoveMaxDepth = DefaultMaxDepth;
+                    }
+                    else
+                    {
+                        BestMoveMaxDepth = null;
+                        BestMoveMaxTime = DefaultMaxTime;
+                    }
+                }
+            }
+        }
+        private BestMoveType _bestMoveType = BestMoveType.MaxTime;
 
-        public int BestMoveMaxDepth
+        public int? BestMoveMaxDepth
         {
             get
             {
@@ -44,16 +68,16 @@ namespace Mzinga.Viewer.ViewModel
             }
             set
             {
-                if (value < 0)
+                if (value.HasValue && value.Value < 0)
                 {
-                    value = int.MaxValue;
+                    value = null;
                 }
                 _bestMoveMaxDepth = value;
             }
         }
-        private int _bestMoveMaxDepth = int.MaxValue;
+        private int? _bestMoveMaxDepth = null;
 
-        public TimeSpan BestMoveMaxTime
+        public TimeSpan? BestMoveMaxTime
         {
             get
             {
@@ -61,14 +85,14 @@ namespace Mzinga.Viewer.ViewModel
             }
             set
             {
-                if (value < TimeSpan.Zero)
+                if (value.HasValue && value.Value < TimeSpan.Zero)
                 {
-                    value = TimeSpan.MaxValue;
+                    value = null;
                 }
                 _bestMoveMaxTime = value;
             }
         }
-        private TimeSpan _bestMoveMaxTime = TimeSpan.FromSeconds(5.0);
+        private TimeSpan? _bestMoveMaxTime = DefaultMaxTime;
 
         public GameSettings() { }
 
@@ -78,11 +102,17 @@ namespace Mzinga.Viewer.ViewModel
 
             clone.WhitePlayerType = WhitePlayerType;
             clone.BlackPlayerType = BlackPlayerType;
+
+            clone.BestMoveType = BestMoveType;
+
             clone.BestMoveMaxDepth = BestMoveMaxDepth;
             clone.BestMoveMaxTime = BestMoveMaxTime;
 
             return clone;
         }
+
+        private static int DefaultMaxDepth= 2;
+        private static TimeSpan DefaultMaxTime = TimeSpan.FromSeconds(5.0);
     }
 
     public enum PlayerType

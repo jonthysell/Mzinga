@@ -403,6 +403,11 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("PlayTarget");
             };
 
+            AppVM.EngineWrapper.IsIdleUpdated += (isIdle) =>
+            {
+                IsIdle = isIdle;
+            };
+
             IsIdle = true;
         }
 

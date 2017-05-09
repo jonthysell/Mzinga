@@ -1,8 +1,8 @@
 <Window Icon="{DynamicResource MzingaIcon}"
         MinHeight="100"
         ResizeMode="NoResize"
-        SizeToContent="Height"
-        Title="{Binding Title}"
+        SizeToContent="WidthAndHeight"
+        Title="{Binding Title, FallbackValue=New Game}"
         Width="300"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.NewGameWindow"
@@ -17,38 +17,80 @@
                    Width="32" />
             <StackPanel Margin="5"
                         Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="White:"
-                           FontWeight="Bold"
-                           Margin="5"
-                           Width="50" />
-                    <RadioButton Content="Human"
-                                 GroupName="WhitePlayerType"
-                                 IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
-                                 Margin="5"
-                                 VerticalAlignment="Center" />
-                    <RadioButton Content="Computer"
-                                 GroupName="WhitePlayerType"
-                                 IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
-                                 Margin="5"
-                                 VerticalAlignment="Center" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Black:"
-                           FontWeight="Bold"
-                           Margin="5"
-                           Width="50" />
-                    <RadioButton Content="Human"
-                                 GroupName="BlackPlayerType"
-                                 IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
-                                 Margin="5"
-                                 VerticalAlignment="Center" />
-                    <RadioButton Content="Computer"
-                                 GroupName="BlackPlayerType"
-                                 IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
-                                 Margin="5"
-                                 VerticalAlignment="Center" />
-                </StackPanel>
+                <GroupBox Header="Players">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="White:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center"
+                                   Width="50" />
+                            <RadioButton Content="Human"
+                                         GroupName="WhitePlayerType"
+                                         IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="Computer"
+                                         GroupName="WhitePlayerType"
+                                         IsChecked="{Binding Path=WhitePlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Black:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center"
+                                   Width="50" />
+                            <RadioButton Content="Human"
+                                         GroupName="BlackPlayerType"
+                                         IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                         Margin="5"
+                                         VerticalAlignment="Center" />
+                            <RadioButton Content="Computer"
+                                         GroupName="BlackPlayerType"
+                                         IsChecked="{Binding Path=BlackPlayerType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                         Margin="5"
+                                         VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Computer">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Type:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center" />
+                            <RadioButton Content="Max Depth"
+                                         GroupName="BestMoveType"
+                                         IsChecked="{Binding Path=BestMoveType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=MaxDepth}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="Max Time"
+                                         GroupName="BestMoveType"
+                                         IsChecked="{Binding Path=BestMoveType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=MaxTime}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                            <Label Content="Max Value:"
+                                   Margin="5" />
+                            <TextBox Margin="5"
+                                     MaxLines="1"
+                                     Text="{Binding BestMoveMaxValue}"
+                                     Width="100" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
             </StackPanel>
         </StackPanel>
         <WrapPanel FlowDirection="RightToLeft">

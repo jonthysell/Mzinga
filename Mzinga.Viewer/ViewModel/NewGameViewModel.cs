@@ -83,6 +83,62 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public BestMoveType BestMoveType
+        {
+            get
+            {
+                return Settings.BestMoveType;
+            }
+            set
+            {
+                try
+                {
+                    Settings.BestMoveType = value;
+                    RaisePropertyChanged("BestMoveType");
+                    RaisePropertyChanged("BestMoveMaxValue");
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
+        }
+
+        public string BestMoveMaxValue
+        {
+            get
+            {
+                if (Settings.BestMoveType == BestMoveType.MaxDepth)
+                {
+                    return Settings.BestMoveMaxDepth.Value.ToString();
+                }
+                else
+                {
+                    return Settings.BestMoveMaxTime.Value.ToString(@"hh\:mm\:ss");
+                }
+            }
+            set
+            {
+                try
+                {
+                    if (Settings.BestMoveType == BestMoveType.MaxDepth)
+                    {
+                        Settings.BestMoveMaxDepth = int.Parse(value);
+                    }
+                    else
+                    {
+                        Settings.BestMoveMaxTime = TimeSpan.Parse(value);
+                    }
+
+                    RaisePropertyChanged("BestMoveMaxValue");
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
+        }
+
         public RelayCommand Accept
         {
             get

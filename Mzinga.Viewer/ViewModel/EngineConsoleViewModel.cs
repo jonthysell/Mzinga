@@ -51,6 +51,20 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public bool IsIdle
+        {
+            get
+            {
+                return _isIdle;
+            }
+            protected set
+            {
+                _isIdle = value;
+                RaisePropertyChanged("IsIdle");
+            }
+        }
+        private bool _isIdle;
+
         public string EngineOutputText
         {
             get
@@ -105,6 +119,13 @@ namespace Mzinga.Viewer.ViewModel
             {
                 RaisePropertyChanged("EngineOutputText");
             };
+
+            AppVM.EngineWrapper.IsIdleUpdated += (isIdle) =>
+            {
+                IsIdle = isIdle;
+            };
+
+            IsIdle = true;
         }
     }
 }

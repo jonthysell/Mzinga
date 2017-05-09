@@ -1,9 +1,10 @@
-<Window Height="240"
+<Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        Height="240"
         Icon="{DynamicResource MzingaIcon}"
         MinHeight="240"
         MinWidth="480"
         ResizeMode="CanResizeWithGrip"
-        Title="{Binding Title}"
+        Title="{Binding Title, FallbackValue=Engine Console}"
         Width="480"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.EngineConsoleWindow"
@@ -14,7 +15,8 @@
     <Window.DataContext>
         <vm:EngineConsoleViewModel />
     </Window.DataContext>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}"
+          IsEnabled="{Binding IsIdle}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />

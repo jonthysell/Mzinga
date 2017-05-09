@@ -4,7 +4,7 @@
         Icon="{DynamicResource MzingaIcon}"
         MinHeight="480"
         MinWidth="640"
-        Title="{Binding Title}"
+        Title="{Binding Title, FallbackValue=Mzinga.Viewer}"
         Width="800"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.MainWindow"
@@ -15,7 +15,9 @@
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <Grid IsEnabled="{Binding IsIdle}" HorizontalAlignment="Right" Width="792">
+    <Grid HorizontalAlignment="Right"
+          IsEnabled="{Binding IsIdle}"
+          Width="792">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
