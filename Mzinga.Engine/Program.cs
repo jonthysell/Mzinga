@@ -92,94 +92,94 @@ namespace Mzinga.Engine
 
         private const string DefaultConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <Mzinga.Engine>
-  <GameAI>
-    <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
-    <MetricWeights>
-        <DrawScore>0</DrawScore>
-        <Maximizing.ValidMoveWeight>-24.963902370786098</Maximizing.ValidMoveWeight>
-        <Maximizing.ValidPlacementWeight>-3.68491462985642</Maximizing.ValidPlacementWeight>
-        <Maximizing.ValidMovementWeight>-1.0443535218089031</Maximizing.ValidMovementWeight>
-        <Maximizing.InHandWeight>-15.86432137353755</Maximizing.InHandWeight>
-        <Maximizing.InPlayWeight>-1.6054702660773665</Maximizing.InPlayWeight>
-        <Maximizing.IsPinnedWeight>-2.8419680922960686</Maximizing.IsPinnedWeight>
-        <Maximizing.QueenBee.ValidMoveWeight>12.438057993771921</Maximizing.QueenBee.ValidMoveWeight>
-        <Maximizing.QueenBee.ValidPlacementWeight>-1.7564328090739774</Maximizing.QueenBee.ValidPlacementWeight>
-        <Maximizing.QueenBee.ValidMovementWeight>-1.2450408224746852</Maximizing.QueenBee.ValidMovementWeight>
-        <Maximizing.QueenBee.NeighborWeight>-11974.498408790743</Maximizing.QueenBee.NeighborWeight>
-        <Maximizing.QueenBee.InHandWeight>2.2409368120346302</Maximizing.QueenBee.InHandWeight>
-        <Maximizing.QueenBee.InPlayWeight>-1.7597902765021634</Maximizing.QueenBee.InPlayWeight>
-        <Maximizing.QueenBee.IsPinnedWeight>-335.53047979206167</Maximizing.QueenBee.IsPinnedWeight>
-        <Maximizing.Spider.ValidMoveWeight>-1.2615068980950961</Maximizing.Spider.ValidMoveWeight>
-        <Maximizing.Spider.ValidPlacementWeight>-15.947262438967481</Maximizing.Spider.ValidPlacementWeight>
-        <Maximizing.Spider.ValidMovementWeight>1.1266153695980654</Maximizing.Spider.ValidMovementWeight>
-        <Maximizing.Spider.NeighborWeight>-11.244960644482266</Maximizing.Spider.NeighborWeight>
-        <Maximizing.Spider.InHandWeight>25.145777198116072</Maximizing.Spider.InHandWeight>
-        <Maximizing.Spider.InPlayWeight>4.145713781921974</Maximizing.Spider.InPlayWeight>
-        <Maximizing.Spider.IsPinnedWeight>-2.6587353776714049</Maximizing.Spider.IsPinnedWeight>
-        <Maximizing.Beetle.ValidMoveWeight>0.18442978184678915</Maximizing.Beetle.ValidMoveWeight>
-        <Maximizing.Beetle.ValidPlacementWeight>0.66437863898848948</Maximizing.Beetle.ValidPlacementWeight>
-        <Maximizing.Beetle.ValidMovementWeight>0.020844182963897367</Maximizing.Beetle.ValidMovementWeight>
-        <Maximizing.Beetle.NeighborWeight>49.661900597451591</Maximizing.Beetle.NeighborWeight>
-        <Maximizing.Beetle.InHandWeight>3.1884094992993135</Maximizing.Beetle.InHandWeight>
-        <Maximizing.Beetle.InPlayWeight>0.70021222845718456</Maximizing.Beetle.InPlayWeight>
-        <Maximizing.Beetle.IsPinnedWeight>10.095809977912747</Maximizing.Beetle.IsPinnedWeight>
-        <Maximizing.Grasshopper.ValidMoveWeight>-0.60554000572039834</Maximizing.Grasshopper.ValidMoveWeight>
-        <Maximizing.Grasshopper.ValidPlacementWeight>-2.6775318723955261</Maximizing.Grasshopper.ValidPlacementWeight>
-        <Maximizing.Grasshopper.ValidMovementWeight>17.445683765389</Maximizing.Grasshopper.ValidMovementWeight>
-        <Maximizing.Grasshopper.NeighborWeight>-0.0074706171576293329</Maximizing.Grasshopper.NeighborWeight>
-        <Maximizing.Grasshopper.InHandWeight>6.4139338483559563</Maximizing.Grasshopper.InHandWeight>
-        <Maximizing.Grasshopper.InPlayWeight>0.9070042908878938</Maximizing.Grasshopper.InPlayWeight>
-        <Maximizing.Grasshopper.IsPinnedWeight>5.392077764115478</Maximizing.Grasshopper.IsPinnedWeight>
-        <Maximizing.SoldierAnt.ValidMoveWeight>-9.0755187989448967</Maximizing.SoldierAnt.ValidMoveWeight>
-        <Maximizing.SoldierAnt.ValidPlacementWeight>3.4172713493479492</Maximizing.SoldierAnt.ValidPlacementWeight>
-        <Maximizing.SoldierAnt.ValidMovementWeight>4.59141683777273</Maximizing.SoldierAnt.ValidMovementWeight>
-        <Maximizing.SoldierAnt.NeighborWeight>-0.38315570599346488</Maximizing.SoldierAnt.NeighborWeight>
-        <Maximizing.SoldierAnt.InHandWeight>-5.982214204449158</Maximizing.SoldierAnt.InHandWeight>
-        <Maximizing.SoldierAnt.InPlayWeight>-1.4805172684790506</Maximizing.SoldierAnt.InPlayWeight>
-        <Maximizing.SoldierAnt.IsPinnedWeight>40.322633049938432</Maximizing.SoldierAnt.IsPinnedWeight>
-        <Minimizing.ValidMoveWeight>-20.316474256780133</Minimizing.ValidMoveWeight>
-        <Minimizing.ValidPlacementWeight>0.48244389243090424</Minimizing.ValidPlacementWeight>
-        <Minimizing.ValidMovementWeight>1.9798472561931735</Minimizing.ValidMovementWeight>
-        <Minimizing.InHandWeight>-6.4360290939573046</Minimizing.InHandWeight>
-        <Minimizing.InPlayWeight>-18.809814711493338</Minimizing.InPlayWeight>
-        <Minimizing.IsPinnedWeight>-2.4118451306781004</Minimizing.IsPinnedWeight>
-        <Minimizing.QueenBee.ValidMoveWeight>8.62395873066201</Minimizing.QueenBee.ValidMoveWeight>
-        <Minimizing.QueenBee.ValidPlacementWeight>-0.24118350664005309</Minimizing.QueenBee.ValidPlacementWeight>
-        <Minimizing.QueenBee.ValidMovementWeight>-3.1193140918692035</Minimizing.QueenBee.ValidMovementWeight>
-        <Minimizing.QueenBee.NeighborWeight>46596.085182486386</Minimizing.QueenBee.NeighborWeight>
-        <Minimizing.QueenBee.InHandWeight>0.98617018107205534</Minimizing.QueenBee.InHandWeight>
-        <Minimizing.QueenBee.InPlayWeight>-0.39106964408865624</Minimizing.QueenBee.InPlayWeight>
-        <Minimizing.QueenBee.IsPinnedWeight>2804.8219253589609</Minimizing.QueenBee.IsPinnedWeight>
-        <Minimizing.Spider.ValidMoveWeight>-0.82678695029088356</Minimizing.Spider.ValidMoveWeight>
-        <Minimizing.Spider.ValidPlacementWeight>0.76716980413332914</Minimizing.Spider.ValidPlacementWeight>
-        <Minimizing.Spider.ValidMovementWeight>4.854619373626992</Minimizing.Spider.ValidMovementWeight>
-        <Minimizing.Spider.NeighborWeight>2.9686609346071235</Minimizing.Spider.NeighborWeight>
-        <Minimizing.Spider.InHandWeight>-4.8851503470946742</Minimizing.Spider.InHandWeight>
-        <Minimizing.Spider.InPlayWeight>0.12976935757518993</Minimizing.Spider.InPlayWeight>
-        <Minimizing.Spider.IsPinnedWeight>-5.1180701052894406</Minimizing.Spider.IsPinnedWeight>
-        <Minimizing.Beetle.ValidMoveWeight>0.98072463615445515</Minimizing.Beetle.ValidMoveWeight>
-        <Minimizing.Beetle.ValidPlacementWeight>-0.32037703118242439</Minimizing.Beetle.ValidPlacementWeight>
-        <Minimizing.Beetle.ValidMovementWeight>-22.939479047011552</Minimizing.Beetle.ValidMovementWeight>
-        <Minimizing.Beetle.NeighborWeight>2.0544173542986583</Minimizing.Beetle.NeighborWeight>
-        <Minimizing.Beetle.InHandWeight>-2.38106810133378</Minimizing.Beetle.InHandWeight>
-        <Minimizing.Beetle.InPlayWeight>-0.024410716896235994</Minimizing.Beetle.InPlayWeight>
-        <Minimizing.Beetle.IsPinnedWeight>-0.48893432597450481</Minimizing.Beetle.IsPinnedWeight>
-        <Minimizing.Grasshopper.ValidMoveWeight>-169.63614203692919</Minimizing.Grasshopper.ValidMoveWeight>
-        <Minimizing.Grasshopper.ValidPlacementWeight>-11.874927870857398</Minimizing.Grasshopper.ValidPlacementWeight>
-        <Minimizing.Grasshopper.ValidMovementWeight>1.0670213802571134</Minimizing.Grasshopper.ValidMovementWeight>
-        <Minimizing.Grasshopper.NeighborWeight>-0.213473932918422</Minimizing.Grasshopper.NeighborWeight>
-        <Minimizing.Grasshopper.InHandWeight>2.5966636476783354</Minimizing.Grasshopper.InHandWeight>
-        <Minimizing.Grasshopper.InPlayWeight>0.0021157184586576014</Minimizing.Grasshopper.InPlayWeight>
-        <Minimizing.Grasshopper.IsPinnedWeight>-3.8971797496714178</Minimizing.Grasshopper.IsPinnedWeight>
-        <Minimizing.SoldierAnt.ValidMoveWeight>-2.62611364094756</Minimizing.SoldierAnt.ValidMoveWeight>
-        <Minimizing.SoldierAnt.ValidPlacementWeight>-2.57061541082512</Minimizing.SoldierAnt.ValidPlacementWeight>
-        <Minimizing.SoldierAnt.ValidMovementWeight>-0.54820621158255145</Minimizing.SoldierAnt.ValidMovementWeight>
-        <Minimizing.SoldierAnt.NeighborWeight>0.48547067214741296</Minimizing.SoldierAnt.NeighborWeight>
-        <Minimizing.SoldierAnt.InHandWeight>28.923468454473756</Minimizing.SoldierAnt.InHandWeight>
-        <Minimizing.SoldierAnt.InPlayWeight>-2.6262564240785524</Minimizing.SoldierAnt.InPlayWeight>
-        <Minimizing.SoldierAnt.IsPinnedWeight>-4.7739532372065066</Minimizing.SoldierAnt.IsPinnedWeight>
-    </MetricWeights>
-  </GameAI>
+<GameAI>
+<TranspositionTableSizeMB>32</TranspositionTableSizeMB>
+<MetricWeights>
+<DrawScore>0</DrawScore>
+<Maximizing.ValidMoveWeight>-0.075498979525094087</Maximizing.ValidMoveWeight>
+<Maximizing.ValidPlacementWeight>-0.14202093136339761</Maximizing.ValidPlacementWeight>
+<Maximizing.ValidMovementWeight>-0.34601947869445787</Maximizing.ValidMovementWeight>
+<Maximizing.InHandWeight>0.0090537986784408053</Maximizing.InHandWeight>
+<Maximizing.InPlayWeight>-0.20045479052286633</Maximizing.InPlayWeight>
+<Maximizing.IsPinnedWeight>-0.049414635353429777</Maximizing.IsPinnedWeight>
+<Maximizing.QueenBee.ValidMoveWeight>-0.079230483143581734</Maximizing.QueenBee.ValidMoveWeight>
+<Maximizing.QueenBee.ValidPlacementWeight>0.96326784018241807</Maximizing.QueenBee.ValidPlacementWeight>
+<Maximizing.QueenBee.ValidMovementWeight>0.17169014322585022</Maximizing.QueenBee.ValidMovementWeight>
+<Maximizing.QueenBee.NeighborWeight>-739.58631865147061</Maximizing.QueenBee.NeighborWeight>
+<Maximizing.QueenBee.InHandWeight>0.66800735067949724</Maximizing.QueenBee.InHandWeight>
+<Maximizing.QueenBee.InPlayWeight>-0.085063577682892688</Maximizing.QueenBee.InPlayWeight>
+<Maximizing.QueenBee.IsPinnedWeight>10.351344543744999</Maximizing.QueenBee.IsPinnedWeight>
+<Maximizing.Spider.ValidMoveWeight>0.063462033031659537</Maximizing.Spider.ValidMoveWeight>
+<Maximizing.Spider.ValidPlacementWeight>-4.7389391078633745</Maximizing.Spider.ValidPlacementWeight>
+<Maximizing.Spider.ValidMovementWeight>0.011377167303786054</Maximizing.Spider.ValidMovementWeight>
+<Maximizing.Spider.NeighborWeight>-8.45661778635653</Maximizing.Spider.NeighborWeight>
+<Maximizing.Spider.InHandWeight>0.952579441447011</Maximizing.Spider.InHandWeight>
+<Maximizing.Spider.InPlayWeight>-2.7481064300557563</Maximizing.Spider.InPlayWeight>
+<Maximizing.Spider.IsPinnedWeight>-0.69529101410510719</Maximizing.Spider.IsPinnedWeight>
+<Maximizing.Beetle.ValidMoveWeight>0.003765849523447537</Maximizing.Beetle.ValidMoveWeight>
+<Maximizing.Beetle.ValidPlacementWeight>-1.7489242310263748</Maximizing.Beetle.ValidPlacementWeight>
+<Maximizing.Beetle.ValidMovementWeight>-0.024355097980445779</Maximizing.Beetle.ValidMovementWeight>
+<Maximizing.Beetle.NeighborWeight>4.3652927041450535</Maximizing.Beetle.NeighborWeight>
+<Maximizing.Beetle.InHandWeight>0.021555515298245325</Maximizing.Beetle.InHandWeight>
+<Maximizing.Beetle.InPlayWeight>-0.99360217388415517</Maximizing.Beetle.InPlayWeight>
+<Maximizing.Beetle.IsPinnedWeight>-0.56276142856439137</Maximizing.Beetle.IsPinnedWeight>
+<Maximizing.Grasshopper.ValidMoveWeight>0.18812298228619015</Maximizing.Grasshopper.ValidMoveWeight>
+<Maximizing.Grasshopper.ValidPlacementWeight>-0.0041418995104384954</Maximizing.Grasshopper.ValidPlacementWeight>
+<Maximizing.Grasshopper.ValidMovementWeight>3.5072659350938067</Maximizing.Grasshopper.ValidMovementWeight>
+<Maximizing.Grasshopper.NeighborWeight>0.096992394592799444</Maximizing.Grasshopper.NeighborWeight>
+<Maximizing.Grasshopper.InHandWeight>0.85724523959428267</Maximizing.Grasshopper.InHandWeight>
+<Maximizing.Grasshopper.InPlayWeight>0.034743331848925522</Maximizing.Grasshopper.InPlayWeight>
+<Maximizing.Grasshopper.IsPinnedWeight>1.9897454741714549</Maximizing.Grasshopper.IsPinnedWeight>
+<Maximizing.SoldierAnt.ValidMoveWeight>0.92583343413758135</Maximizing.SoldierAnt.ValidMoveWeight>
+<Maximizing.SoldierAnt.ValidPlacementWeight>0.31100406658912494</Maximizing.SoldierAnt.ValidPlacementWeight>
+<Maximizing.SoldierAnt.ValidMovementWeight>1.4088853720734798</Maximizing.SoldierAnt.ValidMovementWeight>
+<Maximizing.SoldierAnt.NeighborWeight>-0.30667695965706354</Maximizing.SoldierAnt.NeighborWeight>
+<Maximizing.SoldierAnt.InHandWeight>1.2758077144197426</Maximizing.SoldierAnt.InHandWeight>
+<Maximizing.SoldierAnt.InPlayWeight>0.0470243463776905</Maximizing.SoldierAnt.InPlayWeight>
+<Maximizing.SoldierAnt.IsPinnedWeight>4.194908848724535</Maximizing.SoldierAnt.IsPinnedWeight>
+<Minimizing.ValidMoveWeight>-1.869665823654745</Minimizing.ValidMoveWeight>
+<Minimizing.ValidPlacementWeight>4.0573103561793644</Minimizing.ValidPlacementWeight>
+<Minimizing.ValidMovementWeight>-0.36027022962172889</Minimizing.ValidMovementWeight>
+<Minimizing.InHandWeight>0.40869008700934417</Minimizing.InHandWeight>
+<Minimizing.InPlayWeight>2.8627208848308241</Minimizing.InPlayWeight>
+<Minimizing.IsPinnedWeight>1.132811878839773</Minimizing.IsPinnedWeight>
+<Minimizing.QueenBee.ValidMoveWeight>0.12874060754497368</Minimizing.QueenBee.ValidMoveWeight>
+<Minimizing.QueenBee.ValidPlacementWeight>1.1445122137434838</Minimizing.QueenBee.ValidPlacementWeight>
+<Minimizing.QueenBee.ValidMovementWeight>0.08861736634528522</Minimizing.QueenBee.ValidMovementWeight>
+<Minimizing.QueenBee.NeighborWeight>4109.7933103188579</Minimizing.QueenBee.NeighborWeight>
+<Minimizing.QueenBee.InHandWeight>-0.35450704319100212</Minimizing.QueenBee.InHandWeight>
+<Minimizing.QueenBee.InPlayWeight>0.0046116358532150258</Minimizing.QueenBee.InPlayWeight>
+<Minimizing.QueenBee.IsPinnedWeight>17.11963323212596</Minimizing.QueenBee.IsPinnedWeight>
+<Minimizing.Spider.ValidMoveWeight>0.0029985500151337875</Minimizing.Spider.ValidMoveWeight>
+<Minimizing.Spider.ValidPlacementWeight>0.22193076292434746</Minimizing.Spider.ValidPlacementWeight>
+<Minimizing.Spider.ValidMovementWeight>-1.7294176665397978</Minimizing.Spider.ValidMovementWeight>
+<Minimizing.Spider.NeighborWeight>-0.79355880279707836</Minimizing.Spider.NeighborWeight>
+<Minimizing.Spider.InHandWeight>-0.7637216472264996</Minimizing.Spider.InHandWeight>
+<Minimizing.Spider.InPlayWeight>-0.039959961702868627</Minimizing.Spider.InPlayWeight>
+<Minimizing.Spider.IsPinnedWeight>-0.33212180711454059</Minimizing.Spider.IsPinnedWeight>
+<Minimizing.Beetle.ValidMoveWeight>-0.10267541594485208</Minimizing.Beetle.ValidMoveWeight>
+<Minimizing.Beetle.ValidPlacementWeight>0.16163404180225582</Minimizing.Beetle.ValidPlacementWeight>
+<Minimizing.Beetle.ValidMovementWeight>-4.3429937974595862</Minimizing.Beetle.ValidMovementWeight>
+<Minimizing.Beetle.NeighborWeight>0.17569293016338353</Minimizing.Beetle.NeighborWeight>
+<Minimizing.Beetle.InHandWeight>0.029227761302961831</Minimizing.Beetle.InHandWeight>
+<Minimizing.Beetle.InPlayWeight>-0.081875817176838672</Minimizing.Beetle.InPlayWeight>
+<Minimizing.Beetle.IsPinnedWeight>-0.857575516367572</Minimizing.Beetle.IsPinnedWeight>
+<Minimizing.Grasshopper.ValidMoveWeight>-11.881129648623469</Minimizing.Grasshopper.ValidMoveWeight>
+<Minimizing.Grasshopper.ValidPlacementWeight>0.666412762731396</Minimizing.Grasshopper.ValidPlacementWeight>
+<Minimizing.Grasshopper.ValidMovementWeight>0.040666647328229021</Minimizing.Grasshopper.ValidMovementWeight>
+<Minimizing.Grasshopper.NeighborWeight>-0.020970753076712884</Minimizing.Grasshopper.NeighborWeight>
+<Minimizing.Grasshopper.InHandWeight>-0.014843832945330981</Minimizing.Grasshopper.InHandWeight>
+<Minimizing.Grasshopper.InPlayWeight>-0.00539804572564186</Minimizing.Grasshopper.InPlayWeight>
+<Minimizing.Grasshopper.IsPinnedWeight>0.099050919081589514</Minimizing.Grasshopper.IsPinnedWeight>
+<Minimizing.SoldierAnt.ValidMoveWeight>-0.70124813535602</Minimizing.SoldierAnt.ValidMoveWeight>
+<Minimizing.SoldierAnt.ValidPlacementWeight>-2.83654640675534</Minimizing.SoldierAnt.ValidPlacementWeight>
+<Minimizing.SoldierAnt.ValidMovementWeight>0.34764491447931306</Minimizing.SoldierAnt.ValidMovementWeight>
+<Minimizing.SoldierAnt.NeighborWeight>0.0044933494886377863</Minimizing.SoldierAnt.NeighborWeight>
+<Minimizing.SoldierAnt.InHandWeight>-0.32509664218038609</Minimizing.SoldierAnt.InHandWeight>
+<Minimizing.SoldierAnt.InPlayWeight>-0.17995971583134421</Minimizing.SoldierAnt.InPlayWeight>
+<Minimizing.SoldierAnt.IsPinnedWeight>-1.5886067340435788</Minimizing.SoldierAnt.IsPinnedWeight>
+</MetricWeights>
+</GameAI>
 </Mzinga.Engine>
 ";
     }
