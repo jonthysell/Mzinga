@@ -29,6 +29,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Cache;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -99,9 +101,16 @@ namespace Mzinga.Viewer
                         {
                             Messenger.Default.Send(new ConfirmationMessage(message, (confirmed) =>
                             {
-                                if (confirmed)
+                                try
                                 {
-                                    Update(latestVersion);
+                                    if (confirmed)
+                                    {
+                                        Update(latestVersion);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    ExceptionUtils.HandleException(new UpdateException(ex));
                                 }
                             }));
                         });
@@ -124,7 +133,7 @@ namespace Mzinga.Viewer
             }
             catch (Exception ex)
             {
-                ExceptionUtils.HandleException(ex);
+                ExceptionUtils.HandleException(new UpdateException(ex));
             }
             finally
             {
@@ -137,6 +146,11 @@ namespace Mzinga.Viewer
             if (null == installerInfo)
             {
                 throw new ArgumentNullException("installerInfo");
+            }
+
+            if (!IsConnectedToInternet)
+            {
+                throw new UpdateNoInternetException();
             }
 
             string tempPath = Path.GetTempPath();
@@ -174,10 +188,16 @@ namespace Mzinga.Viewer
 
         public static List<InstallerInfo> GetLatestInstallerInfos()
         {
+            if (!IsConnectedToInternet)
+            {
+                throw new UpdateNoInternetException();
+            }
+
             List<InstallerInfo> installerInfos = new List<InstallerInfo>();
 
             HttpWebRequest request = WebRequest.CreateHttp(_updateUrl);
             request.UserAgent = _userAgent;
+            request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
 
             using (XmlReader reader = XmlReader.Create(request.GetResponse().GetResponseStream()))
             {
@@ -249,6 +269,15 @@ namespace Mzinga.Viewer
             // TODO: Set saved value in config
         }
 
+        public static bool IsConnectedToInternet
+        {
+            get
+            {
+                int Description;
+                return NativeMethods.InternetGetConnectedState(out Description, 0);
+            }
+        }
+
         private const string _updateUrl = "http://mzingaupdate.jonthysell.com";
         private const string _userAgent = "Mozilla/5.0";
     }
@@ -283,5 +312,39 @@ namespace Mzinga.Viewer
     {
         Official,
         Preview
+    }
+
+    [Serializable]
+    public class UpdateException : Exception
+    {
+        public override string Message
+        {
+            get
+            {
+                return "Unable to update Mzinga at this time.";
+            }
+        }
+
+        public UpdateException(Exception innerException) : base("", innerException) { }
+    }
+
+    [Serializable]
+    public class UpdateNoInternetException : Exception
+    {
+        public override string Message
+        {
+            get
+            {
+                return "Mzinga failed to detect an active internet connection.";
+            }
+        }
+
+        public UpdateNoInternetException() : base() { }
+    }
+
+    internal static partial class NativeMethods
+    {
+        [DllImport("wininet.dll")]
+        internal extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
     }
 }
