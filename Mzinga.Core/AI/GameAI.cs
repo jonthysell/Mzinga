@@ -33,40 +33,6 @@ namespace Mzinga.Core.AI
     {
         public MetricWeights MetricWeights { get; private set; } = new MetricWeights();
 
-        public int DefaultMaxDepth
-        {
-            get
-            {
-                return _defaultMaxDepth;
-            }
-            set
-            {
-                if (value < 0)
-                {
-                    value = int.MaxValue;
-                }
-                _defaultMaxDepth = value;
-            }
-        }
-        private int _defaultMaxDepth = 0;
-
-        public TimeSpan DefaultMaxTime
-        {
-            get
-            {
-                return _defaultMaxTime;
-            }
-            set
-            {
-                if (value < TimeSpan.Zero)
-                {
-                    value = TimeSpan.MaxValue;
-                }
-                _defaultMaxTime = value;
-            }
-        }
-        private TimeSpan _defaultMaxTime = TimeSpan.Zero;
-
         public BestMoveMetrics BestMoveMetrics
         {
             get
@@ -103,7 +69,7 @@ namespace Mzinga.Core.AI
             _transpositionTable = new TranspositionTable();
         }
 
-        public GameAI(MetricWeights metricWeights) : this()
+        public GameAI(MetricWeights metricWeights)
         {
             if (null == metricWeights)
             {
@@ -111,6 +77,7 @@ namespace Mzinga.Core.AI
             }
 
             MetricWeights.CopyFrom(metricWeights);
+            _transpositionTable = new TranspositionTable();
         }
 
         public GameAI(int transpositionTableSizeMB)
@@ -123,6 +90,22 @@ namespace Mzinga.Core.AI
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
         }
 
+        public GameAI(MetricWeights metricWeights, int transpositionTableSizeMB)
+        {
+            if (null == metricWeights)
+            {
+                throw new ArgumentNullException("metricWeights");
+            }
+            
+            if (transpositionTableSizeMB <= 0)
+            {
+                throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
+            }
+
+            MetricWeights.CopyFrom(metricWeights);
+            _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
+        }
+
         public void ResetCaches()
         {
             BestMoveMetrics = null;
@@ -131,11 +114,6 @@ namespace Mzinga.Core.AI
         }
 
         #region Move Evaluation
-
-        public Move GetBestMove(GameBoard gameBoard)
-        {
-            return GetBestMove(gameBoard, DefaultMaxDepth, DefaultMaxTime);
-        }
 
         public Move GetBestMove(GameBoard gameBoard, int maxDepth)
         {

@@ -93,8 +93,6 @@ namespace Mzinga.Engine
         private const string DefaultConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <Mzinga.Engine>
   <GameAI>
-    <MaxDepth>-1</MaxDepth>
-    <MaxTime>00:00:05</MaxTime>
     <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
     <MetricWeights>
         <DrawScore>0</DrawScore>

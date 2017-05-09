@@ -37,10 +37,6 @@ namespace Mzinga.Engine
 
         #region GameAI
 
-        public int? MaxDepth { get; private set; } = null;
-
-        public TimeSpan? MaxTime { get; private set; } = null;
-
         public int? TranspositionTableSizeMB { get; private set; } = null;
 
         public MetricWeights MetricWeights { get; private set; } = null;
@@ -89,12 +85,6 @@ namespace Mzinga.Engine
                 {
                     switch (reader.Name)
                     {
-                        case "MaxDepth":
-                            MaxDepth = reader.ReadElementContentAsInt();
-                            break;
-                        case "MaxTime":
-                            MaxTime = TimeSpan.Parse(reader.ReadElementContentAsString());
-                            break;
                         case "TranspositionTableSizeMB":
                             TranspositionTableSizeMB = reader.ReadElementContentAsInt();
                             break;
@@ -109,16 +99,6 @@ namespace Mzinga.Engine
         public GameAI GetGameAI()
         {
             GameAI ai = TranspositionTableSizeMB.HasValue ? new GameAI(TranspositionTableSizeMB.Value) : new GameAI();
-
-            if (MaxDepth.HasValue)
-            {
-                ai.DefaultMaxDepth = MaxDepth.Value;
-            }
-
-            if (MaxTime.HasValue)
-            {
-                ai.DefaultMaxTime = MaxTime.Value;
-            }
 
             if (null != MetricWeights)
             {

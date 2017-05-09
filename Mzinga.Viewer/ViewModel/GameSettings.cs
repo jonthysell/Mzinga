@@ -24,19 +24,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace Mzinga.Viewer.ViewModel
 {
     public class GameSettings
     {
-        public PlayerType WhitePlayerType { get; set; }
+        public PlayerType WhitePlayerType { get; set; } = PlayerType.Human;
 
-        public PlayerType BlackPlayerType { get; set; }
+        public PlayerType BlackPlayerType { get; set; } = PlayerType.EngineAI;
 
-        public GameSettings()
+        public BestMoveType BestMoveType { get; set; } = BestMoveType.MaxTime;
+
+        public int BestMoveMaxDepth
         {
-            WhitePlayerType = PlayerType.Human;
-            BlackPlayerType = PlayerType.EngineAI;
+            get
+            {
+                return _bestMoveMaxDepth;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    value = int.MaxValue;
+                }
+                _bestMoveMaxDepth = value;
+            }
         }
+        private int _bestMoveMaxDepth = int.MaxValue;
+
+        public TimeSpan BestMoveMaxTime
+        {
+            get
+            {
+                return _bestMoveMaxTime;
+            }
+            set
+            {
+                if (value < TimeSpan.Zero)
+                {
+                    value = TimeSpan.MaxValue;
+                }
+                _bestMoveMaxTime = value;
+            }
+        }
+        private TimeSpan _bestMoveMaxTime = TimeSpan.FromSeconds(5.0);
+
+        public GameSettings() { }
 
         public GameSettings Clone()
         {
@@ -44,6 +78,8 @@ namespace Mzinga.Viewer.ViewModel
 
             clone.WhitePlayerType = WhitePlayerType;
             clone.BlackPlayerType = BlackPlayerType;
+            clone.BestMoveMaxDepth = BestMoveMaxDepth;
+            clone.BestMoveMaxTime = BestMoveMaxTime;
 
             return clone;
         }
@@ -53,5 +89,11 @@ namespace Mzinga.Viewer.ViewModel
     {
         Human = 0,
         EngineAI
+    }
+
+    public enum BestMoveType
+    {
+        MaxDepth = 0,
+        MaxTime
     }
 }

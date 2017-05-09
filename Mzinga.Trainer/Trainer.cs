@@ -312,15 +312,9 @@ namespace Mzinga.Trainer
             GameBoard gameBoard = new GameBoard();
 
             // Create AIs
-            GameAI whiteAI = new GameAI(TrainerSettings.TransTableSize);
-            whiteAI.MetricWeights.CopyFrom(whiteProfile.MetricWeights);
-            whiteAI.DefaultMaxDepth = TrainerSettings.MaxDepth;
-            whiteAI.DefaultMaxTime = TrainerSettings.TurnMaxTime;
+            GameAI whiteAI = new GameAI(whiteProfile.MetricWeights, TrainerSettings.TransTableSize);
 
-            GameAI blackAI = new GameAI(TrainerSettings.TransTableSize);
-            blackAI.MetricWeights.CopyFrom(blackProfile.MetricWeights);
-            blackAI.DefaultMaxDepth = TrainerSettings.MaxDepth;
-            blackAI.DefaultMaxTime = TrainerSettings.TurnMaxTime;
+            GameAI blackAI = new GameAI(blackProfile.MetricWeights, TrainerSettings.TransTableSize);
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
@@ -353,7 +347,7 @@ namespace Mzinga.Trainer
                     break;
                 }
 
-                Move move = gameBoard.CurrentTurnColor == Color.White ? whiteAI.GetBestMove(gameBoard) : blackAI.GetBestMove(gameBoard);
+                Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
                 gameBoard.Play(move);
             }
 
@@ -426,6 +420,26 @@ namespace Mzinga.Trainer
             Log("Battle end {0} {1} vs. {2}", boardState, ToString(whiteProfile), ToString(blackProfile));
 
             return boardState;
+        }
+
+        private Move GetBestMove(GameBoard gameBoard, GameAI ai)
+        {
+            if (null == gameBoard)
+            {
+                throw new ArgumentNullException("gameBoard");
+            }
+
+            if (null == ai)
+            {
+                throw new ArgumentNullException("ai");
+            }
+
+            if (TrainerSettings.MaxDepth >= 0)
+            {
+                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth);
+            }
+
+            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime);
         }
 
         public void Cull()

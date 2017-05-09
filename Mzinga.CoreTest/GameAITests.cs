@@ -56,7 +56,7 @@ namespace Mzinga.CoreTest
                 GameAI ai = GetTestGameAI();
 
                 DateTime start = DateTime.Now;
-                Move m = ai.GetBestMove(gb);
+                Move m = ai.GetBestMove(gb, 2);
                 DateTime end = DateTime.Now;
 
                 TimeSpan elapsed = end - start;
@@ -66,15 +66,9 @@ namespace Mzinga.CoreTest
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
         }
 
-        private GameAI GetTestGameAI(int depth = 2, TimeSpan? maxTime = null)
+        private GameAI GetTestGameAI()
         {
-            GameAI ai = new GameAI(MetricWeightsTests.TestMetricWeights)
-            {
-                DefaultMaxDepth = depth,
-                DefaultMaxTime = maxTime.HasValue ? maxTime.Value : TimeSpan.MaxValue
-            };
-
-            return ai;
+            return new GameAI(MetricWeightsTests.TestMetricWeights);
         }
     }
 }

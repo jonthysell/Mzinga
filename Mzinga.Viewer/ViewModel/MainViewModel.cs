@@ -343,27 +343,6 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public RelayCommand PlayBestMove
-        {
-            get
-            {
-                return new RelayCommand(() =>
-                {
-                    try
-                    {
-                        AppVM.EngineWrapper.PlayBestMove();
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                }, () =>
-                {
-                    return AppVM.EngineWrapper.CanPlayBestMove;
-                });
-            }
-        }
-
         public RelayCommand ShowEngineConsole
         {
             get

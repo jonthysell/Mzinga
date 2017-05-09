@@ -104,9 +104,9 @@ namespace Mzinga.Engine
                         NewGame();
                         break;
                     case "play":
-                        if (paramCount == 0)
+                        if (paramCount < 1)
                         {
-                            PlayBestMove();
+                            throw new CommandException();
                         }
                         else
                         {
@@ -127,9 +127,9 @@ namespace Mzinga.Engine
                         }
                         break;
                     case "bestmove":
-                        if (paramCount == 0)
+                        if (paramCount < 2)
                         {
-                            BestMove();
+                            throw new CommandException();
                         }
                         else if (split[1].ToLower() == "depth")
                         {
@@ -138,6 +138,10 @@ namespace Mzinga.Engine
                         else if (split[1].ToLower() == "time")
                         {
                             BestMove(TimeSpan.Parse(split[2]));
+                        }
+                        else
+                        {
+                            throw new CommandException();
                         }
                         break;
                     case "undo":
@@ -157,7 +161,7 @@ namespace Mzinga.Engine
                         Exit();
                         break;
                     default:
-                        throw new Exception("Unknown command.");
+                        throw new CommandException();
                 }
             }
             catch (InvalidMoveException ex)
@@ -214,24 +218,6 @@ namespace Mzinga.Engine
 
             _gameAI.ResetCaches();
 
-            ConsoleOut(GameBoard.ToString());
-        }
-
-        private void PlayBestMove()
-        {
-            if (null == GameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            if (GameBoard.GameIsOver)
-            {
-                throw new GameIsOverException();
-            }
-
-            Move bestMove = _cachedBestMove ?? (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
-
-            GameBoard.Play(bestMove);
             ConsoleOut(GameBoard.ToString());
         }
 
@@ -304,26 +290,6 @@ namespace Mzinga.Engine
             ConsoleOut(validMoves.ToString());
         }
 
-        private void BestMove()
-        {
-            if (null == GameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            if (GameBoard.GameIsOver)
-            {
-                throw new GameIsOverException();
-            }
-
-            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard));
-
-            if (null != bestMove)
-            {
-                ConsoleOut(bestMove.ToString());
-            }
-        }
-
         private void BestMove(int maxDepth)
         {
             if (null == GameBoard)
@@ -371,13 +337,9 @@ namespace Mzinga.Engine
                 throw new NoBoardException();
             }
 
-            if (moves < 1)
+            if (moves < 1 || moves > GameBoard.BoardHistoryCount)
             {
-                throw new UndoTooFewMoves();
-            }
-            else if (moves > GameBoard.BoardHistoryCount)
-            {
-                throw new UndoTooManyMoves();
+                throw new UndoInvalidNumberOfMovesException(moves);
             }
 
             for (int i = 0; i < moves; i++)
@@ -404,23 +366,24 @@ namespace Mzinga.Engine
         }
     }
 
-    public class NoBoardException : Exception
+    public class CommandException : Exception
     {
-        public NoBoardException() : base("You must start a game before you can do that.") { }
+        public CommandException(string message) : base(message) { }
+        public CommandException() : base("Invalid command. Try 'help' to see a list of valid commands.") { }
     }
 
-    public class GameIsOverException : Exception
+    public class NoBoardException : CommandException
     {
-        public GameIsOverException() : base("You can't do that, the game is over.") { }
+        public NoBoardException() : base("No game in progress. Try 'newgame' to start a new game.") { }
     }
 
-    public class UndoTooFewMoves : Exception
+    public class GameIsOverException : CommandException
     {
-        public UndoTooFewMoves() : base("You must undo at least one move.") { }
+        public GameIsOverException() : base("The game is over. Try 'newgame' to start a new game.") { }
     }
 
-    public class UndoTooManyMoves : Exception
+    public class UndoInvalidNumberOfMovesException : CommandException
     {
-        public UndoTooManyMoves() : base("You cannot undo that many moves.") { }
+        public UndoInvalidNumberOfMovesException(int moves) : base(string.Format("Unable to undo {0} moves.", moves)) { }
     }
 }

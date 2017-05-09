@@ -35,6 +35,8 @@ using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModel
 {
+    public delegate void IdleUpdatedEventHandler(bool isIdle);
+
     public delegate void BoardUpdatedEventHandler(Board board);
 
     public delegate void EngineTextUpdatedEventHandler(string engineText);
@@ -62,6 +64,20 @@ namespace Mzinga.Viewer.ViewModel
         public MoveSet ValidMoves { get; private set; }
 
         public BoardHistory BoardHistory { get; private set; }
+
+        public bool IsIdle
+        {
+            get
+            {
+                return _isIdle;
+            }
+            private set
+            {
+                _isIdle = value;
+                OnIsIdleUpdate(value);
+            }
+        }
+        private bool _isIdle = true;
 
         public bool GameInProgress
         {
@@ -239,6 +255,8 @@ namespace Mzinga.Viewer.ViewModel
         }
         private GameSettings _currentGameSettings;
 
+        public event IdleUpdatedEventHandler IsIdleUpdated;
+
         public event BoardUpdatedEventHandler BoardUpdated;
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
 
@@ -264,6 +282,8 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("engineName");
             }
 
+            IsIdle = false;
+
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = engineName;
             startInfo.UseShellExecute = false;
@@ -278,6 +298,8 @@ namespace Mzinga.Viewer.ViewModel
             _writer = _process.StandardInput;
 
             ReadEngineOutput(EngineCommand.Info);
+
+            IsIdle = true;
         }
 
         public void Close()
@@ -332,17 +354,35 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public void PlayBestMove()
-        {
-            AutoPlayBestMove();
-        }
-
         public void FindBestMove()
         {
-            SendCommand("bestmove");
+            if (CurrentGameSettings.BestMoveType == BestMoveType.MaxDepth)
+            {
+                SendCommand("bestmove depth {0}", CurrentGameSettings.BestMoveMaxDepth);
+            }
+            else
+            {
+                SendCommand("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
+            }
         }
 
         public void SendCommand(string command, params object[] args)
+        {
+            if (IsIdle)
+            {
+                IsIdle = false;
+                try
+                {
+                    SendCommandInternal(command, args);
+                }
+                finally
+                {
+                    IsIdle = true;
+                }
+            }
+        }
+
+        private void SendCommandInternal(string command, params object[] args)
         {
             if (string.IsNullOrWhiteSpace(command))
             {
@@ -446,10 +486,12 @@ namespace Mzinga.Viewer.ViewModel
             string[] outputSplit = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
 
             string firstLine = "";
+            string lastLine = "";
 
             if (null != outputSplit && outputSplit.Length > 0)
             {
                 firstLine = outputSplit[0];
+                lastLine = outputSplit[outputSplit.Length - 1];
             }
 
             // Update other properties
@@ -466,9 +508,9 @@ namespace Mzinga.Viewer.ViewModel
                     ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
-                    if (!string.IsNullOrWhiteSpace(firstLine))
+                    if (!string.IsNullOrWhiteSpace(lastLine))
                     {
-                        Move bestMove = new Move(firstLine);
+                        Move bestMove = new Move(lastLine);
 
                         TargetPiece = bestMove.PieceName;
                         TargetPosition = bestMove.Position;
@@ -526,16 +568,68 @@ namespace Mzinga.Viewer.ViewModel
             return (GameInProgress && CurrentTurnIsHuman && null != move && null != ValidMoves && ValidMoves.Contains(move));
         }
 
+        private void AutoPlayBestMove()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    IsIdle = false;
+
+                    DateTime start = DateTime.Now;
+
+                    if (CurrentGameSettings.BestMoveType == BestMoveType.MaxDepth)
+                    {
+                        SendCommandInternal("bestmove depth {0}", CurrentGameSettings.BestMoveMaxDepth);
+                    }
+                    else
+                    {
+                        SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
+                    }
+
+                    int timeToFindBestMoveMs = (int)(DateTime.Now - start).TotalMilliseconds;
+                    int timeToWaitMs = Math.Max(AutoPlayMinMs - timeToFindBestMoveMs, (AutoPlayMinMs / 2));
+
+                    if (timeToWaitMs > 0)
+                    {
+                        Thread.Sleep(timeToWaitMs);
+                    }
+
+                    if (TargetMove.IsPass)
+                    {
+                        SendCommandInternal("pass");
+                    }
+                    else
+                    {
+                        SendCommandInternal("play {0}", TargetMove);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+                finally
+                {
+                    IsIdle = true;
+                }
+            });
+        }
+
+        private void OnIsIdleUpdate(bool isIdle)
+        {
+            IsIdleUpdated?.Invoke(isIdle);
+        }
+
         private void OnBoardUpdate(Board board)
         {
             TargetPiece = PieceName.INVALID;
             ValidMoves = null;
 
-            SendCommand("history");
+            SendCommandInternal("history");
 
             if (GameInProgress)
             {
-                SendCommand("validmoves");
+                SendCommandInternal("validmoves");
             }
 
             BoardUpdated?.Invoke(board);
@@ -546,33 +640,6 @@ namespace Mzinga.Viewer.ViewModel
             {
                 AutoPlayBestMove();
             }
-        }
-
-        private void AutoPlayBestMove()
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    DateTime start = DateTime.Now;
-
-                    FindBestMove();
-
-                    int timeToFindBestMoveMs = (int)(DateTime.Now - start).TotalMilliseconds;
-                    int timeToWaitMs = Math.Max(AutoPlayMinMs - timeToFindBestMoveMs, (AutoPlayMinMs / 2));
-
-                    if (timeToWaitMs > 0)
-                    {
-                        Thread.Sleep(timeToWaitMs);
-                    }
-
-                    PlayTargetMove();
-                }
-                catch (Exception ex)
-                {
-                    ExceptionUtils.HandleException(ex);
-                }
-            });
         }
 
         private void OnEngineTextUpdate(string engineText)

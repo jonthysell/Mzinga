@@ -15,7 +15,7 @@
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <Grid IsEnabled="{Binding IsIdle}">
+    <Grid IsEnabled="{Binding IsIdle}" HorizontalAlignment="Right" Width="792">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -62,10 +62,6 @@
                       Header="Engine"
                       Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding PlayBestMove}"
-                            Content="Play Best Move"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding FindBestMove}"
                             Content="Find Best Move"
                             Margin="5"
