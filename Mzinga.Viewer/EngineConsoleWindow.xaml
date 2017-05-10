@@ -1,4 +1,5 @@
 <Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        ForceCursor="True"
         Height="240"
         Icon="{DynamicResource MzingaIcon}"
         MinHeight="240"
