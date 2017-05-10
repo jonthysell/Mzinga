@@ -15,8 +15,7 @@
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <Grid HorizontalAlignment="Right"
-          Width="792">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -84,7 +83,7 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <StackPanel Background="White"
+        <StackPanel Background="Green"
                     Grid.Column="1"
                     Grid.Row="0"
                     IsEnabled="{Binding IsIdle}"
@@ -98,7 +97,7 @@
                 MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown"
                 Name="BoardCanvas"
                 SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Background="White"
+        <StackPanel Background="Green"
                     Grid.Column="1"
                     Grid.Row="2"
                     IsEnabled="{Binding IsIdle}"

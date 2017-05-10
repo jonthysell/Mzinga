@@ -258,6 +258,42 @@ namespace Mzinga.Core
 
         #endregion
 
+        #region Dimensions
+
+        public int Height
+        {
+            get
+            {
+                if (PiecesInPlay.Count() == 0)
+                {
+                    return 0;
+                }
+
+                int minY = PiecesInPlay.Min(p => p.Position.Y);
+                int maxY = PiecesInPlay.Max(p => p.Position.Y);
+
+                return (maxY - minY);
+            }
+        }
+
+        public int Width
+        {
+            get
+            {
+                if (PiecesInPlay.Count() == 0)
+                {
+                    return 0;
+                }
+
+                int minX = PiecesInPlay.Min(p => p.Position.X);
+                int maxX = PiecesInPlay.Max(p => p.Position.X);
+
+                return (maxX - minX);
+            }
+        }
+
+        #endregion
+
         public Board()
         {
             _pieces = new Piece[EnumUtils.NumPieceNames];

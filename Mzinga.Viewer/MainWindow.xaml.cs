@@ -63,8 +63,6 @@ namespace Mzinga.Viewer
             }
         }
 
-        private double HexRadiusRatio = 1.0 / (EnumUtils.NumPieceNames + 1);
-
         private double PieceCanvasMargin = 3.0;
 
         private double CanvasOffsetX = 0.0;
@@ -150,10 +148,16 @@ namespace Mzinga.Viewer
                 int numPieces;
                 Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out numPieces, out maxStack);
 
-                double size = HexRadiusRatio * Math.Min(BoardCanvas.ActualHeight, BoardCanvas.ActualWidth);
+                int whiteHandCount = board.WhiteHand.Count();
+                int blackHandCount = board.BlackHand.Count();
 
-                WhiteHandStackPanel.MinHeight = board.WhiteHand.Count() > 0 ? (size + PieceCanvasMargin) * 2 : 0;
-                BlackHandStackPanel.MinHeight = board.BlackHand.Count() > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                int horizontalPiecesMin = 2 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.Width);
+                int verticalPiecesMin = 1 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.Height;
+
+                double size = 0.5 * Math.Min(BoardCanvas.ActualHeight / verticalPiecesMin, BoardCanvas.ActualWidth / horizontalPiecesMin);
+
+                WhiteHandStackPanel.MinHeight = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                BlackHandStackPanel.MinHeight = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
                 Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
