@@ -25,6 +25,8 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -77,7 +79,7 @@ namespace Mzinga.Viewer.ViewModel
                 OnIsIdleUpdate(value);
             }
         }
-        private bool _isIdle = true;
+        private volatile bool _isIdle = true;
 
         public bool GameInProgress
         {
@@ -102,6 +104,16 @@ namespace Mzinga.Viewer.ViewModel
                 return (null != Board &&
                         ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
                          (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
+            }
+        }
+
+        public bool CurrentTurnIsEngineAI
+        {
+            get
+            {
+                return (GameInProgress &&
+                        ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
+                         (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)));
             }
         }
 
@@ -220,14 +232,6 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public bool CanPlayBestMove
-        {
-            get
-            {
-                return CurrentTurnIsHuman && GameInProgress && null != ValidMoves && ValidMoves.Count > 0;
-            }
-        }
-
         public string EngineText
         {
             get
@@ -264,14 +268,18 @@ namespace Mzinga.Viewer.ViewModel
         public event TargetPositionUpdatedEventHandler TargetPositionUpdated;
 
         private Process _process;
-        private StreamReader _reader;
         private StreamWriter _writer;
+        private List<string> _outputLines;
+
+        private Queue<EngineCommand> _commandsToProcess;
 
         private const int AutoPlayMinMs = 1000;
 
         public EngineWrapper(string engineCommand)
         {
             _engineText = new StringBuilder();
+            _outputLines = new List<string>();
+            _commandsToProcess = new Queue<EngineCommand>();
             StartEngine(engineCommand);
         }
 
@@ -282,28 +290,55 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("engineName");
             }
 
-            IsIdle = false;
-
-            ProcessStartInfo startInfo = new ProcessStartInfo();
-            startInfo.FileName = engineName;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.RedirectStandardInput = true;
-            startInfo.RedirectStandardOutput = true;
-
             _engineText.Clear();
+            _outputLines.Clear();
 
-            _process = Process.Start(startInfo);
-            _reader = _process.StandardOutput;
+            _process = new Process();
+            _process.StartInfo.FileName = engineName;
+            _process.StartInfo.UseShellExecute = false;
+            _process.StartInfo.CreateNoWindow = true;
+            _process.StartInfo.RedirectStandardInput = true;
+            _process.StartInfo.RedirectStandardOutput = true;
+
+            _process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+            {
+                string line = e.Data;
+                _outputLines.Add(line);
+
+                if (line == "ok")
+                {
+                    try
+                    {
+                        string[] outputLines = _outputLines.ToArray();
+                        ReadEngineOutput(_commandsToProcess.Dequeue(), outputLines);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                    finally
+                    {
+                        _outputLines.Clear();
+                        if (_commandsToProcess.Count == 0)
+                        {
+                            IsIdle = true;
+                        }
+                    }
+                }
+            });
+
+            _commandsToProcess.Enqueue(EngineCommand.Info);
+
+            IsIdle = false;
+            _process.Start();
+            _process.BeginOutputReadLine();
+
             _writer = _process.StandardInput;
-
-            ReadEngineOutput(EngineCommand.Info);
-
-            IsIdle = true;
         }
 
         public void Close()
         {
+            _process.CancelOutputRead();
             _writer.WriteLine("exit");
             _process.WaitForExit();
             _process.Close();
@@ -375,9 +410,10 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     SendCommandInternal(command, args);
                 }
-                finally
+                catch (Exception)
                 {
                     IsIdle = true;
+                    throw;
                 }
             }
         }
@@ -397,10 +433,17 @@ namespace Mzinga.Viewer.ViewModel
             {
                 throw new Exception("Can't send exit command.");
             }
+            else if (cmd == EngineCommand.Unknown)
+            {
+                throw new Exception("Unknown command.");
+            }
 
+            _commandsToProcess.Enqueue(cmd);
+
+            IsIdle = false;
             EngineTextAppendLine(command);
             _writer.WriteLine(command);
-            ReadEngineOutput(cmd);
+            _writer.Flush();
         }
 
         private EngineCommand IdentifyCommand(string command)
@@ -444,32 +487,21 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        private void ReadEngineOutput(EngineCommand command)
+        private void ReadEngineOutput(EngineCommand command, string[] outputLines)
         {
-            StringBuilder sb = new StringBuilder();
-
             string errorMessage = "";
             string invalidMoveMessage = "";
 
-            string line = null;
-            while (null != (line = _reader.ReadLine()))
+            foreach (string line in outputLines)
             {
                 EngineTextAppendLine(line);
-                if (line == "ok")
+                if (line.StartsWith("err"))
                 {
-                    break;
+                    errorMessage = line.Substring(line.IndexOf(' ') + 1);
                 }
-                else
+                else if (line.StartsWith("invalidmove"))
                 {
-                    if (line.StartsWith("err"))
-                    {
-                        errorMessage = line.Substring(line.IndexOf(' ') + 1);
-                    }
-                    else if (line.StartsWith("invalidmove"))
-                    {
-                        invalidMoveMessage = line.Substring(line.IndexOf(' ') + 1);
-                    }
-                    sb.AppendLine(line);
+                    invalidMoveMessage = line.Substring(line.IndexOf(' ') + 1);
                 }
             }
 
@@ -483,15 +515,13 @@ namespace Mzinga.Viewer.ViewModel
                 throw new InvalidMoveException(invalidMoveMessage);
             }
 
-            string[] outputSplit = sb.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
             string firstLine = "";
             string lastLine = "";
 
-            if (null != outputSplit && outputSplit.Length > 0)
+            if (null != outputLines && outputLines.Length > 0)
             {
-                firstLine = outputSplit[0];
-                lastLine = outputSplit[outputSplit.Length - 1];
+                firstLine = outputLines[0];
+                lastLine = outputLines[outputLines.Length - 2]; // ignore the ok line
             }
 
             // Update other properties
@@ -568,53 +598,6 @@ namespace Mzinga.Viewer.ViewModel
             return (GameInProgress && CurrentTurnIsHuman && null != move && null != ValidMoves && ValidMoves.Contains(move));
         }
 
-        private void AutoPlayBestMove()
-        {
-            Task.Run(() =>
-            {
-                try
-                {
-                    IsIdle = false;
-
-                    DateTime start = DateTime.Now;
-
-                    if (CurrentGameSettings.BestMoveType == BestMoveType.MaxDepth)
-                    {
-                        SendCommandInternal("bestmove depth {0}", CurrentGameSettings.BestMoveMaxDepth);
-                    }
-                    else
-                    {
-                        SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
-                    }
-
-                    int timeToFindBestMoveMs = (int)(DateTime.Now - start).TotalMilliseconds;
-                    int timeToWaitMs = Math.Max(AutoPlayMinMs - timeToFindBestMoveMs, (AutoPlayMinMs / 2));
-
-                    if (timeToWaitMs > 0)
-                    {
-                        Thread.Sleep(timeToWaitMs);
-                    }
-
-                    if (TargetMove.IsPass)
-                    {
-                        SendCommandInternal("pass");
-                    }
-                    else
-                    {
-                        SendCommandInternal("play {0}", TargetMove);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ExceptionUtils.HandleException(ex);
-                }
-                finally
-                {
-                    IsIdle = true;
-                }
-            });
-        }
-
         private void OnIsIdleUpdate(bool isIdle)
         {
             IsIdleUpdated?.Invoke(isIdle);
@@ -634,11 +617,16 @@ namespace Mzinga.Viewer.ViewModel
 
             BoardUpdated?.Invoke(board);
 
-            if (GameInProgress &&
-                ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
-                 (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)))
+            if (CurrentTurnIsEngineAI)
             {
-                AutoPlayBestMove();
+                if (CurrentGameSettings.BestMoveType == BestMoveType.MaxDepth)
+                {
+                    SendCommandInternal("bestmove depth {0}", CurrentGameSettings.BestMoveMaxDepth);
+                }
+                else
+                {
+                    SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
+                }
             }
         }
 
@@ -663,6 +651,18 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             TargetPositionUpdated?.Invoke(position);
+
+            if (CurrentTurnIsEngineAI && null != TargetMove)
+            {
+                if (TargetMove.IsPass)
+                {
+                    SendCommandInternal("pass");
+                }
+                else
+                {
+                    SendCommandInternal("play {0}", TargetMove);
+                }
+            }
         }
 
         private enum EngineCommand
