@@ -83,7 +83,7 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <StackPanel Background="Green"
+        <StackPanel Background="White"
                     Grid.Column="1"
                     Grid.Row="0"
                     IsEnabled="{Binding IsIdle}"
@@ -97,7 +97,7 @@
                 MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown"
                 Name="BoardCanvas"
                 SizeChanged="BoardCanvas_SizeChanged" />
-        <StackPanel Background="Green"
+        <StackPanel Background="White"
                     Grid.Column="1"
                     Grid.Row="2"
                     IsEnabled="{Binding IsIdle}"
