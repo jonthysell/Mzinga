@@ -61,6 +61,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
+                RaisePropertyChanged("SendEngineCommand");
             }
         }
         private bool _isIdle;
@@ -108,7 +109,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return !string.IsNullOrWhiteSpace(EngineInputText);
+                    return IsIdle && !string.IsNullOrWhiteSpace(EngineInputText);
                 });
             }
         }

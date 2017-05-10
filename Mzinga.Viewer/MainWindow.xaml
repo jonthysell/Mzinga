@@ -16,7 +16,6 @@
         <vm:MainViewModel />
     </Window.DataContext>
     <Grid HorizontalAlignment="Right"
-          IsEnabled="{Binding IsIdle}"
           Width="792">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -88,18 +87,21 @@
         <StackPanel Background="White"
                     Grid.Column="1"
                     Grid.Row="0"
+                    IsEnabled="{Binding IsIdle}"
                     Name="BlackHandStackPanel"
                     Orientation="Horizontal" />
         <Canvas Background="White"
                 ClipToBounds="True"
                 Grid.Column="1"
                 Grid.Row="1"
+                IsEnabled="{Binding IsIdle}"
                 MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown"
                 Name="BoardCanvas"
                 SizeChanged="BoardCanvas_SizeChanged" />
         <StackPanel Background="White"
                     Grid.Column="1"
                     Grid.Row="2"
+                    IsEnabled="{Binding IsIdle}"
                     Name="WhiteHandStackPanel"
                     Orientation="Horizontal" />
         <Grid Grid.Column="2"

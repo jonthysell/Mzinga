@@ -64,6 +64,12 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
+                RaisePropertyChanged("NewGame");
+                RaisePropertyChanged("PlayTarget");
+                RaisePropertyChanged("Pass");
+                RaisePropertyChanged("UndoLastMove");
+                RaisePropertyChanged("FindBestMove");
+                RaisePropertyChanged("CheckForUpdatesAsync");
             }
         }
         private bool _isIdle;
@@ -255,6 +261,9 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
+                }, ()=>
+                {
+                    return IsIdle;
                 });
             }
         }
@@ -275,7 +284,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanPlayTargetMove;
+                    return IsIdle && AppVM.EngineWrapper.CanPlayTargetMove;
                 });
             }
         }
@@ -296,7 +305,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanPass;
+                    return IsIdle && AppVM.EngineWrapper.CanPass;
                 });
             }
         }
@@ -317,7 +326,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanUndoLastMove;
+                    return IsIdle && AppVM.EngineWrapper.CanUndoLastMove;
                 });
             }
         }
@@ -338,7 +347,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return AppVM.EngineWrapper.CanFindBestMove;
+                    return IsIdle && AppVM.EngineWrapper.CanFindBestMove;
                 });
             }
         }
@@ -382,7 +391,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return !UpdateUtils.IsCheckingforUpdate;
+                    return IsIdle && !UpdateUtils.IsCheckingforUpdate;
                 });
             }
         }

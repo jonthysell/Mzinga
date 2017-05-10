@@ -15,8 +15,7 @@
     <Window.DataContext>
         <vm:EngineConsoleViewModel />
     </Window.DataContext>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}"
-          IsEnabled="{Binding IsIdle}">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -29,6 +28,7 @@
                  Grid.Column="0"
                  Grid.Row="0"
                  Height="20"
+                 IsEnabled="{Binding IsIdle}"
                  Margin="5"
                  MaxLines="1"
                  Name="EngineConsoleInput"
