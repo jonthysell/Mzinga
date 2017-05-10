@@ -26,12 +26,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Mzinga.Core;
 
@@ -271,6 +268,7 @@ namespace Mzinga.Viewer.ViewModel
         private StreamWriter _writer;
         private List<string> _outputLines;
 
+        private Queue<string> _inputToProcess;
         private Queue<EngineCommand> _commandsToProcess;
 
         private const int AutoPlayMinMs = 1000;
@@ -279,6 +277,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             _engineText = new StringBuilder();
             _outputLines = new List<string>();
+            _inputToProcess = new Queue<string>();
             _commandsToProcess = new Queue<EngineCommand>();
             StartEngine(engineCommand);
         }
@@ -300,32 +299,7 @@ namespace Mzinga.Viewer.ViewModel
             _process.StartInfo.RedirectStandardInput = true;
             _process.StartInfo.RedirectStandardOutput = true;
 
-            _process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
-            {
-                string line = e.Data;
-                _outputLines.Add(line);
-
-                if (line == "ok")
-                {
-                    try
-                    {
-                        string[] outputLines = _outputLines.ToArray();
-                        ReadEngineOutput(_commandsToProcess.Dequeue(), outputLines);
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                    finally
-                    {
-                        _outputLines.Clear();
-                        if (_commandsToProcess.Count == 0)
-                        {
-                            IsIdle = true;
-                        }
-                    }
-                }
-            });
+            _process.OutputDataReceived += EngineOutputDataReceived;
 
             _commandsToProcess.Enqueue(EngineCommand.Info);
 
@@ -334,6 +308,37 @@ namespace Mzinga.Viewer.ViewModel
             _process.BeginOutputReadLine();
 
             _writer = _process.StandardInput;
+        }
+
+        private void EngineOutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            string line = e.Data;
+            _outputLines.Add(line);
+
+            if (line == "ok")
+            {
+                try
+                {
+                    if (_inputToProcess.Count > 0)
+                    {
+                        EngineTextAppendLine(_inputToProcess.Dequeue());
+                    }
+                    string[] outputLines = _outputLines.ToArray();
+                    ReadEngineOutput(_commandsToProcess.Dequeue(), outputLines);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+                finally
+                {
+                    _outputLines.Clear();
+                    if (_commandsToProcess.Count == 0)
+                    {
+                        IsIdle = true;
+                    }
+                }
+            }
         }
 
         public void Close()
@@ -438,10 +443,10 @@ namespace Mzinga.Viewer.ViewModel
                 throw new Exception("Unknown command.");
             }
 
+            _inputToProcess.Enqueue(command);
             _commandsToProcess.Enqueue(cmd);
 
             IsIdle = false;
-            EngineTextAppendLine(command);
             _writer.WriteLine(command);
             _writer.Flush();
         }
