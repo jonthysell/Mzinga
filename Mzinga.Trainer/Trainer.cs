@@ -768,8 +768,9 @@ namespace Mzinga.Trainer
                     }
                     else
                     {
-                        Profile whiteProfile = currentTier[profileIndex];
-                        Profile blackProfile = currentTier[profileIndex + 1];
+                        int whiteIndex = Random.Next(0, 2); // Help mitigate top players always playing white
+                        Profile whiteProfile = currentTier[profileIndex + whiteIndex];
+                        Profile blackProfile = currentTier[profileIndex + 1 - whiteIndex];
 
                         BoardState roundResult = BoardState.Draw;
 
