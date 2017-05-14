@@ -161,7 +161,6 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
 
             DateTime brStart = DateTime.Now;
-            Log("Battle Royale start.");
 
             List<Profile> profiles = LoadProfiles(path);
 
@@ -177,6 +176,13 @@ namespace Mzinga.Trainer
             int total = maxBattles;
             int completed = 0;
             int remaining = total;
+
+            TimeSpan timeRemaining = TimeSpan.FromSeconds(TrainerSettings.BattleTimeLimit.TotalSeconds * total);
+            double progress = 0.0;
+
+            TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - brStart);
+
+            Log("Battle Royale start, ETA: {0}.", timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
             List<Profile> whiteProfiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
             List<Profile> blackProfiles = new List<Profile>(profiles.OrderBy(profile => profile.EloRating));
@@ -262,13 +268,13 @@ namespace Mzinga.Trainer
                     }
                 }
 
-                TimeSpan timeRemaining;
-                double progress;
+                lock (_progressLock)
+                {
+                    timeoutRemaining = timeLimit - (DateTime.Now - brStart);
 
-                TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - brStart);
-
-                GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
-                Log("Battle Royale progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
+                    GetProgress(brStart, completed, remaining, out progress, out timeRemaining);
+                    Log("Battle Royale progress: {0:P2}, ETA: {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
+                }
 
                 if (timeoutRemaining <= TimeSpan.Zero)
                 {
@@ -281,7 +287,7 @@ namespace Mzinga.Trainer
                 Log("Battle Royale time-out.");
             }
 
-            Log("Battle Royale end.");
+            Log("Battle Royale end, elapsed time: {0}.", ToString(DateTime.Now - brStart));
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
 
@@ -734,13 +740,19 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
 
             DateTime tournamentStart = DateTime.Now;
-            Log("Tournament start.");
 
             List<Profile> profiles = LoadProfiles(path);
 
             int total = profiles.Count - 1;
             int completed = 0;
             int remaining = total;
+
+            TimeSpan timeRemaining = TimeSpan.FromSeconds(TrainerSettings.BattleTimeLimit.TotalSeconds * total);
+            double progress = 0.0;
+
+            TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
+
+            Log("Tournament start, ETA: {0}.", timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
             Profile[] currentTier = new Profile[profiles.Count];
             (shuffleProfiles ? Shuffle(profiles) : Seed(profiles)).CopyTo(currentTier);
@@ -844,13 +856,13 @@ namespace Mzinga.Trainer
                             }
                         }
 
-                        TimeSpan timeRemaining;
-                        double progress;
+                        lock (_progressLock)
+                        {
+                            timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
 
-                        TimeSpan timeoutRemaining = timeLimit - (DateTime.Now - tournamentStart);
-
-                        GetProgress(tournamentStart, completed, remaining, out progress, out timeRemaining);
-                        Log("Tournament progress: {0:P2} ETA {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
+                            GetProgress(tournamentStart, completed, remaining, out progress, out timeRemaining);
+                            Log("Tournament progress: {0:P2}, ETA: {1}.", progress, timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
+                        }
 
                         if (timeoutRemaining <= TimeSpan.Zero)
                         {
@@ -871,7 +883,7 @@ namespace Mzinga.Trainer
                 }
             }
 
-            Log("Tournament end.");
+            Log("Tournament end, elapsed time: {0}.", ToString(DateTime.Now - tournamentStart));
 
             if (currentTier.Length == 1 && null != currentTier[0])
             {
@@ -1026,6 +1038,8 @@ namespace Mzinga.Trainer
 
             return profile.TotalGames < TrainerSettings.ProvisionalGameCount;
         }
+
+        private object _progressLock = new object();
     }
 
     public enum GameResult
