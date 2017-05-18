@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core;
@@ -158,6 +159,46 @@ namespace Mzinga.CoreTest
             MoveSet validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
             Assert.AreEqual(0, validMoves.Count);
+        }
+
+        [TestMethod]
+        public void GameBoard_PerftTest()
+        {
+            int[] expectedNodes = new int[] { 1, 4, 96, 1440 };
+
+            for (int depth = 0; depth < expectedNodes.Length; depth++)
+            {
+                DateTime start = DateTime.Now;
+
+                GameBoard gameBoard = new GameBoard();
+                int actualNodes = Perft(gameBoard, depth);
+
+                TimeSpan elapsed = DateTime.Now - start;
+
+                Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
+                Trace.WriteLine(string.Format("Depth: {0} Ticks: {1} NPS: {2}", depth, elapsed.Ticks, Math.Round(actualNodes / elapsed.TotalSeconds)));
+            }
+        }
+
+        // Following the example at https://chessprogramming.wikispaces.com/Perft
+        private int Perft(GameBoard gameBoard, int depth)
+        {
+            if (depth == 0)
+            {
+                return 1;
+            }
+
+            int nodes = 0;
+
+            MoveSet validMoves = gameBoard.GetValidMoves();
+            foreach (Move move in validMoves)
+            {
+                gameBoard.Play(move);
+                nodes += Perft(gameBoard, depth - 1);
+                gameBoard.UndoLastMove();
+            }
+
+            return nodes;
         }
 
         private Direction[] StraightLine(Direction direction, int length)
