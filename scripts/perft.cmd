@@ -19,6 +19,7 @@
 
 { 
     # Start PowerShell
+    param ([int]$startingDepth=0)
     
     Add-Type -Path Mzinga.Core.dll | Out-Null
     
@@ -28,26 +29,32 @@
         {
             return 1
         }
-        else
+
+        [Mzinga.Core.MoveSet] $validMoves = $gb.GetValidMoves()
+        
+        if ($depth -eq 1)
         {
-            [int] $nodes = 0
-
-            [Mzinga.Core.MoveSet] $validMoves = $gb.GetValidMoves()
-            
-            foreach ($move in $validMoves)
-            {
-                $gb.Play($move)
-                $nodes += perft -gb $gb -depth ($depth - 1)
-                $gb.UndoLastMove()
-            }
-
-            return $nodes
+            return $validMoves.Count
         }
+
+        [int] $nodes = 0
+        
+        foreach ($move in $validMoves)
+        {
+            $gb.Play($move)
+            $nodes += perft -gb $gb -depth ($depth - 1)
+            $gb.UndoLastMove()
+        }
+
+        return $nodes
     }
     
-    Write-Host "depth,count,time (ms)"
+    if ($startingDepth -eq 0)
+    {
+        Write-Host "depth,count,time (ms)"
+    }
     
-    [int] $depth = 0;
+    [int] $depth = $startingDepth;
     
     while ($True)
     {
