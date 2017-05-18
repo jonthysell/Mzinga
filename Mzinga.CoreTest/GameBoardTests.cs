@@ -162,9 +162,15 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void GameBoard_PerftTest()
+        [TestCategory("Performance")]
+        public void GameBoard_NewGamePerftTest()
         {
-            int[] expectedNodes = new int[] { 1, 4, 96, 1440 };
+            int[] expectedNodes = new int[]
+            {
+                1, 4, 96, 1440, // Confirmed
+                21600, 516240, 12219480, // Unconfirmed
+                //181641900, // Unconfirmed and too long
+            };
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
             {
@@ -176,7 +182,7 @@ namespace Mzinga.CoreTest
                 TimeSpan elapsed = DateTime.Now - start;
 
                 Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
-                Trace.WriteLine(string.Format("Depth: {0} Ticks: {1} NPS: {2}", depth, elapsed.Ticks, Math.Round(actualNodes / elapsed.TotalSeconds)));
+                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, Math.Round(elapsed.TotalMilliseconds), Math.Round((actualNodes / elapsed.TotalSeconds) / 1000, 1)));
             }
         }
 
