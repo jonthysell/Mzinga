@@ -165,11 +165,11 @@ namespace Mzinga.CoreTest
         [TestCategory("Performance")]
         public void GameBoard_NewGamePerftTest()
         {
-            int[] expectedNodes = new int[]
+            long[] expectedNodes = new long[]
             {
                 1, 4, 96, 1440, // Confirmed
                 21600, 516240, 12219480, // Unconfirmed
-                //181641900, // Unconfirmed and too long
+                //181641900, 2657392800 // Unconfirmed and too long
             };
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
@@ -177,24 +177,24 @@ namespace Mzinga.CoreTest
                 DateTime start = DateTime.Now;
 
                 GameBoard gameBoard = new GameBoard();
-                int actualNodes = Perft(gameBoard, depth);
+                long actualNodes = Perft(gameBoard, depth);
 
                 TimeSpan elapsed = DateTime.Now - start;
 
                 Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
-                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, Math.Round(elapsed.TotalMilliseconds), Math.Round((actualNodes / elapsed.TotalSeconds) / 1000, 1)));
+                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, Math.Round(elapsed.TotalMilliseconds), Math.Round(actualNodes / elapsed.TotalMilliseconds, 1)));
             }
         }
 
         // Following the example at https://chessprogramming.wikispaces.com/Perft
-        private int Perft(GameBoard gameBoard, int depth)
+        private long Perft(GameBoard gameBoard, int depth)
         {
             if (depth == 0)
             {
                 return 1;
             }
 
-            int nodes = 0;
+            long nodes = 0;
 
             MoveSet validMoves = gameBoard.GetValidMoves();
             foreach (Move move in validMoves)

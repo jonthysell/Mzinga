@@ -37,7 +37,7 @@
             return $validMoves.Count
         }
 
-        [int] $nodes = 0
+        [long] $nodes = 0
         
         foreach ($move in $validMoves)
         {
@@ -60,7 +60,7 @@
     {
         $gameBoard = New-Object Mzinga.Core.GameBoard
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
-        [int] $count = perft -gb $gameBoard -depth $depth
+        [long] $count = perft -gb $gameBoard -depth $depth
         $elapsed = $sw.Elapsed.TotalMilliseconds
         Write-Host "$depth,$count,$elapsed"
         $depth++
