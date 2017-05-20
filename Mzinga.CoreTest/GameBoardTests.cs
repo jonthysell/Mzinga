@@ -168,7 +168,7 @@ namespace Mzinga.CoreTest
             long[] expectedNodes = new long[]
             {
                 1, 4, 96, 1440, // Confirmed
-                21600, 516240, 12219480, // Unconfirmed
+                21600, 516240, 12219480 // Unconfirmed
                 //181641900, 2657392800 // Unconfirmed and too long
             };
 
@@ -177,7 +177,7 @@ namespace Mzinga.CoreTest
                 DateTime start = DateTime.Now;
 
                 GameBoard gameBoard = new GameBoard();
-                long actualNodes = Perft(gameBoard, depth);
+                long actualNodes = Perft(gameBoard, depth, true);
 
                 TimeSpan elapsed = DateTime.Now - start;
 
@@ -187,20 +187,26 @@ namespace Mzinga.CoreTest
         }
 
         // Following the example at https://chessprogramming.wikispaces.com/Perft
-        private long Perft(GameBoard gameBoard, int depth)
+        private long Perft(GameBoard gameBoard, int depth, bool fast)
         {
             if (depth == 0)
             {
                 return 1;
             }
 
+            MoveSet validMoves = gameBoard.GetValidMoves();
+
+            if (fast && depth == 1)
+            {
+                return validMoves.Count;
+            }
+
             long nodes = 0;
 
-            MoveSet validMoves = gameBoard.GetValidMoves();
             foreach (Move move in validMoves)
             {
                 gameBoard.Play(move);
-                nodes += Perft(gameBoard, depth - 1);
+                nodes += Perft(gameBoard, depth - 1, fast);
                 gameBoard.UndoLastMove();
             }
 
