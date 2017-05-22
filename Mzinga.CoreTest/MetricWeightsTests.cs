@@ -35,6 +35,23 @@ namespace Mzinga.CoreTest
     [TestClass]
     public class MetricWeightsTests
     {
+        [TestMethod]
+        public void MetricWeights_NewTest()
+        {
+            MetricWeights mw = new MetricWeights();
+            Assert.IsNotNull(mw);
+        }
+
+        [TestMethod]
+        public void MetricWeights_GetNormalizedTest()
+        {
+            MetricWeights mw = TestMetricWeights.Clone();
+            Assert.IsNotNull(mw);
+
+            MetricWeights normalized = mw.GetNormalized();
+            Assert.IsNotNull(mw);
+        }
+
         public static MetricWeights TestMetricWeights
         {
             get

@@ -95,6 +95,38 @@ namespace Mzinga.Core.AI
             return clone;
         }
 
+        public MetricWeights GetNormalized()
+        {
+            MetricWeights clone = Clone();
+
+            for (int playerInt = 0; playerInt < NumPlayers; playerInt++)
+            {
+                Player player = (Player)playerInt;
+
+                for (int weightInt = 0; weightInt < NumPlayerWeights; weightInt++)
+                {
+                    PlayerWeight playerWeight = (PlayerWeight)weightInt;
+
+                    double playerWeightValue = clone.Get(player, playerWeight);
+
+                    for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)
+                    {
+                        BugType bugType = (BugType)bugTypeInt;
+
+                        BugTypeWeight bugTypeWeight = (BugTypeWeight)weightInt;
+
+                        double bugWeightValue = clone.Get(player, bugType, bugTypeWeight);
+
+                        clone.Set(player, bugType, bugTypeWeight, playerWeightValue + bugWeightValue);
+                    }
+
+                    clone.Set(player, playerWeight, 0.0);
+                }
+            }
+
+            return clone;
+        }
+
         public static MetricWeights ReadMetricWeightsXml(XmlReader xmlReader)
         {
             if (null == xmlReader)
@@ -268,9 +300,9 @@ namespace Mzinga.Core.AI
         ValidMoveWeight = 0,
         ValidPlacementWeight,
         ValidMovementWeight,
-        NeighborWeight,
         InHandWeight,
         InPlayWeight,
         IsPinnedWeight,
+        NeighborWeight,
     }
 }
