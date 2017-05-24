@@ -48,7 +48,7 @@ namespace Mzinga.CoreTest
             MetricWeights mw = TestMetricWeights.Clone();
             Assert.IsNotNull(mw);
 
-            MetricWeights normalized = mw.GetNormalized();
+            MetricWeights normalized = mw.GetNormalized(short.MaxValue, true);
             Assert.IsNotNull(mw);
         }
 

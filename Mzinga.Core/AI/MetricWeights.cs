@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Xml;
 
 namespace Mzinga.Core.AI
@@ -33,25 +34,25 @@ namespace Mzinga.Core.AI
     {
         public double DrawScore { get; set; }
 
-        private double?[] _playerWeights;
-        private double?[] _bugTypeWeights;
+        private double[] _playerWeights;
+        private double[] _bugTypeWeights;
 
         public MetricWeights()
         {
-            _playerWeights = new double?[NumPlayers * NumPlayerWeights];
-            _bugTypeWeights = new double?[NumPlayers * EnumUtils.NumBugTypes * NumBugTypeWeights];
+            _playerWeights = new double[NumPlayers * NumPlayerWeights];
+            _bugTypeWeights = new double[NumPlayers * EnumUtils.NumBugTypes * NumBugTypeWeights];
         }
 
-        public double Get(Player player, PlayerWeight playerWeight, double defaultValue = 0.0)
+        public double Get(Player player, PlayerWeight playerWeight)
         {
             int key = GetKey(player, playerWeight);
-            return _playerWeights[key].HasValue ? _playerWeights[key].Value : defaultValue;
+            return _playerWeights[key];
         }
 
-        public double Get(Player player, BugType bugType, BugTypeWeight bugTypeWeight, double defaultValue = 0.0)
+        public double Get(Player player, BugType bugType, BugTypeWeight bugTypeWeight)
         {
             int key = GetKey(player, bugType, bugTypeWeight);
-            return _bugTypeWeights[key].HasValue ? _bugTypeWeights[key].Value : defaultValue;
+            return _bugTypeWeights[key];
         }
 
         public void Set(Player player, PlayerWeight playerWeight, double value)
@@ -95,10 +96,16 @@ namespace Mzinga.Core.AI
             return clone;
         }
 
-        public MetricWeights GetNormalized()
+        public MetricWeights GetNormalized(double targetMaxValue, bool round)
         {
+            if (targetMaxValue <= 0.0)
+            {
+                throw new ArgumentOutOfRangeException("targetMaxValue");
+            }
+
             MetricWeights clone = Clone();
 
+            // Apply player weights to appropriate bug weights
             for (int playerInt = 0; playerInt < NumPlayers; playerInt++)
             {
                 Player player = (Player)playerInt;
@@ -122,6 +129,28 @@ namespace Mzinga.Core.AI
 
                     clone.Set(player, playerWeight, 0.0);
                 }
+            }
+
+            // Copy bug weights into local array
+            double[] dblWeights = new double[clone._bugTypeWeights.Length];
+            Array.Copy(clone._bugTypeWeights, dblWeights, clone._bugTypeWeights.Length);
+
+            double max = dblWeights.Max(d => Math.Abs(d));
+
+            // Normalize to new range
+            for (int i= 0; i < dblWeights.Length; i++)
+            {
+                double value = dblWeights[i];
+                int sign = Math.Sign(value);
+                double absValue = Math.Abs(value);
+
+                dblWeights[i] = sign * (absValue / max) * targetMaxValue;
+            }
+
+            // Populate clone with normalized weights
+            for (int i = 0; i < clone._bugTypeWeights.Length; i++)
+            {
+                clone._bugTypeWeights[i] = round ? Math.Round(dblWeights[i]) : dblWeights[i];
             }
 
             return clone;
