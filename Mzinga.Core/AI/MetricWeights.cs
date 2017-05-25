@@ -96,7 +96,7 @@ namespace Mzinga.Core.AI
             return clone;
         }
 
-        public MetricWeights GetNormalized(double targetMaxValue, bool round)
+        public MetricWeights GetNormalized(double targetMaxValue = short.MaxValue, bool round = true)
         {
             if (targetMaxValue <= 0.0)
             {

@@ -62,6 +62,9 @@ namespace Mzinga.Trainer
                         case Command.Enumerate:
                             t.Enumerate();
                             break;
+                        case Command.Analyze:
+                            t.Analyze();
+                            break;
                         case Command.Generate:
                             t.Generate();
                             break;
@@ -103,6 +106,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("battleroyale           Fight every profile against each other");
             Console.WriteLine("cull                   Delete the lowest ranking profiles");
             Console.WriteLine("enumerate              List all of the profiles");
+            Console.WriteLine("analyze                Analyze all of the profiles");
             Console.WriteLine("generate               Create new random profiles");
             Console.WriteLine("lifecycle              Battle, cull, mate cycle for profiles");
             Console.WriteLine("mate                   Mate every profile with each other");
@@ -168,6 +172,10 @@ namespace Mzinga.Trainer
                 case "e":
                 case "enumerate":
                     cmd = Command.Enumerate;
+                    break;
+                case "a":
+                case "analyze":
+                    cmd = Command.Analyze;
                     break;
                 case "g":
                 case "generate":
@@ -308,6 +316,7 @@ namespace Mzinga.Trainer
         BattleRoyale,
         Cull,
         Enumerate,
+        Analyze,
         Generate,
         Lifecycle,
         Mate,

@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -532,6 +533,61 @@ namespace Mzinga.Trainer
             }
 
             Log("Enumerate end.");
+        }
+
+        public void Analyze()
+        {
+            Analyze(TrainerSettings.ProfilesPath);
+        }
+
+        public void Analyze(string path)
+        {
+            StartTime = DateTime.Now;
+            Log("Analyze start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+
+            string resultFile = Path.Combine(path, "analyze.csv");
+
+            using (StreamWriter sw = new StreamWriter(resultFile))
+            {
+                // Header
+                StringBuilder headerSB = new StringBuilder();
+
+                headerSB.Append("Id,EloRating,Generation,ParentA,ParentB,Wins,Losses,Draws");
+
+                MetricWeights.IterateOverWeights((player, playerWeight) =>
+                {
+                    headerSB.AppendFormat(",{0}.{1}", player, playerWeight);
+                }, (player, bugType, bugTypeWeight) =>
+                {
+                    headerSB.AppendFormat(",{0}.{1}.{2}", player, bugType, bugTypeWeight);
+                });
+
+                sw.WriteLine(headerSB.ToString());
+
+                foreach (Profile p in profiles)
+                {
+                    StringBuilder profileSB = new StringBuilder();
+
+                    profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}", p.Id, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
+
+                    MetricWeights normalized = p.MetricWeights.GetNormalized();
+
+                    MetricWeights.IterateOverWeights((player, playerWeight) =>
+                    {
+                        profileSB.AppendFormat(",{0}", normalized.Get(player, playerWeight));
+                    }, (player, bugType, bugTypeWeight) =>
+                    {
+                        profileSB.AppendFormat(",{0}", normalized.Get(player, bugType, bugTypeWeight));
+                    });
+
+                    sw.WriteLine(profileSB.ToString());
+                }
+            }
+
+            Log("Analyze end.");
         }
 
         public void Generate()
