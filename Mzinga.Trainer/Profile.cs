@@ -36,6 +36,14 @@ namespace Mzinga.Trainer
     {
         public Guid Id { get; private set; }
 
+        public string Name
+        {
+            get
+            {
+                return Id.ToString().Substring(0, 8);
+            }
+        }
+
         public int Generation { get; private set; } = 0;
 
         public Guid? ParentA { get; private set; } = null;

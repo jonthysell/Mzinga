@@ -555,7 +555,7 @@ namespace Mzinga.Trainer
                 // Header
                 StringBuilder headerSB = new StringBuilder();
 
-                headerSB.Append("Id,EloRating,Generation,ParentA,ParentB,Wins,Losses,Draws");
+                headerSB.Append("Id,Name,EloRating,Generation,ParentA,ParentB,Wins,Losses,Draws");
 
                 MetricWeights.IterateOverWeights((player, playerWeight) =>
                 {
@@ -571,9 +571,9 @@ namespace Mzinga.Trainer
                 {
                     StringBuilder profileSB = new StringBuilder();
 
-                    profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7}", p.Id, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
+                    profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}", p.Id, p.Name, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
 
-                    MetricWeights normalized = p.MetricWeights.GetNormalized();
+                    MetricWeights normalized = p.MetricWeights.GetNormalized(1000, true);
 
                     MetricWeights.IterateOverWeights((player, playerWeight) =>
                     {
@@ -1082,7 +1082,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("profile");
             }
 
-            return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Id.ToString().Substring(0, 8), profile.EloRating, IsProvisional(profile) ? "?" : " ", profile.Wins, profile.Losses, profile.Draws);
+            return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Name, profile.EloRating, IsProvisional(profile) ? "?" : " ", profile.Wins, profile.Losses, profile.Draws);
         }
 
         private bool IsProvisional(Profile profile)
