@@ -75,8 +75,10 @@ namespace Mzinga.Viewer
         private SolidColorBrush WhiteBrush;
         private SolidColorBrush BlackBrush;
 
-        private SolidColorBrush HighlightEdgeBrush;
-        private SolidColorBrush HighlightBodyBrush;
+        private SolidColorBrush SelectedMoveEdgeBrush;
+        private SolidColorBrush SelectedMoveBodyBrush;
+
+        private SolidColorBrush LastMoveEdgeBrush;
 
         private SolidColorBrush QueenBeeBrush;
         private SolidColorBrush SpiderBrush;
@@ -94,9 +96,11 @@ namespace Mzinga.Viewer
             WhiteBrush = new SolidColorBrush(Colors.White);
             BlackBrush = new SolidColorBrush(Colors.Black);
 
-            HighlightEdgeBrush = new SolidColorBrush(Colors.Orange);
-            HighlightBodyBrush = new SolidColorBrush(Colors.Aqua);
-            HighlightBodyBrush.Opacity = 0.25;
+            SelectedMoveEdgeBrush = new SolidColorBrush(Colors.Orange);
+            SelectedMoveBodyBrush = new SolidColorBrush(Colors.Aqua);
+            SelectedMoveBodyBrush.Opacity = 0.25;
+
+            LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
             QueenBeeBrush = new SolidColorBrush(Colors.Gold);
             SpiderBrush = new SolidColorBrush(Colors.Brown);
@@ -121,6 +125,7 @@ namespace Mzinga.Viewer
             switch (e.PropertyName)
             {
                 case "Board":
+                case "BoardHistory":
                 case "TargetMove":
                     AppViewModel.Instance.DoOnUIThread(() =>
                         {
@@ -158,6 +163,9 @@ namespace Mzinga.Viewer
 
                 WhiteHandStackPanel.MinHeight = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
                 BlackHandStackPanel.MinHeight = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+
+                Position lastMoveStart = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.OriginalPosition;
+                Position lastMoveEnd = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.Move?.Position;
 
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
                 Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
@@ -210,6 +218,30 @@ namespace Mzinga.Viewer
                         Canvas pieceCanvas = GetPieceCanvas(piece, size);
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
+                }
+
+                // Highlight the lastMove start position
+                if (null != lastMoveStart)
+                {
+                    Point center = GetPoint(lastMoveStart, size, true);
+
+                    Polygon hex = GetHex(center, size, HexType.LastMove);
+                    BoardCanvas.Children.Add(hex);
+
+                    minPoint = Min(center, size, minPoint);
+                    maxPoint = Max(center, size, maxPoint);
+                }
+
+                // Highlight the lastMove end position
+                if (null != lastMoveEnd)
+                {
+                    Point center = GetPoint(lastMoveEnd, size, true);
+
+                    Polygon hex = GetHex(center, size, HexType.LastMove);
+                    BoardCanvas.Children.Add(hex);
+
+                    minPoint = Min(center, size, minPoint);
+                    maxPoint = Max(center, size, maxPoint);
                 }
 
                 // Highlight the selected piece
@@ -432,14 +464,17 @@ namespace Mzinga.Viewer
                     hex.Stroke = BlackBrush;
                     break;
                 case HexType.ValidMove:
-                    hex.Fill = HighlightBodyBrush;
+                    hex.Fill = SelectedMoveBodyBrush;
                     break;
                 case HexType.SelectedPiece:
-                    hex.Stroke = HighlightEdgeBrush;
+                    hex.Stroke = SelectedMoveEdgeBrush;
                     break;
                 case HexType.SelectedMove:
-                    hex.Fill = HighlightBodyBrush;
-                    hex.Stroke = HighlightEdgeBrush;
+                    hex.Fill = SelectedMoveBodyBrush;
+                    hex.Stroke = SelectedMoveEdgeBrush;
+                    break;
+                case HexType.LastMove:
+                    hex.Stroke = LastMoveEdgeBrush;
                     break;
             }
 
@@ -523,7 +558,8 @@ namespace Mzinga.Viewer
             BlackPiece,
             ValidMove,
             SelectedPiece,
-            SelectedMove
+            SelectedMove,
+            LastMove
         }
 
         private Canvas GetPieceCanvas(Piece piece, double size)

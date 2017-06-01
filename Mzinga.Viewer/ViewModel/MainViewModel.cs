@@ -400,6 +400,11 @@ namespace Mzinga.Viewer.ViewModel
         {
             AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
 
+            AppVM.EngineWrapper.BoardHistoryUpdated += (boardHistory) =>
+            {
+                RaisePropertyChanged("BoardHistory");
+            };
+
             AppVM.EngineWrapper.TargetPieceUpdated += (pieceName) =>
             {
                 RaisePropertyChanged("TargetMove");
@@ -423,7 +428,6 @@ namespace Mzinga.Viewer.ViewModel
         private void OnBoardUpdated(Board board)
         {
             RaisePropertyChanged("Board");
-            RaisePropertyChanged("BoardHistory");
             RaisePropertyChanged("Pass");
             RaisePropertyChanged("PlayBestMove");
             RaisePropertyChanged("FindBestMove");

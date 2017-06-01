@@ -42,6 +42,19 @@ namespace Mzinga.Core
             }
         }
 
+        public BoardHistoryItem LastMove
+        {
+            get
+            {
+                if (_items.Count > 0)
+                {
+                    return _items[_items.Count - 1];
+                }
+
+                return null;
+            }
+        }
+
         private List<BoardHistoryItem> _items;
 
         public BoardHistory()
