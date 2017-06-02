@@ -191,7 +191,7 @@ namespace Mzinga.Core.AI
             {
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = EvaluateMovesToDepth(gameBoard, depth, movesToEvaluate);
-                depth++;
+                depth = 1 + Math.Max(depth, movesToEvaluate[0].Depth);
             }
 
             return movesToEvaluate;
