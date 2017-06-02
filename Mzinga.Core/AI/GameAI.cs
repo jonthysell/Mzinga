@@ -160,7 +160,7 @@ namespace Mzinga.Core.AI
 
             BestMoveMetrics.End();
 
-            return evaluatedMoves[0].Move;
+            return evaluatedMoves.BestMove.Move;
         }
 
         private EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)
@@ -179,19 +179,32 @@ namespace Mzinga.Core.AI
                 movesToEvaluate.Add(new EvaluatedMove(move));
             }
 
-            // No choices, don't bother evaluating
             if (movesToEvaluate.Count <= 1 || BestMoveMetrics.MaxSearchDepth == 0)
             {
+                // No choices, don't bother evaluating
                 return movesToEvaluate;
             }
 
             // Iterative search
             int depth = 1;
-            while (BestMoveMetrics.HasTimeLeft && depth <= BestMoveMetrics.MaxSearchDepth)
+            while (depth <= BestMoveMetrics.MaxSearchDepth)
             {
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = EvaluateMovesToDepth(gameBoard, depth, movesToEvaluate);
-                depth = 1 + Math.Max(depth, movesToEvaluate[0].Depth);
+
+                if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
+                {
+                    // The best move ends the game, stop searching
+                    break;
+                }
+
+                if (!BestMoveMetrics.HasTimeLeft)
+                {
+                    // Out of time, stop searching
+                    break;
+                }
+
+                depth = 1 + Math.Max(depth, movesToEvaluate.BestMove.Depth);
             }
 
             return movesToEvaluate;
@@ -245,6 +258,7 @@ namespace Mzinga.Core.AI
                     {
                         if (null != tEntry.BestMove)
                         {
+                            // This should only be hit once by EvaluateMoves since it now skips calling the next depths
                             movesToEvaluate.Update(new EvaluatedMove(new Move(tEntry.BestMove), tEntry.Value, tEntry.Depth));
                             return movesToEvaluate;
                         }
@@ -262,7 +276,8 @@ namespace Mzinga.Core.AI
             {
                 if (!BestMoveMetrics.HasTimeLeft)
                 {
-                    break;
+                    // Time-out
+                    return movesToEvaluate;
                 }
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
@@ -271,8 +286,8 @@ namespace Mzinga.Core.AI
 
                 if (!value.HasValue)
                 {
-                    // Time-out occurred during evaluation, so don't save it
-                    break;
+                    // Time-out occurred during evaluation
+                    return movesToEvaluate;
                 }
 
                 EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, value.Value, depth);
@@ -283,17 +298,9 @@ namespace Mzinga.Core.AI
 
                 if (alpha >= beta)
                 {
+                    // Since beta never changes in this function, this means we've found a 100% winning move
                     BestMoveMetrics.AlphaBetaCuts++;
                     break;
-                }
-            }
-
-            // We must have cut-off early, add the remaining moves to the end (possibly for the next iteration)
-            if (evaluatedMoves.Count < movesToEvaluate.Count)
-            {
-                for (int i = evaluatedMoves.Count; i < movesToEvaluate.Count; i++)
-                {
-                    evaluatedMoves.Add(movesToEvaluate[i]);
                 }
             }
 
@@ -301,16 +308,17 @@ namespace Mzinga.Core.AI
 
             if (bestValue <= alphaOriginal)
             {
+                // Since alphaOriginal never changes, this means we've got 100% losing moves
                 tEntry.Type = TranspositionTableEntryType.UpperBound;
             }
             else
             {
                 tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
-                tEntry.BestMove = evaluatedMoves[0].Move.ToString();
+                tEntry.BestMove = evaluatedMoves.BestMove.Move.ToString();
             }
 
             tEntry.Value = bestValue;
-            tEntry.Depth = evaluatedMoves[0].Depth;
+            tEntry.Depth = depth;
 
             _transpositionTable.Store(key, tEntry);
 

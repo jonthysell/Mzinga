@@ -53,6 +53,19 @@ namespace Mzinga.Core.AI
 
         public double BestScore { get; private set; }
 
+        public EvaluatedMove BestMove
+        {
+            get
+            {
+                if (_evaluatedMoves.Count > 0)
+                {
+                    return _evaluatedMoves[0];
+                }
+
+                return null;
+            }
+        }
+
         private IComparer<EvaluatedMove> _comparer;
 
         private List<EvaluatedMove> _evaluatedMoves;
