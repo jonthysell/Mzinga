@@ -232,7 +232,9 @@ namespace Mzinga.Core.AI
 
             double alphaOriginal = alpha;
 
-            string key = gameBoard.TranspositionKey;
+            Color maxColor = gameBoard.CurrentTurnColor;
+
+            string key = GetTranspositionKey(gameBoard, maxColor);
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -265,8 +267,6 @@ namespace Mzinga.Core.AI
                     }
                 }
             }
-
-            Color maxColor = gameBoard.CurrentTurnColor;
 
             EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
@@ -329,7 +329,7 @@ namespace Mzinga.Core.AI
         {
             double alphaOriginal = alpha;
 
-            string key = gameBoard.TranspositionKey;
+            string key = GetTranspositionKey(gameBoard, maxColor);
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -474,7 +474,7 @@ namespace Mzinga.Core.AI
                 return MetricWeights.DrawScore;
             }
 
-            string key = gameBoard.TranspositionKey;
+            string key = GetTranspositionKey(gameBoard, maxColor);
 
             double score;
             if (_cachedBoardScores.TryLookup(key, out score))
@@ -556,5 +556,10 @@ namespace Mzinga.Core.AI
         }
 
         #endregion
+
+        private string GetTranspositionKey(GameBoard gameBoard, Color maxColor)
+        {
+            return string.Format("{0};{1}", maxColor.ToString()[0], gameBoard.TranspositionKey);
+        }
     }
 }

@@ -121,8 +121,6 @@ namespace Mzinga.Core
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    sb.Append(CurrentTurnColor.ToString()[0]);
-
                     foreach (Piece piece in PiecesInPlay)
                     {
                         sb.Append(EnumUtils.GetShortName(piece.PieceName, true));
