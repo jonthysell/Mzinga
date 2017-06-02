@@ -230,11 +230,11 @@ namespace Mzinga.Core.AI
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
 
+            int color = gameBoard.CurrentTurnColor == Color.White ? 1 : -1;
+
             double alphaOriginal = alpha;
 
-            Color maxColor = gameBoard.CurrentTurnColor;
-
-            string key = GetTranspositionKey(gameBoard, maxColor);
+            string key = GetColoredTranspositionKey(gameBoard);
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -281,7 +281,7 @@ namespace Mzinga.Core.AI
                 }
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
-                double? value = AlphaBetaSearch(gameBoard, depth - 1, alpha, beta, maxColor, false);
+                double? value = -1 * NegaMaxSearch(gameBoard, depth - 1, -beta, -alpha, -color);
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
@@ -298,7 +298,6 @@ namespace Mzinga.Core.AI
 
                 if (alpha >= beta)
                 {
-                    // Since beta never changes in this function, this means we've found a 100% winning move
                     BestMoveMetrics.AlphaBetaCuts++;
                     break;
                 }
@@ -308,7 +307,6 @@ namespace Mzinga.Core.AI
 
             if (bestValue <= alphaOriginal)
             {
-                // Since alphaOriginal never changes, this means we've got 100% losing moves
                 tEntry.Type = TranspositionTableEntryType.UpperBound;
             }
             else
@@ -325,11 +323,11 @@ namespace Mzinga.Core.AI
             return evaluatedMoves;
         }
 
-        private double? AlphaBetaSearch(GameBoard gameBoard, int depth, double alpha, double beta, Color maxColor, bool maxPlayer)
+        private double? NegaMaxSearch(GameBoard gameBoard, int depth, double alpha, double beta, int color)
         {
             double alphaOriginal = alpha;
 
-            string key = GetTranspositionKey(gameBoard, maxColor);
+            string key = GetColoredTranspositionKey(gameBoard);
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -364,10 +362,10 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || gameBoard.GameIsOver)
             {
-                return CalculateBoardScore(gameBoard, maxColor);
+                return color * CalculateBoardScore(gameBoard);
             }
 
-            double bestValue = maxPlayer ? double.NegativeInfinity : double.PositiveInfinity;
+            double bestValue = double.NegativeInfinity;
             Move bestMove = null != tEntry?.BestMove ? new Move(tEntry.BestMove) : null;
 
             List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
@@ -391,7 +389,7 @@ namespace Mzinga.Core.AI
                 }
 
                 gameBoard.TrustedPlay(move);
-                double? value = AlphaBetaSearch(gameBoard, depth - 1, alpha, beta, maxColor, !maxPlayer);
+                double? value = -1 * NegaMaxSearch(gameBoard, depth - 1, -beta, -alpha, -color);
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
@@ -399,24 +397,13 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
-                if (maxPlayer)
+                if (value >= bestValue)
                 {
-                    if (value > bestValue)
-                    {
-                        bestValue = value.Value;
-                        bestMove = move;
-                    }
-                    alpha = Math.Max(alpha, bestValue);
+                    bestValue = value.Value;
+                    bestMove = move;
                 }
-                else
-                {
-                    if (value < bestValue)
-                    {
-                        bestValue = value.Value;
-                        bestMove = move;
-                    }
-                    beta = Math.Min(beta, bestValue);
-                }
+
+                alpha = Math.Max(alpha, bestValue);
 
                 if (alpha >= beta)
                 {
@@ -449,21 +436,19 @@ namespace Mzinga.Core.AI
 
         #region Board Scores
 
-        private double CalculateBoardScore(GameBoard gameBoard, Color maxColor)
+        private double CalculateBoardScore(GameBoard gameBoard)
         {
             if (null == gameBoard)
             {
                 throw new ArgumentNullException("gameBoard");
             }
 
-            if ((maxColor == Color.White && gameBoard.BoardState == BoardState.WhiteWins) ||
-                (maxColor == Color.Black && gameBoard.BoardState == BoardState.BlackWins))
+            if (gameBoard.BoardState == BoardState.WhiteWins)
             {
                 BestMoveMetrics.BoardScoreConstantResults++;
                 return double.PositiveInfinity;
             }
-            else if ((maxColor == Color.White && gameBoard.BoardState == BoardState.BlackWins) ||
-                     (maxColor == Color.Black && gameBoard.BoardState == BoardState.WhiteWins))
+            else if (gameBoard.BoardState == BoardState.BlackWins)
             {
                 BestMoveMetrics.BoardScoreConstantResults++;
                 return double.NegativeInfinity;
@@ -474,7 +459,7 @@ namespace Mzinga.Core.AI
                 return MetricWeights.DrawScore;
             }
 
-            string key = GetTranspositionKey(gameBoard, maxColor);
+            string key = gameBoard.TranspositionKey;
 
             double score;
             if (_cachedBoardScores.TryLookup(key, out score))
@@ -484,7 +469,9 @@ namespace Mzinga.Core.AI
 
             BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
 
-            score = CalculateBoardScore(boardMetrics, maxColor);
+            score = (boardMetrics[Color.White].ValidMoveCount - boardMetrics[Color.Black].ValidMoveCount);
+
+            //score = CalculateBoardScore(boardMetrics, maxColor);
             BestMoveMetrics.BoardScoreCalculatedResults++;
 
             _cachedBoardScores.Store(key, score);
@@ -557,9 +544,9 @@ namespace Mzinga.Core.AI
 
         #endregion
 
-        private string GetTranspositionKey(GameBoard gameBoard, Color maxColor)
+        private string GetColoredTranspositionKey(GameBoard gameBoard)
         {
-            return string.Format("{0};{1}", maxColor.ToString()[0], gameBoard.TranspositionKey);
+            return string.Format("{0};{1}", gameBoard.CurrentTurnColor.ToString()[0], gameBoard.TranspositionKey);
         }
     }
 }

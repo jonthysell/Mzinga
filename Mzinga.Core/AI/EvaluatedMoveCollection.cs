@@ -49,8 +49,6 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public bool SortAscending { get; private set; }
-
         public double BestScore { get; private set; }
 
         public EvaluatedMove BestMove
@@ -66,24 +64,13 @@ namespace Mzinga.Core.AI
             }
         }
 
-        private IComparer<EvaluatedMove> _comparer;
+        private IComparer<EvaluatedMove> _comparer = new EvaluatedMoveDescendingComparer();
 
         private List<EvaluatedMove> _evaluatedMoves;
 
-        public EvaluatedMoveCollection(bool sortAscending = false)
+        public EvaluatedMoveCollection()
         {
-            SortAscending = sortAscending;
-
             _evaluatedMoves = new List<EvaluatedMove>(DefaultCapacity);
-
-            if (SortAscending)
-            {
-                _comparer = new EvaluatedMoveAscendingComparer();
-            }
-            else
-            {
-                _comparer = new EvaluatedMoveDescendingComparer();
-            }
         }
 
         public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
@@ -155,19 +142,6 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public IEnumerable<EvaluatedMove> GetBestMoves()
-        {
-            foreach (EvaluatedMove evaluatedMove in this)
-            {
-                if (evaluatedMove.ScoreAfterMove != BestScore)
-                {
-                    break;
-                }
-
-                yield return evaluatedMove;
-            }
-        }
-
         public IEnumerator<EvaluatedMove> GetEnumerator()
         {
             foreach (EvaluatedMove evaluatedMove in _evaluatedMoves)
@@ -201,31 +175,6 @@ namespace Mzinga.Core.AI
         private const int DefaultCapacity = 256;
 
         public const char EvaluatedMoveStringSeparator = ';';
-
-        private class EvaluatedMoveAscendingComparer : IComparer<EvaluatedMove>
-        {
-            public int Compare(EvaluatedMove a, EvaluatedMove b)
-            {
-                if (null == a)
-                {
-                    throw new ArgumentNullException("a");
-                }
-
-                if (null == b)
-                {
-                    throw new ArgumentNullException("b");
-                }
-
-                int result = a.CompareTo(b);
-
-                if (result == 0)
-                {
-                    result = a.Move.CompareTo(b.Move);
-                }
-
-                return result;
-            }
-        }
 
         private class EvaluatedMoveDescendingComparer : IComparer<EvaluatedMove>
         {
