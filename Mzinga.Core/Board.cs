@@ -573,38 +573,40 @@ namespace Mzinga.Core
             BoardMetrics boardMetrics = new BoardMetrics(BoardState);
 
             // Get the metrics for the current turn
-            PlayerMetrics currentPlayerMetrics = GetCurrentPlayerMetrics();
-            boardMetrics[CurrentTurnColor].CopyFrom(currentPlayerMetrics);
+            SetCurrentPlayerMetrics(boardMetrics);
 
-            // Save off current valid placements since we'll be returning to it
+            // Save off current valid moves/placements since we'll be returning to it
+            MoveSet[] validMoves = _cachedValidMovesByPiece;
+            _cachedValidMovesByPiece = null;
+
             HashSet<Position> validPlacements = _cachedValidPlacementPositions;
             _cachedValidPlacementPositions = null;
 
             // Spoof going to the next turn to get the opponent's metrics
             _currentTurn++;
-            PlayerMetrics opponentPlayerMetrics = GetCurrentPlayerMetrics();
-            boardMetrics[CurrentTurnColor].CopyFrom(opponentPlayerMetrics);
+            SetCurrentPlayerMetrics(boardMetrics);
             _currentTurn--;
 
-            // Returned, so reload saved valid placements into cache
+            // Returned, so reload saved valid moves/placements into cache
             _cachedValidPlacementPositions = validPlacements;
+            _cachedValidMovesByPiece = validMoves;
 
             return boardMetrics;
         }
 
-        public PlayerMetrics GetCurrentPlayerMetrics()
+        private void SetCurrentPlayerMetrics(BoardMetrics boardMetrics)
         {
-            PlayerMetrics playerMetrics = new PlayerMetrics(CurrentTurnColor);
-
-            foreach (Piece piece in CurrentTurnPieces)
+            if (null == boardMetrics)
             {
-                PieceMetrics pieceMetrics = GetPieceMetrics(piece);
-                playerMetrics.CopyFrom(pieceMetrics);
+                throw new ArgumentNullException("boardMetrics");
             }
 
-            playerMetrics.RecalculateMetrics();
+            IEnumerable<PieceName> currentTurnPieceNames = CurrentTurnColor == Color.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
 
-            return playerMetrics;
+            foreach (PieceName pieceName in currentTurnPieceNames)
+            {
+                boardMetrics[pieceName] = GetPieceMetrics(pieceName);
+            }
         }
 
         public PieceMetrics GetPieceMetrics(PieceName pieceName)
@@ -616,25 +618,15 @@ namespace Mzinga.Core
 
             Piece targetPiece = GetPiece(pieceName);
 
-            return GetPieceMetrics(targetPiece);
-        }
+            PieceMetrics pieceMetrics = new PieceMetrics();
 
-        private PieceMetrics GetPieceMetrics(Piece targetPiece)
-        {
-            if (null == targetPiece)
-            {
-                throw new ArgumentOutOfRangeException("targetPiece");
-            }
-
-            PieceMetrics pieceMetrics = new PieceMetrics(targetPiece.PieceName);
+            pieceMetrics.IsInPlay = targetPiece.InPlay;
 
             // Move metrics
             MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
             pieceMetrics.ValidMoveCount = validMoves.Count;
 
             pieceMetrics.NeighborCount = CountNeighbors(targetPiece.PieceName);
-
-            pieceMetrics.IsInPlay = targetPiece.InPlay;
 
             return pieceMetrics;
         }
@@ -726,12 +718,12 @@ namespace Mzinga.Core
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
                 {
-                    if (CurrentTurn == 0 && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
+                    if (CurrentTurn == 0 && targetPiece.Color == Color.White && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
                     {
                         // First move must be at the origin and not the White Queen Bee
                         validMoves.Add(new Move(targetPiece.PieceName, Position.Origin));
                     }
-                    else if (CurrentTurn == 1 && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
+                    else if (CurrentTurn == 1 && targetPiece.Color == Color.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
                     {
                         // Second move must be around the origin and not the Black Queen Bee
                         foreach (Position neighbor in Position.Origin.Neighbors)

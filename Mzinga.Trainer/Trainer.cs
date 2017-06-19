@@ -530,6 +530,12 @@ namespace Mzinga.Trainer
             foreach (Profile p in profiles)
             {
                 Log("{0}", ToString(p));
+
+                string profilePath = Path.Combine(path, p.Id + ".xml");
+                using (FileStream fs = new FileStream(profilePath, FileMode.Create))
+                {
+                    p.WriteXml(fs);
+                }
             }
 
             Log("Enumerate end.");
@@ -557,12 +563,9 @@ namespace Mzinga.Trainer
 
                 headerSB.Append("Id,Name,EloRating,Generation,ParentA,ParentB,Wins,Losses,Draws");
 
-                MetricWeights.IterateOverWeights((player, playerWeight) =>
+                MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                 {
-                    headerSB.AppendFormat(",{0}.{1}", player, playerWeight);
-                }, (player, bugType, bugTypeWeight) =>
-                {
-                    headerSB.AppendFormat(",{0}.{1}.{2}", player, bugType, bugTypeWeight);
+                    headerSB.AppendFormat(",{0}.{1}", bugType, bugTypeWeight);
                 });
 
                 sw.WriteLine(headerSB.ToString());
@@ -575,12 +578,9 @@ namespace Mzinga.Trainer
 
                     MetricWeights normalized = p.MetricWeights.GetNormalized(1000, true);
 
-                    MetricWeights.IterateOverWeights((player, playerWeight) =>
+                    MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                     {
-                        profileSB.AppendFormat(",{0}", normalized.Get(player, playerWeight));
-                    }, (player, bugType, bugTypeWeight) =>
-                    {
-                        profileSB.AppendFormat(",{0}", normalized.Get(player, bugType, bugTypeWeight));
+                        profileSB.AppendFormat(",{0}", normalized.Get(bugType, bugTypeWeight));
                     });
 
                     sw.WriteLine(profileSB.ToString());

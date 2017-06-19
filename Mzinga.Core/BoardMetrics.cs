@@ -37,31 +37,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidMoveCount; });
-            }
-        }
-
-        public int ValidPlacementCount
-        {
-            get
-            {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidPlacementCount; });
-            }
-        }
-
-        public int ValidMovementCount
-        {
-            get
-            {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.ValidMovementCount; });
-            }
-        }
-
-        public int PieceCount
-        {
-            get
-            {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PieceCount; });
+                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.ValidMoveCount : 0; });
             }
         }
 
@@ -69,15 +45,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesInPlayCount; });
-            }
-        }
-
-        public int PiecesInHandCount
-        {
-            get
-            {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesInHandCount; });
+                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.InPlay : 0; });
             }
         }
 
@@ -85,32 +53,29 @@ namespace Mzinga.Core
         {
             get
             {
-                return _playerMetrics.Values.Sum((playerMetrics) => { return playerMetrics.PiecesPinnedCount; });
+                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.IsPinned : 0; });
             }
         }
 
-        public PlayerMetrics this[Color playerColor]
+        public PieceMetrics this[PieceName pieceName]
         {
             get
             {
-                return Get(playerColor);
+                return _pieceMetrics[(int)pieceName];
+            }
+            set
+            {
+                _pieceMetrics[(int)pieceName] = value;
             }
         }
 
-        private Dictionary<Color, PlayerMetrics> _playerMetrics;
+        private PieceMetrics[] _pieceMetrics;
 
         public BoardMetrics(BoardState boardState)
         {
             BoardState = boardState;
 
-            _playerMetrics = new Dictionary<Color, PlayerMetrics>();
-            _playerMetrics.Add(Color.White, new PlayerMetrics(Color.White));
-            _playerMetrics.Add(Color.Black, new PlayerMetrics(Color.Black));
-        }
-
-        public PlayerMetrics Get(Color playerColor)
-        {
-            return _playerMetrics[playerColor];
+            _pieceMetrics = new PieceMetrics[EnumUtils.NumPieceNames];
         }
     }
 }

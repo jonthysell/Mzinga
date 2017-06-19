@@ -30,7 +30,15 @@ namespace Mzinga.Core
 {
     public class PieceMetrics
     {
-        public PieceName PieceName { get; private set; }
+        public bool IsInPlay { get; internal set; } = false;
+
+        public int InPlay
+        {
+            get
+            {
+                return IsInPlay ? 1 : 0;
+            }
+        }
 
         public int ValidMoveCount
         {
@@ -47,21 +55,13 @@ namespace Mzinga.Core
                 _validMoveCount = value;
             }
         }
-        private int _validMoveCount;
+        private int _validMoveCount = 0;
 
-        public int ValidPlacementCount
+        public int IsPinned
         {
             get
             {
-                return InHand * ValidMoveCount;
-            }
-        }
-
-        public int ValidMovementCount
-        {
-            get
-            {
-                return InPlay * ValidMoveCount;
+                return ValidMoveCount == 0 ? 1 : 0;
             }
         }
 
@@ -80,63 +80,8 @@ namespace Mzinga.Core
                 _neighborCount = value;
             }
         }
-        private int _neighborCount;
+        private int _neighborCount = 0;
 
-        public bool IsInPlay { get; internal set; }
-
-        public int InHand
-        {
-            get
-            {
-                return IsInPlay ? 0 : 1;
-            }
-        }
-
-        public int InPlay
-        {
-            get
-            {
-                return IsInPlay ? 1 : 0;
-            }
-        }
-
-        public int IsPinned
-        {
-            get
-            {
-                return (IsInPlay && ValidMovementCount == 0) ? 1 : 0;
-            }
-        }
-
-        public PieceMetrics(PieceName pieceName)
-        {
-            if (pieceName == PieceName.INVALID)
-            {
-                throw new ArgumentOutOfRangeException("pieceName");
-            }
-
-            PieceName = pieceName;
-
-            ValidMoveCount = 0;
-            NeighborCount = 0;
-        }
-
-        internal void CopyFrom(PieceMetrics pieceMetrics)
-        {
-            if (null == pieceMetrics)
-            {
-                throw new ArgumentNullException("pieceMetrics");
-            }
-
-            if (PieceName != pieceMetrics.PieceName)
-            {
-                throw new ArgumentOutOfRangeException("pieceMetrics");
-            }
-
-            IsInPlay = pieceMetrics.IsInPlay;
-
-            ValidMoveCount = pieceMetrics.ValidMoveCount;
-            NeighborCount = pieceMetrics.NeighborCount;
-        }
+        public PieceMetrics() { }
     }
 }

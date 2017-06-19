@@ -443,6 +443,8 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("gameBoard");
             }
 
+            // Always score from white's point of view
+
             if (gameBoard.BoardState == BoardState.WhiteWins)
             {
                 BestMoveMetrics.BoardScoreConstantResults++;
@@ -456,7 +458,7 @@ namespace Mzinga.Core.AI
             else if (gameBoard.BoardState == BoardState.Draw)
             {
                 BestMoveMetrics.BoardScoreConstantResults++;
-                return MetricWeights.DrawScore;
+                return 0.0;
             }
 
             string key = gameBoard.TranspositionKey;
@@ -469,9 +471,7 @@ namespace Mzinga.Core.AI
 
             BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
 
-            score = (boardMetrics[Color.White].ValidMoveCount - boardMetrics[Color.Black].ValidMoveCount);
-
-            //score = CalculateBoardScore(boardMetrics, maxColor);
+            score = CalculateBoardScore(boardMetrics);
             BestMoveMetrics.BoardScoreCalculatedResults++;
 
             _cachedBoardScores.Store(key, score);
@@ -479,65 +479,21 @@ namespace Mzinga.Core.AI
             return score;
         }
 
-        private double CalculateBoardScore(BoardMetrics boardMetrics, Color maxColor)
+        private double CalculateBoardScore(BoardMetrics boardMetrics)
         {
-            Color minColor = (Color)(1 - (int)maxColor);
-
             double score = 0;
 
-            // Add max player scores
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.ValidMoveWeight) * boardMetrics[maxColor].ValidMoveCount;
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.ValidPlacementWeight) * boardMetrics[maxColor].ValidPlacementCount;
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.ValidMovementWeight) * boardMetrics[maxColor].ValidMovementCount;
-
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.InHandWeight) * boardMetrics[maxColor].PiecesInHandCount;
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.InPlayWeight) * boardMetrics[maxColor].PiecesInPlayCount;
-
-            score += MetricWeights.Get(Player.Maximizing, PlayerWeight.IsPinnedWeight) * boardMetrics[maxColor].PiecesPinnedCount;
-
-            // Add min player scores
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.ValidMoveWeight) * boardMetrics[minColor].ValidMoveCount;
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.ValidPlacementWeight) * boardMetrics[minColor].ValidPlacementCount;
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.ValidMovementWeight) * boardMetrics[minColor].ValidMovementCount;
-
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.InHandWeight) * boardMetrics[minColor].PiecesInHandCount;
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.InPlayWeight) * boardMetrics[minColor].PiecesInPlayCount;
-
-            score += MetricWeights.Get(Player.Minimizing, PlayerWeight.IsPinnedWeight) * boardMetrics[minColor].PiecesPinnedCount;
-
-            // Add max player piece scores
-            foreach (PieceName pieceName in boardMetrics[maxColor].PieceNames)
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 BugType bugType = EnumUtils.GetBugType(pieceName);
-                score += CalculatePieceScore(Player.Maximizing, boardMetrics[maxColor][pieceName]);
+
+                double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
+
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.ValidMoveWeight) * boardMetrics[pieceName].ValidMoveCount;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.NeighborWeight) * boardMetrics[pieceName].NeighborCount;
             }
-
-            // Add min player piece scores
-            foreach (PieceName pieceName in boardMetrics[minColor].PieceNames)
-            {
-                BugType bugType = EnumUtils.GetBugType(pieceName);
-                score += CalculatePieceScore(Player.Minimizing, boardMetrics[minColor][pieceName]);
-            }
-
-            return score;
-        }
-
-        private double CalculatePieceScore(Player player, PieceMetrics metrics)
-        {
-            BugType bugType = EnumUtils.GetBugType(metrics.PieceName);
-
-            double score = 0.0;
-
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.ValidMoveWeight) * metrics.ValidMoveCount;
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.ValidPlacementWeight) * metrics.ValidPlacementCount;
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.ValidMovementWeight) * metrics.ValidMovementCount;
-
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.NeighborWeight) * metrics.NeighborCount;
-
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.InHandWeight) * metrics.InHand;
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.InPlayWeight) * metrics.InPlay;
-
-            score += MetricWeights.Get(player, bugType, BugTypeWeight.IsPinnedWeight) * metrics.IsPinned;
 
             return score;
         }

@@ -40,9 +40,14 @@ namespace Mzinga.Trainer
         {
             get
             {
-                return Id.ToString().Substring(0, 8);
+                return !string.IsNullOrWhiteSpace(_name) ? _name : Id.ToString().Substring(0, 8);
+            }
+            set
+            {
+                _name = value;
             }
         }
+        private string _name = null;
 
         public int Generation { get; private set; } = 0;
 
@@ -138,7 +143,7 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        private Profile(Guid id, int generation, Guid? parentA, Guid? parentB, int eloRating, int wins, int losses, int draws, MetricWeights metricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
+        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, int wins, int losses, int draws, MetricWeights metricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
         {
             if (generation < 0)
             {
@@ -171,6 +176,8 @@ namespace Mzinga.Trainer
             }
 
             Id = id;
+            Name = name;
+
             Generation = (!parentA.HasValue || !parentB.HasValue) ? 0 : generation;
 
             ParentA = parentA;
@@ -213,7 +220,7 @@ namespace Mzinga.Trainer
             Update();
         }
 
-        public void Update()
+        private void Update()
         {
             LastUpdatedTimestamp = DateTime.Now;
         }
@@ -235,6 +242,13 @@ namespace Mzinga.Trainer
                 writer.WriteStartElement("Id");
                 writer.WriteValue(Id.ToString());
                 writer.WriteEndElement();
+
+                if (!string.IsNullOrWhiteSpace(_name))
+                {
+                    writer.WriteStartElement("Name");
+                    writer.WriteValue(_name.Trim());
+                    writer.WriteEndElement();
+                }
 
                 writer.WriteStartElement("Generation");
                 writer.WriteValue(Generation);
@@ -281,32 +295,19 @@ namespace Mzinga.Trainer
 
                 writer.WriteStartElement("MetricWeights");
 
-                writer.WriteStartElement("DrawScore");
-                writer.WriteValue(MetricWeights.DrawScore);
-                writer.WriteEndElement();
-
-                MetricWeights.IterateOverWeights((player, playerWeight) =>
+                MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                 {
-                    string key = MetricWeights.GetKeyName(player, playerWeight);
-                    double value = MetricWeights.Get(player, playerWeight);
-
-                    writer.WriteStartElement(key);
-                    writer.WriteValue(value);
-                    writer.WriteEndElement();
-                },
-                (player, bugType, bugTypeWeight) =>
-                {
-                    string key = MetricWeights.GetKeyName(player, bugType, bugTypeWeight);
-                    double value = MetricWeights.Get(player, bugType, bugTypeWeight);
+                    string key = MetricWeights.GetKeyName(bugType, bugTypeWeight);
+                    double value = MetricWeights.Get(bugType, bugTypeWeight);
 
                     writer.WriteStartElement(key);
                     writer.WriteValue(value);
                     writer.WriteEndElement();
                 });
 
-                writer.WriteEndElement();
+                writer.WriteEndElement(); // </MetricWeights>
 
-                writer.WriteEndElement();
+                writer.WriteEndElement(); // </Profile>
             }
         }
 
@@ -318,6 +319,7 @@ namespace Mzinga.Trainer
             }
 
             Guid id = Guid.Empty;
+            string name = null;
             int generation = 0;
 
             Guid? parentA = null;
@@ -344,6 +346,9 @@ namespace Mzinga.Trainer
                         {
                             case "Id":
                                 id = Guid.Parse(reader.ReadElementContentAsString());
+                                break;
+                            case "Name":
+                                name = reader.ReadElementContentAsString();
                                 break;
                             case "Generation":
                                 generation = reader.ReadElementContentAsInt();
@@ -380,7 +385,7 @@ namespace Mzinga.Trainer
                 }
             }
 
-            return new Profile(id, generation, parentA, parentB, eloRating, wins, losses, draws, metricWeights, creationTimestamp, lastUpdateTimestamp);
+            return new Profile(id, name, generation, parentA, parentB, eloRating, wins, losses, draws, metricWeights, creationTimestamp, lastUpdateTimestamp);
         }
 
         public static Profile Generate(double minWeight, double maxWeight)
@@ -421,15 +426,10 @@ namespace Mzinga.Trainer
         {
             MetricWeights mw = new MetricWeights();
 
-            MetricWeights.IterateOverWeights((player, playerWeight) =>
+            MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
             {
                 double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
-                mw.Set(player, playerWeight, value);
-            },
-            (player, bugType, bugTypeWeight) =>
-            {
-                double value = minWeight + (Random.NextDouble() * (maxWeight - minWeight));
-                mw.Set(player, bugType, bugTypeWeight, value);
+                mw.Set(bugType, bugTypeWeight, value);
             });
 
             return mw;
@@ -439,25 +439,15 @@ namespace Mzinga.Trainer
         {
             MetricWeights mw = new MetricWeights();
 
-            MetricWeights.IterateOverWeights((player, playerWeight) =>
+            MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
             {
-                double value = 0.5 * (mwA.Get(player, playerWeight) + mwB.Get(player, playerWeight));
-                if (value == 0.0)
-                {
-                    value = -0.01 + (Random.NextDouble() * 0.02);
-                }
-                value = value * (minMix + (Random.NextDouble() * (maxMix - minMix)));
-                mw.Set(player, playerWeight, value);
-            },
-            (player, bugType, bugTypeWeight) =>
-            {
-                double value = 0.5 * (mwA.Get(player, bugType, bugTypeWeight) + mwB.Get(player, bugType, bugTypeWeight));
+                double value = 0.5 * (mwA.Get(bugType, bugTypeWeight) + mwB.Get(bugType, bugTypeWeight));
                 if (value == 0.0)
                 {
                     value = -0.01 + (Random.NextDouble() * 0.02);
                 }
                 value = value * (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
-                mw.Set(player, bugType, bugTypeWeight, value);
+                mw.Set(bugType, bugTypeWeight, value);
             });
 
             return mw;
