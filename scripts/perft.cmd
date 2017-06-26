@@ -1,21 +1,9 @@
 @@echo off
-:CheckPowerShellExecutionPolicy
-@@FOR /F "tokens=*" %%i IN ('powershell -noprofile -command Get-ExecutionPolicy') DO Set PSExecMode=%%i
-@@if /I "%PSExecMode%"=="unrestricted" goto :RunPowerShellScript
-@@if /I "%PSExecMode%"=="remotesigned" goto :RunPowerShellScript
- 
-@@NET FILE 1>NUL 2>NUL
-@@if not "%ERRORLEVEL%"=="0" (
-@@echo Elevation required to change PowerShell execution policy from [%PSExecMode%] to RemoteSigned
-@@powershell -NoProfile -Command "start-process -Wait -Verb 'RunAs' -FilePath 'powershell.exe' -ArgumentList '-NoProfile Set-ExecutionPolicy RemoteSigned'"
-@@) else (
-@@powershell -NoProfile Set-ExecutionPolicy RemoteSigned
-@@)
- 
+
 :RunPowerShellScript
 @@set POWERSHELL_BAT_ARGS=%*
 @@if defined POWERSHELL_BAT_ARGS set POWERSHELL_BAT_ARGS=%POWERSHELL_BAT_ARGS:"=\"%
-@@PowerShell -Command Invoke-Expression $('$args=@(^&{$args} %POWERSHELL_BAT_ARGS%);'+[String]::Join([Environment]::NewLine,$((Get-Content '%~f0') -notmatch '^^@@^|^^:'))) & goto :EOF
+@@PowerShell -ExecutionPolicy RemoteSigned -Command Invoke-Expression $('$args=@(^&{$args} %POWERSHELL_BAT_ARGS%);'+[String]::Join([Environment]::NewLine,$((Get-Content '%~f0') -notmatch '^^@@^|^^:'))) & goto :EOF
 
 { 
     # Start PowerShell
