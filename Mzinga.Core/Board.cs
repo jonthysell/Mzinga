@@ -793,7 +793,7 @@ namespace Mzinga.Core
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
                         foreach (Position neighbor in piece.Position.Neighbors)
                         {
-                            if (!HasPieceAt(neighbor))
+                            if (!_cachedValidPlacementPositions.Contains(neighbor) && !HasPieceAt(neighbor))
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
                                 bool validPlacement = true;
