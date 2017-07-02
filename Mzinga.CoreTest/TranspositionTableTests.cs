@@ -26,10 +26,8 @@
 
 using System;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.CoreTest
