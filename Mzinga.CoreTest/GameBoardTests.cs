@@ -174,15 +174,14 @@ namespace Mzinga.CoreTest
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
             {
-                DateTime start = DateTime.Now;
-
                 GameBoard gameBoard = new GameBoard();
-                long actualNodes = Perft(gameBoard, depth, true);
 
-                TimeSpan elapsed = DateTime.Now - start;
+                Stopwatch sw = Stopwatch.StartNew();
+                long actualNodes = Perft(gameBoard, depth, true);
+                sw.Stop();
 
                 Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
-                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, Math.Round(elapsed.TotalMilliseconds), Math.Round(actualNodes / elapsed.TotalMilliseconds, 1)));
+                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, sw.ElapsedMilliseconds, Math.Round(actualNodes / (double)sw.ElapsedMilliseconds, 1)));
             }
         }
 

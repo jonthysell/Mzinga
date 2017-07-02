@@ -55,12 +55,11 @@ namespace Mzinga.CoreTest
                 GameBoard gb = new GameBoard();
                 GameAI ai = GetTestGameAI();
 
-                DateTime start = DateTime.Now;
+                Stopwatch sw = Stopwatch.StartNew();
                 Move m = ai.GetBestMove(gb, 2);
-                DateTime end = DateTime.Now;
+                sw.Stop();
 
-                TimeSpan elapsed = end - start;
-                sum += elapsed;
+                sum += sw.Elapsed;
             }
 
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));

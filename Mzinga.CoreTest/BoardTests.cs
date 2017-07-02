@@ -97,12 +97,12 @@ namespace Mzinga.CoreTest
             for (int i = 0; i < iterations; i++)
             {
                 Board b = new Board("InProgress;White[13];WQ[1,0,-1];WS1[0,0,0];WS2[2,-1,-1];WB1[0,1,-1];WB2[2,-2,0];WG1[3,-1,-2];WG2[4,-2,-2];WG3[5,-2,-3];WA1[3,0,-3];WA2[6,-2,-4];WA3[5,-3,-2];BQ[-2,1,1];BS1[-1,1,0];BS2[-3,2,1];BB1[-1,0,1];BB2[-3,3,0];BG1[-4,2,2];BG2[-5,3,2];BG3[-6,3,3];BA1[-4,1,3];BA2[-7,3,4];BA3[-6,4,2]");
-                DateTime start = DateTime.Now;
-                MoveSet moves = b.GetValidMoves();
-                DateTime end = DateTime.Now;
 
-                TimeSpan elapsed = end - start;
-                sum += elapsed;
+                Stopwatch sw = Stopwatch.StartNew();
+                MoveSet moves = b.GetValidMoves();
+                sw.Stop();
+
+                sum += sw.Elapsed;
             }
 
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
