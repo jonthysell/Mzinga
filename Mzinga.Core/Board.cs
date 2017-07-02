@@ -541,8 +541,9 @@ namespace Mzinga.Core
                     Piece currentPiece = piecesToLookAt.Dequeue();
 
                     // Check all pieces at this stack level
-                    foreach (Position neighbor in currentPiece.Position.Neighbors)
+                    for (int i = 0; i < EnumUtils.NumDirections; i++)
                     {
+                        Position neighbor = currentPiece.Position.NeighborAt(i);
                         Piece neighborPiece = GetPiece(neighbor);
                         if (null != neighborPiece && !partOfHive[(int)neighborPiece.PieceName])
                         {
@@ -644,8 +645,9 @@ namespace Mzinga.Core
 
             int count = 0;
 
-            foreach (Position neighbor in piece.Position.Neighbors)
+            for (int i = 0; i < EnumUtils.NumDirections; i++)
             {
+                Position neighbor = piece.Position.NeighborAt(i);
                 count += HasPieceAt(neighbor) ? 1 : 0;
             }
 
@@ -728,8 +730,9 @@ namespace Mzinga.Core
                     else if (CurrentTurn == 1 && targetPiece.Color == Color.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
                     {
                         // Second move must be around the origin and not the Black Queen Bee
-                        foreach (Position neighbor in Position.Origin.Neighbors)
+                        for (int i = 0; i < EnumUtils.NumDirections; i++)
                         {
+                            Position neighbor = Position.Origin.NeighborAt(i);
                             validMoves.Add(new Move(targetPiece.PieceName, neighbor));
                         }
                     }
@@ -795,14 +798,17 @@ namespace Mzinga.Core
                     if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetColor)
                     {
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
-                        foreach (Position neighbor in piece.Position.Neighbors)
+                        for (int i = 0; i < EnumUtils.NumDirections; i++)
                         {
+                            Position neighbor = piece.Position.NeighborAt(i);
+
                             if (!_visitedPlacements.Contains(neighbor) && !HasPieceAt(neighbor))
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
                                 bool validPlacement = true;
-                                foreach (Position surroundingPosition in neighbor.Neighbors)
+                                for (int j = 0; j < EnumUtils.NumDirections; j++)
                                 {
+                                    Position surroundingPosition = neighbor.NeighborAt(j);
                                     Piece surroundingPiece = GetPieceOnTop(surroundingPosition);
                                     if (null != surroundingPiece && surroundingPiece.Color != targetColor)
                                     {
@@ -1056,8 +1062,10 @@ namespace Mzinga.Core
                 // Try edge heurestic
                 int edges = 0;
                 bool? lastHasPiece = null;
-                foreach (Position neighbor in targetPiece.Position.Neighbors)
+                for (int i = 0; i < EnumUtils.NumDirections; i++)
                 {
+                    Position neighbor = targetPiece.Position.NeighborAt(i);
+
                     bool hasPiece = HasPieceAt(neighbor);
                     if (lastHasPiece.HasValue)
                     {

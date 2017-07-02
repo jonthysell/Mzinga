@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Mzinga.Core
 {
@@ -60,17 +58,6 @@ namespace Mzinga.Core
             get
             {
                 return Z;
-            }
-        }
-
-        public IEnumerable<Position> Neighbors
-        {
-            get
-            {
-                for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
-                {
-                    yield return NeighborAt(direction);
-                }
             }
         }
 
@@ -116,7 +103,15 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("position");
             }
 
-            return Neighbors.Contains(position);
+            for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
+            {
+                if (NeighborAt(direction) == position)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public Position NeighborAt(Direction direction)

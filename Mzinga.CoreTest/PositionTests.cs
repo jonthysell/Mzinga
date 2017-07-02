@@ -116,7 +116,12 @@ namespace Mzinga.CoreTest
 
             List<Position> expectedNeighbors = new List<Position>(GetOriginNeighbors().Values);
 
-            List<Position> actualNeighbors = new List<Position>(position.Neighbors);
+            List<Position> actualNeighbors = new List<Position>();
+
+            for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
+            {
+                actualNeighbors.Add(position.NeighborAt(direction));
+            }
 
             TestUtils.AssertHaveEqualChildren(expectedNeighbors, actualNeighbors);
         }
