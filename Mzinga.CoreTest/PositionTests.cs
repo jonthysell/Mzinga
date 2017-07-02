@@ -198,21 +198,6 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Position_CloneTest()
-        {
-            foreach (int[] coordinate in _validXYZCoordinates)
-            {
-                Position p = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
-                Assert.IsNotNull(p);
-
-                Position clone = p.Clone();
-
-                AssertPositionsAreEqual(p, clone);
-                Assert.AreNotSame(p, clone);
-            }
-        }
-
-        [TestMethod]
         public void Position_ParseXYZTest()
         {
             int[][] coordinates = _validXYZCoordinates;

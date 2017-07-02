@@ -278,7 +278,7 @@ namespace Mzinga.Core
                 {
                     
                     int rotations = 0;
-                    Position rotatedPos = firstBlackPiece.Position.Clone();
+                    Position rotatedPos = firstBlackPiece.Position;
 
                     // Rotate so that first black piece has positive Q and zero or positive R
                     while (rotatedPos.Q <= 0 || rotatedPos.R < 0)

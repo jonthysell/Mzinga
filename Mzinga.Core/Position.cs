@@ -67,14 +67,14 @@ namespace Mzinga.Core
         {
             get
             {
-                yield return new Position(X, Y + 1, Z - 1, Stack);
-                yield return new Position(X + 1, Y, Z - 1, Stack);
-                yield return new Position(X + 1, Y - 1, Z, Stack);
-                yield return new Position(X, Y - 1, Z + 1, Stack);
-                yield return new Position(X - 1, Y, Z + 1, Stack);
-                yield return new Position(X - 1, Y + 1, Z, Stack);
+                for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
+                {
+                    yield return NeighborAt(direction);
+                }
             }
         }
+
+        private Position[] _neighbors = new Position[EnumUtils.NumDirections];
 
         public Position(int x, int y, int z, int stack)
         {
@@ -119,13 +119,29 @@ namespace Mzinga.Core
             return Neighbors.Contains(position);
         }
 
-        public Position NeighborAt(Direction direction, int deltaStack = 0)
+        public Position NeighborAt(Direction direction)
         {
-            int dirIndex = (int)direction;
-            return new Position(X + _neighborDeltas[dirIndex][0], Y + _neighborDeltas[dirIndex][1], Z + _neighborDeltas[dirIndex][2], deltaStack);
+            return NeighborAt((int)direction);
         }
 
-        public Position NeighborAt(Direction[] directions, int deltaStack = 0)
+        public Position NeighborAt(int direction)
+        {
+            direction = direction % EnumUtils.NumDirections;
+
+            if (null == _neighbors[direction])
+            {
+                _neighbors[direction] = new Position(X + _neighborDeltas[direction][0], Y + _neighborDeltas[direction][1], Z + _neighborDeltas[direction][2], 0);
+
+                // Pre-seed touching neighbors
+                _neighbors[direction]._neighbors[(direction + 3) % EnumUtils.NumDirections] = this;
+                _neighbors[direction]._neighbors[(direction + 2) % EnumUtils.NumDirections] = NeighborAt(direction + 1);
+                _neighbors[direction]._neighbors[(direction + 4) % EnumUtils.NumDirections] = NeighborAt(direction + 5);
+            }
+
+            return _neighbors[direction];
+        }
+
+        public Position NeighborAt(Direction[] directions)
         {
             if (null == directions)
             {
@@ -136,7 +152,7 @@ namespace Mzinga.Core
             for (int i = 0; i < directions.Length; i++)
             {
                 int dirIndex = (int)directions[i];
-                neighbor = neighbor.GetShifted(_neighborDeltas[dirIndex][0], _neighborDeltas[dirIndex][1], _neighborDeltas[dirIndex][2], deltaStack);
+                neighbor = neighbor.GetShifted(_neighborDeltas[dirIndex][0], _neighborDeltas[dirIndex][1], _neighborDeltas[dirIndex][2], 0);
             }
 
             return neighbor;
@@ -200,11 +216,6 @@ namespace Mzinga.Core
             }
 
             return new Position((int)rx, (int)ry, (int)rz, 0);
-        }
-
-        public Position Clone()
-        {
-            return new Position(X, Y, Z, Stack);
         }
 
         public static Position Parse(string positionString)
