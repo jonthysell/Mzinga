@@ -248,7 +248,9 @@ namespace Mzinga.Core
         #region Caches
 
         private MoveSet[] _cachedValidMovesByPiece;
+
         private HashSet<Position> _cachedValidPlacementPositions;
+        private HashSet<Position> _visitedPlacements = new HashSet<Position>();
 
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
 
@@ -786,6 +788,8 @@ namespace Mzinga.Core
             {
                 _cachedValidPlacementPositions = new HashSet<Position>();
 
+                _visitedPlacements.Clear();
+
                 foreach (Piece piece in PiecesInPlay)
                 {
                     if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetColor)
@@ -793,7 +797,7 @@ namespace Mzinga.Core
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
                         foreach (Position neighbor in piece.Position.Neighbors)
                         {
-                            if (!_cachedValidPlacementPositions.Contains(neighbor) && !HasPieceAt(neighbor))
+                            if (!_visitedPlacements.Contains(neighbor) && !HasPieceAt(neighbor))
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
                                 bool validPlacement = true;
@@ -812,6 +816,8 @@ namespace Mzinga.Core
                                     _cachedValidPlacementPositions.Add(neighbor);
                                 }
                             }
+
+                            _visitedPlacements.Add(neighbor);
                         }
                     }
                 }
