@@ -48,7 +48,7 @@ namespace Mzinga.CoreTest
         public void GameAI_FirstMovePerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
-            int iterations = 10000;
+            int iterations = 1000;
 
             for (int i = 0; i < iterations; i++)
             {
