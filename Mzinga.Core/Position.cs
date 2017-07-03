@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
@@ -61,7 +62,9 @@ namespace Mzinga.Core
             }
         }
 
-        private Position[] _neighbors = new Position[EnumUtils.NumDirections];
+        private Position[] _neighbors = null;
+
+        private static Dictionary<Position, Position[]> _cachedNeighbors = new Dictionary<Position, Position[]>();
 
         public Position(int x, int y, int z, int stack)
         {
@@ -123,14 +126,17 @@ namespace Mzinga.Core
         {
             direction = direction % EnumUtils.NumDirections;
 
+            if (null == _neighbors)
+            {
+                if (!_cachedNeighbors.TryGetValue(this, out _neighbors))
+                {
+                    _neighbors = (_cachedNeighbors[this] = new Position[EnumUtils.NumDirections]);
+                }
+            }
+
             if (null == _neighbors[direction])
             {
                 _neighbors[direction] = new Position(X + _neighborDeltas[direction][0], Y + _neighborDeltas[direction][1], Z + _neighborDeltas[direction][2], 0);
-
-                // Pre-seed touching neighbors
-                _neighbors[direction]._neighbors[(direction + 3) % EnumUtils.NumDirections] = this;
-                _neighbors[direction]._neighbors[(direction + 2) % EnumUtils.NumDirections] = NeighborAt(direction + 1);
-                _neighbors[direction]._neighbors[(direction + 4) % EnumUtils.NumDirections] = NeighborAt(direction + 5);
             }
 
             return _neighbors[direction];
