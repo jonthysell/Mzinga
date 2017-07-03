@@ -146,6 +146,11 @@ namespace Mzinga.CoreTest
 
         public MockBoard(string boardString) : base(boardString) { }
 
+        public new Piece GetPiece(PieceName pieceName)
+        {
+            return base.GetPiece(pieceName);
+        }
+
         public new bool CanMoveWithoutBreakingHive(Piece targetPiece)
         {
             return base.CanMoveWithoutBreakingHive(targetPiece);

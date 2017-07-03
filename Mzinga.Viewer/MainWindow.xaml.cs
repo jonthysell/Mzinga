@@ -247,11 +247,11 @@ namespace Mzinga.Viewer
                 // Highlight the selected piece
                 if (selectedPieceName != PieceName.INVALID)
                 {
-                    Piece selectedPiece = board.GetPiece(selectedPieceName);
+                    Position selectedPiecePosition = board.GetPiecePosition(selectedPieceName);
 
-                    if (selectedPiece.InPlay)
+                    if (null != selectedPiecePosition)
                     {
-                        Point center = GetPoint(selectedPiece.Position, size, true);
+                        Point center = GetPoint(selectedPiecePosition, size, true);
 
                         Polygon hex = GetHex(center, size, HexType.SelectedPiece);
                         BoardCanvas.Children.Add(hex);

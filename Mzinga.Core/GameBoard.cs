@@ -174,11 +174,6 @@ namespace Mzinga.Core
 
         internal void TrustedPlay(Move move)
         {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
             Position originalPosition = null;
 
             if (!move.IsPass)

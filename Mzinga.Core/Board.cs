@@ -381,17 +381,22 @@ namespace Mzinga.Core
             return (null != GetPiece(position));
         }
 
-        public Piece GetPiece(PieceName pieceName)
+        public Position GetPiecePosition(PieceName pieceName)
         {
             if (pieceName == PieceName.INVALID)
             {
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
+            return _pieces[(int)pieceName].Position;
+        }
+
+        protected Piece GetPiece(PieceName pieceName)
+        {
             return _pieces[(int)pieceName];
         }
 
-        public Piece GetPiece(Position position)
+        protected Piece GetPiece(Position position)
         {
             if (null == position)
             {
@@ -441,7 +446,7 @@ namespace Mzinga.Core
 
             if (piece.InPlay)
             {
-                RemoveFromPieceByPosition(piece);
+                _piecesByPosition[piece.Position] = null;
                 if (null != piece.PieceBelow)
                 {
                     piece.PieceBelow.PieceAbove = null;
@@ -453,7 +458,7 @@ namespace Mzinga.Core
 
             if (piece.InPlay)
             {
-                AddToPieceByPosition(piece);
+                _piecesByPosition[piece.Position] = piece;
                 if (newPosition.Stack > 0)
                 {
                     Position posBelow = newPosition.GetShifted(0, 0, 0, -1);
@@ -464,37 +469,7 @@ namespace Mzinga.Core
             }
         }
 
-        protected void AddToPieceByPosition(Piece piece)
-        {
-            if (null == piece)
-            {
-                throw new ArgumentNullException("piece");
-            }
-
-            if (null == piece.Position)
-            {
-                throw new ArgumentOutOfRangeException("piece");
-            }
-
-            _piecesByPosition[piece.Position] = piece;
-        }
-
-        protected void RemoveFromPieceByPosition(Piece piece)
-        {
-            if (null == piece)
-            {
-                throw new ArgumentNullException("piece");
-            }
-
-            if (null == piece.Position)
-            {
-                throw new ArgumentOutOfRangeException("piece");
-            }
-
-            _piecesByPosition[piece.Position] = null;
-        }
-
-        public bool PieceIsOnTop(Piece targetPiece)
+        protected bool PieceIsOnTop(Piece targetPiece)
         {
             if (null == targetPiece)
             {
@@ -711,13 +686,6 @@ namespace Mzinga.Core
 
         private MoveSet GetValidMovesInternal(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
-            MoveSet validMoves = new MoveSet();
-
             if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
@@ -725,23 +693,27 @@ namespace Mzinga.Core
                     if (CurrentTurn == 0 && targetPiece.Color == Color.White && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
                     {
                         // First move must be at the origin and not the White Queen Bee
+                        MoveSet validMoves = new MoveSet();
                         validMoves.Add(new Move(targetPiece.PieceName, Position.Origin));
+                        return validMoves;
                     }
                     else if (CurrentTurn == 1 && targetPiece.Color == Color.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
                     {
+                        MoveSet validMoves = new MoveSet();
                         // Second move must be around the origin and not the Black Queen Bee
                         for (int i = 0; i < EnumUtils.NumDirections; i++)
                         {
                             Position neighbor = Position.Origin.NeighborAt(i);
                             validMoves.Add(new Move(targetPiece.PieceName, neighbor));
                         }
+                        return validMoves;
                     }
                     else if (targetPiece.InHand && (CurrentPlayerTurn != 4 || // Normal turn OR
                                                     (CurrentPlayerTurn == 4 && // Turn 4 and AND
                                                      (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && targetPiece.BugType == BugType.QueenBee))))) // Queen is in play or you're trying to play it
                     {
                         // Look for valid new placements
-                        validMoves.Add(GetValidPlacements(targetPiece));
+                        return GetValidPlacements(targetPiece);
                     }
                     else if (targetPiece.InPlay && CurrentTurnQueenInPlay && PieceIsOnTop(targetPiece) && CanMoveWithoutBreakingHive(targetPiece))
                     {
@@ -749,26 +721,21 @@ namespace Mzinga.Core
                         switch (targetPiece.BugType)
                         {
                             case BugType.QueenBee:
-                                validMoves.Add(GetValidQueenBeeMovements(targetPiece));
-                                break;
+                                return GetValidQueenBeeMovements(targetPiece);
                             case BugType.Spider:
-                                validMoves.Add(GetValidSpiderMovements(targetPiece));
-                                break;
+                                return GetValidSpiderMovements(targetPiece);
                             case BugType.Beetle:
-                                validMoves.Add(GetValidBeetleMovements(targetPiece));
-                                break;
+                                return GetValidBeetleMovements(targetPiece);
                             case BugType.Grasshopper:
-                                validMoves.Add(GetValidGrasshopperMovements(targetPiece));
-                                break;
+                                return GetValidGrasshopperMovements(targetPiece);
                             case BugType.SoldierAnt:
-                                validMoves.Add(GetValidSoldierAntMovements(targetPiece));
-                                break;
+                                return GetValidSoldierAntMovements(targetPiece);
                         }
                     }
                 }
             }
 
-            return validMoves;
+            return new MoveSet();
         }
 
         private MoveSet GetValidPlacements(Piece targetPiece)

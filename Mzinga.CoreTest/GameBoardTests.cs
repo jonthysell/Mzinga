@@ -136,23 +136,23 @@ namespace Mzinga.CoreTest
             b.Play(new Move(PieceName.BlackQueenBee, Position.Origin.NeighborAt(StraightLine(Direction.Up, 2))));
 
             // Turn 3
-            b.Play(new Move(PieceName.WhiteSpider2, b.GetPiece(PieceName.WhiteQueenBee).Position.NeighborAt(Direction.UpLeft)));
+            b.Play(new Move(PieceName.WhiteSpider2, b.GetPiecePosition(PieceName.WhiteQueenBee).NeighborAt(Direction.UpLeft)));
             b.Play(new Move(PieceName.BlackSpider2, Position.Origin.NeighborAt(StraightLine(Direction.Up, 3))));
 
             // Turn 4
-            b.Play(new Move(PieceName.WhiteSoldierAnt1, b.GetPiece(PieceName.WhiteQueenBee).Position.NeighborAt(Direction.UpRight)));
+            b.Play(new Move(PieceName.WhiteSoldierAnt1, b.GetPiecePosition(PieceName.WhiteQueenBee).NeighborAt(Direction.UpRight)));
             b.Play(new Move(PieceName.BlackSoldierAnt1, Position.Origin.NeighborAt(StraightLine(Direction.Up, 4))));
 
             // Turn 5
-            b.Play(new Move(PieceName.WhiteSoldierAnt2, b.GetPiece(PieceName.WhiteQueenBee).Position.NeighborAt(Direction.DownLeft)));
+            b.Play(new Move(PieceName.WhiteSoldierAnt2, b.GetPiecePosition(PieceName.WhiteQueenBee).NeighborAt(Direction.DownLeft)));
             b.Play(new Move(PieceName.BlackSoldierAnt2, Position.Origin.NeighborAt(StraightLine(Direction.Up, 5))));
 
             // Turn 6
-            b.Play(new Move(PieceName.WhiteSoldierAnt3, b.GetPiece(PieceName.WhiteQueenBee).Position.NeighborAt(Direction.DownRight)));
+            b.Play(new Move(PieceName.WhiteSoldierAnt3, b.GetPiecePosition(PieceName.WhiteQueenBee).NeighborAt(Direction.DownRight)));
             b.Play(new Move(PieceName.BlackSoldierAnt3, Position.Origin.NeighborAt(StraightLine(Direction.Up, 6))));
 
             // Turn 7
-            b.Play(new Move(PieceName.WhiteBeetle1, b.GetPiece(PieceName.WhiteQueenBee).Position.NeighborAt(Direction.Down)));
+            b.Play(new Move(PieceName.WhiteBeetle1, b.GetPiecePosition(PieceName.WhiteQueenBee).NeighborAt(Direction.Down)));
 
             Assert.AreEqual(BoardState.BlackWins, b.BoardState);
 
