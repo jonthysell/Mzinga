@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mzinga.Core
 {
@@ -76,7 +75,10 @@ namespace Mzinga.Core
         {
             get
             {
-                return PieceNames.Where((pieceName) => { return GetColor(pieceName) == Color.White; });
+                for (int i = 0; i < NumPieceNames / 2; i++)
+                {
+                    yield return (PieceName)i;
+                }
             }
         }
 
@@ -84,7 +86,10 @@ namespace Mzinga.Core
         {
             get
             {
-                return PieceNames.Where((pieceName) => { return GetColor(pieceName) == Color.Black; });
+                for (int i = (NumPieceNames / 2); i < NumPieceNames; i++)
+                {
+                    yield return (PieceName)i;
+                }
             }
         }
 

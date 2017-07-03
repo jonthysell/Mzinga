@@ -24,37 +24,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.Linq;
-
 namespace Mzinga.Core
 {
     public class BoardMetrics
     {
         public BoardState BoardState { get; private set; }
-
-        public int ValidMoveCount
-        {
-            get
-            {
-                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.ValidMoveCount : 0; });
-            }
-        }
-
-        public int PiecesInPlayCount
-        {
-            get
-            {
-                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.InPlay : 0; });
-            }
-        }
-
-        public int PiecesPinnedCount
-        {
-            get
-            {
-                return _pieceMetrics.Sum((pieceMetrics) => { return (null != pieceMetrics) ? pieceMetrics.IsPinned : 0; });
-            }
-        }
 
         public PieceMetrics this[PieceName pieceName]
         {

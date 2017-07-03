@@ -201,21 +201,21 @@ namespace Mzinga.Viewer
                 }
 
                 // Draw the pieces in white's hand
-                foreach (Piece piece in board.WhiteHand)
+                foreach (PieceName pieceName in board.WhiteHand)
                 {
-                    if (piece.PieceName != selectedPieceName || (piece.PieceName == selectedPieceName && null == targetPosition))
+                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                        Canvas pieceCanvas = GetPieceCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size);
                         WhiteHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
 
                 // Draw the pieces in black's hand
-                foreach (Piece piece in board.BlackHand)
+                foreach (PieceName pieceName in board.BlackHand)
                 {
-                    if (piece.PieceName != selectedPieceName || (piece.PieceName == selectedPieceName && null == targetPosition))
+                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceCanvas(piece, size);
+                        Canvas pieceCanvas = GetPieceCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size);
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
@@ -395,11 +395,11 @@ namespace Mzinga.Viewer
             bool targetPieceInPlay = false;
 
             // Add pieces already on the board
-            foreach (Piece piece in board.PiecesInPlay)
+            foreach (PieceName pieceName in board.PiecesInPlay)
             {
-                Position position = piece.Position;
+                Position position = board.GetPiecePosition(pieceName);
 
-                if (piece.PieceName == targetPieceName)
+                if (pieceName == targetPieceName)
                 {
                     if (null != targetPosition)
                     {
@@ -416,7 +416,7 @@ namespace Mzinga.Viewer
                     pieces[stack] = new List<Piece>();
                 }
 
-                pieces[stack].Add(piece);
+                pieces[stack].Add(new Piece(pieceName, position));
                 numPieces++;
             }
 

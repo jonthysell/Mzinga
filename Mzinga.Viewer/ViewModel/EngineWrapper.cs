@@ -591,17 +591,16 @@ namespace Mzinga.Viewer.ViewModel
         {
             Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
 
-            Piece topPiece = (null != Board) ? Board.GetPieceOnTop(position) : null;
-            return ((null != topPiece) ? topPiece.PieceName : PieceName.INVALID);
+            return (null != Board) ? Board.GetPieceOnTop(position) : PieceName.INVALID;
         }
 
         public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius)
         {
             Position bottomPosition = Position.FromCursor(cursorX, cursorY, hexRadius);
 
-            Piece topPiece = (null != Board) ? Board.GetPieceOnTop(bottomPosition) : null;
+            PieceName topPiece = (null != Board) ? Board.GetPieceOnTop(bottomPosition) : PieceName.INVALID;
 
-            if (null == topPiece)
+            if (topPiece == PieceName.INVALID)
             {
                 // No piece there, return position at bottom of the stack (stack == 0)
                 return bottomPosition;
@@ -609,7 +608,7 @@ namespace Mzinga.Viewer.ViewModel
             else
             {
                 // Piece present, return position on top of the piece
-                return topPiece.Position.GetShifted(0, 0, 0, 1);
+                return Board.GetPiecePosition(topPiece).GetShifted(0, 0, 0, 1);
             }
         }
 

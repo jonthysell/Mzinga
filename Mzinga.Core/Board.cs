@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Mzinga.Core
@@ -99,9 +98,12 @@ namespace Mzinga.Core
 
                     sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
 
-                    foreach (Piece piece in PiecesInPlay)
+                    for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                     {
-                        sb.AppendFormat("{0}{1}", piece.ToString(), BoardStringSeparator);
+                        if (_pieces[i].InPlay)
+                        {
+                            sb.AppendFormat("{0}{1}", _pieces[i].ToString(), BoardStringSeparator);
+                        }
                     }
 
                     _boardString = sb.ToString().TrimEnd(BoardStringSeparator);
@@ -110,7 +112,6 @@ namespace Mzinga.Core
                 return _boardString;
             }
         }
-
         private string _boardString = null;
 
         public string TranspositionKey
@@ -121,16 +122,19 @@ namespace Mzinga.Core
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    foreach (Piece piece in PiecesInPlay)
+                    for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                     {
-                        sb.Append(EnumUtils.GetShortName(piece.PieceName, true));
+                        Position pos = _pieces[i].Position;
 
-                        Position pos = piece.Position;
-
-                        sb.AppendFormat("{0},{1}", pos.Q, pos.R);
-                        if (pos.Stack > 0)
+                        if (null != pos)
                         {
-                            sb.AppendFormat(",{0}", pos.Stack);
+                            sb.Append(EnumUtils.GetShortName((PieceName)i, true));
+
+                            sb.AppendFormat("{0},{1}", pos.Q, pos.R);
+                            if (pos.Stack > 0)
+                            {
+                                sb.AppendFormat(",{0}", pos.Stack);
+                            }
                         }
                     }
 
@@ -140,66 +144,59 @@ namespace Mzinga.Core
                 return _transpositionKey;
             }
         }
-
         private string _transpositionKey = null;
 
         #endregion
 
         #region Piece Enumerable Properties
 
-        public IEnumerable<Piece> AllPieces
+        public IEnumerable<PieceName> CurrentTurnPieces
         {
             get
             {
-                return _pieces.AsEnumerable();
+                return CurrentTurnColor == Color.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
             }
         }
 
-        public IEnumerable<Piece> CurrentTurnPieces
+        public IEnumerable<PieceName> PiecesInPlay
         {
             get
             {
-                return _pieces.Where((piece) => { return piece.Color == CurrentTurnColor; });
+                for (int i = 0; i < EnumUtils.NumPieceNames; i++)
+                {
+                    if (_pieces[i].InPlay)
+                    {
+                        yield return (PieceName)i;
+                    }
+                }
             }
         }
 
-        public IEnumerable<Piece> WhitePieces
+        public IEnumerable<PieceName> WhiteHand
         {
             get
             {
-                return _pieces.Where((piece) => { return piece.Color == Color.White; });
+                for (int i = 0; i < EnumUtils.NumPieceNames / 2; i++)
+                {
+                    if (_pieces[i].InHand)
+                    {
+                        yield return (PieceName)i;
+                    }
+                }
             }
         }
 
-        public IEnumerable<Piece> WhiteHand
+        public IEnumerable<PieceName> BlackHand
         {
             get
             {
-                return _pieces.Where((piece) => { return (piece.Color == Color.White && piece.InHand); });
-            }
-        }
-
-        public IEnumerable<Piece> BlackPieces
-        {
-            get
-            {
-                return _pieces.Where((piece) => { return piece.Color == Color.Black; });
-            }
-        }
-
-        public IEnumerable<Piece> BlackHand
-        {
-            get
-            {
-                return _pieces.Where((piece) => { return (piece.Color == Color.Black && piece.InHand); });
-            }
-        }
-
-        public IEnumerable<Piece> PiecesInPlay
-        {
-            get
-            {
-                return _pieces.Where((piece) => { return piece.InPlay; });
+                for (int i = EnumUtils.NumPieceNames / 2; i < EnumUtils.NumPieceNames; i++)
+                {
+                    if (_pieces[i].InHand)
+                    {
+                        yield return (PieceName)i;
+                    }
+                }
             }
         }
 
@@ -264,15 +261,21 @@ namespace Mzinga.Core
         {
             get
             {
-                if (PiecesInPlay.Count() == 0)
+                bool pieceInPlay = false;
+                int minY = int.MaxValue;
+                int maxY = int.MinValue;
+
+                for (int i = 0; i < _pieces.Length; i++)
                 {
-                    return 0;
+                    if (_pieces[i].InPlay)
+                    {
+                        pieceInPlay = true;
+                        minY = Math.Min(minY, _pieces[i].Position.Y);
+                        maxY = Math.Max(maxY, _pieces[i].Position.Y);
+                    }
                 }
 
-                int minY = PiecesInPlay.Min(p => p.Position.Y);
-                int maxY = PiecesInPlay.Max(p => p.Position.Y);
-
-                return (maxY - minY);
+                return pieceInPlay ? (maxY - minY) : 0;
             }
         }
 
@@ -280,15 +283,21 @@ namespace Mzinga.Core
         {
             get
             {
-                if (PiecesInPlay.Count() == 0)
+                bool pieceInPlay = false;
+                int minX = int.MaxValue;
+                int maxX = int.MinValue;
+
+                for (int i = 0; i < _pieces.Length; i++)
                 {
-                    return 0;
+                    if (_pieces[i].InPlay)
+                    {
+                        pieceInPlay = true;
+                        minX = Math.Min(minX, _pieces[i].Position.X);
+                        maxX = Math.Max(maxX, _pieces[i].Position.X);
+                    }
                 }
 
-                int minX = PiecesInPlay.Min(p => p.Position.X);
-                int maxX = PiecesInPlay.Max(p => p.Position.X);
-
-                return (maxX - minX);
+                return pieceInPlay ? (maxX - minX) : 0;
             }
         }
 
@@ -412,13 +421,19 @@ namespace Mzinga.Core
             return null;
         }
 
-        public Piece GetPieceOnTop(Position position)
+        public PieceName GetPieceOnTop(Position position)
         {
             if (null == position)
             {
                 throw new ArgumentNullException("position");
             }
 
+            Piece piece = GetPieceOnTopInternal(position);
+            return (null != piece) ? piece.PieceName : PieceName.INVALID;
+        }
+
+        private Piece GetPieceOnTopInternal(Position position)
+        {
             if (position.Stack > 0)
             {
                 position = position.GetShifted(0, 0, 0, -position.Stack);
@@ -536,8 +551,14 @@ namespace Mzinga.Core
                     }
                 }
 
-                // Return true iff every piece was part of the one-hive
-                return partOfHive.All((value) => { return value; });
+                // Return false if even a single piece is not part of the one-hive
+                for (int i = 0; i < partOfHive.Length; i++)
+                {
+                    if (!partOfHive[i])
+                    {
+                        return false;
+                    }
+                }
             }
 
             // If there's no startingPiece, there's nothing on the board
@@ -574,26 +595,14 @@ namespace Mzinga.Core
 
         private void SetCurrentPlayerMetrics(BoardMetrics boardMetrics)
         {
-            if (null == boardMetrics)
-            {
-                throw new ArgumentNullException("boardMetrics");
-            }
-
-            IEnumerable<PieceName> currentTurnPieceNames = CurrentTurnColor == Color.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
-
-            foreach (PieceName pieceName in currentTurnPieceNames)
+            foreach (PieceName pieceName in CurrentTurnPieces)
             {
                 boardMetrics[pieceName] = GetPieceMetrics(pieceName);
             }
         }
 
-        public PieceMetrics GetPieceMetrics(PieceName pieceName)
+        private PieceMetrics GetPieceMetrics(PieceName pieceName)
         {
-            if (pieceName == PieceName.INVALID)
-            {
-                throw new ArgumentOutOfRangeException("pieceName");
-            }
-
             Piece targetPiece = GetPiece(pieceName);
 
             PieceMetrics pieceMetrics = new PieceMetrics();
@@ -604,15 +613,18 @@ namespace Mzinga.Core
             MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
             pieceMetrics.ValidMoveCount = validMoves.Count;
 
-            pieceMetrics.NeighborCount = CountNeighbors(targetPiece.PieceName);
+            pieceMetrics.NeighborCount = CountNeighbors(targetPiece);
 
             return pieceMetrics;
         }
 
-        public int CountNeighbors(PieceName pieceName)
+        protected int CountNeighbors(PieceName pieceName)
         {
-            Piece piece = GetPiece(pieceName);
+            return CountNeighbors(GetPiece(pieceName));
+        }
 
+        private int CountNeighbors(Piece piece)
+        {
             if (piece.InHand)
             {
                 return 0;
@@ -622,8 +634,7 @@ namespace Mzinga.Core
 
             for (int i = 0; i < EnumUtils.NumDirections; i++)
             {
-                Position neighbor = piece.Position.NeighborAt(i);
-                count += HasPieceAt(neighbor) ? 1 : 0;
+                count += HasPieceAt(piece.Position.NeighborAt(i)) ? 1 : 0;
             }
 
             return count;
@@ -639,9 +650,9 @@ namespace Mzinga.Core
 
             if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
             {
-                foreach (Piece piece in CurrentTurnPieces)
+                foreach (PieceName pieceName in CurrentTurnPieces)
                 {
-                    moves.Add(GetValidMoves(piece.PieceName));
+                    moves.Add(GetValidMoves(pieceName));
                 }
 
                 if (moves.Count == 0)
@@ -662,7 +673,9 @@ namespace Mzinga.Core
                 _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
             }
 
-            if (null != _cachedValidMovesByPiece[(int)pieceName])
+            int pieceNameIndex = (int)pieceName;
+
+            if (null != _cachedValidMovesByPiece[pieceNameIndex])
             {
                 // MoveSet is cached in L1 cache
                 ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hits++;
@@ -678,10 +691,10 @@ namespace Mzinga.Core
                 moves.Lock();
 
                 // Populate cache
-                _cachedValidMovesByPiece[(int)pieceName] = moves;
+                _cachedValidMovesByPiece[pieceNameIndex] = moves;
             }
 
-            return _cachedValidMovesByPiece[(int)pieceName];
+            return _cachedValidMovesByPiece[pieceNameIndex];
         }
 
         private MoveSet GetValidMovesInternal(Piece targetPiece)
@@ -760,23 +773,24 @@ namespace Mzinga.Core
 
                 _visitedPlacements.Clear();
 
-                foreach (Piece piece in PiecesInPlay)
+                foreach (PieceName pieceName in PiecesInPlay)
                 {
-                    if (piece.Position.Stack == 0 && GetPieceOnTop(piece.Position).Color == targetColor)
+                    Position piecePosition = GetPiecePosition(pieceName);
+                    if (piecePosition.Stack == 0 && GetPieceOnTopInternal(piecePosition).Color == targetColor)
                     {
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
                         for (int i = 0; i < EnumUtils.NumDirections; i++)
                         {
-                            Position neighbor = piece.Position.NeighborAt(i);
+                            Position neighbor = piecePosition.NeighborAt(i);
 
-                            if (!_visitedPlacements.Contains(neighbor) && !HasPieceAt(neighbor))
+                            if (_visitedPlacements.Add(neighbor) && !HasPieceAt(neighbor))
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
                                 bool validPlacement = true;
                                 for (int j = 0; j < EnumUtils.NumDirections; j++)
                                 {
                                     Position surroundingPosition = neighbor.NeighborAt(j);
-                                    Piece surroundingPiece = GetPieceOnTop(surroundingPosition);
+                                    Piece surroundingPiece = GetPieceOnTopInternal(surroundingPosition);
                                     if (null != surroundingPiece && surroundingPiece.Color != targetColor)
                                     {
                                         validPlacement = false;
@@ -789,8 +803,6 @@ namespace Mzinga.Core
                                     _cachedValidPlacementPositions.Add(neighbor);
                                 }
                             }
-
-                            _visitedPlacements.Add(neighbor);
                         }
                     }
                 }
@@ -862,7 +874,7 @@ namespace Mzinga.Core
                 Position newPosition = targetPiece.Position.NeighborAt(direction);
                 newPosition = newPosition.GetShifted(0, 0, 0, -newPosition.Stack);
 
-                Piece topNeighbor = GetPieceOnTop(newPosition);
+                Piece topNeighbor = GetPieceOnTopInternal(newPosition);
 
                 // Get positions to left and right or direction we're heading
                 Direction leftOfTarget = EnumUtils.LeftOf(direction);
@@ -870,8 +882,8 @@ namespace Mzinga.Core
                 Position leftNeighborPosition = targetPiece.Position.NeighborAt(leftOfTarget);
                 Position rightNeighborPosition = targetPiece.Position.NeighborAt(rightOfTarget);
 
-                Piece topLeftNeighbor = GetPieceOnTop(leftNeighborPosition);
-                Piece topRightNeighbor = GetPieceOnTop(rightNeighborPosition);
+                Piece topLeftNeighbor = GetPieceOnTopInternal(leftNeighborPosition);
+                Piece topRightNeighbor = GetPieceOnTopInternal(rightNeighborPosition);
 
                 // At least one neighbor is present
                 int currentHeight = targetPiece.Position.Stack + 1;

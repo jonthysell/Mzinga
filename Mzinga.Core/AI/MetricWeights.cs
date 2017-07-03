@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Xml;
 
 namespace Mzinga.Core.AI
@@ -86,7 +85,11 @@ namespace Mzinga.Core.AI
             double[] dblWeights = new double[clone._bugTypeWeights.Length];
             Array.Copy(clone._bugTypeWeights, dblWeights, clone._bugTypeWeights.Length);
 
-            double max = dblWeights.Max(d => Math.Abs(d));
+            double max = double.MinValue;
+            foreach (double weight in dblWeights)
+            {
+                max = Math.Max(max, Math.Abs(weight));
+            }
 
             // Normalize to new range
             for (int i= 0; i < dblWeights.Length; i++)

@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Mzinga.Core
 {
@@ -48,7 +47,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _boardHistory.AsEnumerable();
+                return _boardHistory;
             }
         }
         private BoardHistory _boardHistory;
@@ -233,69 +232,6 @@ namespace Mzinga.Core
             }
 
             BoardChanged?.Invoke();
-        }
-
-        public GameBoard GetNormalized()
-        {
-            GameBoard normalizedBoard = Clone();
-
-            Piece firstWhitePiece = null;
-            Piece firstBlackPiece = null;
-
-            foreach (Piece piece in normalizedBoard.PiecesInPlay)
-            {
-                if (piece.Color == Color.White && null == firstWhitePiece)
-                {
-                    firstWhitePiece = piece;
-                }
-                else if (piece.Color == Color.Black && null == firstBlackPiece)
-                {
-                    firstBlackPiece = piece;
-                }
-            }
-
-            if (null != firstWhitePiece)
-            {
-                // Shift first (white) piece to origin
-                int deltaX = 0 - firstWhitePiece.Position.X;
-                int deltaY = 0 - firstWhitePiece.Position.Y;
-                int deltaZ = 0 - firstWhitePiece.Position.Z;
-
-                if (deltaX != 0 || deltaY != 0 || deltaZ != 0)
-                {
-                    foreach (Piece piece in normalizedBoard.PiecesInPlay)
-                    {
-                        piece.Shift(deltaX, deltaY, deltaZ);
-                    }
-                }
-
-                if (null != firstBlackPiece)
-                {
-                    
-                    int rotations = 0;
-                    Position rotatedPos = firstBlackPiece.Position;
-
-                    // Rotate so that first black piece has positive Q and zero or positive R
-                    while (rotatedPos.Q <= 0 || rotatedPos.R < 0)
-                    {
-                        rotatedPos = rotatedPos.GetRotatedRight();
-                        rotations++;
-                    }
-
-                    if (rotations > 0)
-                    {
-                        foreach (Piece piece in normalizedBoard.PiecesInPlay)
-                        {
-                            for (int i = 0; i < rotations; i++)
-                            {
-                                piece.RotateRight();
-                            }
-                        }
-                    }
-                }
-            }
-
-            return normalizedBoard;
         }
     }
 }

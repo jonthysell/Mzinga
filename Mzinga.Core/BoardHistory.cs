@@ -27,7 +27,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Mzinga.Core
@@ -93,7 +92,7 @@ namespace Mzinga.Core
         {
             if (Count > 0)
             {
-                BoardHistoryItem item = _items.Last();
+                BoardHistoryItem item = _items[_items.Count - 1];
                 _items.Remove(item);
                 return item;
             }

@@ -85,20 +85,5 @@ namespace Mzinga.Core
         {
             Position = newPosition;
         }
-
-        internal void Shift(int deltaX, int deltaY, int deltaZ, int deltaStack = 0)
-        {
-            Position = Position.GetShifted(deltaX, deltaY, deltaZ, deltaStack);
-        }
-
-        internal void RotateRight()
-        {
-            Position = Position.GetRotatedRight();
-        }
-
-        internal void RotateLeft()
-        {
-            Position = Position.GetRotatedLeft();
-        }
     }
 }

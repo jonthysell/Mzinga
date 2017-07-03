@@ -63,9 +63,9 @@ namespace Mzinga.CoreTest
         {
             MockBoard b = new MockBoard("InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
 
-            foreach (Piece p in b.PiecesInPlay)
+            foreach (PieceName pieceName in b.PiecesInPlay)
             {
-                VerifyCanMoveWithoutBreakingHive(b, p.PieceName, true);
+                VerifyCanMoveWithoutBreakingHive(b, pieceName, true);
             }
         }
 
@@ -74,9 +74,9 @@ namespace Mzinga.CoreTest
         {
             MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
 
-            foreach (Piece p in b.PiecesInPlay)
+            foreach (PieceName pieceName in b.PiecesInPlay)
             {
-                VerifyCanMoveWithoutBreakingHive(b, p.PieceName, p.PieceName == PieceName.WhiteGrasshopper1 || p.PieceName == PieceName.BlackQueenBee);
+                VerifyCanMoveWithoutBreakingHive(b, pieceName, pieceName == PieceName.WhiteGrasshopper1 || pieceName == PieceName.BlackQueenBee);
             }
         }
 

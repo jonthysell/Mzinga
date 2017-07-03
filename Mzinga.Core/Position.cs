@@ -103,9 +103,9 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("position");
             }
 
-            for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
+            for (int i = 0; i < EnumUtils.NumDirections; i++)
             {
-                if (NeighborAt(direction) == position)
+                if (NeighborAt(i) == position)
                 {
                     return true;
                 }
@@ -156,16 +156,6 @@ namespace Mzinga.Core
         public Position GetShifted(int deltaX, int deltaY, int deltaZ, int deltaStack = 0)
         {
             return new Position(X + deltaX, Y + deltaY, Z + deltaZ, Stack + deltaStack);
-        }
-
-        public Position GetRotatedRight()
-        {
-            return new Position(-Z, -X, -Y, Stack);
-        }
-
-        public Position GetRotatedLeft()
-        {
-            return new Position(-Y, -Z, -X, Stack);
         }
 
         public static Position FromCursor(double cursorX, double cursorY, double hexRadius)
