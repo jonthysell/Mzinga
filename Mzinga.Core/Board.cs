@@ -34,7 +34,7 @@ namespace Mzinga.Core
     {
         #region State Properties
 
-        public BoardState BoardState { get; protected set; }
+        public BoardState BoardState { get; protected set; } = BoardState.NotStarted;
 
         public int CurrentTurn
         {
@@ -52,7 +52,7 @@ namespace Mzinga.Core
                 ResetCaches();
             }
         }
-        private int _currentTurn;
+        private int _currentTurn = 0;
 
         public Color CurrentTurnColor
         {
@@ -200,9 +200,9 @@ namespace Mzinga.Core
             }
         }
 
-        private Piece[] _pieces;
+        private Piece[] _pieces = new Piece[EnumUtils.NumPieceNames];
 
-        private Dictionary<Position, Piece> _piecesByPosition;
+        private Dictionary<Position, Piece> _piecesByPosition = new Dictionary<Position, Piece>();
 
         #endregion
 
@@ -244,9 +244,9 @@ namespace Mzinga.Core
 
         #region Caches
 
-        private MoveSet[] _cachedValidMovesByPiece;
+        private MoveSet[] _cachedValidMovesByPiece = null;
 
-        private HashSet<Position> _cachedValidPlacementPositions;
+        private HashSet<Position> _cachedValidPlacementPositions = null;
         private HashSet<Position> _visitedPlacements = new HashSet<Position>();
 
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
@@ -305,16 +305,10 @@ namespace Mzinga.Core
 
         public Board()
         {
-            _pieces = new Piece[EnumUtils.NumPieceNames];
-            _piecesByPosition = new Dictionary<Position, Piece>();
-
-            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            for (int i = 0; i < EnumUtils.NumPieceNames; i++)
             {
-                _pieces[(int)pieceName] = new Piece(pieceName);
+                _pieces[i] = new Piece((PieceName)i);
             }
-
-            CurrentTurn = 0;
-            BoardState = BoardState.NotStarted;
         }
 
         public Board(string boardString) : this()
@@ -385,7 +379,7 @@ namespace Mzinga.Core
             }
         }
 
-        public bool HasPieceAt(Position position)
+        protected bool HasPieceAt(Position position)
         {
             return (null != GetPiece(position));
         }
@@ -397,7 +391,7 @@ namespace Mzinga.Core
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
-            return _pieces[(int)pieceName].Position;
+            return GetPiece(pieceName).Position;
         }
 
         protected Piece GetPiece(PieceName pieceName)
@@ -405,13 +399,8 @@ namespace Mzinga.Core
             return _pieces[(int)pieceName];
         }
 
-        protected Piece GetPiece(Position position)
+        private Piece GetPiece(Position position)
         {
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
             Piece piece;
             if (_piecesByPosition.TryGetValue(position, out piece))
             {
@@ -454,11 +443,6 @@ namespace Mzinga.Core
 
         protected void MovePiece(Piece piece, Position newPosition)
         {
-            if (null == piece)
-            {
-                throw new ArgumentNullException("piece");
-            }
-
             if (piece.InPlay)
             {
                 _piecesByPosition[piece.Position] = null;
@@ -486,11 +470,6 @@ namespace Mzinga.Core
 
         protected bool PieceIsOnTop(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             return (null == targetPiece.PieceAbove);
         }
 
@@ -668,6 +647,11 @@ namespace Mzinga.Core
 
         public MoveSet GetValidMoves(PieceName pieceName)
         {
+            if (pieceName == PieceName.INVALID)
+            {
+                throw new ArgumentOutOfRangeException("pieceName");
+            }
+
             if (null == _cachedValidMovesByPiece)
             {
                 _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];
@@ -753,11 +737,6 @@ namespace Mzinga.Core
 
         private MoveSet GetValidPlacements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             MoveSet validMoves = new MoveSet();
 
             Color targetColor = CurrentTurnColor;
@@ -773,23 +752,23 @@ namespace Mzinga.Core
 
                 _visitedPlacements.Clear();
 
-                foreach (PieceName pieceName in PiecesInPlay)
+                for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
-                    Position piecePosition = GetPiecePosition(pieceName);
-                    if (piecePosition.Stack == 0 && GetPieceOnTopInternal(piecePosition).Color == targetColor)
+                    Position piecePosition = _pieces[i].Position;
+                    if (null != piecePosition && piecePosition.Stack == 0 && GetPieceOnTopInternal(piecePosition).Color == targetColor)
                     {
                         // Piece is in play, on the bottom, and the top is the right color, look through neighbors
-                        for (int i = 0; i < EnumUtils.NumDirections; i++)
+                        for (int j = 0; j < EnumUtils.NumDirections; j++)
                         {
-                            Position neighbor = piecePosition.NeighborAt(i);
+                            Position neighbor = piecePosition.NeighborAt(j);
 
                             if (_visitedPlacements.Add(neighbor) && !HasPieceAt(neighbor))
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
                                 bool validPlacement = true;
-                                for (int j = 0; j < EnumUtils.NumDirections; j++)
+                                for (int k = 0; k < EnumUtils.NumDirections; k++)
                                 {
-                                    Position surroundingPosition = neighbor.NeighborAt(j);
+                                    Position surroundingPosition = neighbor.NeighborAt(k);
                                     Piece surroundingPiece = GetPieceOnTopInternal(surroundingPosition);
                                     if (null != surroundingPiece && surroundingPiece.Color != targetColor)
                                     {
@@ -824,22 +803,12 @@ namespace Mzinga.Core
 
         private MoveSet GetValidQueenBeeMovements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             // Get all slides one away
             return GetValidSlides(targetPiece, 1);
         }
 
         private MoveSet GetValidSpiderMovements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             MoveSet validMoves = new MoveSet();
 
             // Get all slides up to 2 spots away
@@ -861,11 +830,6 @@ namespace Mzinga.Core
 
         private MoveSet GetValidBeetleMovements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             MoveSet validMoves = new MoveSet();
 
             // Look in all directions
@@ -913,11 +877,6 @@ namespace Mzinga.Core
 
         private MoveSet GetValidGrasshopperMovements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             MoveSet validMoves = new MoveSet();
 
             Position startingPosition = targetPiece.Position;
@@ -947,27 +906,12 @@ namespace Mzinga.Core
 
         private MoveSet GetValidSoldierAntMovements(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             // Get all slides all the way around
             return GetValidSlides(targetPiece, null);
         }
 
         private MoveSet GetValidSlides(Piece targetPiece, int? maxRange)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
-            if (maxRange.HasValue && maxRange.Value < 1)
-            {
-                throw new ArgumentOutOfRangeException("maxRange");
-            }
-
             MoveSet validMoves = new MoveSet();
 
             GetValidSlides(targetPiece, targetPiece.Position, 0, maxRange, validMoves);
@@ -977,26 +921,6 @@ namespace Mzinga.Core
 
         private void GetValidSlides(Piece targetPiece, Position startingPosition, int currentRange, int? maxRange, MoveSet validMoves)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
-            if (null == startingPosition)
-            {
-                throw new ArgumentNullException("startingPosition");
-            }
-
-            if (maxRange.HasValue && maxRange.Value < 1)
-            {
-                throw new ArgumentOutOfRangeException("maxRange");
-            }
-
-            if (null == validMoves)
-            {
-                throw new ArgumentNullException("validMoves");
-            }
-
             if (!maxRange.HasValue || currentRange < maxRange.Value)
             {
                 foreach (Direction slideDirection in EnumUtils.Directions)
@@ -1031,11 +955,6 @@ namespace Mzinga.Core
 
         protected bool CanMoveWithoutBreakingHive(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             if (targetPiece.InPlay && targetPiece.Position.Stack == 0)
             {
                 // Try edge heurestic
@@ -1083,11 +1002,6 @@ namespace Mzinga.Core
 
         protected bool PlacingPieceInOrder(Piece targetPiece)
         {
-            if (null == targetPiece)
-            {
-                throw new ArgumentNullException("targetPiece");
-            }
-
             if (targetPiece.InHand)
             {
                 switch (targetPiece.PieceName)

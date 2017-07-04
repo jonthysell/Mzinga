@@ -34,15 +34,16 @@ namespace Mzinga.Core
         {
             get
             {
-                return new Move();
+                return _pass ?? (_pass = new Move());
             }
         }
+        private static Move _pass;
 
         public bool IsPass
         {
             get
             {
-                return (CompareTo(Pass) == 0);
+                return (this == _pass);
             }
         }
 
@@ -77,12 +78,12 @@ namespace Mzinga.Core
 
         private void Init(PieceName pieceName, Position position)
         {
-            if (pieceName == PieceName.INVALID && null != position)
+            if (pieceName == PieceName.INVALID)
             {
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
-            if (pieceName != PieceName.INVALID && null == position)
+            if (null == position)
             {
                 throw new ArgumentNullException("position");
             }

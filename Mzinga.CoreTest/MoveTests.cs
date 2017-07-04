@@ -46,15 +46,6 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Move_NewPassTest()
-        {
-            Move pass = new Move(PieceName.INVALID, null);
-            VerifyMoveProperties(pass, PieceName.INVALID, null);
-
-            Assert.AreEqual(Move.Pass, pass);
-        }
-
-        [TestMethod]
         public void Move_PassTest()
         {
             Move pass = Move.Pass;
