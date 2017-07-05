@@ -209,6 +209,33 @@ namespace Mzinga.Core
             OnBoardChanged();
         }
 
+        // Following the example at https://chessprogramming.wikispaces.com/Perft
+        public long CalculatePerft(int depth)
+        {
+            if (depth == 0)
+            {
+                return 1;
+            }
+
+            MoveSet validMoves = GetValidMoves();
+
+            if (depth == 1)
+            {
+                return validMoves.Count;
+            }
+
+            long nodes = 0;
+
+            foreach (Move move in validMoves)
+            {
+                TrustedPlay(move);
+                nodes += CalculatePerft(depth - 1);
+                UndoLastMove();
+            }
+
+            return nodes;
+        }
+
         private void OnBoardChanged()
         {
             bool whiteQueenSurrounded = (CountNeighbors(PieceName.WhiteQueenBee) == 6);

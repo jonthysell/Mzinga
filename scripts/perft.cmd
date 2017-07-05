@@ -9,32 +9,13 @@
     # Start PowerShell
     param ([int]$startingDepth=0)
     
-    Add-Type -Path Mzinga.Core.dll | Out-Null
-    
-    function perft($gb, $depth)
+    try
     {
-        if ($depth -eq 0)
-        {
-            return 1
-        }
-
-        [Mzinga.Core.MoveSet] $validMoves = $gb.GetValidMoves()
-        
-        if ($depth -eq 1)
-        {
-            return $validMoves.Count
-        }
-
-        [long] $nodes = 0
-        
-        foreach ($move in $validMoves)
-        {
-            $gb.Play($move)
-            $nodes += perft -gb $gb -depth ($depth - 1)
-            $gb.UndoLastMove()
-        }
-
-        return $nodes
+        Add-Type -Path ..\Mzinga.Core\bin\Release\Mzinga.Core.dll | Out-Null
+    }
+    catch
+    {
+        Add-Type -Path Mzinga.Core.dll | Out-Null
     }
     
     if ($startingDepth -eq 0)
@@ -48,7 +29,7 @@
     {
         $gameBoard = New-Object Mzinga.Core.GameBoard
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
-        [long] $count = perft -gb $gameBoard -depth $depth
+        [long] $count = $gameBoard.CalculatePerft($depth)
         $elapsed = $sw.Elapsed.TotalMilliseconds
         Write-Host "$depth,$count,$elapsed"
         $depth++

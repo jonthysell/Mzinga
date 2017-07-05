@@ -177,39 +177,12 @@ namespace Mzinga.CoreTest
                 GameBoard gameBoard = new GameBoard();
 
                 Stopwatch sw = Stopwatch.StartNew();
-                long actualNodes = Perft(gameBoard, depth, true);
+                long actualNodes = gameBoard.CalculatePerft(depth);
                 sw.Stop();
 
                 Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
                 Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, sw.ElapsedMilliseconds, Math.Round(actualNodes / (double)sw.ElapsedMilliseconds, 1)));
             }
-        }
-
-        // Following the example at https://chessprogramming.wikispaces.com/Perft
-        private long Perft(GameBoard gameBoard, int depth, bool fast)
-        {
-            if (depth == 0)
-            {
-                return 1;
-            }
-
-            MoveSet validMoves = gameBoard.GetValidMoves();
-
-            if (fast && depth == 1)
-            {
-                return validMoves.Count;
-            }
-
-            long nodes = 0;
-
-            foreach (Move move in validMoves)
-            {
-                gameBoard.Play(move);
-                nodes += Perft(gameBoard, depth - 1, fast);
-                gameBoard.UndoLastMove();
-            }
-
-            return nodes;
         }
 
         private Direction[] StraightLine(Direction direction, int length)
