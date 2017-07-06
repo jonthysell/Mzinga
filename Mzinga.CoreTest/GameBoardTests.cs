@@ -168,8 +168,8 @@ namespace Mzinga.CoreTest
             long[] expectedNodes = new long[]
             {
                 1, 4, 96, 1440, // Confirmed
-                21600, 516240, 12219480 // Unconfirmed
-                //181641900, 2657392800 // Unconfirmed and too long
+                21600, 516240, 12219480, // Unconfirmed
+                //181641900, 2657392800, 99375893436 // Unconfirmed and too long to test
             };
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
