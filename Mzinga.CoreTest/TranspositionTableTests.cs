@@ -75,11 +75,11 @@ namespace Mzinga.CoreTest
         public void TranspositionTable_FillAndReplacePerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
-            int iterations = 10;
+            int iterations = 1000;
 
             for (int i = 0; i < iterations; i++)
             {
-                TranspositionTable tt = new TranspositionTable();
+                TranspositionTable tt = new TranspositionTable(TranspositionTable.DefaultSizeInBytes / 1024);
                 Assert.IsNotNull(tt);
 
                 Stopwatch sw = Stopwatch.StartNew();
@@ -94,8 +94,10 @@ namespace Mzinga.CoreTest
                 // Replace
                 for (int j = tt.Capacity - 1; j >= 0; j--)
                 {
+                    TranspositionTableEntry newEntry = CreateMaxEntry(j);
+                    newEntry.Depth++;
                     string key = j.ToString().PadLeft(204);
-                    tt.Store(key, CreateMaxEntry(j));
+                    tt.Store(key, newEntry);
                 }
 
                 sw.Stop();
