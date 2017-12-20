@@ -54,7 +54,7 @@ namespace Mzinga.Core.AI
         public CacheMetrics Metrics { get; private set; } = new CacheMetrics();
 
         private Dictionary<TKey, TEntry> _dict;
-        private Queue<TKey> _queue;
+        private LinkedList<TKey> _list;
 
         private FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
 
@@ -70,7 +70,7 @@ namespace Mzinga.Core.AI
             _replaceEntryPredicate = replaceEntryPredicate;
 
             _dict = new Dictionary<TKey, TEntry>(Capacity);
-            _queue = new Queue<TKey>(Capacity);
+            _list = new LinkedList<TKey>();
         }
 
         public void Store(TKey key, TEntry newEntry)
@@ -83,12 +83,14 @@ namespace Mzinga.Core.AI
                 if (Count == Capacity)
                 {
                     // Make space
-                    _dict.Remove(_queue.Dequeue());
+                    TKey first = _list.First.Value;
+                    _dict.Remove(first);
+                    _list.RemoveFirst();
                 }
 
                 // Add
                 _dict.Add(key, newEntry);
-                _queue.Enqueue(key);
+                _list.AddLast(key);
 
                 Metrics.Stores++;
             }
@@ -97,20 +99,10 @@ namespace Mzinga.Core.AI
                 // Existing entry
                 if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry, newEntry))
                 {
-                    int count = _queue.Count;
-                    while (count > 0)
-                    {
-                        TKey k = _queue.Dequeue();
-                        if (!k.Equals(key))
-                        {
-                            _queue.Enqueue(k);
-                        }
-                        count--;
-                    }
-
                     // Replace
+                    _list.Remove(key);
                     _dict[key] = newEntry;
-                    _queue.Enqueue(key);
+                    _list.AddLast(key);
 
                     Metrics.Updates++;
                 }
@@ -134,7 +126,7 @@ namespace Mzinga.Core.AI
         public void Clear()
         {
             _dict.Clear();
-            _queue.Clear();
+            _list.Clear();
             Metrics.Reset();
         }
 
