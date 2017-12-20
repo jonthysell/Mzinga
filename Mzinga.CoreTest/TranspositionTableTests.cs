@@ -45,7 +45,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void TranspositionTable_MaxMemoryTest()
         {
-            long expectedSizeInBytes =TranspositionTable.DefaultSizeInBytes;
+            long expectedSizeInBytes = TranspositionTable.DefaultSizeInBytes;
 
             TranspositionTable tt = new TranspositionTable(expectedSizeInBytes);
             Assert.IsNotNull(tt);
@@ -65,11 +65,46 @@ namespace Mzinga.CoreTest
             long actualSizeInBytes = endMemoryUsage - startMemoryUsage;
 
             double usageRatio = actualSizeInBytes / (double)expectedSizeInBytes;
-            Trace.WriteLine(string.Format("Usage: {0} ({1:P2})", actualSizeInBytes, usageRatio));
+            Trace.WriteLine(string.Format("Usage: {0}/{1} ({2:P2})", actualSizeInBytes, expectedSizeInBytes, usageRatio));
 
             Assert.IsTrue(usageRatio - 1.0 <= 0.01, string.Format("Table is too big {0:P2}: {1} bytes (~{2} bytes per entry)", usageRatio, actualSizeInBytes - expectedSizeInBytes, (actualSizeInBytes - expectedSizeInBytes) / tt.Count));
         }
 
+        [TestMethod]
+        [TestCategory("Performance")]
+        public void TranspositionTable_FillAndReplacePerfTest()
+        {
+            TimeSpan sum = TimeSpan.Zero;
+            int iterations = 10;
+
+            for (int i = 0; i < iterations; i++)
+            {
+                TranspositionTable tt = new TranspositionTable();
+                Assert.IsNotNull(tt);
+
+                Stopwatch sw = Stopwatch.StartNew();
+
+                // Fill
+                for (int j = 0; j < tt.Capacity; j++)
+                {
+                    string key = j.ToString().PadLeft(204);
+                    tt.Store(key, CreateMaxEntry(j));
+                }
+
+                // Replace
+                for (int j = tt.Capacity - 1; j >= 0; j--)
+                {
+                    string key = j.ToString().PadLeft(204);
+                    tt.Store(key, CreateMaxEntry(j));
+                }
+
+                sw.Stop();
+
+                sum += sw.Elapsed;
+            }
+
+            Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
+        }
 
         private TranspositionTableEntry CreateMaxEntry(int id)
         {
