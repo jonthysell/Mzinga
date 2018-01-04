@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,13 +89,18 @@ namespace Mzinga.Core.AI
         public TranspositionTableEntryType Type;
         public double Value;
         public int Depth;
-        public string BestMove;
+        public Move BestMove;
 
         public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType)
                                                     + sizeof(double) // Value
                                                     + sizeof(int) // Depth
                                                     + IntPtr.Size // BestMove pointer
-                                                    + (14 * sizeof(char)); // BestMove length
+                                                    + sizeof(PieceName) // BestMove PieceName
+                                                    + sizeof(Color) // BestMove PieceName Color
+                                                    + sizeof(BugType) // BestMove PieceName BugType
+                                                    + IntPtr.Size // BestMove Position neighbor pointer
+                                                    + IntPtr.Size // BestMove Position pointer
+                                                    + (4 * sizeof(int)); // BestMove Position values
     }
 
     public enum TranspositionTableEntryType : byte

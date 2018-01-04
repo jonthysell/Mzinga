@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -261,7 +261,7 @@ namespace Mzinga.Core.AI
                         if (null != tEntry.BestMove)
                         {
                             // This should only be hit once by EvaluateMoves since it now skips calling the next depths
-                            movesToEvaluate.Update(new EvaluatedMove(new Move(tEntry.BestMove), tEntry.Value, tEntry.Depth));
+                            movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
                             return movesToEvaluate;
                         }
                     }
@@ -312,7 +312,7 @@ namespace Mzinga.Core.AI
             else
             {
                 tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
-                tEntry.BestMove = evaluatedMoves.BestMove.Move.ToString();
+                tEntry.BestMove = evaluatedMoves.BestMove.Move;
             }
 
             tEntry.Value = bestValue;
@@ -366,7 +366,7 @@ namespace Mzinga.Core.AI
             }
 
             double bestValue = double.NegativeInfinity;
-            Move bestMove = null != tEntry?.BestMove ? new Move(tEntry.BestMove) : null;
+            Move bestMove = null != tEntry?.BestMove ? tEntry.BestMove : null;
 
             List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
 
@@ -421,7 +421,7 @@ namespace Mzinga.Core.AI
             else
             {
                 tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
-                tEntry.BestMove = bestMove?.ToString();
+                tEntry.BestMove = bestMove;
             }
 
             tEntry.Value = bestValue;

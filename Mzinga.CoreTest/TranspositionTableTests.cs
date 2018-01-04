@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.CoreTest
@@ -114,7 +115,7 @@ namespace Mzinga.CoreTest
             te.Depth = 0;
             te.Type = TranspositionTableEntryType.Exact;
             te.Value = 0;
-            te.BestMove = id.ToString().PadLeft(14);
+            te.BestMove = new Move(PieceName.WhiteSoldierAnt1, new Position(0, 0, 0, 0));
             return te;
         }
     }
