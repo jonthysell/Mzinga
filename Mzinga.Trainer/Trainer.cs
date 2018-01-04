@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -355,7 +355,7 @@ namespace Mzinga.Trainer
                 }
 
                 Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
-                gameBoard.Play(move);
+                gameBoard.Play(move, false);
             }
 
             BoardState boardState = gameBoard.GameInProgress ? BoardState.Draw : gameBoard.BoardState;
@@ -431,16 +431,6 @@ namespace Mzinga.Trainer
 
         private Move GetBestMove(GameBoard gameBoard, GameAI ai)
         {
-            if (null == gameBoard)
-            {
-                throw new ArgumentNullException("gameBoard");
-            }
-
-            if (null == ai)
-            {
-                throw new ArgumentNullException("ai");
-            }
-
             if (TrainerSettings.MaxDepth >= 0)
             {
                 return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth);

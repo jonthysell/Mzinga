@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,20 +63,7 @@ namespace Mzinga.Core
             for (int i = 0; i < split.Length; i++)
             {
                 Move parseMove = new Move(split[i]);
-                Add(parseMove);
-            }
-        }
-
-        public void Add(IEnumerable<Move> moves)
-        {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
-            foreach (Move move in moves)
-            {
-                Add(move);
+                _moves.Add(parseMove);
             }
         }
 
@@ -95,7 +82,25 @@ namespace Mzinga.Core
             return _moves.Add(move);
         }
 
-        public void Remove(IEnumerable<Move> moves)
+        public void Add(MoveSet moves)
+        {
+            if (null == moves)
+            {
+                throw new ArgumentNullException("moves");
+            }
+
+            if (IsLocked)
+            {
+                throw new MoveSetIsLockedException();
+            }
+
+            foreach (Move move in moves)
+            {
+                _moves.Add(move);
+            }
+        }
+
+        public void Add(IEnumerable<Move> moves)
         {
             if (null == moves)
             {
@@ -104,7 +109,7 @@ namespace Mzinga.Core
 
             foreach (Move move in moves)
             {
-                Remove(move);
+                Add(move);
             }
         }
 
@@ -123,6 +128,37 @@ namespace Mzinga.Core
             return _moves.Remove(move);
         }
 
+        public void Remove(MoveSet moves)
+        {
+            if (null == moves)
+            {
+                throw new ArgumentNullException("moves");
+            }
+
+            if (IsLocked)
+            {
+                throw new MoveSetIsLockedException();
+            }
+
+            foreach (Move move in moves)
+            {
+                _moves.Remove(move);
+            }
+        }
+
+        public void Remove(IEnumerable<Move> moves)
+        {
+            if (null == moves)
+            {
+                throw new ArgumentNullException("moves");
+            }
+
+            foreach (Move move in moves)
+            {
+                Remove(move);
+            }
+        }
+
         public bool Contains(Move move)
         {
             if (null == move)
@@ -131,6 +167,29 @@ namespace Mzinga.Core
             }
 
             return _moves.Contains(move);
+        }
+
+        internal bool TryGetMove(Move move, out Move storedMove)
+        {
+            if (null == move)
+            {
+                throw new ArgumentNullException("move");
+            }
+
+            if (_moves.Contains(move))
+            {
+                foreach (Move m in _moves)
+                {
+                    if (m == move)
+                    {
+                        storedMove = m;
+                        return true;
+                    }
+                }
+            }
+
+            storedMove = null;
+            return false;
         }
 
         public void Lock()

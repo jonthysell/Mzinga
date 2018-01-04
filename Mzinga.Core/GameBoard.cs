@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,23 +61,8 @@ namespace Mzinga.Core
             _boardHistory = new BoardHistory();
         }
 
-        public GameBoard Clone()
+        public void Play(Move move, bool getValid = true)
         {
-            GameBoard clone = new GameBoard();
-            foreach (BoardHistoryItem item in BoardHistory)
-            {
-                clone.Play(item.Move);
-            }
-            return clone;
-        }
-
-        public void Play(Move move)
-        {
-            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
-            {
-                throw new InvalidMoveException(move, "You can't play, the game is over.");
-            }
-
             if (null == move)
             {
                 throw new ArgumentNullException("move");
@@ -87,6 +72,11 @@ namespace Mzinga.Core
             {
                 Pass();
                 return;
+            }
+
+            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
+            {
+                throw new InvalidMoveException(move, "You can't play, the game is over.");
             }
 
             Piece targetPiece = GetPiece(move.PieceName);
@@ -146,7 +136,18 @@ namespace Mzinga.Core
 
             MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
 
-            if (!validMoves.Contains(move))
+            if (getValid)
+            {
+                Move validMove = null;
+
+                if (!validMoves.TryGetMove(move, out validMove))
+                {
+                    throw new InvalidMoveException(move);
+                }
+
+                move = validMove;
+            }
+            else if (!validMoves.Contains(move))
             {
                 throw new InvalidMoveException(move);
             }
