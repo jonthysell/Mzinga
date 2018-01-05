@@ -819,10 +819,16 @@ namespace Mzinga.Core
                 // Get all slides up to 3 spots away
                 MoveSet upToThree = GetValidSlides(targetPiece, 3);
 
-                // Get all slides ONLY 3 spots away
-                upToThree.Remove(upToTwo);
+                if (upToThree.Count > 0)
+                {
+                    // Get all slides ONLY 3 spots away
+                    upToThree.Remove(upToTwo);
 
-                validMoves.Add(upToThree);
+                    if (upToThree.Count > 0)
+                    {
+                        validMoves.Add(upToThree);
+                    }
+                }
             }
 
             return validMoves;
