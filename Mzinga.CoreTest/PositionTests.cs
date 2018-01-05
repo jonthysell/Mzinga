@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -110,7 +110,7 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Position_NeighborsTest()
+        public void Position_NeighborAtIndexTest()
         {
             Position position = Position.Origin;
 
@@ -127,7 +127,7 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Position_NeighborAtTest()
+        public void Position_NeighborAtDirectionTest()
         {
             Position position = Position.Origin;
 
@@ -137,6 +137,26 @@ namespace Mzinga.CoreTest
             {
                 Assert.AreEqual(expectedNeighbors[direction], position.NeighborAt(direction));
             }
+        }
+
+        [TestMethod]
+        public void Position_GetAboveTest()
+        {
+            Position position = Position.Origin;
+
+            Position expectedAbove = new Position(0, 0, 0, 1);
+
+            Assert.AreEqual(expectedAbove, position.GetAbove());
+        }
+
+        [TestMethod]
+        public void Position_GetBelowTest()
+        {
+            Position position = new Position(0, 0, 0, 1);
+
+            Position expectedBelow = new Position(0, 0, 0, 0);
+
+            Assert.AreEqual(expectedBelow, position.GetBelow());
         }
 
         [TestMethod]

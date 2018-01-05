@@ -98,8 +98,8 @@ namespace Mzinga.Core.AI
                                                     + sizeof(PieceName) // BestMove PieceName
                                                     + sizeof(Color) // BestMove PieceName Color
                                                     + sizeof(BugType) // BestMove PieceName BugType
-                                                    + IntPtr.Size // BestMove Position neighbor pointer
                                                     + IntPtr.Size // BestMove Position pointer
+                                                    + IntPtr.Size // BestMove Position internal pointer
                                                     + (4 * sizeof(int)); // BestMove Position values
     }
 

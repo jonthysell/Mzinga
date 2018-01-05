@@ -355,7 +355,7 @@ namespace Mzinga.Trainer
                 }
 
                 Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
-                gameBoard.Play(move, false);
+                gameBoard.Play(move);
             }
 
             BoardState boardState = gameBoard.GameInProgress ? BoardState.Draw : gameBoard.BoardState;

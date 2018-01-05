@@ -61,7 +61,7 @@ namespace Mzinga.Core
             _boardHistory = new BoardHistory();
         }
 
-        public void Play(Move move, bool getValid = true)
+        public void Play(Move move)
         {
             if (null == move)
             {
@@ -136,18 +136,7 @@ namespace Mzinga.Core
 
             MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
 
-            if (getValid)
-            {
-                Move validMove = null;
-
-                if (!validMoves.TryGetMove(move, out validMove))
-                {
-                    throw new InvalidMoveException(move);
-                }
-
-                move = validMove;
-            }
-            else if (!validMoves.Contains(move))
+            if (!validMoves.Contains(move))
             {
                 throw new InvalidMoveException(move);
             }

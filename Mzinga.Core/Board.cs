@@ -361,7 +361,7 @@ namespace Mzinga.Core
                 Piece parsedPiece = parsedPieces.Dequeue();
                 if (parsedPiece.InPlay)
                 {
-                    if (parsedPiece.Position.Stack > 0 && !HasPieceAt(parsedPiece.Position.GetShifted(0, 0, 0, -1)))
+                    if (parsedPiece.Position.Stack > 0 && !HasPieceAt(parsedPiece.Position.GetBelow()))
                     {
                         parsedPieces.Enqueue(parsedPiece);
                     }
@@ -423,9 +423,9 @@ namespace Mzinga.Core
 
         private Piece GetPieceOnTopInternal(Position position)
         {
-            if (position.Stack > 0)
+            while (position.Stack > 0)
             {
-                position = position.GetShifted(0, 0, 0, -position.Stack);
+                position = position.GetBelow();
             }
 
             Piece topPiece = GetPiece(position);
@@ -460,7 +460,7 @@ namespace Mzinga.Core
                 _piecesByPosition[piece.Position] = piece;
                 if (newPosition.Stack > 0)
                 {
-                    Position posBelow = newPosition.GetShifted(0, 0, 0, -1);
+                    Position posBelow = newPosition.GetBelow();
                     Piece pieceBelow = GetPiece(posBelow);
                     pieceBelow.PieceAbove = piece;
                     piece.PieceBelow = pieceBelow;
@@ -869,7 +869,7 @@ namespace Mzinga.Core
                     // Logic from http://boardgamegeek.com/wiki/page/Hive_FAQ#toc9
                     if (!(destinationHeight < topLeftNeighborHeight && destinationHeight < topRightNeighborHeight && currentHeight < topLeftNeighborHeight && currentHeight < topRightNeighborHeight))
                     {
-                        Position targetPosition = (newPosition.Stack == destinationHeight) ? newPosition : topNeighbor.Position.GetShifted(0, 0, 0, 1);
+                        Position targetPosition = (newPosition.Stack == destinationHeight) ? newPosition : topNeighbor.Position.GetAbove();
                         Move targetMove = new Move(targetPiece.PieceName, targetPosition);
                         validMoves.Add(targetMove);
                     }

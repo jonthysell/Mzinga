@@ -169,29 +169,6 @@ namespace Mzinga.Core
             return _moves.Contains(move);
         }
 
-        internal bool TryGetMove(Move move, out Move storedMove)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            if (_moves.Contains(move))
-            {
-                foreach (Move m in _moves)
-                {
-                    if (m == move)
-                    {
-                        storedMove = m;
-                        return true;
-                    }
-                }
-            }
-
-            storedMove = null;
-            return false;
-        }
-
         public void Lock()
         {
             IsLocked = true;

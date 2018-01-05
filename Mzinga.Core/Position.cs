@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,9 +62,9 @@ namespace Mzinga.Core
             }
         }
 
-        private Position[] _neighbors = null;
+        private Position[] _localCache = null;
 
-        private static Dictionary<Position, Position[]> _cachedNeighbors = new Dictionary<Position, Position[]>();
+        private static Dictionary<Position, Position[]> _sharedCache = new Dictionary<Position, Position[]>();
 
         public Position(int x, int y, int z, int stack)
         {
@@ -126,20 +126,46 @@ namespace Mzinga.Core
         {
             direction = direction % EnumUtils.NumDirections;
 
-            if (null == _neighbors)
+            return CacheLookup(direction);
+        }
+
+        public Position GetAbove()
+        {
+            return CacheLookup(EnumUtils.NumDirections);
+        }
+
+        public Position GetBelow()
+        {
+            return CacheLookup(EnumUtils.NumDirections + 1);
+        }
+
+        private Position CacheLookup(int index)
+        {
+            if (null == _localCache)
             {
-                if (!_cachedNeighbors.TryGetValue(this, out _neighbors))
+                if (!_sharedCache.TryGetValue(this, out _localCache))
                 {
-                    _neighbors = (_cachedNeighbors[this] = new Position[EnumUtils.NumDirections]);
+                    _localCache = (_sharedCache[this] = new Position[EnumUtils.NumDirections + 2]);
                 }
             }
 
-            if (null == _neighbors[direction])
+            if (null == _localCache[index])
             {
-                _neighbors[direction] = new Position(X + _neighborDeltas[direction][0], Y + _neighborDeltas[direction][1], Z + _neighborDeltas[direction][2], 0);
+                if (index < EnumUtils.NumDirections)
+                {
+                    _localCache[index] = new Position(X + _neighborDeltas[index][0], Y + _neighborDeltas[index][1], Z + _neighborDeltas[index][2], 0);
+                }
+                else if (index == EnumUtils.NumDirections) // Above
+                {
+                    _localCache[index] = new Position(X, Y, Z, Stack + 1);
+                }
+                else if (index == EnumUtils.NumDirections + 1) // Below
+                {
+                    _localCache[index] = new Position(X, Y, Z, Stack - 1);
+                }
             }
 
-            return _neighbors[direction];
+            return _localCache[index];
         }
 
         public Position NeighborAt(Direction[] directions)
