@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -836,7 +836,6 @@ namespace Mzinga.Core
             foreach (Direction direction in EnumUtils.Directions)
             {
                 Position newPosition = targetPiece.Position.NeighborAt(direction);
-                newPosition = newPosition.GetShifted(0, 0, 0, -newPosition.Stack);
 
                 Piece topNeighbor = GetPieceOnTopInternal(newPosition);
 
@@ -856,9 +855,6 @@ namespace Mzinga.Core
                 int topLeftNeighborHeight = null != topLeftNeighbor ? topLeftNeighbor.Position.Stack + 1 : 0;
                 int topRightNeighborHeight = null != topRightNeighbor ? topRightNeighbor.Position.Stack + 1 : 0;
 
-                Position targetPosition = newPosition.GetShifted(0, 0, 0, destinationHeight);
-                Move targetMove = new Move(targetPiece.PieceName, targetPosition);
-
                 // "Take-off" beetle
                 currentHeight--;
 
@@ -867,6 +863,8 @@ namespace Mzinga.Core
                     // Logic from http://boardgamegeek.com/wiki/page/Hive_FAQ#toc9
                     if (!(destinationHeight < topLeftNeighborHeight && destinationHeight < topRightNeighborHeight && currentHeight < topLeftNeighborHeight && currentHeight < topRightNeighborHeight))
                     {
+                        Position targetPosition = (newPosition.Stack == destinationHeight) ? newPosition : topNeighbor.Position.GetShifted(0, 0, 0, 1);
+                        Move targetMove = new Move(targetPiece.PieceName, targetPosition);
                         validMoves.Add(targetMove);
                     }
                 }
