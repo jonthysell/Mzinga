@@ -918,12 +918,15 @@ namespace Mzinga.Core
         {
             MoveSet validMoves = new MoveSet();
 
-            GetValidSlides(targetPiece, targetPiece.Position, 0, maxRange, validMoves);
+            HashSet<Position> visitedPositions = new HashSet<Position>();
+            visitedPositions.Add(targetPiece.Position);
+
+            GetValidSlides(targetPiece, visitedPositions, 0, maxRange, validMoves);
 
             return validMoves;
         }
 
-        private void GetValidSlides(Piece targetPiece, Position startingPosition, int currentRange, int? maxRange, MoveSet validMoves)
+        private void GetValidSlides(Piece targetPiece, HashSet<Position> visitedPositions, int currentRange, int? maxRange, MoveSet validMoves)
         {
             if (!maxRange.HasValue || currentRange < maxRange.Value)
             {
@@ -931,7 +934,7 @@ namespace Mzinga.Core
                 {
                     Position slidePosition = targetPiece.Position.NeighborAt(slideDirection);
 
-                    if (slidePosition != startingPosition && !HasPieceAt(slidePosition))
+                    if (visitedPositions.Add(slidePosition) && !HasPieceAt(slidePosition))
                     {
                         // Slide position is open
 
@@ -948,7 +951,7 @@ namespace Mzinga.Core
                                 // Sliding from this position has not been tested yet
                                 Position preSlidePosition = targetPiece.Position;
                                 MovePiece(targetPiece, move.Position);
-                                GetValidSlides(targetPiece, startingPosition, currentRange + 1, maxRange, validMoves);
+                                GetValidSlides(targetPiece, visitedPositions, currentRange + 1, maxRange, validMoves);
                                 MovePiece(targetPiece, preSlidePosition);
                             }
                         }
