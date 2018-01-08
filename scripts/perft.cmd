@@ -20,7 +20,7 @@
     
     if ($startingDepth -eq 0)
     {
-        Write-Host "depth,count,time (ms)"
+        Write-Host "Depth`tCount`tTime`tKN/s"
     }
     
     [int] $depth = $startingDepth;
@@ -30,8 +30,9 @@
         $gameBoard = New-Object Mzinga.Core.GameBoard
         $sw = [System.Diagnostics.Stopwatch]::StartNew()
         [long] $count = $gameBoard.CalculatePerft($depth)
-        $elapsed = $sw.Elapsed.TotalMilliseconds
-        Write-Host "$depth,$count,$elapsed"
+        $elapsed = $sw.Elapsed
+        $kns = ($count / $elapsed.TotalMilliseconds).ToString("0.00")
+        Write-Host "$depth`t$count`t$elapsed`t$kns"
         $depth++
     }
     
