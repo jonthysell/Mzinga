@@ -477,6 +477,7 @@ namespace Mzinga.Core
         {
             // Whether or not a piece has been found to be part of the hive
             bool[] partOfHive = new bool[EnumUtils.NumPieceNames];
+            int piecesVisited = 0;
 
             // Find a piece on the board to start checking
             Piece startingPiece = null;
@@ -486,6 +487,7 @@ namespace Mzinga.Core
                 if (piece.InHand)
                 {
                     partOfHive[(int)pieceName] = true;
+                    piecesVisited++;
                 }
                 else
                 {
@@ -495,12 +497,13 @@ namespace Mzinga.Core
                         // Save off a starting piece on the bottom
                         startingPiece = piece;
                         partOfHive[(int)pieceName] = true;
+                        piecesVisited++;
                     }
                 }
             }
 
             // There is at least one piece on the board
-            if (null != startingPiece)
+            if (null != startingPiece && piecesVisited < EnumUtils.NumPieceNames)
             {
                 Queue<Piece> piecesToLookAt = new Queue<Piece>();
                 piecesToLookAt.Enqueue(startingPiece);
@@ -518,6 +521,7 @@ namespace Mzinga.Core
                         {
                             piecesToLookAt.Enqueue(neighborPiece);
                             partOfHive[(int)neighborPiece.PieceName] = true;
+                            piecesVisited++;
                         }
                     }
 
@@ -526,22 +530,13 @@ namespace Mzinga.Core
                     while (null != pieceAbove)
                     {
                         partOfHive[(int)pieceAbove.PieceName] = true;
+                        piecesVisited++;
                         pieceAbove = pieceAbove.PieceAbove;
-                    }
-                }
-
-                // Return false if even a single piece is not part of the one-hive
-                for (int i = 0; i < partOfHive.Length; i++)
-                {
-                    if (!partOfHive[i])
-                    {
-                        return false;
                     }
                 }
             }
 
-            // If there's no startingPiece, there's nothing on the board
-            return true;
+            return piecesVisited == EnumUtils.NumPieceNames;
         }
 
         #region Metrics
