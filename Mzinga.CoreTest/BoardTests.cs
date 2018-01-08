@@ -81,6 +81,44 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
+        public void Board_IsOneHive_NewGameTest()
+        {
+            MockBoard b = new MockBoard();
+            Assert.IsTrue(b.IsOneHive());
+        }
+
+        [TestMethod]
+        public void Board_IsOneHive_OnePieceTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[1];WS1[0,0,0]");
+            Assert.IsTrue(b.IsOneHive());
+        }
+
+        [TestMethod]
+        public void Board_IsOneHive_ClosedCircleTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+            Assert.IsTrue(b.IsOneHive());
+        }
+
+        [TestMethod]
+        public void Board_IsOneHive_OpenCircleTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            Assert.IsTrue(b.IsOneHive());
+        }
+
+        [TestMethod]
+        public void Board_IsOneHive_TwoHivesTest()
+        {
+            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            Assert.IsTrue(b.IsOneHive());
+
+            b.MovePiece(b.GetPiece(PieceName.WhiteSpider1), null);
+            Assert.IsFalse(b.IsOneHive());
+        }
+
+        [TestMethod]
         public void Board_GetValidMoves_BeetleStackTest()
         {
             VerifyValidMoves("InProgress;White[5];WQ[1,-1,0];WS1[0,0,0];WB1[0,0,0,1];BQ[1,1,-2];BS1[0,1,-1];BB1[0,1,-1,1]",
@@ -154,6 +192,11 @@ namespace Mzinga.CoreTest
         public new bool CanMoveWithoutBreakingHive(Piece targetPiece)
         {
             return base.CanMoveWithoutBreakingHive(targetPiece);
+        }
+
+        public new void MovePiece(Piece piece, Position newPosition)
+        {
+            base.MovePiece(piece, newPosition);
         }
     }
 }
