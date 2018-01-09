@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -169,7 +169,7 @@ namespace Mzinga.CoreTest
             {
                 1, 4, 96, 1440, // Confirmed
                 21600, 516240, 12219480, // Unconfirmed
-                //181641900, 2657392800, 99375893436 // Unconfirmed and too long to test
+                //181464200, 2651558410, 98813813835 // Unconfirmed and too long to test
             };
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
