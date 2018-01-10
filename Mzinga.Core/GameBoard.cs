@@ -74,7 +74,7 @@ namespace Mzinga.Core
                 return;
             }
 
-            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
+            if (GameIsOver)
             {
                 throw new InvalidMoveException(move, "You can't play, the game is over.");
             }
@@ -113,6 +113,11 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move, "When there are multiple pieces of the same bug type, you must play the pieces in order.");
             }
 
+            if (HasPieceAt(move.Position))
+            {
+                throw new InvalidMoveException(move, "You can't move there because a piece already exists at that position.");
+            }
+
             if (targetPiece.InPlay)
             {
                 if (targetPiece.Position == move.Position)
@@ -129,11 +134,6 @@ namespace Mzinga.Core
                 }
             }
 
-            if (HasPieceAt(move.Position))
-            {
-                throw new InvalidMoveException(move, "You can't move there because a piece already exists at that position.");
-            }
-
             MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
 
             if (!validMoves.Contains(move))
@@ -148,7 +148,7 @@ namespace Mzinga.Core
         {
             Move pass = Move.Pass;
 
-            if (BoardState == BoardState.Draw || BoardState == BoardState.WhiteWins || BoardState == BoardState.BlackWins)
+            if (GameIsOver)
             {
                 throw new InvalidMoveException(pass, "You can't pass, the game is over.");
             }

@@ -432,13 +432,30 @@ namespace Mzinga.Core
 
             if (null != topPiece)
             {
-                while (null != topPiece.PieceAbove)
-                {
-                    topPiece = topPiece.PieceAbove;
-                }
+                topPiece = GetPieceOnTop(topPiece);
             }
 
             return topPiece;
+        }
+
+        private Piece GetPieceOnTop(Piece piece)
+        {
+            while (null != piece.PieceAbove)
+            {
+                piece = piece.PieceAbove;
+            }
+
+            return piece;
+        }
+
+        private Piece GetPieceOnBottom(Piece piece)
+        {
+            while (null != piece.PieceBelow)
+            {
+                piece = piece.PieceBelow;
+            }
+
+            return piece;
         }
 
         protected void MovePiece(Piece piece, Position newPosition)
@@ -471,6 +488,11 @@ namespace Mzinga.Core
         protected bool PieceIsOnTop(Piece targetPiece)
         {
             return (null == targetPiece.PieceAbove);
+        }
+
+        protected bool PieceIsOnBottom(Piece targetPiece)
+        {
+            return (null == targetPiece.PieceBelow);
         }
 
         public bool IsOneHive()
@@ -622,7 +644,7 @@ namespace Mzinga.Core
         {
             MoveSet moves = new MoveSet();
 
-            if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
+            if (GameInProgress)
             {
                 foreach (PieceName pieceName in CurrentTurnPieces)
                 {
@@ -678,7 +700,7 @@ namespace Mzinga.Core
 
         private MoveSet GetValidMovesInternal(Piece targetPiece)
         {
-            if (BoardState == BoardState.NotStarted || BoardState == BoardState.InProgress)
+            if (GameInProgress)
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
                 {
@@ -749,13 +771,16 @@ namespace Mzinga.Core
 
                 for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
-                    Position piecePosition = _pieces[i].Position;
-                    if (null != piecePosition && piecePosition.Stack == 0 && GetPieceOnTopInternal(piecePosition).Color == targetColor)
+                    Piece piece = _pieces[i];
+                    if (piece.InPlay && PieceIsOnTop(piece) && piece.Color == targetColor)
                     {
-                        // Piece is in play, on the bottom, and the top is the right color, look through neighbors
+                        // Piece is in play, on the top and is the right color, look through neighbors
+                        Position bottomPosition = GetPieceOnBottom(piece).Position;
+                        _visitedPlacements.Add(bottomPosition);
+
                         for (int j = 0; j < EnumUtils.NumDirections; j++)
                         {
-                            Position neighbor = piecePosition.NeighborAt(j);
+                            Position neighbor = bottomPosition.NeighborAt(j);
 
                             if (_visitedPlacements.Add(neighbor) && !HasPieceAt(neighbor))
                             {
