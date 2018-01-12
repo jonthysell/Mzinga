@@ -47,32 +47,6 @@ namespace Mzinga.Core.AI
             return entry.Depth > existingEntry.Depth;
         }
 
-        public new void Store(string key, TranspositionTableEntry entry)
-        {
-            if (null == entry)
-            {
-                throw new ArgumentNullException("entry");
-            }
-
-            base.Store(key, entry);
-        }
-
-        public new bool TryLookup(string key, out TranspositionTableEntry entry)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentNullException("key");
-            }
-
-            if (base.TryLookup(key, out entry))
-            {
-                return true;
-            }
-
-            entry = null;
-            return false;
-        }
-
         private static readonly long EntrySizeInBytes = (2 * IntPtr.Size) // Key pointers x2
                                                         + ((2 * 8 + 4 * 11 + 16 * 9) * sizeof(char)) // Key length (2x Q, 4x B, 16x other)
                                                         + IntPtr.Size // Entry pointer

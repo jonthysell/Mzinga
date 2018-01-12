@@ -165,11 +165,6 @@ namespace Mzinga.Core.AI
 
         private EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)
         {
-            if (null == gameBoard)
-            {
-                throw new ArgumentNullException("gameBoard");
-            }
-
             MoveSet validMoves = gameBoard.GetValidMoves();
 
             EvaluatedMoveCollection movesToEvaluate = new EvaluatedMoveCollection();
@@ -212,21 +207,6 @@ namespace Mzinga.Core.AI
 
         private EvaluatedMoveCollection EvaluateMovesToDepth(GameBoard gameBoard, int depth, EvaluatedMoveCollection movesToEvaluate)
         {
-            if (null == gameBoard)
-            {
-                throw new ArgumentNullException("gameBoard");
-            }
-
-            if (depth <= 0)
-            {
-                throw new ArgumentOutOfRangeException("depth");
-            }
-
-            if (null == movesToEvaluate || movesToEvaluate.Count == 0)
-            {
-                throw new ArgumentNullException("movesToEvaluate");
-            }
-
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
 
@@ -438,11 +418,6 @@ namespace Mzinga.Core.AI
 
         private double CalculateBoardScore(GameBoard gameBoard)
         {
-            if (null == gameBoard)
-            {
-                throw new ArgumentNullException("gameBoard");
-            }
-
             // Always score from white's point of view
 
             if (gameBoard.BoardState == BoardState.WhiteWins)
