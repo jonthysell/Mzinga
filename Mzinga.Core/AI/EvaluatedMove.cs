@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ using System;
 
 namespace Mzinga.Core.AI
 {
-    public class EvaluatedMove : IComparable<EvaluatedMove>
+    internal class EvaluatedMove : IComparable<EvaluatedMove>
     {
         public Move Move { get; private set; }
 
@@ -38,11 +38,6 @@ namespace Mzinga.Core.AI
 
         public EvaluatedMove(Move move, double scoreAfterMove = UnevaluatedMoveScore, int depth = 0)
         {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
             Move = move;
             ScoreAfterMove = scoreAfterMove;
             Depth = depth;
@@ -50,11 +45,6 @@ namespace Mzinga.Core.AI
 
         public int CompareTo(EvaluatedMove evaluatedMove)
         {
-            if (null == evaluatedMove)
-            {
-                throw new ArgumentNullException("evaluatedMove");
-            }
-
             return ScoreAfterMove.CompareTo(evaluatedMove.ScoreAfterMove);
         }
 

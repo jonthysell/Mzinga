@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Mzinga.Core.AI
 {
-    public class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
+    internal class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
     {
         public int Count
         {
@@ -70,7 +69,7 @@ namespace Mzinga.Core.AI
 
         public EvaluatedMoveCollection()
         {
-            _evaluatedMoves = new List<EvaluatedMove>(DefaultCapacity);
+            _evaluatedMoves = new List<EvaluatedMove>();
         }
 
         public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
@@ -83,11 +82,6 @@ namespace Mzinga.Core.AI
 
         public bool Add(EvaluatedMove evaluatedMove)
         {
-            if (null == evaluatedMove)
-            {
-                throw new ArgumentNullException("evaluatedMove");
-            }
-
             int index = SearchFor(evaluatedMove);
 
             if (index < 0)
@@ -116,11 +110,6 @@ namespace Mzinga.Core.AI
 
         public void Update(EvaluatedMove evaluatedMove)
         {
-            if (null == evaluatedMove)
-            {
-                throw new ArgumentNullException("evaluatedMove");
-            }
-
             int foundIndex = -1;
 
             for (int i = 0; i < _evaluatedMoves.Count; i++)
@@ -172,24 +161,12 @@ namespace Mzinga.Core.AI
             return sb.ToString().TrimEnd(EvaluatedMoveStringSeparator);
         }
 
-        private const int DefaultCapacity = 256;
-
         public const char EvaluatedMoveStringSeparator = ';';
 
         private class EvaluatedMoveDescendingComparer : IComparer<EvaluatedMove>
         {
             public int Compare(EvaluatedMove a, EvaluatedMove b)
             {
-                if (null == a)
-                {
-                    throw new ArgumentNullException("a");
-                }
-
-                if (null == b)
-                {
-                    throw new ArgumentNullException("b");
-                }
-
                 int result = b.CompareTo(a);
 
                 if (result == 0)
