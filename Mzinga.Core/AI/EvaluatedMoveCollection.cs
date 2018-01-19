@@ -63,8 +63,6 @@ namespace Mzinga.Core.AI
             }
         }
 
-        private static IComparer<EvaluatedMove> _comparer = new EvaluatedMoveDescendingComparer();
-
         private List<EvaluatedMove> _evaluatedMoves;
 
         public EvaluatedMoveCollection()
@@ -143,7 +141,7 @@ namespace Mzinga.Core.AI
 
         private int SearchFor(EvaluatedMove evaluatedMove)
         {
-            return _evaluatedMoves.BinarySearch(evaluatedMove, _comparer);
+            return _evaluatedMoves.BinarySearch(evaluatedMove);
         }
 
         public override string ToString()
@@ -159,20 +157,5 @@ namespace Mzinga.Core.AI
         }
 
         public const char EvaluatedMoveStringSeparator = ';';
-
-        private class EvaluatedMoveDescendingComparer : IComparer<EvaluatedMove>
-        {
-            public int Compare(EvaluatedMove a, EvaluatedMove b)
-            {
-                int result = b.CompareTo(a);
-
-                if (result == 0)
-                {
-                    result = b.Move.CompareTo(a.Move);
-                }
-
-                return result;
-            }
-        }
     }
 }

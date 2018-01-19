@@ -45,7 +45,14 @@ namespace Mzinga.Core.AI
 
         public int CompareTo(EvaluatedMove evaluatedMove)
         {
-            return ScoreAfterMove.CompareTo(evaluatedMove.ScoreAfterMove);
+            int result = evaluatedMove.ScoreAfterMove.CompareTo(ScoreAfterMove);
+
+            if (result == 0)
+            {
+                result = evaluatedMove.Move.CompareTo(Move);
+            }
+
+            return result;
         }
 
         public override string ToString()
