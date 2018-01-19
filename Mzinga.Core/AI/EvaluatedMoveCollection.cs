@@ -63,7 +63,7 @@ namespace Mzinga.Core.AI
             }
         }
 
-        private IComparer<EvaluatedMove> _comparer = new EvaluatedMoveDescendingComparer();
+        private static IComparer<EvaluatedMove> _comparer = new EvaluatedMoveDescendingComparer();
 
         private List<EvaluatedMove> _evaluatedMoves;
 
@@ -133,10 +133,7 @@ namespace Mzinga.Core.AI
 
         public IEnumerator<EvaluatedMove> GetEnumerator()
         {
-            foreach (EvaluatedMove evaluatedMove in _evaluatedMoves)
-            {
-                yield return evaluatedMove;
-            }
+            return _evaluatedMoves.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

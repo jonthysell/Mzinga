@@ -176,10 +176,7 @@ namespace Mzinga.Core
 
         public IEnumerator<Move> GetEnumerator()
         {
-            foreach (Move move in _moves)
-            {
-                yield return move;
-            }
+            return _moves.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
