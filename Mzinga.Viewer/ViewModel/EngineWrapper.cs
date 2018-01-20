@@ -453,10 +453,6 @@ namespace Mzinga.Viewer.ViewModel
             {
                 throw new Exception("Can't send exit command.");
             }
-            else if (cmd == EngineCommand.Unknown)
-            {
-                throw new Exception("Unknown command.");
-            }
 
             _inputToProcess.Enqueue(command);
             _commandsToProcess.Enqueue(cmd);

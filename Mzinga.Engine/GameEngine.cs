@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Diagnostics;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
@@ -157,6 +158,16 @@ namespace Mzinga.Engine
                     case "history":
                         History();
                         break;
+                    case "perft":
+                        if (paramCount == 0)
+                        {
+                            Perft();
+                        }
+                        else
+                        {
+                            Perft(int.Parse(split[1]));
+                        }
+                        break;
                     case "exit":
                         Exit();
                         break;
@@ -193,6 +204,7 @@ namespace Mzinga.Engine
             ConsoleOut("bestmove");
             ConsoleOut("undo");
             ConsoleOut("history");
+            ConsoleOut("perft");
             ConsoleOut("exit");
         }
 
@@ -360,6 +372,28 @@ namespace Mzinga.Engine
             ConsoleOut(history.ToString());
         }
 
+        private void Perft(int maxDepth = Int32.MaxValue)
+        {
+            if (null == GameBoard)
+            {
+                throw new NoBoardException();
+            }
+
+            if (maxDepth < 0)
+            {
+                throw new PerftInvalidDepthException(maxDepth);
+            }
+
+            for (int depth = 0; depth <= maxDepth; depth++)
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                long nodes = GameBoard.CalculatePerft(depth);
+                sw.Stop();
+
+                ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), nodes, sw.ElapsedMilliseconds, Math.Round(nodes / (double)sw.ElapsedMilliseconds, 1));
+            }
+        }
+
         private void Exit()
         {
             ExitRequested = true;
@@ -385,5 +419,10 @@ namespace Mzinga.Engine
     public class UndoInvalidNumberOfMovesException : CommandException
     {
         public UndoInvalidNumberOfMovesException(int moves) : base(string.Format("Unable to undo {0} moves.", moves)) { }
+    }
+
+    public class PerftInvalidDepthException : CommandException
+    {
+        public PerftInvalidDepthException(int depth) : base(string.Format("Unable to calculate perft({0}).", depth)) { }
     }
 }
