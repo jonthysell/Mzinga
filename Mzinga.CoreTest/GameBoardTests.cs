@@ -185,7 +185,7 @@ namespace Mzinga.CoreTest
             }
         }
 
-        private Direction[] StraightLine(Direction direction, int length)
+        private static Direction[] StraightLine(Direction direction, int length)
         {
             if (length <= 0)
             {
@@ -200,6 +200,25 @@ namespace Mzinga.CoreTest
             }
 
             return line;
+        }
+    }
+
+    static partial class PositionExtensions
+    {
+        public static Position NeighborAt(this Position pos, Direction[] directions)
+        {
+            if (null == directions)
+            {
+                throw new ArgumentNullException("directions");
+            }
+
+            Position neighbor = pos;
+            for (int i = 0; i < directions.Length; i++)
+            {
+                neighbor = neighbor.NeighborAt(directions[i]);
+            }
+
+            return neighbor;
         }
     }
 }

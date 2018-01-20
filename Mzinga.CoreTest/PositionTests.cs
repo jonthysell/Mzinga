@@ -194,35 +194,6 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Position_GetShiftedTest()
-        {
-            Position position = Position.Origin;
-
-            int[] deltas = new int[]
-            {
-                -1,
-                0,
-                1
-            };
-
-            foreach (int delta in deltas)
-            {
-                Assert.AreEqual(delta, position.GetShifted(delta, 0, -delta, 0).X);
-                Assert.AreEqual(delta, position.GetShifted(delta, -delta, 0, 0).X);
-                Assert.AreEqual(delta, position.GetShifted(-delta, delta, 0, 0).Y);
-                Assert.AreEqual(delta, position.GetShifted(0, delta, -delta, 0).Y);
-                Assert.AreEqual(delta, position.GetShifted(-delta, 0, delta, 0).Z);
-                Assert.AreEqual(delta, position.GetShifted(0, -delta, delta, 0).Z);
-                
-                if (delta >= 0)
-                {
-                    Assert.AreEqual(delta, position.GetShifted(0, 0, 0, delta).Stack);
-                }
-
-            }
-        }
-
-        [TestMethod]
         public void Position_ParseXYZTest()
         {
             int[][] coordinates = _validXYZCoordinates;

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@ namespace Mzinga.CoreTest
         public void GameAI_FirstMovePerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
-            int iterations = 1000;
+            int iterations = 100;
 
             for (int i = 0; i < iterations; i++)
             {
@@ -65,9 +65,52 @@ namespace Mzinga.CoreTest
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
         }
 
+        [TestMethod]
+        [TestCategory("Performance")]
+        public void GameAI_FifthTurnMovesPerfTest()
+        {
+            TimeSpan sum = TimeSpan.Zero;
+            int iterations = 100;
+
+            GameBoard original = new GameBoard();
+            GameAI originalAI = GetTestGameAI();
+
+            while (original.CurrentPlayerTurn < 5)
+            {
+                original.Play(originalAI.GetBestMove(original, 1));
+            }
+
+            for (int i = 0; i < iterations; i++)
+            {
+                GameBoard gb = original.Clone();
+                GameAI ai = GetTestGameAI();
+
+                Stopwatch sw = Stopwatch.StartNew();
+                Move m = ai.GetBestMove(gb, 2);
+                sw.Stop();
+
+                sum += sw.Elapsed;
+            }
+
+            Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
+        }
+
         private GameAI GetTestGameAI()
         {
             return new GameAI(MetricWeightsTests.TestMetricWeights);
+        }
+    }
+
+    static partial class GameBoardExtensions
+    {
+        public static GameBoard Clone(this GameBoard original)
+        {
+            GameBoard clone = new GameBoard();
+            foreach (BoardHistoryItem item in original.BoardHistory)
+            {
+                clone.Play(item.Move);
+            }
+            return clone;
         }
     }
 }

@@ -168,28 +168,6 @@ namespace Mzinga.Core
             return _localCache[index];
         }
 
-        public Position NeighborAt(Direction[] directions)
-        {
-            if (null == directions)
-            {
-                throw new ArgumentNullException("directions");
-            }
-
-            Position neighbor = this;
-            for (int i = 0; i < directions.Length; i++)
-            {
-                int dirIndex = (int)directions[i];
-                neighbor = neighbor.GetShifted(_neighborDeltas[dirIndex][0], _neighborDeltas[dirIndex][1], _neighborDeltas[dirIndex][2], 0);
-            }
-
-            return neighbor;
-        }
-
-        public Position GetShifted(int deltaX, int deltaY, int deltaZ, int deltaStack = 0)
-        {
-            return new Position(X + deltaX, Y + deltaY, Z + deltaZ, Stack + deltaStack);
-        }
-
         public static Position FromCursor(double cursorX, double cursorY, double hexRadius)
         {
             if (hexRadius < 0)

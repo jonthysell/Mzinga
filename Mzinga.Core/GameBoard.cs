@@ -50,16 +50,13 @@ namespace Mzinga.Core
                 return _boardHistory;
             }
         }
-        private BoardHistory _boardHistory;
+        private BoardHistory _boardHistory = new BoardHistory();
 
         public event BoardChangedEventHandler BoardChanged;
 
         #endregion
 
-        public GameBoard() : base()
-        {
-            _boardHistory = new BoardHistory();
-        }
+        public GameBoard() : base() { }
 
         public void Play(Move move)
         {
