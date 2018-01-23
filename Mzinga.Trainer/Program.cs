@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,10 +83,34 @@ namespace Mzinga.Trainer
                     }
                 }
             }
+            catch (AggregateException ex)
+            {
+                PrintException(ex);
+                foreach (Exception innerEx in ex.InnerExceptions)
+                {
+                    PrintException(innerEx);
+                }
+            }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("Error: {0}", ex.Message);
-                Console.Error.WriteLine(ex.StackTrace);
+                PrintException(ex);
+            }
+        }
+
+        static void PrintException(Exception ex)
+        {
+            ConsoleColor oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine();
+            Console.Error.WriteLine("Error: {0}", ex.Message);
+            Console.Error.WriteLine(ex.StackTrace);
+
+            Console.ForegroundColor = oldColor;
+
+            if (null != ex.InnerException)
+            {
+                PrintException(ex.InnerException);
             }
         }
 
