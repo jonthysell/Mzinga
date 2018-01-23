@@ -141,6 +141,12 @@ namespace Mzinga.Core
 
         private Position CacheLookup(int index)
         {
+            bool createdNew;
+            return CacheLookup(index, out createdNew);
+        }
+
+        private Position CacheLookup(int index, out bool createdNew)
+        {
             if (null == _localCache)
             {
                 if (!_sharedCache.TryGetValue(this, out _localCache))
@@ -149,23 +155,57 @@ namespace Mzinga.Core
                 }
             }
 
+            createdNew = false;
+
             if (null == _localCache[index])
             {
                 if (index < EnumUtils.NumDirections)
                 {
                     _localCache[index] = new Position(X + _neighborDeltas[index][0], Y + _neighborDeltas[index][1], Z + _neighborDeltas[index][2], 0);
+                    createdNew = true;
                 }
                 else if (index == EnumUtils.NumDirections) // Above
                 {
                     _localCache[index] = new Position(X, Y, Z, Stack + 1);
+                    createdNew = true;
                 }
-                else if (index == EnumUtils.NumDirections + 1) // Below
+                else if (index == EnumUtils.NumDirections + 1 && Stack > 0) // Below
                 {
                     _localCache[index] = new Position(X, Y, Z, Stack - 1);
+                    createdNew = true;
                 }
             }
 
             return _localCache[index];
+        }
+
+        public static void InitializeSharedCache(int size = 128)
+        {
+            if (size < 1)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+
+            Queue<Position> positions = new Queue<Position>();
+            positions.Enqueue(Origin);
+
+            while (positions.Count > 0)
+            {
+                Position pos = positions.Dequeue();
+
+                for (int i = 0; i < EnumUtils.NumDirections; i++)
+                {
+                    if (_sharedCache.Count < size)
+                    {
+                        bool createdNew;
+                        Position neighbor = pos.CacheLookup(i, out createdNew);
+                        if (createdNew)
+                        {
+                            positions.Enqueue(neighbor);
+                        }
+                    }
+                }
+            }
         }
 
         public static Position FromCursor(double cursorX, double cursorY, double hexRadius)

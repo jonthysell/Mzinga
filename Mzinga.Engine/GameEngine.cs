@@ -69,6 +69,8 @@ namespace Mzinga.Engine
             Config = config;
             ConsoleOut = consoleOut;
 
+            Position.InitializeSharedCache();
+
             _gameAI = Config.GetGameAI();
 
             ExitRequested = false;

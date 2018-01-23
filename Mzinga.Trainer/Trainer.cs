@@ -84,6 +84,8 @@ namespace Mzinga.Trainer
         public Trainer()
         {
             TrainerSettings = new TrainerSettings();
+
+            Position.InitializeSharedCache();
         }
 
         public void Battle()

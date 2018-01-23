@@ -45,7 +45,7 @@ namespace Mzinga.CoreTest
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void GameAI_FirstMovePerfTest()
+        public void GameAI_FirstTurnBestMovePerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
             int iterations = 100;
@@ -67,7 +67,7 @@ namespace Mzinga.CoreTest
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void GameAI_FifthTurnMovesPerfTest()
+        public void GameAI_FifthTurnBestMovePerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
             int iterations = 100;
