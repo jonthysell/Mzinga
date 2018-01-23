@@ -346,7 +346,7 @@ namespace Mzinga.Core.AI
             }
 
             double bestValue = double.NegativeInfinity;
-            Move bestMove = null != tEntry?.BestMove ? tEntry.BestMove : null;
+            Move bestMove = tEntry?.BestMove;
 
             List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
 
