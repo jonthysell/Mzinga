@@ -45,7 +45,7 @@ namespace Mzinga.CoreTest
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void GameAI_FirstTurnBestMovePerfTest()
+        public void GameAI_FirstTurnBestMoveByDepthPerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
             int iterations = 100;
@@ -67,18 +67,12 @@ namespace Mzinga.CoreTest
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void GameAI_FifthTurnBestMovePerfTest()
+        public void GameAI_FifthTurnBestMoveByDepthPerfTest()
         {
             TimeSpan sum = TimeSpan.Zero;
             int iterations = 100;
 
-            GameBoard original = new GameBoard();
-            GameAI originalAI = GetTestGameAI();
-
-            while (original.CurrentPlayerTurn < 5)
-            {
-                original.Play(originalAI.GetBestMove(original, 1));
-            }
+            GameBoard original = GetBoardOnFifthTurn();
 
             for (int i = 0; i < iterations; i++)
             {
@@ -93,6 +87,52 @@ namespace Mzinga.CoreTest
             }
 
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
+        }
+
+        [TestMethod]
+        [TestCategory("Performance")]
+        public void GameAI_FirstTurnBestMoveByTimePerfTest()
+        {
+            GameBoard gb = new GameBoard();
+            GameAI ai = GetTestGameAI();
+
+            Stopwatch sw = Stopwatch.StartNew();
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5));
+
+            TraceBestMoveMetrics(ai.BestMoveMetrics);
+        }
+
+        [TestMethod]
+        [TestCategory("Performance")]
+        public void GameAI_FifthTurnBestMoveByTimePerfTest()
+        {
+            GameBoard gb = GetBoardOnFifthTurn();
+
+            GameAI ai = GetTestGameAI();
+
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5));
+
+            TraceBestMoveMetrics(ai.BestMoveMetrics);
+        }
+
+        private void TraceBestMoveMetrics(BestMoveMetrics metrics)
+        {
+            Trace.WriteLine(string.Format("Elapsed Time: {0}", metrics.ElapsedTime));
+            Trace.WriteLine(string.Format("Moves Evaluated: {0}", metrics.MovesEvaluated));
+            Trace.WriteLine(string.Format("Average Depth: {0}", metrics.AverageDepth));
+        }
+
+        private GameBoard GetBoardOnFifthTurn()
+        {
+            GameBoard gb = new GameBoard();
+            GameAI ai = GetTestGameAI();
+
+            while (gb.CurrentPlayerTurn < 5)
+            {
+                gb.Play(ai.GetBestMove(gb, 1));
+            }
+
+            return gb;
         }
 
         private GameAI GetTestGameAI()
