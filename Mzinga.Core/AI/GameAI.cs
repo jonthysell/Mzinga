@@ -59,6 +59,8 @@ namespace Mzinga.Core.AI
         }
         private LinkedList<BestMoveMetrics> _bestMoveMetricsHistory = new LinkedList<BestMoveMetrics>();
 
+        public event BestMoveFoundEventHandler BestMoveFound;
+
         private TranspositionTable _transpositionTable;
 
         private FixedCache<string, double> _cachedBoardScores = new FixedCache<string, double>(DefaultBoardScoresCacheSize);
@@ -176,7 +178,24 @@ namespace Mzinga.Core.AI
 
             if (movesToEvaluate.Count <= 1 || BestMoveMetrics.MaxSearchDepth == 0)
             {
-                // No choices, don't bother evaluating
+                // No choices, try to get a cached value if available and just return
+                string key = GetColoredTranspositionKey(gameBoard);
+                TranspositionTableEntry tEntry;
+                if (!_transpositionTable.TryLookup(key, out tEntry))
+                {
+                    BestMoveMetrics.TranspositionTableMetrics.Misses++;
+                }
+                else
+                {
+                    BestMoveMetrics.TranspositionTableMetrics.Hits++;
+                    if (null != tEntry.BestMove)
+                    {
+                        movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
+                    }
+                }
+
+                OnBestMoveFound(movesToEvaluate.BestMove);
+
                 return movesToEvaluate;
             }
 
@@ -186,6 +205,9 @@ namespace Mzinga.Core.AI
             {
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = EvaluateMovesToDepth(gameBoard, depth, movesToEvaluate);
+
+                // Fire BestMoveFound for current depth
+                OnBestMoveFound(movesToEvaluate.BestMove);
 
                 if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
                 {
@@ -412,6 +434,16 @@ namespace Mzinga.Core.AI
             return bestValue;
         }
 
+        private void OnBestMoveFound(EvaluatedMove evaluatedMove)
+        {
+            if (null != BestMoveFound && evaluatedMove != BestMoveMetrics.BestMove)
+            {
+                BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
+                BestMoveFound.Invoke(this, args);
+                BestMoveMetrics.BestMove = evaluatedMove;
+            }
+        }
+
         #endregion
 
         #region Board Scores
@@ -478,6 +510,22 @@ namespace Mzinga.Core.AI
         private string GetColoredTranspositionKey(GameBoard gameBoard)
         {
             return string.Format("{0};{1}", gameBoard.CurrentTurnColor.ToString()[0], gameBoard.TranspositionKey);
+        }
+    }
+
+    public delegate void BestMoveFoundEventHandler(object sender, BestMoveFoundEventArgs args);
+
+    public class BestMoveFoundEventArgs : EventArgs
+    {
+        public Move Move { get; private set; }
+        public int Depth { get; private set; }
+        public double Score { get; private set; }
+
+        public BestMoveFoundEventArgs(Move move, int depth, double score)
+        {
+            Move = move;
+            Depth = depth;
+            Score = score;
         }
     }
 }

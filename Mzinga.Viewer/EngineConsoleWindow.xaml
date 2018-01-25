@@ -1,4 +1,5 @@
 <Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}"
         ForceCursor="True"
         Height="240"
         Icon="{DynamicResource MzingaIcon}"
@@ -16,7 +17,7 @@
     <Window.DataContext>
         <vm:EngineConsoleViewModel />
     </Window.DataContext>
-    <Grid FocusManager.FocusedElement="{Binding ElementName=EngineConsoleInput}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -29,7 +30,6 @@
                  Grid.Column="0"
                  Grid.Row="0"
                  Height="20"
-                 IsEnabled="{Binding IsIdle}"
                  Margin="5"
                  MaxLines="1"
                  Name="EngineConsoleInput"

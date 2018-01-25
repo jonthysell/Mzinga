@@ -28,7 +28,7 @@ using System;
 
 namespace Mzinga.Core.AI
 {
-    internal class EvaluatedMove : IComparable<EvaluatedMove>
+    internal class EvaluatedMove : IEquatable<EvaluatedMove>, IComparable<EvaluatedMove>
     {
         public Move Move { get; private set; }
 
@@ -53,6 +53,47 @@ namespace Mzinga.Core.AI
             }
 
             return result;
+        }
+
+        public bool Equals(EvaluatedMove evaluatedMove)
+        {
+            if (null == evaluatedMove)
+            {
+                return false;
+            }
+
+            return Depth == evaluatedMove.Depth && ScoreAfterMove == evaluatedMove.ScoreAfterMove && Move == evaluatedMove.Move;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as EvaluatedMove);
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+
+            hash = hash * 31 + Move.GetHashCode();
+            hash = hash * 31 + ScoreAfterMove.GetHashCode();
+            hash = hash * 31 + Depth;
+
+            return hash;
+        }
+
+        public static bool operator ==(EvaluatedMove a, EvaluatedMove b)
+        {
+            if (ReferenceEquals(a, null))
+            {
+                return ReferenceEquals(b, null);
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(EvaluatedMove a, EvaluatedMove b)
+        {
+            return !(a == b);
         }
 
         public override string ToString()

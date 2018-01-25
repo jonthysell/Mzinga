@@ -40,7 +40,7 @@ namespace Mzinga.Viewer.ViewModel
 
     public delegate void BoardHistoryUpdatedEventHandler(BoardHistory boardHistory);
 
-    public delegate void EngineTextUpdatedEventHandler(string engineText);
+    public delegate void EngineTextUpdatedEventHandler();
 
     public delegate void TargetPieceUpdatedEventHandler(PieceName pieceName);
 
@@ -286,8 +286,6 @@ namespace Mzinga.Viewer.ViewModel
         private Queue<string> _inputToProcess;
         private Queue<EngineCommand> _commandsToProcess;
 
-        private const int AutoPlayMinMs = 1000;
-
         public EngineWrapper(string engineCommand)
         {
             _engineText = new StringBuilder();
@@ -353,6 +351,11 @@ namespace Mzinga.Viewer.ViewModel
                         IsIdle = true;
                     }
                 }
+            }
+            else if (_commandsToProcess.Peek() == EngineCommand.BestMove)
+            {
+                // Got a preliminary bestmove reuslt, update the TargetMove but don't autoplay it
+                ProcessBestMove(line, false);
             }
         }
 
@@ -508,9 +511,10 @@ namespace Mzinga.Viewer.ViewModel
             string errorMessage = "";
             string invalidMoveMessage = "";
 
+            EngineTextAppendLine(outputLines);
+
             foreach (string line in outputLines)
             {
-                EngineTextAppendLine(line);
                 if (line.StartsWith("err"))
                 {
                     errorMessage = line.Substring(line.IndexOf(' ') + 1);
@@ -554,18 +558,8 @@ namespace Mzinga.Viewer.ViewModel
                     ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
-                    if (!string.IsNullOrWhiteSpace(lastLine))
-                    {
-                        Move bestMove = new Move(lastLine);
-
-                        TargetPiece = bestMove.PieceName;
-                        TargetPosition = bestMove.Position;
-                        TargetMove = bestMove;
-                    }
-                    else
-                    {
-                        TargetPiece = PieceName.INVALID;
-                    }
+                    // Update the target move (and potentially auto-play it)
+                    ProcessBestMove(lastLine, true);
                     break;
                 case EngineCommand.History:
                     BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
@@ -580,7 +574,46 @@ namespace Mzinga.Viewer.ViewModel
         private void EngineTextAppendLine(string line)
         {
             _engineText.AppendLine(line);
-            OnEngineTextUpdate(EngineText);
+            OnEngineTextUpdate();
+        }
+
+        private void EngineTextAppendLine(string[] lines)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string line in lines)
+            {
+                sb.AppendLine(line);
+            }
+
+            _engineText.AppendLine(sb.ToString());
+            OnEngineTextUpdate();
+        }
+
+        private void ProcessBestMove(string line, bool tryToPlay)
+        {
+            try
+            {
+                Move bestMove = new Move(line.Split(';')[0]);
+
+                TargetPiece = bestMove.PieceName;
+                TargetPosition = bestMove.Position;
+            }
+            catch (Exception)
+            {
+                TargetPiece = PieceName.INVALID;
+            }
+
+            if (tryToPlay && CurrentTurnIsEngineAI && null != TargetMove)
+            {
+                if (TargetMove.IsPass)
+                {
+                    SendCommandInternal("pass");
+                }
+                else
+                {
+                    SendCommandInternal("play {0}", TargetMove);
+                }
+            }
         }
 
         public PieceName GetPieceAt(double cursorX, double cursorY, double hexRadius)
@@ -650,9 +683,9 @@ namespace Mzinga.Viewer.ViewModel
             BoardHistoryUpdated?.Invoke(boardHistory);
         }
 
-        private void OnEngineTextUpdate(string engineText)
+        private void OnEngineTextUpdate()
         {
-            EngineTextUpdated?.Invoke(engineText);
+            EngineTextUpdated?.Invoke();
         }
 
         private void OnTargetPieceUpdate(PieceName pieceName)
@@ -671,18 +704,6 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             TargetPositionUpdated?.Invoke(position);
-
-            if (CurrentTurnIsEngineAI && null != TargetMove)
-            {
-                if (TargetMove.IsPass)
-                {
-                    SendCommandInternal("pass");
-                }
-                else
-                {
-                    SendCommandInternal("play {0}", TargetMove);
-                }
-            }
         }
 
         private enum EngineCommand

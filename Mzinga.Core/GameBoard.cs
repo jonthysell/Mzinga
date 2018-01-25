@@ -29,8 +29,6 @@ using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
-    public delegate void BoardChangedEventHandler();
-
     public class GameBoard : Board
     {
         #region Properties
@@ -245,7 +243,9 @@ namespace Mzinga.Core
                 BoardState = CurrentTurn == 0 ? BoardState.NotStarted : BoardState.InProgress;
             }
 
-            BoardChanged?.Invoke();
+            BoardChanged?.Invoke(this, null);
         }
     }
+
+    public delegate void BoardChangedEventHandler(object sender, EventArgs args);
 }

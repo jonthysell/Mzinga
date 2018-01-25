@@ -44,8 +44,6 @@ namespace Mzinga.Engine
 
         private GameAI _gameAI;
 
-        private Move _cachedBestMove;
-
         public bool ExitRequested { get; private set; }
 
         public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
@@ -72,8 +70,21 @@ namespace Mzinga.Engine
             Position.InitializeSharedCache();
 
             _gameAI = Config.GetGameAI();
+            _gameAI.BestMoveFound += OnBestMoveFound;
 
             ExitRequested = false;
+        }
+
+        private void OnBestMoveFound(object sender, BestMoveFoundEventArgs args)
+        {
+            if (null == args || null == args.Move)
+            {
+                ConsoleOut("");
+            }
+            else
+            {
+                ConsoleOut("{0};{1};{2}", args.Move, args.Depth, args.Score);
+            }
         }
 
         public void ParseCommand(string command)
@@ -223,12 +234,6 @@ namespace Mzinga.Engine
         private void NewGame()
         {
             GameBoard = new GameBoard();
-            _cachedBestMove = null;
-
-            GameBoard.BoardChanged += () =>
-            {
-                _cachedBestMove = null;
-            };
 
             _gameAI.ResetCaches();
 
@@ -316,12 +321,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard, maxDepth));
-
-            if (null != bestMove)
-            {
-                ConsoleOut(bestMove.ToString());
-            }
+            _gameAI.GetBestMove(GameBoard, maxDepth);
         }
 
         private void BestMove(TimeSpan maxTime)
@@ -336,12 +336,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            Move bestMove = (_cachedBestMove = _gameAI.GetBestMove(GameBoard, maxTime));
-
-            if (null != bestMove)
-            {
-                ConsoleOut(bestMove.ToString());
-            }
+            _gameAI.GetBestMove(GameBoard, maxTime);
         }
 
         private void Undo(int moves = 1)

@@ -57,7 +57,5 @@ namespace Mzinga.Viewer
         {
             _instance = null;
         }
-
-
     }
 }
