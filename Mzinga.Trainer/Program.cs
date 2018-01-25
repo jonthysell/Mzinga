@@ -26,6 +26,7 @@
 
 using System;
 using System.Reflection;
+using System.Text;
 
 namespace Mzinga.Trainer
 {
@@ -33,6 +34,8 @@ namespace Mzinga.Trainer
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
             try
             {
                 Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());

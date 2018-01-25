@@ -311,6 +311,7 @@ namespace Mzinga.Viewer.ViewModel
             _process.StartInfo.CreateNoWindow = true;
             _process.StartInfo.RedirectStandardInput = true;
             _process.StartInfo.RedirectStandardOutput = true;
+            _process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
             _process.OutputDataReceived += EngineOutputDataReceived;
 
