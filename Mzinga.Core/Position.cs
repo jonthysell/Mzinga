@@ -179,33 +179,36 @@ namespace Mzinga.Core
             return _localCache[index];
         }
 
-        public static void InitializeSharedCache(int size = 128)
+        public static IEnumerable<Position> GetUniquePositions(int count, int maxStack = MaxStack)
         {
-            if (size < 1)
+            if (count < 1)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException("count");
             }
 
             Queue<Position> positions = new Queue<Position>();
             positions.Enqueue(Origin);
 
+            HashSet<Position> result = new HashSet<Position>();
+
             while (positions.Count > 0)
             {
                 Position pos = positions.Dequeue();
 
-                for (int i = 0; i < EnumUtils.NumDirections; i++)
+                for (int i = 0; i < EnumUtils.NumDirections + 2; i++)
                 {
-                    if (_sharedCache.Count < size)
+                    if (result.Count < count)
                     {
-                        bool createdNew;
-                        Position neighbor = pos.CacheLookup(i, out createdNew);
-                        if (createdNew)
+                        Position neighbor = pos.CacheLookup(i);
+                        if (null != neighbor && neighbor.Stack < maxStack && result.Add(neighbor))
                         {
                             positions.Enqueue(neighbor);
                         }
                     }
                 }
             }
+
+            return result;
         }
 
         public static Position FromCursor(double cursorX, double cursorY, double hexRadius)
@@ -392,6 +395,8 @@ namespace Mzinga.Core
             new int[] { -1, 0, 1 },
             new int[] { -1, 1, 0 },
         };
+
+        public const int MaxStack = 5;
 
         public const char PositionStringSeparator = ',';
     }

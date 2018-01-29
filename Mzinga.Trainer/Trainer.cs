@@ -84,8 +84,6 @@ namespace Mzinga.Trainer
         public Trainer()
         {
             TrainerSettings = new TrainerSettings();
-
-            Position.InitializeSharedCache();
         }
 
         public void Battle()
@@ -332,12 +330,12 @@ namespace Mzinga.Trainer
             DateTime battleStart = DateTime.Now;
             TimeSpan battleElapsed = TimeSpan.Zero;
 
-            List<string> boardKeys = new List<string>();
+            List<long> boardKeys = new List<long>();
 
             // Play Game
             while (gameBoard.GameInProgress)
             {
-                boardKeys.Add(gameBoard.TranspositionKey);
+                boardKeys.Add(gameBoard.ZobristKey);
 
                 if (boardKeys.Count >= 6)
                 {

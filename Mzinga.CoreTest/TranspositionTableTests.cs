@@ -56,7 +56,7 @@ namespace Mzinga.CoreTest
             long startMemoryUsage = GC.GetTotalMemory(true);
             for (int i = 0; i < tt.Capacity; i++)
             {
-                string key = i.ToString().PadLeft(204);
+                long key = i;
                 tt.Store(key, CreateMaxEntry(i));
             }
             long endMemoryUsage = GC.GetTotalMemory(true);
@@ -88,7 +88,7 @@ namespace Mzinga.CoreTest
                 // Fill
                 for (int j = 0; j < tt.Capacity; j++)
                 {
-                    string key = j.ToString().PadLeft(204);
+                    long key = j;
                     tt.Store(key, CreateMaxEntry(j));
                 }
 
@@ -97,7 +97,7 @@ namespace Mzinga.CoreTest
                 {
                     TranspositionTableEntry newEntry = CreateMaxEntry(j);
                     newEntry.Depth++;
-                    string key = j.ToString().PadLeft(204);
+                    long key = j;
                     tt.Store(key, newEntry);
                 }
 

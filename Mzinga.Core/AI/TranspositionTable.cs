@@ -25,10 +25,11 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 namespace Mzinga.Core.AI
 {
-    public class TranspositionTable : FixedCache<string, TranspositionTableEntry>
+    public class TranspositionTable : FixedCache<long, TranspositionTableEntry>
     {
         public TranspositionTable(long sizeInBytes = DefaultSizeInBytes) : base(GetCapacity(sizeInBytes), TranspostionTableReplaceEntryPredicate) { }
 
@@ -47,8 +48,7 @@ namespace Mzinga.Core.AI
             return entry.Depth > existingEntry.Depth;
         }
 
-        private static readonly long EntrySizeInBytes = (2 * IntPtr.Size) // Key pointers x2
-                                                        + ((2 * 8 + 4 * 11 + 16 * 9) * sizeof(char)) // Key length (2x Q, 4x B, 16x other)
+        private static readonly long EntrySizeInBytes = (4 * sizeof(long)) // Key size x4
                                                         + IntPtr.Size // Entry pointer
                                                         + (3 * IntPtr.Size) // LinkedList node,next,previous pointers
                                                         + TranspositionTableEntry.SizeInBytes; // Entry object
@@ -63,11 +63,13 @@ namespace Mzinga.Core.AI
         public TranspositionTableEntryType Type;
         public double Value;
         public int Depth;
+        public List<Move> ValidMoves;
         public Move BestMove;
 
         public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType)
                                                     + sizeof(double) // Value
                                                     + sizeof(int) // Depth
+                                                    + IntPtr.Size // ValidMoves pointer
                                                     + IntPtr.Size // BestMove pointer
                                                     + sizeof(PieceName) // BestMove PieceName
                                                     + sizeof(Color) // BestMove PieceName Color

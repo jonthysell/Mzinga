@@ -48,7 +48,16 @@ namespace Mzinga.Core
                 {
                     throw new ArgumentOutOfRangeException();
                 }
+                Color oldColor = CurrentTurnColor;
+
                 _currentTurn = value;
+
+                if (oldColor != CurrentTurnColor)
+                {
+                    // Turn has changed
+                    _zobristHash.ToggleTurn();
+                }
+
                 ResetCaches();
             }
         }
@@ -114,37 +123,15 @@ namespace Mzinga.Core
         }
         private string _boardString = null;
 
-        public string TranspositionKey
+        public long ZobristKey
         {
             get
             {
-                if (null == _transpositionKey)
-                {
-                    StringBuilder sb = new StringBuilder();
-
-                    for (int i = 0; i < EnumUtils.NumPieceNames; i++)
-                    {
-                        Position pos = _pieces[i].Position;
-
-                        if (null != pos)
-                        {
-                            sb.Append(EnumUtils.GetShortName((PieceName)i, true));
-
-                            sb.AppendFormat("{0},{1}", pos.Q, pos.R);
-                            if (pos.Stack > 0)
-                            {
-                                sb.AppendFormat(",{0}", pos.Stack);
-                            }
-                        }
-                    }
-
-                    _transpositionKey = sb.ToString();
-                }
-
-                return _transpositionKey;
+                return _zobristHash.Value;
             }
         }
-        private string _transpositionKey = null;
+
+        private ZobristHash _zobristHash = new ZobristHash();
 
         #endregion
 
@@ -368,7 +355,7 @@ namespace Mzinga.Core
                     else
                     {
                         Piece piece = GetPiece(parsedPiece.PieceName);
-                        MovePiece(piece, parsedPiece.Position);
+                        MovePiece(piece, parsedPiece.Position, true);
                     }
                 }
             }
@@ -460,6 +447,11 @@ namespace Mzinga.Core
 
         protected void MovePiece(Piece piece, Position newPosition)
         {
+            MovePiece(piece, newPosition, true);
+        }
+
+        private void MovePiece(Piece piece, Position newPosition, bool updateZobrist)
+        {
             if (piece.InPlay)
             {
                 _piecesByPosition[piece.Position] = null;
@@ -467,6 +459,12 @@ namespace Mzinga.Core
                 {
                     piece.PieceBelow.PieceAbove = null;
                     piece.PieceBelow = null;
+                }
+
+                // Remove from old position
+                if (updateZobrist)
+                {
+                    _zobristHash.TogglePiece(piece.PieceName, piece.Position);
                 }
             }
 
@@ -481,6 +479,12 @@ namespace Mzinga.Core
                     Piece pieceBelow = GetPiece(posBelow);
                     pieceBelow.PieceAbove = piece;
                     piece.PieceBelow = pieceBelow;
+                }
+
+                // Add to new position
+                if (updateZobrist)
+                {
+                    _zobristHash.TogglePiece(piece.PieceName, piece.Position);
                 }
             }
         }
@@ -579,8 +583,10 @@ namespace Mzinga.Core
 
             // Spoof going to the next turn to get the opponent's metrics
             _currentTurn++;
+            _zobristHash.ToggleTurn();
             SetCurrentPlayerMetrics(boardMetrics);
             _currentTurn--;
+            _zobristHash.ToggleTurn();
 
             // Returned, so reload saved valid moves/placements into cache
             _cachedValidPlacementPositions = validPlacements;
@@ -970,9 +976,9 @@ namespace Mzinga.Core
                             {
                                 // Sliding from this position has not been tested yet
                                 Position preSlidePosition = targetPiece.Position;
-                                MovePiece(targetPiece, move.Position);
+                                MovePiece(targetPiece, move.Position, false);
                                 GetValidSlides(targetPiece, visitedPositions, currentRange + 1, maxRange, validMoves);
-                                MovePiece(targetPiece, preSlidePosition);
+                                MovePiece(targetPiece, preSlidePosition, false);
                             }
                         }
                     }
@@ -1013,13 +1019,13 @@ namespace Mzinga.Core
 
                 // Temporarily remove piece from board
                 Position originalPosition = targetPiece.Position;
-                MovePiece(targetPiece, null);
+                MovePiece(targetPiece, null, false);
 
                 // Determine if the hive is broken
                 bool isOneHive = IsOneHive();
 
                 // Return piece to the board
-                MovePiece(targetPiece, originalPosition);
+                MovePiece(targetPiece, originalPosition, false);
 
                 return isOneHive;
             }
@@ -1070,7 +1076,6 @@ namespace Mzinga.Core
             ValidMoveCacheResets++;
 
             _boardString = null;
-            _transpositionKey = null;
         }
 
         #endregion

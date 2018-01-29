@@ -67,8 +67,6 @@ namespace Mzinga.Engine
             Config = config;
             ConsoleOut = consoleOut;
 
-            Position.InitializeSharedCache();
-
             _gameAI = Config.GetGameAI();
             _gameAI.BestMoveFound += OnBestMoveFound;
 

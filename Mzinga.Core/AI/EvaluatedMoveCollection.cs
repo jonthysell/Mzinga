@@ -139,6 +139,14 @@ namespace Mzinga.Core.AI
             return GetEnumerator();
         }
 
+        public IEnumerable<Move> AsMoveEnumerable()
+        {
+            foreach (EvaluatedMove em in _evaluatedMoves)
+            {
+                yield return em.Move;
+            }
+        }
+
         private int SearchFor(EvaluatedMove evaluatedMove)
         {
             return _evaluatedMoves.BinarySearch(evaluatedMove);

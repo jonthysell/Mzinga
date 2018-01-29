@@ -63,7 +63,7 @@ namespace Mzinga.Core.AI
 
         private TranspositionTable _transpositionTable;
 
-        private FixedCache<string, double> _cachedBoardScores = new FixedCache<string, double>(DefaultBoardScoresCacheSize);
+        private FixedCache<long, double> _cachedBoardScores = new FixedCache<long, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 32768;
 
         public GameAI()
@@ -179,7 +179,7 @@ namespace Mzinga.Core.AI
             if (movesToEvaluate.Count <= 1 || BestMoveMetrics.MaxSearchDepth == 0)
             {
                 // No choices, try to get a cached value if available and just return
-                string key = GetColoredTranspositionKey(gameBoard);
+                long key = gameBoard.ZobristKey;
                 TranspositionTableEntry tEntry;
                 if (!_transpositionTable.TryLookup(key, out tEntry))
                 {
@@ -236,7 +236,7 @@ namespace Mzinga.Core.AI
 
             double alphaOriginal = alpha;
 
-            string key = GetColoredTranspositionKey(gameBoard);
+            long key = gameBoard.ZobristKey;
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -306,6 +306,7 @@ namespace Mzinga.Core.AI
             }
 
             tEntry = new TranspositionTableEntry();
+            tEntry.ValidMoves = new List<Move>(movesToEvaluate.AsMoveEnumerable());
 
             if (bestValue <= alphaOriginal)
             {
@@ -329,7 +330,7 @@ namespace Mzinga.Core.AI
         {
             double alphaOriginal = alpha;
 
-            string key = GetColoredTranspositionKey(gameBoard);
+            long key = gameBoard.ZobristKey;
 
             TranspositionTableEntry tEntry;
             if (!_transpositionTable.TryLookup(key, out tEntry))
@@ -370,7 +371,7 @@ namespace Mzinga.Core.AI
             double bestValue = double.NegativeInfinity;
             Move bestMove = tEntry?.BestMove;
 
-            List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
+            List<Move> moves = tEntry?.ValidMoves ?? new List<Move>(gameBoard.GetValidMoves());
 
             if (null != bestMove)
             {
@@ -415,6 +416,7 @@ namespace Mzinga.Core.AI
             }
 
             tEntry = new TranspositionTableEntry();
+            tEntry.ValidMoves = moves;
 
             if (bestValue <= alphaOriginal)
             {
@@ -468,7 +470,7 @@ namespace Mzinga.Core.AI
                 return 0.0;
             }
 
-            string key = gameBoard.TranspositionKey;
+            long key = gameBoard.ZobristKey;
 
             double score;
             if (_cachedBoardScores.TryLookup(key, out score))
@@ -506,11 +508,6 @@ namespace Mzinga.Core.AI
         }
 
         #endregion
-
-        private string GetColoredTranspositionKey(GameBoard gameBoard)
-        {
-            return string.Format("{0};{1}", gameBoard.CurrentTurnColor.ToString()[0], gameBoard.TranspositionKey);
-        }
     }
 
     public delegate void BestMoveFoundEventHandler(object sender, BestMoveFoundEventArgs args);

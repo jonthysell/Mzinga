@@ -83,6 +83,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SharedInfo.tt</DependentUpon>
     </Compile>
+    <Compile Include="ZobristHash.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\SharedInfo.tt">
