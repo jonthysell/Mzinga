@@ -243,14 +243,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public string EngineText
-        {
-            get
-            {
-                return _engineText.ToString();
-            }
-        }
-        private StringBuilder _engineText;
+        public string EngineText { get; private set; } = "";
 
         public GameSettings CurrentGameSettings
         {
@@ -284,14 +277,12 @@ namespace Mzinga.Viewer.ViewModel
         private List<string> _outputLines;
 
         private Queue<string> _inputToProcess;
-        private Queue<EngineCommand> _commandsToProcess;
+        private EngineCommand? _currentlyRunningCommand = null;
 
         public EngineWrapper(string engineCommand)
         {
-            _engineText = new StringBuilder();
             _outputLines = new List<string>();
             _inputToProcess = new Queue<string>();
-            _commandsToProcess = new Queue<EngineCommand>();
             StartEngine(engineCommand);
         }
 
@@ -302,7 +293,6 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("engineName");
             }
 
-            _engineText.Clear();
             _outputLines.Clear();
 
             _process = new Process();
@@ -315,7 +305,8 @@ namespace Mzinga.Viewer.ViewModel
 
             _process.OutputDataReceived += EngineOutputDataReceived;
 
-            _commandsToProcess.Enqueue(EngineCommand.Info);
+            _inputToProcess.Enqueue("info");
+            _currentlyRunningCommand = EngineCommand.Info;
 
             IsIdle = false;
             _process.Start();
@@ -327,18 +318,15 @@ namespace Mzinga.Viewer.ViewModel
         private void EngineOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             string line = e.Data;
+            EngineTextAppendLine(line);
             _outputLines.Add(line);
 
             if (line == "ok")
             {
                 try
                 {
-                    if (_inputToProcess.Count > 0)
-                    {
-                        EngineTextAppendLine(_inputToProcess.Dequeue());
-                    }
                     string[] outputLines = _outputLines.ToArray();
-                    ReadEngineOutput(_commandsToProcess.Dequeue(), outputLines);
+                    ReadEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
                 }
                 catch (Exception ex)
                 {
@@ -346,16 +334,14 @@ namespace Mzinga.Viewer.ViewModel
                 }
                 finally
                 {
+                    _inputToProcess.Dequeue();
                     _outputLines.Clear();
-                    if (_commandsToProcess.Count == 0)
-                    {
-                        IsIdle = true;
-                    }
+                    RunNextCommand();
                 }
             }
-            else if (_commandsToProcess.Peek() == EngineCommand.BestMove)
+            else if (_currentlyRunningCommand == EngineCommand.BestMove)
             {
-                // Got a preliminary bestmove reuslt, update the TargetMove but don't autoplay it
+                // Got a preliminary bestmove result, update the TargetMove but don't autoplay it
                 ProcessBestMove(line, false);
             }
         }
@@ -459,11 +445,29 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             _inputToProcess.Enqueue(command);
-            _commandsToProcess.Enqueue(cmd);
 
-            IsIdle = false;
-            _writer.WriteLine(command);
-            _writer.Flush();
+            if (_inputToProcess.Count == 1)
+            {
+                RunNextCommand();
+            }
+        }
+
+        private void RunNextCommand()
+        {
+            if (_inputToProcess.Count > 0)
+            {
+                IsIdle = false;
+                string command = _inputToProcess.Peek();
+                EngineTextAppendLine(command);
+                _currentlyRunningCommand = IdentifyCommand(command);
+                _writer.WriteLine(command);
+                _writer.Flush();
+            }
+            else
+            {
+                _currentlyRunningCommand = null;
+                IsIdle = true;
+            }
         }
 
         private EngineCommand IdentifyCommand(string command)
@@ -511,8 +515,6 @@ namespace Mzinga.Viewer.ViewModel
         {
             string errorMessage = "";
             string invalidMoveMessage = "";
-
-            EngineTextAppendLine(outputLines);
 
             foreach (string line in outputLines)
             {
@@ -574,19 +576,7 @@ namespace Mzinga.Viewer.ViewModel
 
         private void EngineTextAppendLine(string line)
         {
-            _engineText.AppendLine(line);
-            OnEngineTextUpdate();
-        }
-
-        private void EngineTextAppendLine(string[] lines)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (string line in lines)
-            {
-                sb.AppendLine(line);
-            }
-
-            _engineText.AppendLine(sb.ToString());
+            EngineText += string.Format("{0}{1}", line, Environment.NewLine);
             OnEngineTextUpdate();
         }
 
