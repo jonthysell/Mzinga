@@ -49,8 +49,10 @@ namespace Mzinga.Core.AI
         }
 
         private static readonly long EntrySizeInBytes = (4 * sizeof(long)) // Key size x4
-                                                        + IntPtr.Size // Entry pointer
-                                                        + (3 * IntPtr.Size) // LinkedList node,next,previous pointers
+                                                        + IntPtr.Size // Wrapped entry pointer
+                                                        + IntPtr.Size // Wrapped entry, LinkedList node pointer
+                                                        + IntPtr.Size // Wrapped entry, entry pointer
+                                                        + (4 * IntPtr.Size) // LinkedList node,list,next,previous pointers
                                                         + TranspositionTableEntry.SizeInBytes; // Entry object
 
         public const long DefaultSizeInBytes = 32 * 1024 * 1024;

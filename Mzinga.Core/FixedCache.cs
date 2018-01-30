@@ -53,7 +53,7 @@ namespace Mzinga.Core
 
         public CacheMetrics Metrics { get; private set; } = new CacheMetrics();
 
-        private Dictionary<TKey, TEntry> _dict;
+        private Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
         private LinkedList<TKey> _list;
 
         private FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
@@ -69,17 +69,16 @@ namespace Mzinga.Core
 
             _replaceEntryPredicate = replaceEntryPredicate;
 
-            _dict = new Dictionary<TKey, TEntry>(Capacity);
+            _dict = new Dictionary<TKey, FixedCacheEntry<TKey, TEntry>>(Capacity);
             _list = new LinkedList<TKey>();
         }
 
         public void Store(TKey key, TEntry newEntry)
         {
-            TEntry existingEntry;
+            FixedCacheEntry<TKey, TEntry> existingEntry;
             if (!_dict.TryGetValue(key, out existingEntry))
             {
                 // New entry
-
                 if (Count == Capacity)
                 {
                     // Make space
@@ -89,30 +88,44 @@ namespace Mzinga.Core
                 }
 
                 // Add
-                _dict.Add(key, newEntry);
-                _list.AddLast(key);
+                StoreInternal(key, newEntry);
 
                 Metrics.Stores++;
             }
             else
             {
                 // Existing entry
-                if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry, newEntry))
+                if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry.Entry, newEntry))
                 {
                     // Replace
-                    _list.Remove(key);
-                    _dict[key] = newEntry;
-                    _list.AddLast(key);
+                    _list.Remove(existingEntry.ListNode);
+
+                    StoreInternal(key, newEntry);
 
                     Metrics.Updates++;
                 }
             }
         }
 
+        private void StoreInternal(TKey key, TEntry newEntry)
+        {
+            LinkedListNode<TKey> listNode = _list.AddLast(key);
+
+            FixedCacheEntry<TKey, TEntry> wrappedEntry = new FixedCacheEntry<TKey, TEntry>
+            {
+                ListNode = listNode,
+                Entry = newEntry,
+            };
+
+            _dict[key] = wrappedEntry;
+        }
+
         public bool TryLookup(TKey key, out TEntry entry)
         {
-            if (_dict.TryGetValue(key, out entry))
+            FixedCacheEntry<TKey, TEntry> wrappedEntry;
+            if (_dict.TryGetValue(key, out wrappedEntry))
             {
+                entry = wrappedEntry.Entry;
                 Metrics.Hits++;
                 return true;
             }
@@ -136,5 +149,11 @@ namespace Mzinga.Core
         }
 
         private const int DefaultCapacity = 1024;
+
+        private class FixedCacheEntry<TK, TE> where TK : IEquatable<TK>, IComparable<TK>
+        {
+            public LinkedListNode<TK> ListNode;
+            public TE Entry;
+        }
     }
 }
