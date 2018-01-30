@@ -26,6 +26,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Mzinga.Core
 {
@@ -55,6 +57,16 @@ namespace Mzinga.Core
         #endregion
 
         public GameBoard() : base() { }
+
+        public GameBoard Clone()
+        {
+            GameBoard clone = new GameBoard();
+            foreach (BoardHistoryItem item in BoardHistory)
+            {
+                clone.Play(item.Move);
+            }
+            return clone;
+        }
 
         public void Play(Move move)
         {
@@ -217,6 +229,34 @@ namespace Mzinga.Core
                 nodes += CalculatePerft(depth - 1);
                 UndoLastMove();
             }
+
+            return nodes;
+        }
+
+        public long ParallelPerft(int depth, int maxThreads)
+        {
+            if (depth == 0)
+            {
+                return 1;
+            }
+
+            MoveSet validMoves = GetValidMoves();
+
+            if (depth == 1)
+            {
+                return validMoves.Count;
+            }
+
+            ParallelOptions po = new ParallelOptions();
+            po.MaxDegreeOfParallelism = Math.Max(1, maxThreads);
+
+            long nodes = 0;
+            Parallel.ForEach(validMoves, po, (move) =>
+            {
+                GameBoard clone = Clone();
+                clone.TrustedPlay(move);
+                Interlocked.Add(ref nodes, clone.CalculatePerft(depth - 1));
+            });
 
             return nodes;
         }

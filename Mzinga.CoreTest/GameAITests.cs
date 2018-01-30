@@ -140,17 +140,4 @@ namespace Mzinga.CoreTest
             return new GameAI(MetricWeightsTests.TestMetricWeights);
         }
     }
-
-    static partial class GameBoardExtensions
-    {
-        public static GameBoard Clone(this GameBoard original)
-        {
-            GameBoard clone = new GameBoard();
-            foreach (BoardHistoryItem item in original.BoardHistory)
-            {
-                clone.Play(item.Move);
-            }
-            return clone;
-        }
-    }
 }

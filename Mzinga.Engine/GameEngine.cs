@@ -382,7 +382,7 @@ namespace Mzinga.Engine
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                long nodes = GameBoard.CalculatePerft(depth);
+                long nodes = GameBoard.ParallelPerft(depth, Environment.ProcessorCount);
                 sw.Stop();
 
                 ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), nodes, sw.ElapsedMilliseconds, Math.Round(nodes / (double)sw.ElapsedMilliseconds, 1));
