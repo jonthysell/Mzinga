@@ -133,6 +133,8 @@ namespace Mzinga.Core
 
         private ZobristHash _zobristHash = new ZobristHash();
 
+        private BoardMetrics _boardMetrics = new BoardMetrics();
+
         #endregion
 
         #region Piece Enumerable Properties
@@ -569,10 +571,10 @@ namespace Mzinga.Core
 
         public BoardMetrics GetBoardMetrics()
         {
-            BoardMetrics boardMetrics = new BoardMetrics(BoardState);
+            _boardMetrics.BoardState = BoardState;
 
             // Get the metrics for the current turn
-            SetCurrentPlayerMetrics(boardMetrics);
+            SetCurrentPlayerMetrics();
 
             // Save off current valid moves/placements since we'll be returning to it
             MoveSet[] validMoves = _cachedValidMovesByPiece;
@@ -584,7 +586,7 @@ namespace Mzinga.Core
             // Spoof going to the next turn to get the opponent's metrics
             _currentTurn++;
             _zobristHash.ToggleTurn();
-            SetCurrentPlayerMetrics(boardMetrics);
+            SetCurrentPlayerMetrics();
             _currentTurn--;
             _zobristHash.ToggleTurn();
 
@@ -592,32 +594,24 @@ namespace Mzinga.Core
             _cachedValidPlacementPositions = validPlacements;
             _cachedValidMovesByPiece = validMoves;
 
-            return boardMetrics;
+            return _boardMetrics;
         }
 
-        private void SetCurrentPlayerMetrics(BoardMetrics boardMetrics)
+        private void SetCurrentPlayerMetrics()
         {
             foreach (PieceName pieceName in CurrentTurnPieces)
             {
-                boardMetrics[pieceName] = GetPieceMetrics(pieceName);
+                Piece targetPiece = GetPiece(pieceName);
+
+                _boardMetrics[pieceName].InPlay = targetPiece.InPlay ? 1 : 0;
+
+                // Move metrics
+                MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
+
+                _boardMetrics[pieceName].ValidMoveCount = validMoves.Count;
+                _boardMetrics[pieceName].IsPinned = _boardMetrics[pieceName].ValidMoveCount == 0 ? 1 : 0;
+                _boardMetrics[pieceName].NeighborCount = CountNeighbors(targetPiece);
             }
-        }
-
-        private PieceMetrics GetPieceMetrics(PieceName pieceName)
-        {
-            Piece targetPiece = GetPiece(pieceName);
-
-            PieceMetrics pieceMetrics = new PieceMetrics();
-
-            pieceMetrics.IsInPlay = targetPiece.InPlay;
-
-            // Move metrics
-            MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
-            pieceMetrics.ValidMoveCount = validMoves.Count;
-
-            pieceMetrics.NeighborCount = CountNeighbors(targetPiece);
-
-            return pieceMetrics;
         }
 
         protected int CountNeighbors(PieceName pieceName)

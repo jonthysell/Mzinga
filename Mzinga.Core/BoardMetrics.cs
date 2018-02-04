@@ -28,7 +28,7 @@ namespace Mzinga.Core
 {
     public class BoardMetrics
     {
-        public BoardState BoardState { get; private set; }
+        public BoardState BoardState;
 
         public PieceMetrics this[PieceName pieceName]
         {
@@ -36,19 +36,16 @@ namespace Mzinga.Core
             {
                 return _pieceMetrics[(int)pieceName];
             }
-            set
-            {
-                _pieceMetrics[(int)pieceName] = value;
-            }
         }
 
-        private PieceMetrics[] _pieceMetrics;
+        private PieceMetrics[] _pieceMetrics = new PieceMetrics[EnumUtils.NumPieceNames];
 
-        public BoardMetrics(BoardState boardState)
+        public BoardMetrics()
         {
-            BoardState = boardState;
-
-            _pieceMetrics = new PieceMetrics[EnumUtils.NumPieceNames];
+            for (int i = 0; i < _pieceMetrics.Length; i++)
+            {
+                _pieceMetrics[i] = new PieceMetrics();
+            }
         }
     }
 }
