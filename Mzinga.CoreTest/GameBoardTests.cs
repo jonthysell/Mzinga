@@ -169,7 +169,7 @@ namespace Mzinga.CoreTest
             {
                 1, 4, 96, 1440, // Confirmed
                 21600, 516240, 12219480, // Unconfirmed
-                //181464200, 2651558410, 98813813835 // Unconfirmed and too long to test
+                //181464200, 2651558410, 98813813835, 3631333115387 // Unconfirmed and too long to test
             };
 
             for (int depth = 0; depth < expectedNodes.Length; depth++)
