@@ -58,6 +58,8 @@ namespace Mzinga.Core
 
         private FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
 
+        private object _storeLock = new object();
+
         public FixedCache(int capacity = DefaultCapacity, FixedCacheReplaceEntryPredicate<TEntry> replaceEntryPredicate = null)
         {
             if (capacity <= 0)
@@ -75,34 +77,37 @@ namespace Mzinga.Core
 
         public void Store(TKey key, TEntry newEntry)
         {
-            FixedCacheEntry<TKey, TEntry> existingEntry;
-            if (!_dict.TryGetValue(key, out existingEntry))
+            lock (_storeLock)
             {
-                // New entry
-                if (Count == Capacity)
+                FixedCacheEntry<TKey, TEntry> existingEntry;
+                if (!_dict.TryGetValue(key, out existingEntry))
                 {
-                    // Make space
-                    TKey first = _list.First.Value;
-                    _dict.Remove(first);
-                    _list.RemoveFirst();
-                }
+                    // New entry
+                    if (Count == Capacity)
+                    {
+                        // Make space
+                        TKey first = _list.First.Value;
+                        _dict.Remove(first);
+                        _list.RemoveFirst();
+                    }
 
-                // Add
-                StoreInternal(key, newEntry);
-
-                Metrics.Stores++;
-            }
-            else
-            {
-                // Existing entry
-                if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry.Entry, newEntry))
-                {
-                    // Replace
-                    _list.Remove(existingEntry.ListNode);
-
+                    // Add
                     StoreInternal(key, newEntry);
 
-                    Metrics.Updates++;
+                    Metrics.Store();
+                }
+                else
+                {
+                    // Existing entry
+                    if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry.Entry, newEntry))
+                    {
+                        // Replace
+                        _list.Remove(existingEntry.ListNode);
+
+                        StoreInternal(key, newEntry);
+
+                        Metrics.Update();
+                    }
                 }
             }
         }
@@ -126,11 +131,11 @@ namespace Mzinga.Core
             if (_dict.TryGetValue(key, out wrappedEntry))
             {
                 entry = wrappedEntry.Entry;
-                Metrics.Hits++;
+                Metrics.Hit();
                 return true;
             }
 
-            Metrics.Misses++;
+            Metrics.Miss();
 
             entry = default(TEntry);
             return false;

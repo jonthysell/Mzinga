@@ -70,6 +70,7 @@
     <Compile Include="GameBoard.cs" />
     <Compile Include="EnumUtils.cs" />
     <Compile Include="AI\EvaluatedMoveCollection.cs" />
+    <Compile Include="IEnumerableExtensions.cs" />
     <Compile Include="MoveSet.cs" />
     <Compile Include="BoardHistory.cs" />
     <Compile Include="Piece.cs" />

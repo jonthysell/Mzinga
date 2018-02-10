@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 
 namespace Mzinga.Core.AI
 {
@@ -65,13 +64,11 @@ namespace Mzinga.Core.AI
         public TranspositionTableEntryType Type;
         public double Value;
         public int Depth;
-        public List<Move> ValidMoves;
         public Move BestMove;
 
         public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType)
                                                     + sizeof(double) // Value
                                                     + sizeof(int) // Depth
-                                                    + IntPtr.Size // ValidMoves pointer
                                                     + IntPtr.Size // BestMove pointer
                                                     + sizeof(PieceName) // BestMove PieceName
                                                     + sizeof(Color) // BestMove PieceName Color

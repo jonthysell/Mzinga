@@ -679,12 +679,12 @@ namespace Mzinga.Core
             if (null != _cachedValidMovesByPiece[pieceNameIndex])
             {
                 // MoveSet is cached in L1 cache
-                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hits++;
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hit();
             }
             else
             {
                 // MoveSet is not cached in L1 cache
-                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Misses++;
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Miss();
 
                 // Calculate MoveSet
                 Piece targetPiece = GetPiece(pieceName);
@@ -806,11 +806,11 @@ namespace Mzinga.Core
                     }
                 }
 
-                ValidMoveCacheMetricsSet["ValidPlacements"].Misses++;
+                ValidMoveCacheMetricsSet["ValidPlacements"].Miss();
             }
             else
             {
-                ValidMoveCacheMetricsSet["ValidPlacements"].Hits++;
+                ValidMoveCacheMetricsSet["ValidPlacements"].Hit();
             }
 
             foreach (Position validPlacement in _cachedValidPlacementPositions)

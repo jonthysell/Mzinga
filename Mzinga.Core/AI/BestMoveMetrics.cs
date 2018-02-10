@@ -33,13 +33,15 @@ namespace Mzinga.Core.AI
     {
         public int MaxSearchDepth { get; private set;  }
 
-        public TimeSpan MaxSearchTime{ get; private set; }
+        public TimeSpan MaxSearchTime { get; private set; }
+
+        public int MaxHelperThreads { get; private set; }
 
         public int MovesEvaluated { get; private set; } = 0;
 
-        public int MinDepth { get; private set; } = int.MaxValue;
+        public int MinDepth { get; private set; } = 0;
 
-        public int MaxDepth { get; private set; } = int.MinValue;
+        public int MaxDepth { get; private set; } = 0;
 
         public double AverageDepth { get; private set; } = 0.0;
 
@@ -59,30 +61,17 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public int AlphaBetaCuts { get; set; } = 0;
-
-        public int BoardScoreConstantResults { get; set; } = 0;
-
-        public int BoardScoreCalculatedResults { get; set; } = 0;
-
-        public int BoardScoreTotalResults
-        {
-            get
-            {
-                return BoardScoreConstantResults + BoardScoreCalculatedResults;
-            }
-        }
-
         public CacheMetrics TranspositionTableMetrics { get; private set; } = new CacheMetrics();
 
         internal EvaluatedMove BestMove { get; set; } = null;
 
         private Stopwatch _stopwatch = new Stopwatch();
 
-        public BestMoveMetrics(int maxSearchDepth, TimeSpan maxSearchTime)
+        public BestMoveMetrics(int maxSearchDepth, TimeSpan maxSearchTime, int maxHelperThreads)
         {
             MaxSearchDepth = maxSearchDepth;
             MaxSearchTime = maxSearchTime;
+            MaxHelperThreads = maxHelperThreads;
         }
 
         public void Start()

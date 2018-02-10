@@ -319,7 +319,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            _gameAI.GetBestMove(GameBoard, maxDepth);
+            _gameAI.GetBestMove(GameBoard, maxDepth, Math.Max(0, Environment.ProcessorCount - 1));
         }
 
         private void BestMove(TimeSpan maxTime)
@@ -334,7 +334,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            _gameAI.GetBestMove(GameBoard, maxTime);
+            _gameAI.GetBestMove(GameBoard, maxTime, Math.Max(0, Environment.ProcessorCount - 1));
         }
 
         private void Undo(int moves = 1)

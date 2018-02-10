@@ -70,6 +70,11 @@ namespace Mzinga.Core.AI
             _evaluatedMoves = new List<EvaluatedMove>();
         }
 
+        public EvaluatedMoveCollection(IEnumerable<EvaluatedMove> evaluatedMoves) : this()
+        {
+            Add(evaluatedMoves);
+        }
+
         public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
         {
             foreach (EvaluatedMove evaluatedMove in evaluatedMoves)
