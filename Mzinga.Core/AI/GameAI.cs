@@ -372,7 +372,7 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || gameBoard.GameIsOver)
             {
-                return color * CalculateBoardScore(gameBoard);
+                return QuiescenceSearch(gameBoard, alpha, beta, color);
             }
 
             double? bestValue = null;
@@ -488,6 +488,63 @@ namespace Mzinga.Core.AI
         #endregion
 
         #region Board Scores
+
+        private double QuiescenceSearch(GameBoard gameBoard, double alpha, double beta, int color)
+        {
+            double standPat = color * CalculateBoardScore(gameBoard);
+
+            if (standPat >= beta)
+            {
+                return beta;
+            }
+            else if (alpha < standPat)
+            {
+                alpha = standPat;
+            }
+
+            foreach (Move move in GetNonQuietMoves(gameBoard, color))
+            {
+                gameBoard.TrustedPlay(move);
+                double score = -1.0 * QuiescenceSearch(gameBoard, -beta, -alpha, -color);
+                gameBoard.UndoLastMove();
+
+                if (score >= beta)
+                {
+                    return beta;
+                }
+                else if (score > alpha)
+                {
+                    alpha = score;
+                }
+            }
+
+            return alpha;
+        }
+
+        private IEnumerable<Move> GetNonQuietMoves(GameBoard gameBoard, int color)
+        {
+            // Build up a list of positions around the enemy queen (non-quiet)
+            HashSet<Position> queenNeighbors = new HashSet<Position>();
+
+            Position queenPosition = gameBoard.GetPiecePosition(color < 0 ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee);
+            if (null != queenPosition)
+            {
+                // Add queen's neighboring positions (including above)
+                for (int dir = 0; dir < EnumUtils.NumDirections + 1; dir++)
+                {
+                    queenNeighbors.Add(queenPosition.NeighborAt(dir));
+                }
+
+                foreach (Move move in gameBoard.GetValidMoves())
+                {
+                    if (queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
+                    {
+                        // Move is to a neighbor, and is not from a neighbor
+                        yield return move;
+                    }
+                }
+            }
+        }
 
         private double CalculateBoardScore(GameBoard gameBoard)
         {
