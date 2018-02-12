@@ -954,7 +954,7 @@ namespace Mzinga.Core
                 {
                     Position slidePosition = targetPiece.Position.NeighborAt(slideDirection);
 
-                    if (visitedPositions.Add(slidePosition) && !HasPieceAt(slidePosition))
+                    if (!visitedPositions.Contains(slidePosition) && !HasPieceAt(slidePosition))
                     {
                         // Slide position is open
 
@@ -969,6 +969,8 @@ namespace Mzinga.Core
                             if (validMoves.Add(move))
                             {
                                 // Sliding from this position has not been tested yet
+                                visitedPositions.Add(move.Position);
+
                                 Position preSlidePosition = targetPiece.Position;
                                 MovePiece(targetPiece, move.Position, false);
                                 GetValidSlides(targetPiece, visitedPositions, currentRange + 1, maxRange, validMoves);
