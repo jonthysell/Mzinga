@@ -372,7 +372,7 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || gameBoard.GameIsOver)
             {
-                return QuiescenceSearch(gameBoard, alpha, beta, color);
+                return color * CalculateBoardScore(gameBoard);
             }
 
             double? bestValue = null;
