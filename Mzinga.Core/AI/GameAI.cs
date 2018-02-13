@@ -481,8 +481,8 @@ namespace Mzinga.Core.AI
             {
                 BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
                 BestMoveFound.Invoke(this, args);
-                BestMoveMetrics.BestMove = evaluatedMove;
             }
+            BestMoveMetrics.BestMove = evaluatedMove;
         }
 
         #endregion
@@ -502,7 +502,7 @@ namespace Mzinga.Core.AI
                 alpha = standPat;
             }
 
-            foreach (Move move in GetNonQuietMoves(gameBoard, color))
+            foreach (Move move in GetNoisyMoves(gameBoard))
             {
                 gameBoard.TrustedPlay(move);
                 double score = -1.0 * QuiescenceSearch(gameBoard, -beta, -alpha, -color);
@@ -521,12 +521,12 @@ namespace Mzinga.Core.AI
             return alpha;
         }
 
-        private IEnumerable<Move> GetNonQuietMoves(GameBoard gameBoard, int color)
+        private IEnumerable<Move> GetNoisyMoves(GameBoard gameBoard)
         {
-            // Build up a list of positions around the enemy queen (non-quiet)
+            // Build up a list of positions around the enemy queen
             HashSet<Position> queenNeighbors = new HashSet<Position>();
 
-            Position queenPosition = gameBoard.GetPiecePosition(color < 0 ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee);
+            Position queenPosition = gameBoard.GetPiecePosition(gameBoard.CurrentTurnColor == Color.White ? PieceName.BlackQueenBee : PieceName.WhiteQueenBee);
 
             if (null == queenPosition)
             {
