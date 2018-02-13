@@ -203,6 +203,13 @@ namespace Mzinga.CoreTest
         }
     }
 
+    public class MockGameBoard : GameBoard
+    {
+        public MockGameBoard() : base() { }
+
+        public MockGameBoard(string boardString) : base(boardString) { }
+    }
+
     static partial class PositionExtensions
     {
         public static Position NeighborAt(this Position pos, Direction[] directions)

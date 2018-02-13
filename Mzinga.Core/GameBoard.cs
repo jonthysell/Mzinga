@@ -58,6 +58,8 @@ namespace Mzinga.Core
 
         public GameBoard() : base() { }
 
+        protected GameBoard(string boardString) : base(boardString) { }
+
         public GameBoard Clone()
         {
             GameBoard clone = new GameBoard();

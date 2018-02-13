@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,10 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Mzinga.CoreTest
@@ -74,6 +76,69 @@ namespace Mzinga.CoreTest
             Assert.IsTrue(object1.CompareTo(object2) == 0);
         }
 
+        public static void LoadAndExecuteTestCases<T>(string fileName) where T : ITestCase, new()
+        {
+            IEnumerable<T> testCases = LoadTestCases<T>(fileName);
+            ExecuteTestCases<T>(testCases);
+        }
+
+        public static IEnumerable<T> LoadTestCases<T>(string fileName) where T : ITestCase, new()
+        {
+            List<T> testCases = new List<T>();
+
+            using (StreamReader sr = new StreamReader(fileName))
+            {
+                string line;
+                while (null != (line = sr.ReadLine()))
+                {
+                    line = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
+                    {
+                        T testCase = new T();
+                        testCase.Parse(line);
+                        testCases.Add(testCase);
+                    }
+                }
+            }
+
+            return testCases;
+        }
+
+        public static void ExecuteTestCases<T>(IEnumerable<T> testCases) where T : ITestCase, new()
+        {
+            List<T> failedTestCases = new List<T>();
+            StringBuilder failMessages = new StringBuilder();
+
+            int testCaseIndex = 0;
+            foreach (T testCase in testCases)
+            {
+                try
+                {
+                    testCase.Execute();
+                }
+                catch (Exception ex)
+                {
+                    failedTestCases.Add(testCase);
+                    failMessages.AppendLine(string.Format("Test case #{0} \"{1}\" failed:", testCaseIndex, testCase));
+                    failMessages.AppendLine(ex.Message);
+                }
+                finally
+                {
+                    testCaseIndex++;
+                }
+            }
+
+            if (failedTestCases.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(string.Format("{0} test cases failed:", failedTestCases.Count));
+
+                sb.Append(failMessages.ToString());
+
+                Assert.Fail(sb.ToString());
+            }
+        }
+
         public static string[] NullOrWhiteSpaceStrings = new string[]
         {
             null,
@@ -85,5 +150,11 @@ namespace Mzinga.CoreTest
             " \t ",
             "\t \t",
         };
+    }
+
+    public interface ITestCase
+    {
+        void Execute();
+        void Parse(string s);
     }
 }

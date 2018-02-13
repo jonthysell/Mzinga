@@ -34,6 +34,7 @@ using Mzinga.Core.AI;
 namespace Mzinga.CoreTest
 {
     [TestClass]
+    [DeploymentItem("TestCases\\GameAITests")]
     public class GameAITests
     {
         [TestMethod]
@@ -115,6 +116,12 @@ namespace Mzinga.CoreTest
             TraceBestMoveMetrics(ai.BestMoveMetrics);
         }
 
+        [TestMethod]
+        public void GameAI_WinningMoveIsBestMoveTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_WinningMoveIsBestMoveTest.csv");
+        }
+
         private void TraceBestMoveMetrics(BestMoveMetrics metrics)
         {
             Trace.WriteLine(string.Format("Elapsed Time: {0}", metrics.ElapsedTime));
@@ -135,9 +142,41 @@ namespace Mzinga.CoreTest
             return gb;
         }
 
-        private GameAI GetTestGameAI()
+        public static GameAI GetTestGameAI()
         {
             return new GameAI(MetricWeightsTests.TestMetricWeights);
+        }
+
+        private class GameAIBestMoveTestCase : ITestCase
+        {
+            public MockGameBoard gameBoard;
+            public int maxDepth;
+
+            public Move ExpectedBestMove;
+            public Move ActualBestMove;
+
+            public void Execute()
+            {
+                GameAI ai = GetTestGameAI();
+                ActualBestMove = ai.GetBestMove(gameBoard, maxDepth, 0);
+                Assert.AreEqual(ExpectedBestMove, ActualBestMove);
+            }
+
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException("s");
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                gameBoard = new MockGameBoard(vals[0]);
+                maxDepth = int.Parse(vals[1]);
+                ExpectedBestMove = new Move(vals[2]);
+            }
         }
     }
 }
