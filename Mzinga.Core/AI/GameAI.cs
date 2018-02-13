@@ -527,21 +527,25 @@ namespace Mzinga.Core.AI
             HashSet<Position> queenNeighbors = new HashSet<Position>();
 
             Position queenPosition = gameBoard.GetPiecePosition(color < 0 ? PieceName.WhiteQueenBee : PieceName.BlackQueenBee);
-            if (null != queenPosition)
-            {
-                // Add queen's neighboring positions (including above)
-                for (int dir = 0; dir < EnumUtils.NumDirections + 1; dir++)
-                {
-                    queenNeighbors.Add(queenPosition.NeighborAt(dir));
-                }
 
-                foreach (Move move in gameBoard.GetValidMoves())
+            if (null == queenPosition)
+            {
+                // Queen is not yet in play
+                yield break;
+            }
+
+            // Add queen's neighboring positions
+            for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
+            {
+                queenNeighbors.Add(queenPosition.NeighborAt(dir));
+            }
+
+            foreach (Move move in gameBoard.GetValidMoves())
+            {
+                if (queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
                 {
-                    if (queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
-                    {
-                        // Move is to a neighbor, and is not from a neighbor
-                        yield return move;
-                    }
+                    // Move is to a neighbor, and is not from a neighbor
+                    yield return move;
                 }
             }
         }
