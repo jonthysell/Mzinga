@@ -41,22 +41,47 @@ namespace Mzinga.Engine
             }
         }
 
+        private static GameEngine _engine;
+
+        private static volatile bool _interceptCancel = false;
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
             GameEngineConfig config = null != args && args.Length > 0 ? LoadConfig(args[0]) : GetDefaultConfig();
 
-            GameEngine engine = new GameEngine(ID, config, PrintLine);
-            engine.ParseCommand("info");
+            _engine = new GameEngine(ID, config, PrintLine);
+            _engine.ParseCommand("info");
 
-            while (!engine.ExitRequested)
+            Console.CancelKeyPress += Console_CancelKeyPress;
+
+            _engine.StartAsyncCommandEvent += (s, e) =>
             {
-                string command = Console.In.ReadLine();
+                _interceptCancel = true;
+            };
+
+            _engine.EndAsyncCommandEvent += (s, e) =>
+            {
+                _interceptCancel = false;
+            };
+
+            while (!_engine.ExitRequested)
+            {
+                string command = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(command))
                 {
-                    engine.ParseCommand(command);
+                    _engine.ParseCommand(command);
                 }
+            }
+        }
+
+        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            if (_interceptCancel)
+            {
+                _engine.TryCancelAsyncCommand();
+                e.Cancel = true;
             }
         }
 

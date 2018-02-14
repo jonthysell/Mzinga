@@ -68,9 +68,6 @@ namespace Mzinga.Core.AI
         private FixedCache<long, double> _cachedBoardScores = new FixedCache<long, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
 
-        private Task[] _helperThreads = null;
-        private CancellationTokenSource _helperThreadCancellationTokenSource = null;
-
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
@@ -122,17 +119,47 @@ namespace Mzinga.Core.AI
 
         #region Move Evaluation
 
-        public Move GetBestMove(GameBoard gameBoard, int maxDepth, int maxHelperThreads = 0)
+        public Move GetBestMove(GameBoard gameBoard, int maxDepth, int maxHelperThreads)
         {
             return GetBestMove(gameBoard, maxDepth, TimeSpan.MaxValue, maxHelperThreads);
         }
 
-        public Move GetBestMove(GameBoard gameBoard, TimeSpan maxTime, int maxHelperThreads = 0)
+        public Move GetBestMove(GameBoard gameBoard, TimeSpan maxTime, int maxHelperThreads)
         {
             return GetBestMove(gameBoard, int.MaxValue, maxTime, maxHelperThreads);
         }
 
         private Move GetBestMove(GameBoard gameBoard, int maxDepth, TimeSpan maxTime, int maxHelperThreads)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            if (maxTime < TimeSpan.MaxValue)
+            {
+                cts.CancelAfter(maxTime);
+            }
+
+            Task<Move> task = GetBestMoveAsync(gameBoard, maxDepth, maxTime, maxHelperThreads, cts.Token);
+            task.Wait();
+
+            return task.Result;
+        }
+
+        public async Task<Move> GetBestMoveAsync(GameBoard gameBoard, int maxHelperThreads, CancellationToken token)
+        {
+            return await GetBestMoveAsync(gameBoard, int.MaxValue, TimeSpan.MaxValue, maxHelperThreads, token);
+        }
+
+        public async Task<Move> GetBestMoveAsync(GameBoard gameBoard, int maxDepth, int maxHelperThreads, CancellationToken token)
+        {
+            return await GetBestMoveAsync(gameBoard, maxDepth, TimeSpan.MaxValue, maxHelperThreads, token);
+        }
+
+        public async Task<Move> GetBestMoveAsync(GameBoard gameBoard, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        {
+            return await GetBestMoveAsync(gameBoard, int.MaxValue, maxTime, maxHelperThreads, token);
+        }
+
+        private async Task<Move> GetBestMoveAsync(GameBoard gameBoard, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
             if (null == gameBoard)
             {
@@ -163,7 +190,7 @@ namespace Mzinga.Core.AI
 
             BestMoveMetrics.Start();
 
-            EvaluatedMoveCollection evaluatedMoves = EvaluateMoves(gameBoard);
+            EvaluatedMoveCollection evaluatedMoves = await EvaluateMovesAsync(gameBoard, token);
 
             if (evaluatedMoves.Count == 0)
             {
@@ -183,7 +210,7 @@ namespace Mzinga.Core.AI
             return evaluatedMoves.BestMove.Move;
         }
 
-        private EvaluatedMoveCollection EvaluateMoves(GameBoard gameBoard)
+        private async Task<EvaluatedMoveCollection> EvaluateMovesAsync(GameBoard gameBoard, CancellationToken token)
         {
             MoveSet validMoves = gameBoard.GetValidMoves();
 
@@ -197,23 +224,15 @@ namespace Mzinga.Core.AI
             // Try to get cached best move if available
             long key = gameBoard.ZobristKey;
             TranspositionTableEntry tEntry;
-            if (!_transpositionTable.TryLookup(key, out tEntry))
+            if (_transpositionTable.TryLookup(key, out tEntry) && null != tEntry.BestMove)
             {
-                BestMoveMetrics.TranspositionTableMetrics.Miss();
-            }
-            else
-            {
-                BestMoveMetrics.TranspositionTableMetrics.Hit();
-                if (null != tEntry.BestMove)
-                {
-                    movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
-                    OnBestMoveFound(movesToEvaluate.BestMove);
+                movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
+                OnBestMoveFound(movesToEvaluate.BestMove);
 
-                    if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
-                    {
-                        // The best move ends the game, stop searching
-                        return movesToEvaluate;
-                    }
+                if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
+                {
+                    // The best move ends the game, stop searching
+                    return movesToEvaluate;
                 }
             }
 
@@ -228,13 +247,14 @@ namespace Mzinga.Core.AI
             while (depth <= BestMoveMetrics.MaxSearchDepth)
             {
                 // Start LazySMP helper threads
-                StartHelperThreads(gameBoard, depth, BestMoveMetrics.MaxHelperThreads);
+                CancellationTokenSource helperCTS = new CancellationTokenSource();
+                Task[] helperThreads = StartHelperThreads(gameBoard, depth, BestMoveMetrics.MaxHelperThreads, helperCTS);
 
                 // "Re-sort" moves to evaluate based on the next iteration
-                movesToEvaluate = EvaluateMovesToDepth(gameBoard, depth, movesToEvaluate);
+                movesToEvaluate = await EvaluateMovesToDepthAsync(gameBoard, depth, movesToEvaluate, token);
 
                 // End LazySMP helper threads
-                EndHelperThreads();
+                EndHelperThreads(helperThreads, helperCTS);
 
                 // Fire BestMoveFound for current depth
                 OnBestMoveFound(movesToEvaluate.BestMove);
@@ -245,9 +265,9 @@ namespace Mzinga.Core.AI
                     break;
                 }
 
-                if (!BestMoveMetrics.HasTimeLeft)
+                if (token.IsCancellationRequested)
                 {
-                    // Out of time, stop searching
+                    // Cancelled, stop searching
                     break;
                 }
 
@@ -257,7 +277,7 @@ namespace Mzinga.Core.AI
             return movesToEvaluate;
         }
 
-        private EvaluatedMoveCollection EvaluateMovesToDepth(GameBoard gameBoard, int depth, IEnumerable<EvaluatedMove> movesToEvaluate)
+        private async Task<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(GameBoard gameBoard, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, CancellationToken token)
         {
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
@@ -272,19 +292,19 @@ namespace Mzinga.Core.AI
 
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
-                if (!BestMoveMetrics.HasTimeLeft)
+                if (token.IsCancellationRequested)
                 {
-                    // Time-out
+                    // Cancel
                     return new EvaluatedMoveCollection(movesToEvaluate);
                 }
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
-                double? value = -1 * NegaMaxSearch(gameBoard, depth - 1, -beta, -alpha, -color);
+                double? value = -1 * await NegaMaxSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
                 {
-                    // Time-out occurred during evaluation
+                    // Cancel occurred during evaluation
                     return new EvaluatedMoveCollection(movesToEvaluate);
                 }
 
@@ -323,15 +343,54 @@ namespace Mzinga.Core.AI
             return evaluatedMoves;
         }
 
-        private double? NegaMaxSearch(GameBoard gameBoard, int depth, double alpha, double beta, int color)
+        private void OnBestMoveFound(EvaluatedMove evaluatedMove)
         {
-            CancellationTokenSource cts = new CancellationTokenSource();
-
-            Task<double?> task = NegaMaxSearchAsync(gameBoard, depth, alpha, beta, color, cts.Token);
-            task.Wait();
-
-            return task.Result;
+            if (null != BestMoveFound && evaluatedMove != BestMoveMetrics.BestMove)
+            {
+                BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
+                BestMoveFound.Invoke(this, args);
+            }
+            BestMoveMetrics.BestMove = evaluatedMove;
         }
+
+        #endregion
+
+        #region Threading support
+
+        private Task[] StartHelperThreads(GameBoard gameBoard, int depth, int threads, CancellationTokenSource tokenSource)
+        {
+            Task[] helperThreads = null;
+
+            if (depth > 1 && threads > 0)
+            {
+                helperThreads = new Task[threads];
+                int color = gameBoard.CurrentTurnColor == Color.White ? 1 : -1;
+
+                for (int i = 0; i < helperThreads.Length; i++)
+                {
+                    GameBoard clone = gameBoard.Clone();
+                    helperThreads[i] = Task.Factory.StartNew(async () =>
+                    {
+                        await NegaMaxSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, tokenSource.Token);
+                    });
+                }
+            }
+
+            return helperThreads;
+        }
+
+        private void EndHelperThreads(Task[] helperThreads, CancellationTokenSource tokenSource)
+        {
+            if (null != helperThreads)
+            {
+                tokenSource.Cancel();
+                Task.WaitAll(helperThreads);
+            }
+        }
+
+        #endregion
+
+        #region NegaMax Search
 
         private async Task<double?> NegaMaxSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
         {
@@ -340,33 +399,24 @@ namespace Mzinga.Core.AI
             long key = gameBoard.ZobristKey;
 
             TranspositionTableEntry tEntry;
-            if (!_transpositionTable.TryLookup(key, out tEntry))
+            if (_transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth >= depth)
             {
-                BestMoveMetrics.TranspositionTableMetrics.Miss();
-            }
-            else
-            {
-                BestMoveMetrics.TranspositionTableMetrics.Hit();
-
-                if (tEntry.Depth >= depth)
+                if (tEntry.Type == TranspositionTableEntryType.Exact)
                 {
-                    if (tEntry.Type == TranspositionTableEntryType.Exact)
-                    {
-                        return tEntry.Value;
-                    }
-                    else if (tEntry.Type == TranspositionTableEntryType.LowerBound)
-                    {
-                        alpha = Math.Max(alpha, tEntry.Value);
-                    }
-                    else if (tEntry.Type == TranspositionTableEntryType.UpperBound)
-                    {
-                        beta = Math.Min(beta, tEntry.Value);
-                    }
+                    return tEntry.Value;
+                }
+                else if (tEntry.Type == TranspositionTableEntryType.LowerBound)
+                {
+                    alpha = Math.Max(alpha, tEntry.Value);
+                }
+                else if (tEntry.Type == TranspositionTableEntryType.UpperBound)
+                {
+                    beta = Math.Min(beta, tEntry.Value);
+                }
 
-                    if (alpha >= beta)
-                    {
-                        return tEntry.Value;
-                    }
+                if (alpha >= beta)
+                {
+                    return tEntry.Value;
                 }
             }
 
@@ -393,7 +443,7 @@ namespace Mzinga.Core.AI
 
             foreach (Move move in moves)
             {
-                if (!BestMoveMetrics.HasTimeLeft || token.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     return null;
                 }
@@ -444,50 +494,9 @@ namespace Mzinga.Core.AI
             return bestValue;
         }
 
-        private void StartHelperThreads(GameBoard gameBoard, int depth, int threads)
-        {
-            _helperThreads = null;
-            _helperThreadCancellationTokenSource = null;
-
-            if (depth > 1 && threads > 0)
-            {
-                _helperThreads = new Task[threads];
-                _helperThreadCancellationTokenSource = new CancellationTokenSource();
-                int color = gameBoard.CurrentTurnColor == Color.White ? 1 : -1;
-
-                for (int i = 0; i < _helperThreads.Length; i++)
-                {
-                    GameBoard clone = gameBoard.Clone();
-                    _helperThreads[i] = Task.Factory.StartNew(async () =>
-                    {
-                        await NegaMaxSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, _helperThreadCancellationTokenSource.Token);
-                    });
-                }
-            }
-        }
-
-        private void EndHelperThreads()
-        {
-            if (null != _helperThreads && null != _helperThreadCancellationTokenSource)
-            {
-                _helperThreadCancellationTokenSource.Cancel();
-                Task.WaitAll(_helperThreads);
-            }
-        }
-
-        private void OnBestMoveFound(EvaluatedMove evaluatedMove)
-        {
-            if (null != BestMoveFound && evaluatedMove != BestMoveMetrics.BestMove)
-            {
-                BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
-                BestMoveFound.Invoke(this, args);
-            }
-            BestMoveMetrics.BestMove = evaluatedMove;
-        }
-
         #endregion
 
-        #region Board Scores
+        #region QuiescenceSearch
 
         private double QuiescenceSearch(GameBoard gameBoard, double alpha, double beta, int color)
         {
@@ -549,6 +558,10 @@ namespace Mzinga.Core.AI
                 }
             }
         }
+
+        #endregion
+
+        #region Board Scores
 
         private double CalculateBoardScore(GameBoard gameBoard)
         {

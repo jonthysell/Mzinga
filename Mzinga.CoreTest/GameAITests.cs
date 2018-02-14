@@ -57,7 +57,7 @@ namespace Mzinga.CoreTest
                 GameAI ai = GetTestGameAI();
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2);
+                Move m = ai.GetBestMove(gb, 2, 0);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -81,7 +81,7 @@ namespace Mzinga.CoreTest
                 GameAI ai = GetTestGameAI();
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2);
+                Move m = ai.GetBestMove(gb, 2, 0);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -98,7 +98,7 @@ namespace Mzinga.CoreTest
             GameAI ai = GetTestGameAI();
 
             Stopwatch sw = Stopwatch.StartNew();
-            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5));
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
 
             TraceBestMoveMetrics(ai.BestMoveMetrics);
         }
@@ -111,7 +111,7 @@ namespace Mzinga.CoreTest
 
             GameAI ai = GetTestGameAI();
 
-            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5));
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
 
             TraceBestMoveMetrics(ai.BestMoveMetrics);
         }
@@ -136,7 +136,7 @@ namespace Mzinga.CoreTest
 
             while (gb.CurrentPlayerTurn < 5)
             {
-                gb.Play(ai.GetBestMove(gb, 1));
+                gb.Play(ai.GetBestMove(gb, 1, 0));
             }
 
             return gb;

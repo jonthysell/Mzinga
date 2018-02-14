@@ -26,25 +26,30 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.Engine
 {
-    public delegate void ConsoleOut(string format, params object[] arg);
-
     public class GameEngine
     {
         public string ID { get; private set; }
         public ConsoleOut ConsoleOut { get; private set; }
         public GameEngineConfig Config { get; private set; }
 
-        private GameBoard GameBoard;
+        public bool ExitRequested { get; private set; }
+
+        public event EventHandler StartAsyncCommandEvent;
+        public event EventHandler EndAsyncCommandEvent;
+
+        private GameBoard _gameBoard;
 
         private GameAI _gameAI;
 
-        public bool ExitRequested { get; private set; }
+        private CancellationTokenSource _asyncCommandCTS = null;
 
         public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
         {
@@ -83,6 +88,11 @@ namespace Mzinga.Engine
             {
                 ConsoleOut("{0};{1};{2}", args.Move, args.Depth, args.Score);
             }
+        }
+
+        public void TryCancelAsyncCommand()
+        {
+            _asyncCommandCTS?.Cancel();
         }
 
         public void ParseCommand(string command)
@@ -139,15 +149,15 @@ namespace Mzinga.Engine
                         }
                         break;
                     case "bestmove":
-                        if (paramCount < 2)
+                        if (paramCount == 0)
                         {
-                            throw new CommandException();
+                            BestMove();
                         }
-                        else if (split[1].ToLower() == "depth")
+                        else if (paramCount >= 2 && split[1].ToLower() == "depth")
                         {
                             BestMove(int.Parse(split[2]));
                         }
-                        else if (split[1].ToLower() == "time")
+                        else if (paramCount >= 2 && split[1].ToLower() == "time")
                         {
                             BestMove(TimeSpan.Parse(split[2]));
                         }
@@ -221,74 +231,74 @@ namespace Mzinga.Engine
 
         private void PrintBoard()
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            ConsoleOut(GameBoard.ToString());
+            ConsoleOut(_gameBoard.ToString());
         }
 
         private void NewGame()
         {
-            GameBoard = new GameBoard();
+            _gameBoard = new GameBoard();
 
             _gameAI.ResetCaches();
 
-            ConsoleOut(GameBoard.ToString());
+            ConsoleOut(_gameBoard.ToString());
         }
 
         private void Play(string moveString)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            GameBoard.Play(new Move(moveString));
-            ConsoleOut(GameBoard.ToString());
+            _gameBoard.Play(new Move(moveString));
+            ConsoleOut(_gameBoard.ToString());
         }
 
         private void Pass()
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            GameBoard.Pass();
-            ConsoleOut(GameBoard.ToString());
+            _gameBoard.Pass();
+            ConsoleOut(_gameBoard.ToString());
         }
 
         private void ValidMoves()
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            MoveSet validMoves = GameBoard.GetValidMoves();
+            MoveSet validMoves = _gameBoard.GetValidMoves();
             ConsoleOut(validMoves.ToString());
         }
 
         private void ValidMoves(string pieceName)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
@@ -298,78 +308,108 @@ namespace Mzinga.Engine
                 throw new ArgumentNullException(pieceName);
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            MoveSet validMoves = GameBoard.GetValidMoves(EnumUtils.ParseShortName(pieceName));
+            MoveSet validMoves = _gameBoard.GetValidMoves(EnumUtils.ParseShortName(pieceName));
             ConsoleOut(validMoves.ToString());
+        }
+
+        private void BestMove()
+        {
+            if (null == _gameBoard)
+            {
+                throw new NoBoardException();
+            }
+
+            if (_gameBoard.GameIsOver)
+            {
+                throw new GameIsOverException();
+            }
+
+            CancellationToken token = StartAsyncCommand();
+
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Math.Max(0, Environment.ProcessorCount - 1), token);
+            task.Wait();
+
+            EndAsyncCommand();
         }
 
         private void BestMove(int maxDepth)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            _gameAI.GetBestMove(GameBoard, maxDepth, Math.Max(0, Environment.ProcessorCount - 1));
+            CancellationToken token = StartAsyncCommand();
+
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Math.Max(0, Environment.ProcessorCount - 1), token);
+            task.Wait();
+
+            EndAsyncCommand();
         }
 
         private void BestMove(TimeSpan maxTime)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (GameBoard.GameIsOver)
+            if (_gameBoard.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            _gameAI.GetBestMove(GameBoard, maxTime, Math.Max(0, Environment.ProcessorCount - 1));
+            CancellationToken token = StartAsyncCommand();
+
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Math.Max(0, Environment.ProcessorCount - 1), token);
+            task.Wait();
+
+            EndAsyncCommand();
         }
 
         private void Undo(int moves = 1)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            if (moves < 1 || moves > GameBoard.BoardHistoryCount)
+            if (moves < 1 || moves > _gameBoard.BoardHistoryCount)
             {
                 throw new UndoInvalidNumberOfMovesException(moves);
             }
 
             for (int i = 0; i < moves; i++)
             {
-                GameBoard.UndoLastMove();
+                _gameBoard.UndoLastMove();
             }
-            ConsoleOut(GameBoard.ToString());
+            ConsoleOut(_gameBoard.ToString());
         }
 
         private void History()
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
 
-            BoardHistory history = new BoardHistory(GameBoard.BoardHistory);
+            BoardHistory history = new BoardHistory(_gameBoard.BoardHistory);
             ConsoleOut(history.ToString());
         }
 
         private void Perft(int maxDepth = Int32.MaxValue)
         {
-            if (null == GameBoard)
+            if (null == _gameBoard)
             {
                 throw new NoBoardException();
             }
@@ -382,7 +422,7 @@ namespace Mzinga.Engine
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                long nodes = GameBoard.ParallelPerft(depth, Environment.ProcessorCount);
+                long nodes = _gameBoard.ParallelPerft(depth, Environment.ProcessorCount);
                 sw.Stop();
 
                 ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), nodes, sw.ElapsedMilliseconds, Math.Round(nodes / (double)sw.ElapsedMilliseconds, 1));
@@ -393,7 +433,25 @@ namespace Mzinga.Engine
         {
             ExitRequested = true;
         }
+
+        private CancellationToken StartAsyncCommand()
+        {
+            _asyncCommandCTS = new CancellationTokenSource();
+
+            StartAsyncCommandEvent?.Invoke(this, new EventArgs());
+
+            return _asyncCommandCTS.Token;
+        }
+
+        private void EndAsyncCommand()
+        {
+            _asyncCommandCTS = null;
+
+            EndAsyncCommandEvent?.Invoke(this, new EventArgs());
+        }
     }
+
+    public delegate void ConsoleOut(string format, params object[] arg);
 
     public class CommandException : Exception
     {

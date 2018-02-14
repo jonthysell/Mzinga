@@ -53,16 +53,6 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public bool HasTimeLeft
-        {
-            get
-            {
-                return ElapsedTime < MaxSearchTime;
-            }
-        }
-
-        public CacheMetrics TranspositionTableMetrics { get; private set; } = new CacheMetrics();
-
         internal EvaluatedMove BestMove { get; set; } = null;
 
         private Stopwatch _stopwatch = new Stopwatch();

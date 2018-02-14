@@ -433,10 +433,10 @@ namespace Mzinga.Trainer
         {
             if (TrainerSettings.MaxDepth >= 0)
             {
-                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth);
+                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth, 0);
             }
 
-            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime);
+            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime, 0);
         }
 
         public void Cull()
