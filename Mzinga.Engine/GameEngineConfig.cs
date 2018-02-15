@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,12 +34,13 @@ namespace Mzinga.Engine
 {
     public class GameEngineConfig
     {
-
         #region GameAI
 
         public int? TranspositionTableSizeMB { get; private set; } = null;
 
         public MetricWeights MetricWeights { get; private set; } = null;
+
+        public bool PonderDuringIdle { get; private set; } = false;
 
         #endregion
 
@@ -90,6 +91,9 @@ namespace Mzinga.Engine
                             break;
                         case "MetricWeights":
                             MetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
+                            break;
+                        case "PonderDuringIdle":
+                            PonderDuringIdle = reader.ReadElementContentAsBoolean();
                             break;
                     }
                 }

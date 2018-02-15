@@ -51,6 +51,12 @@ namespace Mzinga.Engine
 
         private CancellationTokenSource _asyncCommandCTS = null;
 
+        private Task _ponderTask = null;
+        private CancellationTokenSource _ponderCTS = null;
+        private volatile bool _isPondering = false;
+
+        private const int PonderHelperThreads = 0;
+
         public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -109,6 +115,8 @@ namespace Mzinga.Engine
                 string cmd = split[0].ToLower();
 
                 int paramCount = split.Length - 1;
+
+                StopPonder();
 
                 switch (cmd)
                 {
@@ -205,6 +213,8 @@ namespace Mzinga.Engine
                 ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
             }
             ConsoleOut("ok");
+
+            StartPonder();
         }
 
         private void Info()
@@ -371,6 +381,11 @@ namespace Mzinga.Engine
 
             CancellationToken token = StartAsyncCommand();
 
+            if (maxTime < TimeSpan.MaxValue)
+            {
+                _asyncCommandCTS.CancelAfter(maxTime);
+            }
+
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Math.Max(0, Environment.ProcessorCount - 1), token);
             task.Wait();
 
@@ -426,6 +441,34 @@ namespace Mzinga.Engine
                 sw.Stop();
 
                 ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), nodes, sw.ElapsedMilliseconds, Math.Round(nodes / (double)sw.ElapsedMilliseconds, 1));
+            }
+        }
+
+        private void StartPonder()
+        {
+            if (Config.PonderDuringIdle && !_isPondering && null != _gameBoard)
+            {
+                _gameAI.BestMoveFound -= OnBestMoveFound;
+
+                _ponderCTS = new CancellationTokenSource();
+                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), PonderHelperThreads, _ponderCTS.Token), _ponderCTS.Token);
+
+                _isPondering = true;
+            }
+        }
+
+        private void StopPonder()
+        {
+            if (_isPondering)
+            {
+                _ponderCTS.Cancel();
+                _ponderTask.Wait();
+
+                _ponderCTS = null;
+                _ponderTask = null;
+
+                _gameAI.BestMoveFound += OnBestMoveFound;
+                _isPondering = false;
             }
         }
 
