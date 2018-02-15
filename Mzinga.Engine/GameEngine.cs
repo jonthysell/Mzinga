@@ -55,8 +55,6 @@ namespace Mzinga.Engine
         private CancellationTokenSource _ponderCTS = null;
         private volatile bool _isPondering = false;
 
-        private const int PonderHelperThreads = 0;
-
         public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -361,7 +359,7 @@ namespace Mzinga.Engine
 
             CancellationToken token = StartAsyncCommand();
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Math.Max(0, Environment.ProcessorCount - 1), token);
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Config.MaxHelperThreads, token);
             task.Wait();
 
             EndAsyncCommand();
@@ -386,7 +384,7 @@ namespace Mzinga.Engine
                 _asyncCommandCTS.CancelAfter(maxTime);
             }
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Math.Max(0, Environment.ProcessorCount - 1), token);
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Config.MaxHelperThreads, token);
             task.Wait();
 
             EndAsyncCommand();
@@ -446,12 +444,12 @@ namespace Mzinga.Engine
 
         private void StartPonder()
         {
-            if (Config.PonderDuringIdle && !_isPondering && null != _gameBoard)
+            if (Config.PonderDuringIdle != PonderDuringIdle.Disabled && !_isPondering && null != _gameBoard)
             {
                 _gameAI.BestMoveFound -= OnBestMoveFound;
 
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), PonderHelperThreads, _ponderCTS.Token), _ponderCTS.Token);
+                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdle.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token), _ponderCTS.Token);
 
                 _isPondering = true;
             }

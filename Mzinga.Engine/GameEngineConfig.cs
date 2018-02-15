@@ -40,7 +40,15 @@ namespace Mzinga.Engine
 
         public MetricWeights MetricWeights { get; private set; } = null;
 
-        public bool PonderDuringIdle { get; private set; } = false;
+        public PonderDuringIdle PonderDuringIdle { get; private set; } = PonderDuringIdle.Disabled;
+
+        public int MaxHelperThreads
+        {
+            get
+            {
+                return Math.Max(0, Environment.ProcessorCount - 1);
+            }
+        }
 
         #endregion
 
@@ -93,7 +101,11 @@ namespace Mzinga.Engine
                             MetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
                             break;
                         case "PonderDuringIdle":
-                            PonderDuringIdle = reader.ReadElementContentAsBoolean();
+                            PonderDuringIdle result;
+                            if (Enum.TryParse(reader.ReadElementContentAsString(), out result))
+                            {
+                                PonderDuringIdle = result;
+                            }
                             break;
                     }
                 }
@@ -111,5 +123,12 @@ namespace Mzinga.Engine
 
             return ai;
         }
+    }
+
+    public enum PonderDuringIdle
+    {
+        Disabled,
+        SingleThreaded,
+        MultiThreaded
     }
 }

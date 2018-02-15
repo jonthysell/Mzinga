@@ -122,7 +122,7 @@ namespace Mzinga.Engine
 <Mzinga.Engine>
 <GameAI>
 <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
-<PonderDuringIdle>true</PonderDuringIdle>
+<PonderDuringIdle>SingleThreaded</PonderDuringIdle>
 <MetricWeights>
 <QueenBee.InPlayWeight>-0.58470774882045851</QueenBee.InPlayWeight>
 <QueenBee.ValidMoveWeight>19.650175090357259</QueenBee.ValidMoveWeight>
