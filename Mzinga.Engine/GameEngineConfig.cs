@@ -97,7 +97,7 @@ namespace Mzinga.Engine
                     switch (reader.Name)
                     {
                         case "TranspositionTableSizeMB":
-                            TranspositionTableSizeMB = reader.ReadElementContentAsInt();
+                            ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
                             break;
                         case "MetricWeights":
                             MetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
@@ -110,6 +110,15 @@ namespace Mzinga.Engine
                             break;
                     }
                 }
+            }
+        }
+
+        private void ParseTranspositionTableSizeMBValue(string rawValue)
+        {
+            int intValue;
+            if (int.TryParse(rawValue, out intValue))
+            {
+                TranspositionTableSizeMB = intValue;
             }
         }
 
