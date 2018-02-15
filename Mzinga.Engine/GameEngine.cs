@@ -444,12 +444,12 @@ namespace Mzinga.Engine
 
         private void StartPonder()
         {
-            if (Config.PonderDuringIdle != PonderDuringIdle.Disabled && !_isPondering && null != _gameBoard)
+            if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard)
             {
                 _gameAI.BestMoveFound -= OnBestMoveFound;
 
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdle.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token), _ponderCTS.Token);
+                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token), _ponderCTS.Token);
 
                 _isPondering = true;
             }

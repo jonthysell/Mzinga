@@ -40,15 +40,17 @@ namespace Mzinga.Engine
 
         public MetricWeights MetricWeights { get; private set; } = null;
 
-        public PonderDuringIdle PonderDuringIdle { get; private set; } = PonderDuringIdle.Disabled;
+        public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
 
         public int MaxHelperThreads
         {
             get
             {
-                return Math.Max(0, Environment.ProcessorCount - 1);
+                // Hard min is 0, hard max is Environment.ProcessorCount - 1
+                return Math.Max(0, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, Environment.ProcessorCount - 1) : Environment.ProcessorCount - 1);
             }
         }
+        private int? _maxHelperThreads = null;
 
         #endregion
 
@@ -100,15 +102,47 @@ namespace Mzinga.Engine
                         case "MetricWeights":
                             MetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
                             break;
+                        case "MaxHelperThreads":
+                            ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
+                            break;
                         case "PonderDuringIdle":
-                            PonderDuringIdle result;
-                            if (Enum.TryParse(reader.ReadElementContentAsString(), out result))
-                            {
-                                PonderDuringIdle = result;
-                            }
+                            ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
                             break;
                     }
                 }
+            }
+        }
+
+        private void ParseMaxHelperThreadsValue(string rawValue)
+        {
+            int intValue;
+            MaxHelperThreadsType enumValue;
+
+            if (int.TryParse(rawValue, out intValue))
+            {
+                _maxHelperThreads = intValue;
+            }
+            else if (Enum.TryParse(rawValue, out enumValue))
+            {
+                switch (enumValue)
+                {
+                    case MaxHelperThreadsType.None:
+                        _maxHelperThreads = 0;
+                        break;
+                    case MaxHelperThreadsType.Auto:
+                        _maxHelperThreads = null;
+                        break;
+
+                }
+            }
+        }
+
+        private void ParsePonderDuringIdleValue(string rawValue)
+        {
+            PonderDuringIdleType enumValue;
+            if (Enum.TryParse(rawValue, out enumValue))
+            {
+                PonderDuringIdle = enumValue;
             }
         }
 
@@ -125,7 +159,13 @@ namespace Mzinga.Engine
         }
     }
 
-    public enum PonderDuringIdle
+    public enum MaxHelperThreadsType
+    {
+        None,
+        Auto,
+    }
+
+    public enum PonderDuringIdleType
     {
         Disabled,
         SingleThreaded,
