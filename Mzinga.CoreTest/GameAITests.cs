@@ -122,6 +122,12 @@ namespace Mzinga.CoreTest
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_WinningMoveIsBestMoveTest.csv");
         }
 
+        [TestMethod]
+        public void GameAI_BlockWinningMoveIsBestMoveTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_BlockWinningMoveIsBestMoveTest.csv");
+        }
+
         private void TraceBestMoveMetrics(BestMoveMetrics metrics)
         {
             Trace.WriteLine(string.Format("Elapsed Time: {0}", metrics.ElapsedTime));
