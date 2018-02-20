@@ -498,7 +498,7 @@ namespace Mzinga.Core.AI
 
         #region QuiescenceSearch
 
-        private double QuiescenceSearch(GameBoard gameBoard, double alpha, double beta, int color)
+        private async Task<double?> QuiescenceSearchAsync(GameBoard gameBoard, double alpha, double beta, int color, CancellationToken token)
         {
             double standPat = color * CalculateBoardScore(gameBoard);
 
@@ -513,17 +513,27 @@ namespace Mzinga.Core.AI
 
             foreach (Move move in GetNoisyMoves(gameBoard))
             {
+                if (token.IsCancellationRequested)
+                {
+                    return null;
+                }
+
                 gameBoard.TrustedPlay(move);
-                double score = -1.0 * QuiescenceSearch(gameBoard, -beta, -alpha, -color);
+                double? value = -1 * await QuiescenceSearchAsync(gameBoard, -beta, -alpha, -color, token);
                 gameBoard.UndoLastMove();
 
-                if (score >= beta)
+                if (!value.HasValue)
+                {
+                    return null;
+                }
+
+                if (value >= beta)
                 {
                     return beta;
                 }
-                else if (score > alpha)
+                else if (value > alpha)
                 {
-                    alpha = score;
+                    alpha = value.Value;
                 }
             }
 
