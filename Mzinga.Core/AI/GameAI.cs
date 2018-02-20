@@ -422,7 +422,7 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || gameBoard.GameIsOver)
             {
-                return color * CalculateBoardScore(gameBoard);
+                return await QuiescenceSearchAsync(gameBoard, alpha, beta, color, token);
             }
 
             double? bestValue = null;
@@ -500,15 +500,13 @@ namespace Mzinga.Core.AI
 
         private async Task<double?> QuiescenceSearchAsync(GameBoard gameBoard, double alpha, double beta, int color, CancellationToken token)
         {
-            double standPat = color * CalculateBoardScore(gameBoard);
+            double bestValue = color * CalculateBoardScore(gameBoard);
 
-            if (standPat >= beta)
+            alpha = Math.Max(alpha, bestValue);
+
+            if (alpha >= beta)
             {
-                return beta;
-            }
-            else if (alpha < standPat)
-            {
-                alpha = standPat;
+                return bestValue;
             }
 
             foreach (Move move in GetNoisyMoves(gameBoard))
@@ -527,17 +525,17 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
-                if (value >= beta)
+                bestValue = Math.Max(bestValue, value.Value);
+
+                alpha = Math.Max(alpha, bestValue);
+
+                if (alpha >= beta)
                 {
-                    return beta;
-                }
-                else if (value > alpha)
-                {
-                    alpha = value.Value;
+                    break;
                 }
             }
 
-            return alpha;
+            return bestValue;
         }
 
         private IEnumerable<Move> GetNoisyMoves(GameBoard gameBoard)
