@@ -206,13 +206,34 @@ namespace Mzinga.Engine
             {
                 ConsoleOut("invalidmove {0}", ex.Message);
             }
+            catch (AggregateException ex)
+            {
+                ErrorOut(ex);
+                foreach (Exception innerEx in ex.InnerExceptions)
+                {
+                    ErrorOut(innerEx);
+                }
+            }
             catch (Exception ex)
             {
-                ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
+                ErrorOut(ex);
             }
             ConsoleOut("ok");
 
             StartPonder();
+        }
+
+        private void ErrorOut(Exception ex)
+        {
+            ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
+#if DEBUG
+            ConsoleOut(ex.StackTrace.Replace("\r\n", " "));
+#endif
+
+            if (null != ex.InnerException)
+            {
+                ErrorOut(ex.InnerException);
+            }
         }
 
         private void Info()
@@ -449,7 +470,7 @@ namespace Mzinga.Engine
                 _gameAI.BestMoveFound -= OnBestMoveFound;
 
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token), _ponderCTS.Token);
+                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
                 _isPondering = true;
             }
