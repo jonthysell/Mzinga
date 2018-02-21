@@ -1,5 +1,5 @@
 ﻿// 
-// ViewerConfig.cs
+// BoardExtensions.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -24,49 +24,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
+using Mzinga.Core;
+
 namespace Mzinga.Viewer.ViewModel
 {
-    public class ViewerConfig
+    static class BoardExtensions
     {
-        public HexOrientation HexOrientation { get; set; } = HexOrientation.FlatTop;
-
-        public NotationType NotationType
+        public static int GetHeight(this Board board)
         {
-            get
+            bool pieceInPlay = false;
+            int minY = int.MaxValue;
+            int maxY = int.MinValue;
+
+            foreach (PieceName pieceName in board.PiecesInPlay)
             {
-                return _notationType;
+                pieceInPlay = true;
+                Position pos = board.GetPiecePosition(pieceName);
+
+                minY = Math.Min(minY, pos.Y);
+                maxY = Math.Max(maxY, pos.Y);
             }
-            set
-            {
-                _notationType = value;
-                if (_notationType == NotationType.BoardSpace)
-                {
-                    HexOrientation = HexOrientation.PointyTop;
-                }
-            }
+
+            return pieceInPlay ? (maxY - minY) : 0;
         }
-        private NotationType _notationType = NotationType.Mzinga;
 
-        public bool DisablePiecesInHandWithNoMoves { get; set; } = true;
+        public static int GetWidth(this Board board)
+        {
+            bool pieceInPlay = false;
+            int minX = int.MaxValue;
+            int maxX = int.MinValue;
 
-        public bool DisablePiecesInPlayWithNoMoves { get; set; } = true;
+            foreach (PieceName pieceName in board.PiecesInPlay)
+            {
+                pieceInPlay = true;
+                Position pos = board.GetPiecePosition(pieceName);
 
-        public bool HighlightTargetMove { get; set; } = true;
+                minX = Math.Min(minX, pos.X);
+                maxX = Math.Max(maxX, pos.X);
+            }
 
-        public bool HighlightValidMoves { get; set; } = true;
-
-        public bool HighlightLastMovePlayed { get; set; } = true;
-    }
-
-    public enum HexOrientation
-    {
-        FlatTop,
-        PointyTop
-    }
-
-    public enum NotationType
-    {
-        Mzinga,
-        BoardSpace
+            return pieceInPlay ? (maxX - minX) : 0;
+        }
     }
 }

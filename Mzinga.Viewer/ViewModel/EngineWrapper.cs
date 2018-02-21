@@ -609,16 +609,16 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public PieceName GetPieceAt(double cursorX, double cursorY, double hexRadius)
+        public PieceName GetPieceAt(double cursorX, double cursorY, double hexRadius, HexOrientation hexOrientation)
         {
-            Position position = Position.FromCursor(cursorX, cursorY, hexRadius);
+            Position position = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
             return (null != Board) ? Board.GetPieceOnTop(position) : PieceName.INVALID;
         }
 
-        public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius)
+        public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius, HexOrientation hexOrientation)
         {
-            Position bottomPosition = Position.FromCursor(cursorX, cursorY, hexRadius);
+            Position bottomPosition = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
             PieceName topPiece = (null != Board) ? Board.GetPieceOnTop(bottomPosition) : PieceName.INVALID;
 

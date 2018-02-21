@@ -161,8 +161,8 @@ namespace Mzinga.Viewer
                 int whiteHandCount = board.WhiteHand.Count();
                 int blackHandCount = board.BlackHand.Count();
 
-                int horizontalPiecesMin = 2 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.Width);
-                int verticalPiecesMin = 1 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.Height;
+                int horizontalPiecesMin = 2 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
+                int verticalPiecesMin = 1 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
 
                 double size = 0.5 * Math.Min(BoardCanvas.ActualHeight / verticalPiecesMin, BoardCanvas.ActualWidth / horizontalPiecesMin);
 
@@ -352,7 +352,15 @@ namespace Mzinga.Viewer
                 CanvasOffsetX = offsetX;
                 CanvasOffsetY = offsetY;
 
-                VM.CanvasHexRadius = size;
+                if (board.BoardState == BoardState.NotStarted && null == targetPosition)
+                {
+                    // Fix so that for a new game, a click anywhere on the board is the Origin
+                    VM.CanvasHexRadius = 0;
+                }
+                else
+                {
+                    VM.CanvasHexRadius = size;
+                }
             }
 
             LastBoard = board;
