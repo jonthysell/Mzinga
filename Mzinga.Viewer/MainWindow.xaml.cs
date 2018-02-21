@@ -80,14 +80,13 @@ namespace Mzinga.Viewer
 
         private SolidColorBrush LastMoveEdgeBrush;
 
-        private SolidColorBrush InHandNoMovesEdgeBrush;
-        private SolidColorBrush InHandNoMovesBodyBrush;
-
         private SolidColorBrush QueenBeeBrush;
         private SolidColorBrush SpiderBrush;
         private SolidColorBrush BeetleBrush;
         private SolidColorBrush GrasshopperBrush;
         private SolidColorBrush SoldierAntBrush;
+
+        private SolidColorBrush DisabledPieceBrush;
 
         public MainWindow()
         {
@@ -105,14 +104,13 @@ namespace Mzinga.Viewer
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
-            InHandNoMovesBodyBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#80FFFFFF"));
-            InHandNoMovesEdgeBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#80FFFFFF"));
-
             QueenBeeBrush = new SolidColorBrush(Colors.Gold);
             SpiderBrush = new SolidColorBrush(Colors.Brown);
             BeetleBrush = new SolidColorBrush(Colors.Purple);
             GrasshopperBrush = new SolidColorBrush(Colors.Green);
             SoldierAntBrush = new SolidColorBrush(Colors.Blue);
+
+            DisabledPieceBrush = new SolidColorBrush(Colors.Gray);
 
             // Bind board updates to VM
             if (null != VM)
@@ -200,7 +198,9 @@ namespace Mzinga.Viewer
                             Polygon hex = GetHex(center, size, hexType);
                             BoardCanvas.Children.Add(hex);
 
-                            TextBlock hexText = GetHexText(center, size, piece.PieceName);
+                            bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
+
+                            TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
                             BoardCanvas.Children.Add(hexText);
 
                             minPoint = Min(center, size, minPoint);
@@ -214,7 +214,8 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, disabled);
                         WhiteHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
@@ -224,45 +225,33 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, disabled);
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
 
-                // Highlight the lastMove start position
-                if (null != lastMoveStart)
+                // Highlight last move played
+                if (VM.AppVM.ViewerConfig.HighlightLastMovePlayed)
                 {
-                    Point center = GetPoint(lastMoveStart, size, true);
-
-                    Polygon hex = GetHex(center, size, HexType.LastMove);
-                    BoardCanvas.Children.Add(hex);
-
-                    minPoint = Min(center, size, minPoint);
-                    maxPoint = Max(center, size, maxPoint);
-                }
-
-                // Highlight the lastMove end position
-                if (null != lastMoveEnd)
-                {
-                    Point center = GetPoint(lastMoveEnd, size, true);
-
-                    Polygon hex = GetHex(center, size, HexType.LastMove);
-                    BoardCanvas.Children.Add(hex);
-
-                    minPoint = Min(center, size, minPoint);
-                    maxPoint = Max(center, size, maxPoint);
-                }
-
-                // Highlight the selected piece
-                if (selectedPieceName != PieceName.INVALID)
-                {
-                    Position selectedPiecePosition = board.GetPiecePosition(selectedPieceName);
-
-                    if (null != selectedPiecePosition)
+                    // Highlight the lastMove start position
+                    if (null != lastMoveStart)
                     {
-                        Point center = GetPoint(selectedPiecePosition, size, true);
+                        Point center = GetPoint(lastMoveStart, size, true);
 
-                        Polygon hex = GetHex(center, size, HexType.SelectedPiece);
+                        Polygon hex = GetHex(center, size, HexType.LastMove);
+                        BoardCanvas.Children.Add(hex);
+
+                        minPoint = Min(center, size, minPoint);
+                        maxPoint = Max(center, size, maxPoint);
+                    }
+
+                    // Highlight the lastMove end position
+                    if (null != lastMoveEnd)
+                    {
+                        Point center = GetPoint(lastMoveEnd, size, true);
+
+                        Polygon hex = GetHex(center, size, HexType.LastMove);
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -270,17 +259,18 @@ namespace Mzinga.Viewer
                     }
                 }
 
-                // Draw the valid moves for that piece
-
-                if (selectedPieceName != PieceName.INVALID && null != validMoves)
+                // Highlight the selected piece
+                if (VM.AppVM.ViewerConfig.HighlightTargetMove)
                 {
-                    foreach (Move validMove in validMoves)
+                    if (selectedPieceName != PieceName.INVALID)
                     {
-                        if (validMove.PieceName == selectedPieceName)
-                        {
-                            Point center = GetPoint(validMove.Position, size);
+                        Position selectedPiecePosition = board.GetPiecePosition(selectedPieceName);
 
-                            Polygon hex = GetHex(center, size, HexType.ValidMove);
+                        if (null != selectedPiecePosition)
+                        {
+                            Point center = GetPoint(selectedPiecePosition, size, true);
+
+                            Polygon hex = GetHex(center, size, HexType.SelectedPiece);
                             BoardCanvas.Children.Add(hex);
 
                             minPoint = Min(center, size, minPoint);
@@ -289,16 +279,40 @@ namespace Mzinga.Viewer
                     }
                 }
 
-                // Highlight the target position
-                if (null != targetPosition)
+                // Draw the valid moves for that piece
+                if (VM.AppVM.ViewerConfig.HighlightValidMoves)
                 {
-                    Point center = GetPoint(targetPosition, size, true);
+                    if (selectedPieceName != PieceName.INVALID && null != validMoves)
+                    {
+                        foreach (Move validMove in validMoves)
+                        {
+                            if (validMove.PieceName == selectedPieceName)
+                            {
+                                Point center = GetPoint(validMove.Position, size);
 
-                    Polygon hex = GetHex(center, size, HexType.SelectedMove);
-                    BoardCanvas.Children.Add(hex);
+                                Polygon hex = GetHex(center, size, HexType.ValidMove);
+                                BoardCanvas.Children.Add(hex);
 
-                    minPoint = Min(center, size, minPoint);
-                    maxPoint = Max(center, size, maxPoint);
+                                minPoint = Min(center, size, minPoint);
+                                maxPoint = Max(center, size, maxPoint);
+                            }
+                        }
+                    }
+                }
+
+                // Highlight the target position
+                if (VM.AppVM.ViewerConfig.HighlightTargetMove)
+                {
+                    if (null != targetPosition)
+                    {
+                        Point center = GetPoint(targetPosition, size, true);
+
+                        Polygon hex = GetHex(center, size, HexType.SelectedMove);
+                        BoardCanvas.Children.Add(hex);
+
+                        minPoint = Min(center, size, minPoint);
+                        maxPoint = Max(center, size, maxPoint);
+                    }
                 }
 
                 // Translate everything on the board
@@ -484,10 +498,6 @@ namespace Mzinga.Viewer
                 case HexType.LastMove:
                     hex.Stroke = LastMoveEdgeBrush;
                     break;
-                case HexType.InHandNoMoves:
-                    hex.Fill = InHandNoMovesBodyBrush;
-                    hex.Stroke = InHandNoMovesEdgeBrush;
-                    break;
             }
 
             PointCollection points = new PointCollection();
@@ -504,7 +514,7 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private TextBlock GetHexText(Point center, double size, PieceName pieceName)
+        private TextBlock GetHexText(Point center, double size, PieceName pieceName, bool disabled)
         {
             if (null == center)
             {
@@ -520,40 +530,47 @@ namespace Mzinga.Viewer
             hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
             hexText.FontFamily = new FontFamily("Lucida Console");
 
-            switch (pieceName)
+            if (disabled)
             {
-                case PieceName.WhiteQueenBee:
-                case PieceName.BlackQueenBee:
-                    hexText.Foreground = QueenBeeBrush;
-                    break;
-                case PieceName.WhiteSpider1:
-                case PieceName.WhiteSpider2:
-                case PieceName.BlackSpider1:
-                case PieceName.BlackSpider2:
-                    hexText.Foreground = SpiderBrush;
-                    break;
-                case PieceName.WhiteBeetle1:
-                case PieceName.WhiteBeetle2:
-                case PieceName.BlackBeetle1:
-                case PieceName.BlackBeetle2:
-                    hexText.Foreground = BeetleBrush;
-                    break;
-                case PieceName.WhiteGrasshopper1:
-                case PieceName.WhiteGrasshopper2:
-                case PieceName.WhiteGrassHopper3:
-                case PieceName.BlackGrasshopper1:
-                case PieceName.BlackGrasshopper2:
-                case PieceName.BlackGrassHopper3:
-                    hexText.Foreground = GrasshopperBrush;
-                    break;
-                case PieceName.WhiteSoldierAnt1:
-                case PieceName.WhiteSoldierAnt2:
-                case PieceName.WhiteSoldierAnt3:
-                case PieceName.BlackSoldierAnt1:
-                case PieceName.BlackSoldierAnt2:
-                case PieceName.BlackSoldierAnt3:
-                    hexText.Foreground = SoldierAntBrush;
-                    break;
+                hexText.Foreground = DisabledPieceBrush;
+            }
+            else
+            {
+                switch (pieceName)
+                {
+                    case PieceName.WhiteQueenBee:
+                    case PieceName.BlackQueenBee:
+                        hexText.Foreground = QueenBeeBrush;
+                        break;
+                    case PieceName.WhiteSpider1:
+                    case PieceName.WhiteSpider2:
+                    case PieceName.BlackSpider1:
+                    case PieceName.BlackSpider2:
+                        hexText.Foreground = SpiderBrush;
+                        break;
+                    case PieceName.WhiteBeetle1:
+                    case PieceName.WhiteBeetle2:
+                    case PieceName.BlackBeetle1:
+                    case PieceName.BlackBeetle2:
+                        hexText.Foreground = BeetleBrush;
+                        break;
+                    case PieceName.WhiteGrasshopper1:
+                    case PieceName.WhiteGrasshopper2:
+                    case PieceName.WhiteGrassHopper3:
+                    case PieceName.BlackGrasshopper1:
+                    case PieceName.BlackGrasshopper2:
+                    case PieceName.BlackGrassHopper3:
+                        hexText.Foreground = GrasshopperBrush;
+                        break;
+                    case PieceName.WhiteSoldierAnt1:
+                    case PieceName.WhiteSoldierAnt2:
+                    case PieceName.WhiteSoldierAnt3:
+                    case PieceName.BlackSoldierAnt1:
+                    case PieceName.BlackSoldierAnt2:
+                    case PieceName.BlackSoldierAnt3:
+                        hexText.Foreground = SoldierAntBrush;
+                        break;
+                }
             }
 
             hexText.FontSize = size;
@@ -572,17 +589,16 @@ namespace Mzinga.Viewer
             SelectedPiece,
             SelectedMove,
             LastMove,
-            InHandNoMoves,
         }
 
-        private Canvas GetPieceInHandCanvas(Piece piece, double size, bool hasMoves)
+        private Canvas GetPieceInHandCanvas(Piece piece, double size, bool disabled)
         {
             Point center = new Point(size, size);
 
             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Polygon hex = GetHex(center, size, hexType);
-            TextBlock hexText = GetHexText(center, size, piece.PieceName);
+            TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas();
             pieceCanvas.Height = size * 2;
@@ -600,13 +616,6 @@ namespace Mzinga.Viewer
             {
                 Polygon highlightHex = GetHex(center, size, HexType.SelectedPiece);
                 pieceCanvas.Children.Add(highlightHex);
-            }
-
-            // "Gray-out" if it has no moves
-            if (!hasMoves)
-            {
-                Polygon disabled = GetHex(center, size, HexType.InHandNoMoves);
-                pieceCanvas.Children.Add(disabled);
             }
 
             pieceCanvas.MouseLeftButtonDown += PieceCanvas_MouseLeftButtonDown;

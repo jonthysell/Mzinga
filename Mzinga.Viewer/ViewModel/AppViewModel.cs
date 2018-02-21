@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,6 +59,8 @@ namespace Mzinga.Viewer.ViewModel
 
         public EngineWrapper EngineWrapper { get; private set; }
 
+        public ViewerConfig ViewerConfig { get; private set; }
+
         public static void Init(DoOnUIThread doOnUIThread)
         {
             if (null != Instance)
@@ -79,6 +81,8 @@ namespace Mzinga.Viewer.ViewModel
             DoOnUIThread = doOnUIThread;
 
             EngineWrapper = new EngineWrapper("Mzinga.Engine.exe");
+
+            ViewerConfig = new ViewerConfig();
         }
     }
 }

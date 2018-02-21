@@ -120,6 +120,7 @@
     <Compile Include="ViewModel\EngineWrapper.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
+    <Compile Include="ViewModel\ViewerConfig.cs" />
     <Compile Include="ViewModel\GameSettings.cs" />
     <Compile Include="ViewModel\NewGameViewModel.cs" />
     <Compile Include="ViewModel\InformationViewModel.cs" />
