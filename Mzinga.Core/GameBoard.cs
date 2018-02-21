@@ -52,7 +52,7 @@ namespace Mzinga.Core
         }
         private BoardHistory _boardHistory = new BoardHistory();
 
-        public event BoardChangedEventHandler BoardChanged;
+        public event EventHandler BoardChanged;
 
         #endregion
 
@@ -288,6 +288,4 @@ namespace Mzinga.Core
             BoardChanged?.Invoke(this, null);
         }
     }
-
-    public delegate void BoardChangedEventHandler(object sender, EventArgs args);
 }

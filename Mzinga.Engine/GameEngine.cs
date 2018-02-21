@@ -42,8 +42,8 @@ namespace Mzinga.Engine
 
         public bool ExitRequested { get; private set; }
 
-        public event EventHandler StartAsyncCommandEvent;
-        public event EventHandler EndAsyncCommandEvent;
+        public event EventHandler StartAsyncCommand;
+        public event EventHandler EndAsyncCommand;
 
         private GameBoard _gameBoard;
 
@@ -358,12 +358,12 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            CancellationToken token = StartAsyncCommand();
+            CancellationToken token = OnStartAsyncCommand();
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Math.Max(0, Environment.ProcessorCount - 1), token);
             task.Wait();
 
-            EndAsyncCommand();
+            OnEndAsyncCommand();
         }
 
         private void BestMove(int maxDepth)
@@ -378,12 +378,12 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            CancellationToken token = StartAsyncCommand();
+            CancellationToken token = OnStartAsyncCommand();
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Config.MaxHelperThreads, token);
             task.Wait();
 
-            EndAsyncCommand();
+            OnEndAsyncCommand();
         }
 
         private void BestMove(TimeSpan maxTime)
@@ -398,7 +398,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            CancellationToken token = StartAsyncCommand();
+            CancellationToken token = OnStartAsyncCommand();
 
             if (maxTime < TimeSpan.MaxValue)
             {
@@ -408,7 +408,7 @@ namespace Mzinga.Engine
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Config.MaxHelperThreads, token);
             task.Wait();
 
-            EndAsyncCommand();
+            OnEndAsyncCommand();
         }
 
         private void Undo(int moves = 1)
@@ -496,20 +496,20 @@ namespace Mzinga.Engine
             ExitRequested = true;
         }
 
-        private CancellationToken StartAsyncCommand()
+        private CancellationToken OnStartAsyncCommand()
         {
             _asyncCommandCTS = new CancellationTokenSource();
 
-            StartAsyncCommandEvent?.Invoke(this, new EventArgs());
+            StartAsyncCommand?.Invoke(this, null);
 
             return _asyncCommandCTS.Token;
         }
 
-        private void EndAsyncCommand()
+        private void OnEndAsyncCommand()
         {
             _asyncCommandCTS = null;
 
-            EndAsyncCommandEvent?.Invoke(this, new EventArgs());
+            EndAsyncCommand?.Invoke(this, null);
         }
     }
 

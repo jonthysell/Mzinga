@@ -116,14 +116,14 @@ namespace Mzinga.Viewer.ViewModel
 
         public EngineConsoleViewModel()
         {
-            AppVM.EngineWrapper.EngineTextUpdated += () =>
+            AppVM.EngineWrapper.EngineTextUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("EngineOutputText");
             };
 
-            AppVM.EngineWrapper.IsIdleUpdated += (isIdle) =>
+            AppVM.EngineWrapper.IsIdleUpdated += (sender, args) =>
             {
-                IsIdle = isIdle;
+                IsIdle = AppVM.EngineWrapper.IsIdle;
             };
 
             IsIdle = true;

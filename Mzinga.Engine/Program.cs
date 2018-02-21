@@ -56,12 +56,12 @@ namespace Mzinga.Engine
 
             Console.CancelKeyPress += Console_CancelKeyPress;
 
-            _engine.StartAsyncCommandEvent += (s, e) =>
+            _engine.StartAsyncCommand += (s, e) =>
             {
                 _interceptCancel = true;
             };
 
-            _engine.EndAsyncCommandEvent += (s, e) =>
+            _engine.EndAsyncCommand += (s, e) =>
             {
                 _interceptCancel = false;
             };

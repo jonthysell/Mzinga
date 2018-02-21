@@ -34,20 +34,6 @@ using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModel
 {
-    public delegate void IdleUpdatedEventHandler(bool isIdle);
-
-    public delegate void BoardUpdatedEventHandler(Board board);
-
-    public delegate void ValidMovesUpdatedEventHandler(MoveSet validMoves);
-
-    public delegate void BoardHistoryUpdatedEventHandler(BoardHistory boardHistory);
-
-    public delegate void EngineTextUpdatedEventHandler();
-
-    public delegate void TargetPieceUpdatedEventHandler(PieceName pieceName);
-
-    public delegate void TargetPositionUpdatedEventHandler(Position position);
-
     public class EngineWrapper
     {
         public Board Board
@@ -59,7 +45,7 @@ namespace Mzinga.Viewer.ViewModel
             private set
             {
                 _board = value;
-                OnBoardUpdate(Board);
+                OnBoardUpdate();
             }
         }
         private Board _board = null;
@@ -73,7 +59,7 @@ namespace Mzinga.Viewer.ViewModel
             private set
             {
                 _validMoves = value;
-                OnValidMovesUpdate(ValidMoves);
+                OnValidMovesUpdate();
 
             }
         }
@@ -88,7 +74,7 @@ namespace Mzinga.Viewer.ViewModel
             private set
             {
                 _boardHistory = value;
-                OnBoardHistoryUpdate(BoardHistory);
+                OnBoardHistoryUpdate();
             }
         }
         private BoardHistory _boardHistory;
@@ -102,7 +88,7 @@ namespace Mzinga.Viewer.ViewModel
             private set
             {
                 _isIdle = value;
-                OnIsIdleUpdate(value);
+                OnIsIdleUpdate();
             }
         }
         private volatile bool _isIdle = true;
@@ -157,7 +143,7 @@ namespace Mzinga.Viewer.ViewModel
 
                 if (oldValue != value)
                 {
-                    OnTargetPieceUpdate(TargetPiece);
+                    OnTargetPieceUpdate();
                 }
             }
         }
@@ -177,7 +163,7 @@ namespace Mzinga.Viewer.ViewModel
 
                 if (oldValue != value)
                 {
-                    OnTargetPositionUpdate(TargetPosition);
+                    OnTargetPositionUpdate();
                 }
             }
         }
@@ -278,15 +264,15 @@ namespace Mzinga.Viewer.ViewModel
         }
         private GameSettings _currentGameSettings;
 
-        public event IdleUpdatedEventHandler IsIdleUpdated;
+        public event EventHandler IsIdleUpdated;
 
-        public event BoardUpdatedEventHandler BoardUpdated;
-        public event ValidMovesUpdatedEventHandler ValidMovesUpdated;
-        public event BoardHistoryUpdatedEventHandler BoardHistoryUpdated;
-        public event EngineTextUpdatedEventHandler EngineTextUpdated;
+        public event EventHandler BoardUpdated;
+        public event EventHandler ValidMovesUpdated;
+        public event EventHandler BoardHistoryUpdated;
+        public event EventHandler EngineTextUpdated;
 
-        public event TargetPieceUpdatedEventHandler TargetPieceUpdated;
-        public event TargetPositionUpdatedEventHandler TargetPositionUpdated;
+        public event EventHandler TargetPieceUpdated;
+        public event EventHandler TargetPositionUpdated;
 
         private Process _process;
         private StreamWriter _writer;
@@ -653,12 +639,12 @@ namespace Mzinga.Viewer.ViewModel
             return (GameInProgress && CurrentTurnIsHuman && null != move && null != ValidMoves && ValidMoves.Contains(move));
         }
 
-        private void OnIsIdleUpdate(bool isIdle)
+        private void OnIsIdleUpdate()
         {
-            IsIdleUpdated?.Invoke(isIdle);
+            IsIdleUpdated?.Invoke(this, null);
         }
 
-        private void OnBoardUpdate(Board board)
+        private void OnBoardUpdate()
         {
             TargetPiece = PieceName.INVALID;
             ValidMoves = null;
@@ -670,7 +656,7 @@ namespace Mzinga.Viewer.ViewModel
                 SendCommandInternal("validmoves");
             }
 
-            BoardUpdated?.Invoke(board);
+            BoardUpdated?.Invoke(this, null);
 
             if (CurrentTurnIsEngineAI)
             {
@@ -685,29 +671,29 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        private void OnValidMovesUpdate(MoveSet validMoves)
+        private void OnValidMovesUpdate()
         {
-            ValidMovesUpdated?.Invoke(validMoves);
+            ValidMovesUpdated?.Invoke(this, null);
         }
 
-        private void OnBoardHistoryUpdate(BoardHistory boardHistory)
+        private void OnBoardHistoryUpdate()
         {
-            BoardHistoryUpdated?.Invoke(boardHistory);
+            BoardHistoryUpdated?.Invoke(this, null);
         }
 
         private void OnEngineTextUpdate()
         {
-            EngineTextUpdated?.Invoke();
+            EngineTextUpdated?.Invoke(this, null);
         }
 
-        private void OnTargetPieceUpdate(PieceName pieceName)
+        private void OnTargetPieceUpdate()
         {
             TargetPosition = null;
 
-            TargetPieceUpdated?.Invoke(pieceName);
+            TargetPieceUpdated?.Invoke(this, null);
         }
 
-        private void OnTargetPositionUpdate(Position position)
+        private void OnTargetPositionUpdate()
         {
             TargetMove = null;
             if (TargetPiece != PieceName.INVALID && null != TargetPosition)
@@ -715,7 +701,7 @@ namespace Mzinga.Viewer.ViewModel
                 TargetMove = new Move(TargetPiece, TargetPosition);
             }
 
-            TargetPositionUpdated?.Invoke(position);
+            TargetPositionUpdated?.Invoke(this, null);
         }
 
         private enum EngineCommand

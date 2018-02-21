@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -400,37 +400,37 @@ namespace Mzinga.Viewer.ViewModel
         {
             AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
 
-            AppVM.EngineWrapper.ValidMovesUpdated += (validMoves) =>
+            AppVM.EngineWrapper.ValidMovesUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("ValidMoves");
             };
 
-            AppVM.EngineWrapper.BoardHistoryUpdated += (boardHistory) =>
+            AppVM.EngineWrapper.BoardHistoryUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("BoardHistory");
             };
 
-            AppVM.EngineWrapper.TargetPieceUpdated += (pieceName) =>
+            AppVM.EngineWrapper.TargetPieceUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
             };
 
-            AppVM.EngineWrapper.TargetPositionUpdated += (position) =>
+            AppVM.EngineWrapper.TargetPositionUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("TargetMove");
                 RaisePropertyChanged("PlayTarget");
             };
 
-            AppVM.EngineWrapper.IsIdleUpdated += (isIdle) =>
+            AppVM.EngineWrapper.IsIdleUpdated += (sender, args) =>
             {
-                IsIdle = isIdle;
+                IsIdle = AppVM.EngineWrapper.IsIdle;
             };
 
             IsIdle = true;
         }
 
-        private void OnBoardUpdated(Board board)
+        private void OnBoardUpdated(object sender, EventArgs args)
         {
             RaisePropertyChanged("Board");
             RaisePropertyChanged("Pass");
@@ -441,7 +441,7 @@ namespace Mzinga.Viewer.ViewModel
 
             AppVM.DoOnUIThread(() =>
             {
-                switch (board.BoardState)
+                switch (Board.BoardState)
                 {
                     case BoardState.WhiteWins:
                         Messenger.Default.Send(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
