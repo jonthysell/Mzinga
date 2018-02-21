@@ -626,12 +626,12 @@ namespace Mzinga.Viewer
                 pieceCanvas.Children.Add(highlightHex);
             }
 
-            pieceCanvas.MouseLeftButtonDown += PieceCanvas_MouseLeftButtonDown;
+            pieceCanvas.MouseLeftButtonUp += PieceCanvas_MouseLeftButtonUp;
 
             return pieceCanvas;
         }
 
-        private void PieceCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void PieceCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Canvas pieceCanvas = sender as Canvas;
 
@@ -642,7 +642,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        private void BoardCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void BoardCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Point p = CanvasCursorPosition;
             VM.CanvasClick(p.X, p.Y);

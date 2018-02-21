@@ -94,7 +94,7 @@
                 Grid.Column="1"
                 Grid.Row="1"
                 IsEnabled="{Binding IsIdle}"
-                MouseLeftButtonDown="BoardCanvas_MouseLeftButtonDown"
+                MouseLeftButtonUp="BoardCanvas_MouseLeftButtonUp"
                 Name="BoardCanvas"
                 SizeChanged="BoardCanvas_SizeChanged" />
         <StackPanel Background="White"
