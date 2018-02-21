@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -80,6 +80,9 @@ namespace Mzinga.Viewer
 
         private SolidColorBrush LastMoveEdgeBrush;
 
+        private SolidColorBrush InHandNoMovesEdgeBrush;
+        private SolidColorBrush InHandNoMovesBodyBrush;
+
         private SolidColorBrush QueenBeeBrush;
         private SolidColorBrush SpiderBrush;
         private SolidColorBrush BeetleBrush;
@@ -101,6 +104,9 @@ namespace Mzinga.Viewer
             SelectedMoveBodyBrush.Opacity = 0.25;
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
+
+            InHandNoMovesBodyBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#80FFFFFF"));
+            InHandNoMovesEdgeBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#80FFFFFF"));
 
             QueenBeeBrush = new SolidColorBrush(Colors.Gold);
             SpiderBrush = new SolidColorBrush(Colors.Brown);
@@ -125,6 +131,7 @@ namespace Mzinga.Viewer
             switch (e.PropertyName)
             {
                 case "Board":
+                case "ValidMoves":
                 case "BoardHistory":
                 case "TargetMove":
                     AppViewModel.Instance.DoOnUIThread(() =>
@@ -170,6 +177,8 @@ namespace Mzinga.Viewer
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
                 Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
 
+                MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
+
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
                 {
@@ -205,7 +214,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         WhiteHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
@@ -215,7 +224,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        Canvas pieceCanvas = GetPieceCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
                 }
@@ -262,7 +271,6 @@ namespace Mzinga.Viewer
                 }
 
                 // Draw the valid moves for that piece
-                MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
 
                 if (selectedPieceName != PieceName.INVALID && null != validMoves)
                 {
@@ -476,6 +484,10 @@ namespace Mzinga.Viewer
                 case HexType.LastMove:
                     hex.Stroke = LastMoveEdgeBrush;
                     break;
+                case HexType.InHandNoMoves:
+                    hex.Fill = InHandNoMovesBodyBrush;
+                    hex.Stroke = InHandNoMovesEdgeBrush;
+                    break;
             }
 
             PointCollection points = new PointCollection();
@@ -559,10 +571,11 @@ namespace Mzinga.Viewer
             ValidMove,
             SelectedPiece,
             SelectedMove,
-            LastMove
+            LastMove,
+            InHandNoMoves,
         }
 
-        private Canvas GetPieceCanvas(Piece piece, double size)
+        private Canvas GetPieceInHandCanvas(Piece piece, double size, bool hasMoves)
         {
             Point center = new Point(size, size);
 
@@ -587,6 +600,13 @@ namespace Mzinga.Viewer
             {
                 Polygon highlightHex = GetHex(center, size, HexType.SelectedPiece);
                 pieceCanvas.Children.Add(highlightHex);
+            }
+
+            // "Gray-out" if it has no moves
+            if (!hasMoves)
+            {
+                Polygon disabled = GetHex(center, size, HexType.InHandNoMoves);
+                pieceCanvas.Children.Add(disabled);
             }
 
             pieceCanvas.MouseLeftButtonDown += PieceCanvas_MouseLeftButtonDown;
