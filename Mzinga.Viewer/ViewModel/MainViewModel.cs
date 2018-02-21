@@ -400,6 +400,11 @@ namespace Mzinga.Viewer.ViewModel
         {
             AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
 
+            AppVM.EngineWrapper.ValidMovesUpdated += (validMoves) =>
+            {
+                RaisePropertyChanged("ValidMoves");
+            };
+
             AppVM.EngineWrapper.BoardHistoryUpdated += (boardHistory) =>
             {
                 RaisePropertyChanged("BoardHistory");
@@ -433,7 +438,6 @@ namespace Mzinga.Viewer.ViewModel
             RaisePropertyChanged("FindBestMove");
             RaisePropertyChanged("UndoLastMove");
             RaisePropertyChanged("GameState");
-            RaisePropertyChanged("ValidMoves");
 
             AppVM.DoOnUIThread(() =>
             {

@@ -38,6 +38,8 @@ namespace Mzinga.Viewer.ViewModel
 
     public delegate void BoardUpdatedEventHandler(Board board);
 
+    public delegate void ValidMovesUpdatedEventHandler(MoveSet validMoves);
+
     public delegate void BoardHistoryUpdatedEventHandler(BoardHistory boardHistory);
 
     public delegate void EngineTextUpdatedEventHandler();
@@ -62,7 +64,20 @@ namespace Mzinga.Viewer.ViewModel
         }
         private Board _board = null;
 
-        public MoveSet ValidMoves { get; private set; }
+        public MoveSet ValidMoves
+        {
+            get
+            {
+                return _validMoves;
+            }
+            private set
+            {
+                _validMoves = value;
+                OnValidMovesUpdate(ValidMoves);
+
+            }
+        }
+        private MoveSet _validMoves;
 
         public BoardHistory BoardHistory
         {
@@ -266,6 +281,7 @@ namespace Mzinga.Viewer.ViewModel
         public event IdleUpdatedEventHandler IsIdleUpdated;
 
         public event BoardUpdatedEventHandler BoardUpdated;
+        public event ValidMovesUpdatedEventHandler ValidMovesUpdated;
         public event BoardHistoryUpdatedEventHandler BoardHistoryUpdated;
         public event EngineTextUpdatedEventHandler EngineTextUpdated;
 
@@ -667,6 +683,11 @@ namespace Mzinga.Viewer.ViewModel
                     SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
                 }
             }
+        }
+
+        private void OnValidMovesUpdate(MoveSet validMoves)
+        {
+            ValidMovesUpdated?.Invoke(validMoves);
         }
 
         private void OnBoardHistoryUpdate(BoardHistory boardHistory)
