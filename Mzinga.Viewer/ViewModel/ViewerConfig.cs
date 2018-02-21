@@ -56,6 +56,8 @@ namespace Mzinga.Viewer.ViewModel
         public bool HighlightValidMoves { get; set; } = true;
 
         public bool HighlightLastMovePlayed { get; set; } = true;
+
+        public bool BlockInvalidMoves { get; set; } = true;
     }
 
     public enum HexOrientation

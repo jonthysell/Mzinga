@@ -352,15 +352,7 @@ namespace Mzinga.Viewer
                 CanvasOffsetX = offsetX;
                 CanvasOffsetY = offsetY;
 
-                if (board.BoardState == BoardState.NotStarted && null == targetPosition)
-                {
-                    // Fix so that for a new game, a click anywhere on the board is the Origin
-                    VM.CanvasHexRadius = 0;
-                }
-                else
-                {
-                    VM.CanvasHexRadius = size;
-                }
+                VM.CanvasHexRadius = size;
             }
 
             LastBoard = board;

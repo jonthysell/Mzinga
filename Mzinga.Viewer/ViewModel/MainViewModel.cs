@@ -284,7 +284,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.CanPlayTargetMove;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove);
                 });
             }
         }
@@ -305,7 +305,7 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.CanPass;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass);
                 });
             }
         }
@@ -466,15 +466,28 @@ namespace Mzinga.Viewer.ViewModel
                 PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, AppVM.ViewerConfig.HexOrientation);
                 Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, AppVM.ViewerConfig.HexOrientation);
 
+                // Make sure the first move is on the origin, no matter what
+                if (Board.BoardState == BoardState.NotStarted && AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
+                {
+                    if (AppVM.EngineWrapper.TargetPosition == Position.Origin)
+                    {
+                        AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
+                    }
+                    else
+                    {
+                        clickedPosition = Position.Origin;
+                    }
+                }
+
                 if (AppVM.EngineWrapper.TargetPiece == PieceName.INVALID && clickedPiece != PieceName.INVALID)
                 {
-                    // No piece seleected, select it
+                    // No piece selected, select it
                     AppVM.EngineWrapper.TargetPiece = clickedPiece;
                 }
                 else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
                     // Piece is selected
-                    if (clickedPiece == AppVM.EngineWrapper.TargetPiece)
+                    if (clickedPiece == AppVM.EngineWrapper.TargetPiece || clickedPosition == AppVM.EngineWrapper.TargetPosition)
                     {
                         // Unselect piece
                         AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
@@ -483,14 +496,14 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         // Get the move with the clicked position
                         Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
-                        if (AppVM.EngineWrapper.CanPlayMove(targetMove))
+                        if (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove))
                         {
-                            // Move is valid, select position
+                            // Move is selectable, select position
                             AppVM.EngineWrapper.TargetPosition = clickedPosition;
                         }
                         else
                         {
-                            // Move is invalid, (un)select clicked piece
+                            // Move is not selectable, (un)select clicked piece
                             AppVM.EngineWrapper.TargetPiece = clickedPiece;
                         }
                     }

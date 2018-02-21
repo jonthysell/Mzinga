@@ -92,7 +92,7 @@ namespace Mzinga.Core
 
             if (targetPiece.Color != CurrentTurnColor)
             {
-                throw new InvalidMoveException(move, "It's not your turn.");
+                throw new InvalidMoveException(move, "It's not that player's turn.");
             }
 
             if (null == move.Position)
