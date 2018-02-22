@@ -102,6 +102,9 @@
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="IdleBoolToWaitCursorConverter.cs" />
+    <Compile Include="ViewerConfigWindow.xaml.cs">
+      <DependentUpon>ViewerConfigWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewGameWindow.xaml.cs">
       <DependentUpon>NewGameWindow.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,7 @@
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\BoardExtensions.cs" />
+    <Compile Include="ViewModel\ViewerConfigViewModel.cs" />
     <Compile Include="ViewModel\PositionUtils.cs" />
     <Compile Include="ViewModel\ViewerConfig.cs" />
     <Compile Include="ViewModel\GameSettings.cs" />
@@ -133,6 +137,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="EngineConsoleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ViewerConfigWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

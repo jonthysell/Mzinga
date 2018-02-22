@@ -150,4 +150,7 @@
   <data name="NewGameTitle" xml:space="preserve">
     <value>New Game</value>
   </data>
+  <data name="ViewerConfigTitle" xml:space="preserve">
+    <value>Viewer Settings</value>
+  </data>
 </root>

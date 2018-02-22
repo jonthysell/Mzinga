@@ -69,10 +69,19 @@ namespace Mzinga.Viewer.ViewModel
                 RaisePropertyChanged("Pass");
                 RaisePropertyChanged("UndoLastMove");
                 RaisePropertyChanged("FindBestMove");
+                RaisePropertyChanged("ShowViewerConfig");
                 RaisePropertyChanged("CheckForUpdatesAsync");
             }
         }
         private bool _isIdle;
+
+        public ViewerConfig ViewerConfig
+        {
+            get
+            {
+                return AppVM.ViewerConfig;
+            }
+        }
 
         public Board Board
         {
@@ -366,6 +375,40 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
+                });
+            }
+        }
+
+        public RelayCommand ShowViewerConfig
+        {
+            get
+            {
+                return new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
+                        {
+                            try
+                            {
+                                AppVM.ViewerConfig.CopyFrom(config);
+                                RaisePropertyChanged("ViewerConfig");
+                                RaisePropertyChanged("PlayTarget");
+                                RaisePropertyChanged("Pass");
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle;
                 });
             }
         }

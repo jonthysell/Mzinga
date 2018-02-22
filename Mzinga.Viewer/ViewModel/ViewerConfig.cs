@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace Mzinga.Viewer.ViewModel
 {
     public class ViewerConfig
@@ -93,6 +95,26 @@ namespace Mzinga.Viewer.ViewModel
             clone.BlockInvalidMoves = BlockInvalidMoves;
 
             return clone;
+        }
+
+        public void CopyFrom(ViewerConfig config)
+        {
+            if (null == config)
+            {
+                throw new ArgumentNullException("config");
+            }
+
+            HexOrientation = config.HexOrientation;
+            NotationType = config.NotationType;
+
+            DisablePiecesInHandWithNoMoves = config.DisablePiecesInHandWithNoMoves;
+            DisablePiecesInPlayWithNoMoves = config.DisablePiecesInPlayWithNoMoves;
+
+            HighlightTargetMove = config.HighlightTargetMove;
+            HighlightValidMoves = config.HighlightValidMoves;
+            HighlightLastMovePlayed = config.HighlightLastMovePlayed;
+
+            BlockInvalidMoves = config.BlockInvalidMoves;
         }
     }
 

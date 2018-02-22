@@ -76,6 +76,10 @@
                       Header="Settings"
                       Margin="5">
                 <StackPanel>
+                    <Button Command="{Binding ShowViewerConfig}"
+                            Content="Viewer Config"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
                             Content="Update Check"
                             Margin="5"

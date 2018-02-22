@@ -132,6 +132,7 @@ namespace Mzinga.Viewer
                 case "ValidMoves":
                 case "BoardHistory":
                 case "TargetMove":
+                case "ViewerConfig":
                     AppViewModel.Instance.DoOnUIThread(() =>
                         {
                             DrawBoard(VM.Board);
@@ -177,7 +178,7 @@ namespace Mzinga.Viewer
 
                 MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
 
-                HexOrientation hexOrientation = VM.AppVM.ViewerConfig.HexOrientation;
+                HexOrientation hexOrientation =VM.ViewerConfig.HexOrientation;
 
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
@@ -200,7 +201,7 @@ namespace Mzinga.Viewer
                             Polygon hex = GetHex(center, size, hexType, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
-                            bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
+                            bool disabled =VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
                             TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
                             BoardCanvas.Children.Add(hexText);
@@ -216,7 +217,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled =VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
                         WhiteHandStackPanel.Children.Add(pieceCanvas);
                     }
@@ -227,7 +228,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        bool disabled = VM.AppVM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled =VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
