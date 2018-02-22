@@ -28,7 +28,22 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class ViewerConfig
     {
-        public HexOrientation HexOrientation { get; set; } = HexOrientation.FlatTop;
+        public HexOrientation HexOrientation
+        {
+            get
+            {
+                return _hexOrientation;
+            }
+            set
+            {
+                _hexOrientation = value;
+                if (_hexOrientation == HexOrientation.FlatTop)
+                {
+                    NotationType = NotationType.Mzinga;
+                }
+            }
+        }
+        private HexOrientation _hexOrientation = HexOrientation.FlatTop;
 
         public NotationType NotationType
         {
@@ -58,6 +73,27 @@ namespace Mzinga.Viewer.ViewModel
         public bool HighlightLastMovePlayed { get; set; } = true;
 
         public bool BlockInvalidMoves { get; set; } = true;
+
+        public ViewerConfig() { }
+
+        public ViewerConfig Clone()
+        {
+            ViewerConfig clone = new ViewerConfig();
+
+            clone.HexOrientation = HexOrientation;
+            clone.NotationType = NotationType;
+
+            clone.DisablePiecesInHandWithNoMoves = DisablePiecesInHandWithNoMoves;
+            clone.DisablePiecesInPlayWithNoMoves = DisablePiecesInPlayWithNoMoves;
+
+            clone.HighlightTargetMove = HighlightTargetMove;
+            clone.HighlightValidMoves = HighlightValidMoves;
+            clone.HighlightLastMovePlayed = HighlightLastMovePlayed;
+
+            clone.BlockInvalidMoves = BlockInvalidMoves;
+
+            return clone;
+        }
     }
 
     public enum HexOrientation
