@@ -165,7 +165,10 @@ namespace Mzinga.Viewer
             using (WebClient client = new WebClient())
             {
                 client.Headers["User-Agent"] = _userAgent;
+                SecurityProtocolType oldType = ServicePointManager.SecurityProtocol;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // Fix since Github only supports TLS1.2
                 client.DownloadFile(installerInfo.Url, msiPath);
+                ServicePointManager.SecurityProtocol = oldType;
             }
 
             string cmdFile = Path.Combine(tempPath, "UpdateMzinga.cmd");
