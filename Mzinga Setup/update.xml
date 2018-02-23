@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
-  <update version="0.9.18051.1556" url="https://github.com/jonthysell/Mzinga/releases/download/v0.9.18051.1556/MzingaSetup.msi" channel="Official" />
-  <update version="0.9.18051.1556" url="https://github.com/jonthysell/Mzinga/releases/download/v0.9.18051.1556/MzingaSetup.msi" channel="Preview" />
+  <update version="0.9.18054.0512" url="https://github.com/jonthysell/Mzinga/releases/download/v0.9.18054.0512/MzingaSetup.msi" channel="Official" />
+  <update version="0.9.18054.0512" url="https://github.com/jonthysell/Mzinga/releases/download/v0.9.18054.0512/MzingaSetup.msi" channel="Preview" />
 </updates>
