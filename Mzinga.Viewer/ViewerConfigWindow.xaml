@@ -69,13 +69,6 @@
                                          VerticalContentAlignment="Center" />
                         </StackPanel>
                         <Separator Margin="5" />
-                        <CheckBox Content="Disable pieces in play with no moves"
-                                  IsChecked="{Binding DisablePiecesInPlayWithNoMoves}"
-                                  Margin="5" />
-                        <CheckBox Content="Disable pieces in hand with no moves"
-                                  IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
-                                  Margin="5" />
-                        <Separator Margin="5" />
                         <CheckBox Content="Highlight target move"
                                   IsChecked="{Binding HighlightTargetMove}"
                                   Margin="5" />
@@ -84,6 +77,13 @@
                                   Margin="5" />
                         <CheckBox Content="Highlight last move played"
                                   IsChecked="{Binding HighlightLastMovePlayed}"
+                                  Margin="5" />
+                        <Separator Margin="5" />
+                        <CheckBox Content="Disable pieces in play with no moves"
+                                  IsChecked="{Binding DisablePiecesInPlayWithNoMoves}"
+                                  Margin="5" />
+                        <CheckBox Content="Disable pieces in hand with no moves"
+                                  IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
                                   Margin="5" />
                     </StackPanel>
                 </GroupBox>

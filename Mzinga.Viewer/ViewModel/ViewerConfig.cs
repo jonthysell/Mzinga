@@ -68,9 +68,9 @@ namespace Mzinga.Viewer.ViewModel
         }
         private NotationType _notationType = NotationType.Mzinga;
 
-        public bool DisablePiecesInHandWithNoMoves { get; set; } = true;
+        public bool DisablePiecesInHandWithNoMoves { get; set; } = false;
 
-        public bool DisablePiecesInPlayWithNoMoves { get; set; } = true;
+        public bool DisablePiecesInPlayWithNoMoves { get; set; } = false;
 
         public bool HighlightTargetMove { get; set; } = true;
 

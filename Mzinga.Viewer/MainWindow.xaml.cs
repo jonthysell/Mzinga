@@ -533,47 +533,45 @@ namespace Mzinga.Viewer
             hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
             hexText.FontFamily = new FontFamily("Lucida Console");
 
+            switch (pieceName)
+            {
+                case PieceName.WhiteQueenBee:
+                case PieceName.BlackQueenBee:
+                    hexText.Foreground = QueenBeeBrush;
+                    break;
+                case PieceName.WhiteSpider1:
+                case PieceName.WhiteSpider2:
+                case PieceName.BlackSpider1:
+                case PieceName.BlackSpider2:
+                    hexText.Foreground = SpiderBrush;
+                    break;
+                case PieceName.WhiteBeetle1:
+                case PieceName.WhiteBeetle2:
+                case PieceName.BlackBeetle1:
+                case PieceName.BlackBeetle2:
+                    hexText.Foreground = BeetleBrush;
+                    break;
+                case PieceName.WhiteGrasshopper1:
+                case PieceName.WhiteGrasshopper2:
+                case PieceName.WhiteGrassHopper3:
+                case PieceName.BlackGrasshopper1:
+                case PieceName.BlackGrasshopper2:
+                case PieceName.BlackGrassHopper3:
+                    hexText.Foreground = GrasshopperBrush;
+                    break;
+                case PieceName.WhiteSoldierAnt1:
+                case PieceName.WhiteSoldierAnt2:
+                case PieceName.WhiteSoldierAnt3:
+                case PieceName.BlackSoldierAnt1:
+                case PieceName.BlackSoldierAnt2:
+                case PieceName.BlackSoldierAnt3:
+                    hexText.Foreground = SoldierAntBrush;
+                    break;
+            }
+
             if (disabled)
             {
-                hexText.Foreground = DisabledPieceBrush;
-            }
-            else
-            {
-                switch (pieceName)
-                {
-                    case PieceName.WhiteQueenBee:
-                    case PieceName.BlackQueenBee:
-                        hexText.Foreground = QueenBeeBrush;
-                        break;
-                    case PieceName.WhiteSpider1:
-                    case PieceName.WhiteSpider2:
-                    case PieceName.BlackSpider1:
-                    case PieceName.BlackSpider2:
-                        hexText.Foreground = SpiderBrush;
-                        break;
-                    case PieceName.WhiteBeetle1:
-                    case PieceName.WhiteBeetle2:
-                    case PieceName.BlackBeetle1:
-                    case PieceName.BlackBeetle2:
-                        hexText.Foreground = BeetleBrush;
-                        break;
-                    case PieceName.WhiteGrasshopper1:
-                    case PieceName.WhiteGrasshopper2:
-                    case PieceName.WhiteGrassHopper3:
-                    case PieceName.BlackGrasshopper1:
-                    case PieceName.BlackGrasshopper2:
-                    case PieceName.BlackGrassHopper3:
-                        hexText.Foreground = GrasshopperBrush;
-                        break;
-                    case PieceName.WhiteSoldierAnt1:
-                    case PieceName.WhiteSoldierAnt2:
-                    case PieceName.WhiteSoldierAnt3:
-                    case PieceName.BlackSoldierAnt1:
-                    case PieceName.BlackSoldierAnt2:
-                    case PieceName.BlackSoldierAnt3:
-                        hexText.Foreground = SoldierAntBrush;
-                        break;
-                }
+                hexText.Foreground = MixSolidColorBrushes((SolidColorBrush)hexText.Foreground, DisabledPieceBrush);
             }
 
             hexText.FontSize = size;
@@ -582,6 +580,13 @@ namespace Mzinga.Viewer
             Canvas.SetTop(hexText, center.Y - (hexText.FontSize / 2.0));
 
             return hexText;
+        }
+
+        private static SolidColorBrush MixSolidColorBrushes(SolidColorBrush b1, SolidColorBrush b2)
+        {
+            SolidColorBrush result = new SolidColorBrush();
+            result.Color = System.Windows.Media.Color.FromScRgb((b1.Color.ScA + b2.Color.ScA) / 2, (b1.Color.ScR + b2.Color.ScR) / 2, (b1.Color.ScG + b2.Color.ScG) / 2, (b1.Color.ScB + b2.Color.ScB) / 2);
+            return result;
         }
 
         private enum HexType
