@@ -50,7 +50,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return AppVM.ProgramTitle;
+                return AppViewModel.ProgramTitle;
             }
         }
 

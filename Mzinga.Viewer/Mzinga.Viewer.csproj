@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Mzinga.Viewer.App</StartupObject>
+    <StartupObject>Mzinga.Viewer.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -89,10 +89,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
+    </Page>
     <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
@@ -102,6 +102,7 @@
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="IdleBoolToWaitCursorConverter.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ViewerConfigWindow.xaml.cs">
       <DependentUpon>ViewerConfigWindow.xaml</DependentUpon>
     </Compile>

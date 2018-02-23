@@ -37,7 +37,7 @@ namespace Mzinga.Viewer.ViewModel
     {
         public static AppViewModel Instance { get; private set; }
 
-        public string ProgramTitle
+        public static string ProgramTitle
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public string FullVersion
+        public static string FullVersion
         {
             get
             {
@@ -55,34 +55,39 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public ViewerConfig ViewerConfig { get; private set; }
+
         public DoOnUIThread DoOnUIThread { get; private set; }
 
         public EngineWrapper EngineWrapper { get; private set; }
 
-        public ViewerConfig ViewerConfig { get; private set; }
-
-        public static void Init(DoOnUIThread doOnUIThread)
+        public static void Init(ViewerConfig viewerConfig, DoOnUIThread doOnUIThread)
         {
             if (null != Instance)
             {
                 throw new NotSupportedException();
             }
 
-            Instance = new AppViewModel(doOnUIThread);
+            Instance = new AppViewModel(viewerConfig, doOnUIThread);
         }
 
-        private AppViewModel(DoOnUIThread doOnUIThread)
+        private AppViewModel(ViewerConfig viewerConfig, DoOnUIThread doOnUIThread)
         {
+            if (null == viewerConfig)
+            {
+                throw new ArgumentNullException("viewerConfig");
+            }
+
             if (null == doOnUIThread)
             {
                 throw new ArgumentNullException("doOnUIThread");
             }
 
+            ViewerConfig = viewerConfig;
+
             DoOnUIThread = doOnUIThread;
 
-            EngineWrapper = new EngineWrapper("Mzinga.Engine.exe");
-
-            ViewerConfig = new ViewerConfig();
+            EngineWrapper = new EngineWrapper(ViewerConfig.EngineCommand);
         }
     }
 }

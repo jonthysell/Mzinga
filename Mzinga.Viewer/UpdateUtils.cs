@@ -70,7 +70,7 @@ namespace Mzinga.Viewer
 
                 ReleaseChannel targetReleaseChannel = GetReleaseChannel();
 
-                ulong maxVersion = LongVersion(AppVM.FullVersion);
+                ulong maxVersion = LongVersion(AppViewModel.FullVersion);
 
                 InstallerInfo latestVersion = null;
 

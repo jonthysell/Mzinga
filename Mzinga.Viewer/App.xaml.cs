@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -45,11 +46,13 @@ namespace Mzinga.Viewer
             }
         }
 
-        public App()
+        private string _configFile;
+
+        public App(string configFile)
         {
             MessageHandlers.RegisterMessageHandlers(this);
 
-            AppViewModel.Init((action) =>
+            AppViewModel.Init(LoadConfig(configFile), (action) =>
             {
                 Dispatcher.Invoke(action);
             });
@@ -61,12 +64,50 @@ namespace Mzinga.Viewer
         {
             try
             {
+                SaveConfig();
                 AppVM.EngineWrapper.Close();
                 MessageHandlers.UnregisterMessageHandlers(this);
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+        }
+
+        private ViewerConfig LoadConfig(string configFile)
+        {
+            if (string.IsNullOrWhiteSpace(configFile) || !File.Exists(configFile))
+            {
+                string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                userFolder = Path.Combine(userFolder, "Mzinga");
+                if (!Directory.Exists(userFolder))
+                {
+                    Directory.CreateDirectory(userFolder);
+                }
+
+                configFile = Path.Combine(userFolder, "Mzinga.Viewer.xml");
+            }
+
+            using (FileStream inputStream = new FileStream(configFile, FileMode.OpenOrCreate))
+            {
+                ViewerConfig viewerConfig = new ViewerConfig();
+
+                try
+                {
+                    viewerConfig.LoadConfig(inputStream);
+                }
+                catch (Exception) { }
+
+                _configFile = configFile;
+                return viewerConfig;
+            }
+        }
+
+        private void SaveConfig()
+        {
+            using (FileStream outputStream = new FileStream(_configFile, FileMode.Create))
+            {
+                AppVM.ViewerConfig.SaveConfig(outputStream);
             }
         }
     }
