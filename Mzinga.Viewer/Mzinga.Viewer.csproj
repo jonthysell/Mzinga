@@ -121,10 +121,13 @@
     </Compile>
     <Compile Include="ScrollingTextBox.cs" />
     <Compile Include="UpdateUtils.cs" />
+    <Compile Include="ViewModel\BoardHistoryExtensions.cs" />
     <Compile Include="ViewModel\EngineWrapper.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />
     <Compile Include="ViewModel\BoardExtensions.cs" />
+    <Compile Include="ViewModel\NotationUtils.cs" />
+    <Compile Include="ViewModel\ViewerBoard.cs" />
     <Compile Include="ViewModel\ViewerConfigViewModel.cs" />
     <Compile Include="ViewModel\PositionUtils.cs" />
     <Compile Include="ViewModel\ViewerConfig.cs" />

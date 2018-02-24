@@ -35,7 +35,6 @@
                             <RadioButton Content="BoardSpace"
                                          GroupName="NotationType"
                                          IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
-                                         IsEnabled="False"
                                          Margin="5"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />

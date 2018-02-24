@@ -83,7 +83,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        public Board Board
+        public ViewerBoard Board
         {
             get
             {
@@ -101,12 +101,12 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     int count = 1;
                     bool isWhite = true;
-                    foreach (BoardHistoryItem item in AppVM.EngineWrapper.BoardHistory)
+                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard())
                     {
                         string countString = count.ToString() + ". ";
                         if (isWhite)
                         {
-                            sb.AppendFormat(Strings.BoardHistoryItemFormat, countString, item.ToString(BoardHistoryItemStringFormat.ShortAlgebraic));
+                            sb.AppendFormat(Strings.BoardHistoryItemFormat, countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
                         }
                         else
                         {
@@ -117,7 +117,7 @@ namespace Mzinga.Viewer.ViewModel
                                 spacing += " ";
                             }
 
-                            sb.AppendFormat(Strings.BoardHistoryItemFormat, spacing, item.ToString(BoardHistoryItemStringFormat.ShortAlgebraic));
+                            sb.AppendFormat(Strings.BoardHistoryItemFormat, spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
                             count++;
                         }
 
@@ -182,11 +182,11 @@ namespace Mzinga.Viewer.ViewModel
                 string move = "";
                 if (null != AppVM.EngineWrapper.TargetMove)
                 {
-                    move = AppVM.EngineWrapper.TargetMove.ToString();
+                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(Board, AppVM.EngineWrapper.TargetMove) : AppVM.EngineWrapper.TargetMove.ToString();
                 }
                 else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
-                    move = EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
+                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpacePieceName(AppVM.EngineWrapper.TargetPiece) : EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
                 }
 
                 return move;

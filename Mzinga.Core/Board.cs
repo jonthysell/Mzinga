@@ -340,7 +340,7 @@ namespace Mzinga.Core
             return _pieces[(int)pieceName];
         }
 
-        private Piece GetPiece(Position position)
+        protected Piece GetPiece(Position position)
         {
             Piece piece;
             if (_piecesByPosition.TryGetValue(position, out piece))

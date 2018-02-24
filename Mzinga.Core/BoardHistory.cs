@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -170,30 +170,13 @@ namespace Mzinga.Core
 
         public override string ToString()
         {
-            return ToString(BoardHistoryItemStringFormat.FullAlgebraic);
-        }
-
-        public string ToString(BoardHistoryItemStringFormat format)
-        {
             if (Move.IsPass)
             {
                 return Move.ToString();
             }
 
-            switch (format)
-            {
-                case BoardHistoryItemStringFormat.ShortAlgebraic:
-                    return Move.ToString();
-                default:
-                    Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
-                    return string.Format("{0} > {1}", startingPiece, Move);
-            }
+            Piece startingPiece = new Piece(Move.PieceName, OriginalPosition);
+            return string.Format("{0} > {1}", startingPiece, Move);
         }
-    }
-
-    public enum BoardHistoryItemStringFormat
-    {
-        FullAlgebraic,
-        ShortAlgebraic
     }
 }

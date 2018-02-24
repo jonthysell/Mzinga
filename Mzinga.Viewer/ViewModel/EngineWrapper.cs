@@ -36,7 +36,7 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class EngineWrapper
     {
-        public Board Board
+        public ViewerBoard Board
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Mzinga.Viewer.ViewModel
                 OnBoardUpdate();
             }
         }
-        private Board _board = null;
+        private ViewerBoard _board = null;
 
         public MoveSet ValidMoves
         {
@@ -557,7 +557,7 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !string.IsNullOrWhiteSpace(firstLine) ? new Board(firstLine) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? new ViewerBoard(firstLine) : null;
                     break;
                 case EngineCommand.ValidMoves:
                     ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
