@@ -922,7 +922,7 @@ namespace Mzinga.Core
                 return GetValidBeetleMovements(targetPiece);
             }
 
-            MoveSet moves = new MoveSet();
+            MoveSet validMoves = new MoveSet();
 
             for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
             {
@@ -934,36 +934,68 @@ namespace Mzinga.Core
                     switch (piece.BugType)
                     {
                         case BugType.QueenBee:
-                            moves.Add(GetValidQueenBeeMovements(targetPiece));
+                            validMoves.Add(GetValidQueenBeeMovements(targetPiece));
                             break;
                         case BugType.Spider:
-                            moves.Add(GetValidSpiderMovements(targetPiece));
+                            validMoves.Add(GetValidSpiderMovements(targetPiece));
                             break;
                         case BugType.Beetle:
-                            moves.Add(GetValidBeetleMovements(targetPiece));
+                            validMoves.Add(GetValidBeetleMovements(targetPiece));
                             break;
                         case BugType.Grasshopper:
-                            moves.Add(GetValidGrasshopperMovements(targetPiece));
+                            validMoves.Add(GetValidGrasshopperMovements(targetPiece));
                             break;
                         case BugType.SoldierAnt:
-                            moves.Add(GetValidSoldierAntMovements(targetPiece));
+                            validMoves.Add(GetValidSoldierAntMovements(targetPiece));
                             break;
                         case BugType.Ladybug:
-                            moves.Add(GetValidLadybugMovements(targetPiece));
+                            validMoves.Add(GetValidLadybugMovements(targetPiece));
                             break;
                         case BugType.Pillbug:
-                            moves.Add(GetValidPillbugMovements(targetPiece));
+                            validMoves.Add(GetValidPillbugMovements(targetPiece));
                             break;
                     }
                 }
             }
 
-            return moves;
+            return validMoves;
         }
 
         private MoveSet GetValidLadybugMovements(Piece targetPiece)
         {
-            return new MoveSet();
+            MoveSet validMoves = new MoveSet();
+
+            Position startingPosition = targetPiece.Position;
+
+            foreach (Move firstMove in GetValidBeetleMovements(targetPiece))
+            {
+                if (firstMove.Position.Stack > 0)
+                {
+                    MovePiece(targetPiece, firstMove.Position, false);
+
+                    foreach (Move secondMove in GetValidBeetleMovements(targetPiece))
+                    {
+                        if (secondMove.Position.Stack > 0)
+                        {
+                            MovePiece(targetPiece, secondMove.Position, false);
+
+                            foreach (Move thirdMove in GetValidBeetleMovements(targetPiece))
+                            {
+                                if (thirdMove.Position.Stack == 0 && thirdMove.Position != startingPosition)
+                                {
+                                    validMoves.Add(thirdMove);
+                                }
+                            }
+
+                            MovePiece(targetPiece, firstMove.Position, false);
+                        }
+                    }
+
+                    MovePiece(targetPiece, startingPosition, false);
+                }
+            }
+
+            return validMoves;
         }
 
         private MoveSet GetValidPillbugMovements(Piece targetPiece)
