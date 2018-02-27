@@ -205,7 +205,7 @@ namespace Mzinga.CoreTest
 
     public class MockGameBoard : GameBoard
     {
-        public MockGameBoard() : base() { }
+        public MockGameBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
 
         public MockGameBoard(string boardString) : base(boardString) { }
     }

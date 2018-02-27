@@ -86,6 +86,10 @@ namespace Mzinga.Viewer
         private SolidColorBrush GrasshopperBrush;
         private SolidColorBrush SoldierAntBrush;
 
+        private SolidColorBrush MosquitoBrush;
+        private SolidColorBrush LadybugBrush;
+        private SolidColorBrush PillbugBrush;
+
         private SolidColorBrush DisabledPieceBrush;
 
         public MainWindow()
@@ -109,6 +113,10 @@ namespace Mzinga.Viewer
             BeetleBrush = new SolidColorBrush(Colors.Purple);
             GrasshopperBrush = new SolidColorBrush(Colors.Green);
             SoldierAntBrush = new SolidColorBrush(Colors.Blue);
+
+            MosquitoBrush = new SolidColorBrush(Colors.DarkGray);
+            LadybugBrush = new SolidColorBrush(Colors.Red);
+            PillbugBrush = new SolidColorBrush(Colors.Aqua);
 
             DisabledPieceBrush = new SolidColorBrush(Colors.Gray);
 
@@ -178,7 +186,7 @@ namespace Mzinga.Viewer
 
                 MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
 
-                HexOrientation hexOrientation =VM.ViewerConfig.HexOrientation;
+                HexOrientation hexOrientation = VM.ViewerConfig.HexOrientation;
 
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
@@ -201,7 +209,7 @@ namespace Mzinga.Viewer
                             Polygon hex = GetHex(center, size, hexType, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
-                            bool disabled =VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
+                            bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
                             TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
                             BoardCanvas.Children.Add(hexText);
@@ -217,7 +225,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        bool disabled =VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
                         WhiteHandStackPanel.Children.Add(pieceCanvas);
                     }
@@ -228,7 +236,7 @@ namespace Mzinga.Viewer
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        bool disabled =VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
                         BlackHandStackPanel.Children.Add(pieceCanvas);
                     }
@@ -533,39 +541,31 @@ namespace Mzinga.Viewer
             hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
             hexText.FontFamily = new FontFamily("Lucida Console");
 
-            switch (pieceName)
+            switch (EnumUtils.GetBugType(pieceName))
             {
-                case PieceName.WhiteQueenBee:
-                case PieceName.BlackQueenBee:
+                case BugType.QueenBee:
                     hexText.Foreground = QueenBeeBrush;
                     break;
-                case PieceName.WhiteSpider1:
-                case PieceName.WhiteSpider2:
-                case PieceName.BlackSpider1:
-                case PieceName.BlackSpider2:
+                case BugType.Spider:
                     hexText.Foreground = SpiderBrush;
                     break;
-                case PieceName.WhiteBeetle1:
-                case PieceName.WhiteBeetle2:
-                case PieceName.BlackBeetle1:
-                case PieceName.BlackBeetle2:
+                case BugType.Beetle:
                     hexText.Foreground = BeetleBrush;
                     break;
-                case PieceName.WhiteGrasshopper1:
-                case PieceName.WhiteGrasshopper2:
-                case PieceName.WhiteGrassHopper3:
-                case PieceName.BlackGrasshopper1:
-                case PieceName.BlackGrasshopper2:
-                case PieceName.BlackGrassHopper3:
+                case BugType.Grasshopper:
                     hexText.Foreground = GrasshopperBrush;
                     break;
-                case PieceName.WhiteSoldierAnt1:
-                case PieceName.WhiteSoldierAnt2:
-                case PieceName.WhiteSoldierAnt3:
-                case PieceName.BlackSoldierAnt1:
-                case PieceName.BlackSoldierAnt2:
-                case PieceName.BlackSoldierAnt3:
+                case BugType.SoldierAnt:
                     hexText.Foreground = SoldierAntBrush;
+                    break;
+                case BugType.Mosquito:
+                    hexText.Foreground = MosquitoBrush;
+                    break;
+                case BugType.Ladybug:
+                    hexText.Foreground = LadybugBrush;
+                    break;
+                case BugType.Pillbug:
+                    hexText.Foreground = PillbugBrush;
                     break;
             }
 

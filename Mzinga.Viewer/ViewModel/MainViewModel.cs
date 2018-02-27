@@ -101,7 +101,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     int count = 1;
                     bool isWhite = true;
-                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard())
+                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard(Board.ExpansionPieces))
                     {
                         string countString = count.ToString() + ". ";
                         if (isWhite)

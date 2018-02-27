@@ -33,9 +33,9 @@ namespace Mzinga.Viewer.ViewModel
 {
     static class BoardHistoryExtensions
     {
-        public static IEnumerable<Tuple<ViewerBoard, BoardHistoryItem>>EnumerateWithBoard(this BoardHistory boardHistory)
+        public static IEnumerable<Tuple<ViewerBoard, BoardHistoryItem>>EnumerateWithBoard(this BoardHistory boardHistory, ExpansionPieces expansionPieces)
         {
-            ViewerBoard board = new ViewerBoard();
+            ViewerBoard board = new ViewerBoard(expansionPieces);
             foreach (BoardHistoryItem item in boardHistory)
             {
                 yield return new Tuple<ViewerBoard, BoardHistoryItem>(board, item);

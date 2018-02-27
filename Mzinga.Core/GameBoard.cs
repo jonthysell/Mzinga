@@ -62,7 +62,7 @@ namespace Mzinga.Core
 
         public GameBoard Clone()
         {
-            GameBoard clone = new GameBoard();
+            GameBoard clone = new GameBoard(ExpansionPieces);
             foreach (BoardHistoryItem item in BoardHistory)
             {
                 clone.Play(item.Move);

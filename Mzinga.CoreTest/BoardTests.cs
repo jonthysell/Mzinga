@@ -180,7 +180,7 @@ namespace Mzinga.CoreTest
 
     public class MockBoard : Board
     {
-        public MockBoard() : base() { }
+        public MockBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
 
         public MockBoard(string boardString) : base(boardString) { }
 

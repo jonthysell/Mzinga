@@ -30,7 +30,7 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class ViewerBoard : Board
     {
-        public ViewerBoard() : base() { }
+        public ViewerBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
 
         public ViewerBoard(string boardString) : base(boardString) { }
 
