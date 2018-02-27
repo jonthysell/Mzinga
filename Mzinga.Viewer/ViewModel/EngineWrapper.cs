@@ -366,7 +366,7 @@ namespace Mzinga.Viewer.ViewModel
 
             CurrentGameSettings = settings;
 
-            SendCommand("newgame");
+            SendCommand("newgame {0}", EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
         public void PlayTargetMove()

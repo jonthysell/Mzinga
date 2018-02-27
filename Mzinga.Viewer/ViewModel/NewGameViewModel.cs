@@ -26,6 +26,7 @@
 
 using System;
 
+using Mzinga.Core;
 using Mzinga.Viewer.Resources;
 
 using GalaSoft.MvvmLight;
@@ -75,6 +76,87 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     Settings.BlackPlayerType = value;
                     RaisePropertyChanged("BlackPlayerType");
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
+        }
+
+        public bool IncludeMosquito
+        {
+            get
+            {
+                return (Settings.ExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+            }
+            set
+            {
+                try
+                {
+                    if (value)
+                    {
+                        Settings.ExpansionPieces |= ExpansionPieces.Mosquito;
+                    }
+                    else
+                    {
+                        Settings.ExpansionPieces &= ~ExpansionPieces.Mosquito; 
+                    }
+                    RaisePropertyChanged("IncludeMosquito");
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
+        }
+
+        public bool IncludeLadybug
+        {
+            get
+            {
+                return (Settings.ExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+            }
+            set
+            {
+                try
+                {
+                    if (value)
+                    {
+                        Settings.ExpansionPieces |= ExpansionPieces.Ladybug;
+                    }
+                    else
+                    {
+                        Settings.ExpansionPieces &= ~ExpansionPieces.Ladybug;
+                    }
+                    RaisePropertyChanged("IncludeLadybug");
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
+        }
+
+        public bool IncludePillbug
+        {
+            get
+            {
+                return (Settings.ExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+            }
+            set
+            {
+                try
+                {
+                    if (value)
+                    {
+                        Settings.ExpansionPieces |= ExpansionPieces.Pillbug;
+                    }
+                    else
+                    {
+                        Settings.ExpansionPieces &= ~ExpansionPieces.Pillbug;
+                    }
+                    RaisePropertyChanged("IncludePillbug");
                 }
                 catch (Exception ex)
                 {

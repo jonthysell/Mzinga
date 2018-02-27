@@ -26,6 +26,8 @@
 
 using System;
 
+using Mzinga.Core;
+
 namespace Mzinga.Viewer.ViewModel
 {
     public class GameSettings
@@ -33,6 +35,8 @@ namespace Mzinga.Viewer.ViewModel
         public PlayerType WhitePlayerType { get; set; } = PlayerType.Human;
 
         public PlayerType BlackPlayerType { get; set; } = PlayerType.EngineAI;
+
+        public ExpansionPieces ExpansionPieces { get; set; } = ExpansionPieces.None;
 
         public BestMoveType BestMoveType
         {
@@ -102,6 +106,8 @@ namespace Mzinga.Viewer.ViewModel
 
             clone.WhitePlayerType = WhitePlayerType;
             clone.BlackPlayerType = BlackPlayerType;
+
+            clone.ExpansionPieces = ExpansionPieces;
 
             clone.BestMoveType = BestMoveType;
 

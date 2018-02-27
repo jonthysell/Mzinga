@@ -1,9 +1,9 @@
 <Window Icon="{DynamicResource MzingaIcon}"
         MinHeight="100"
+        MinWidth="100"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
         Title="{Binding Title, FallbackValue=New Game}"
-        Width="300"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.NewGameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -57,6 +57,26 @@
                                          Margin="5"
                                          VerticalAlignment="Center" />
                         </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Expansion Pieces">
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <CheckBox Content="Mosquito"
+                                  IsChecked="{Binding IncludeMosquito}"
+                                  Margin="5"
+                                  VerticalAlignment="Center"
+                                  VerticalContentAlignment="Center" />
+                        <CheckBox Content="Ladybug"
+                                  IsChecked="{Binding IncludeLadybug}"
+                                  Margin="5"
+                                  VerticalAlignment="Center"
+                                  VerticalContentAlignment="Center" />
+                        <CheckBox Content="Pillbug"
+                                  IsChecked="{Binding IncludePillbug}"
+                                  Margin="5"
+                                  VerticalAlignment="Center"
+                                  VerticalContentAlignment="Center" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Computer">
