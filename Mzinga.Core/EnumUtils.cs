@@ -93,24 +93,6 @@ namespace Mzinga.Core
             }
         }
 
-        public static bool IsEnabled(PieceName pieceName, ExpansionPieces enabledExpansionPieces)
-        {
-            switch (pieceName)
-            {
-                case PieceName.WhiteMosquito:
-                case PieceName.BlackMosquito:
-                    return (enabledExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
-                case PieceName.WhiteLadybug:
-                case PieceName.BlackLadybug:
-                    return (enabledExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
-                case PieceName.WhitePillbug:
-                case PieceName.BlackPillbug:
-                    return (enabledExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
-                default:
-                    return true;
-            }
-        }
-
         public static string GetShortName(PieceName pieceName)
         {
             if (pieceName == PieceName.INVALID)
@@ -280,22 +262,119 @@ namespace Mzinga.Core
             throw new ArgumentOutOfRangeException("pieceName");
         }
 
-        public static bool IsEnabled(BugType bugType, ExpansionPieces enabledExpansionPieces)
+        public const int NumBugTypes = 8;
+
+        #endregion
+
+        #region Expansion Pieces
+
+        public static bool IsEnabled(PieceName pieceName, ExpansionPieces expansionPieces)
         {
-            switch (bugType)
+            switch (pieceName)
             {
-                case BugType.Mosquito:
-                    return (enabledExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
-                case BugType.Ladybug:
-                    return (enabledExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
-                case BugType.Pillbug:
-                    return (enabledExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+                case PieceName.WhiteMosquito:
+                case PieceName.BlackMosquito:
+                    return (expansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+                case PieceName.WhiteLadybug:
+                case PieceName.BlackLadybug:
+                    return (expansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+                case PieceName.WhitePillbug:
+                case PieceName.BlackPillbug:
+                    return (expansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
                 default:
                     return true;
             }
         }
 
-        public const int NumBugTypes = 8;
+        public static bool IsEnabled(BugType bugType, ExpansionPieces expansionPieces)
+        {
+            switch (bugType)
+            {
+                case BugType.Mosquito:
+                    return (expansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+                case BugType.Ladybug:
+                    return (expansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+                case BugType.Pillbug:
+                    return (expansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+                default:
+                    return true;
+            }
+        }
+
+        public static bool TryParseExpansionPieces(string s, out ExpansionPieces expansionPieces)
+        {
+            try
+            {
+                expansionPieces = ParseExpansionPieces(s);
+                return true;
+            }
+            catch (Exception)
+            {
+                expansionPieces = default(ExpansionPieces);
+                return false;
+            }
+        }
+
+        public static ExpansionPieces ParseExpansionPieces(string s)
+        {
+            ExpansionPieces expansionPieces = ExpansionPieces.None;
+
+            if (!string.IsNullOrWhiteSpace(s))
+            {
+                string[] split = s.Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (split[0] != NoExpansionsString)
+                {
+                    throw new ArgumentException();
+                }
+
+                if (split.Length == 2)
+                {
+                    if (split[1].Contains("M"))
+                    {
+                        expansionPieces |= ExpansionPieces.Mosquito;
+                    }
+                    if (split[1].Contains("L"))
+                    {
+                        expansionPieces |= ExpansionPieces.Ladybug;
+                    }
+                    if (split[1].Contains("P"))
+                    {
+                        expansionPieces |= ExpansionPieces.Pillbug;
+                    }
+                }
+
+            }
+
+            return expansionPieces;
+        }
+
+        public static string GetExpansionPiecesString(ExpansionPieces expansionPieces)
+        {
+            string s = NoExpansionsString;
+
+            if (expansionPieces != ExpansionPieces.None)
+            {
+                s += "+";
+
+                if ((expansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito)
+                {
+                    s += "M";
+                }
+                if ((expansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug)
+                {
+                    s += "L";
+                }
+                if ((expansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug)
+                {
+                    s += "P";
+                }
+            }
+
+            return s;
+        }
+
+        private static string NoExpansionsString = "Base";
 
         #endregion
     }

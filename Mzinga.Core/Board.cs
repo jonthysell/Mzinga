@@ -105,6 +105,8 @@ namespace Mzinga.Core
                 {
                     StringBuilder sb = new StringBuilder();
 
+                    sb.AppendFormat("{0}{1}", EnumUtils.GetExpansionPiecesString(ExpansionPieces), BoardStringSeparator);
+
                     sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
 
                     sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
@@ -251,7 +253,7 @@ namespace Mzinga.Core
             InitPieces(expansionPieces);
         }
 
-        public Board(string boardString) : this()
+        public Board(string boardString)
         {
             if (string.IsNullOrWhiteSpace(boardString))
             {
@@ -260,7 +262,15 @@ namespace Mzinga.Core
 
             string[] split = boardString.Split(BoardStringSeparator);
 
-            string boardStateString = split[0];
+            ExpansionPieces expansionPieces;
+            if (!EnumUtils.TryParseExpansionPieces(split[0], out expansionPieces))
+            {
+                throw new ArgumentException("Couldn't parse expansion pieces.", "boardString");
+            }
+
+            InitPieces(expansionPieces);
+
+            string boardStateString = split[1];
 
             BoardState boardState;
             if (!Enum.TryParse(boardStateString, out boardState))
@@ -269,7 +279,7 @@ namespace Mzinga.Core
             }
             BoardState = boardState;
 
-            string[] currentTurnSplit = split[1].Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] currentTurnSplit = split[2].Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
 
             string currentTurnColorString = currentTurnSplit[0];
 
@@ -291,7 +301,7 @@ namespace Mzinga.Core
 
             Queue<Piece> parsedPieces = new Queue<Piece>(EnumUtils.NumPieceNames);
 
-            for (int i = 2; i < split.Length; i++)
+            for (int i = 3; i < split.Length; i++)
             {
                 parsedPieces.Enqueue(new Piece(split[i]));
             }

@@ -53,7 +53,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_OnlyPieceInPlayTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[1];WS1[0,0,0]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[1];WS1[0,0,0]");
 
             VerifyCanMoveWithoutBreakingHive(b, PieceName.WhiteSpider1, true);
         }
@@ -61,7 +61,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_ClosedCircleTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
 
             foreach (PieceName pieceName in b.PiecesInPlay)
             {
@@ -72,7 +72,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_OpenCircleTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
 
             foreach (PieceName pieceName in b.PiecesInPlay)
             {
@@ -90,28 +90,28 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Board_IsOneHive_OnePieceTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[1];WS1[0,0,0]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[1];WS1[0,0,0]");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_ClosedCircleTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_OpenCircleTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_TwoHivesTest()
         {
-            MockBoard b = new MockBoard("InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
             Assert.IsTrue(b.IsOneHive());
 
             b.MovePiece(b.GetPiece(PieceName.WhiteSpider1), null);
@@ -121,7 +121,7 @@ namespace Mzinga.CoreTest
         [TestMethod]
         public void Board_GetValidMoves_BeetleStackTest()
         {
-            VerifyValidMoves("InProgress;White[5];WQ[1,-1,0];WS1[0,0,0];WB1[0,0,0,1];BQ[1,1,-2];BS1[0,1,-1];BB1[0,1,-1,1]",
+            VerifyValidMoves("Base;InProgress;White[5];WQ[1,-1,0];WS1[0,0,0];WB1[0,0,0,1];BQ[1,1,-2];BS1[0,1,-1];BB1[0,1,-1,1]",
                 "WQ[1,0,-1];WQ[0,-1,1];WS2[2,-1,-1];WS2[2,-2,0];WS2[1,-2,1];WS2[0,-1,1];WS2[-1,0,1];WB1[0,1,-1,2];WB1[1,0,-1];WB1[1,-1,0,1];WB1[0,-1,1];WB1[-1,0,1];WB1[-1,1,0];WB2[2,-1,-1];WB2[2,-2,0];WB2[1,-2,1];WB2[0,-1,1];WB2[-1,0,1];WG1[2,-1,-1];WG1[2,-2,0];WG1[1,-2,1];WG1[0,-1,1];WG1[-1,0,1];WA1[2,-1,-1];WA1[2,-2,0];WA1[1,-2,1];WA1[0,-1,1];WA1[-1,0,1]");
         }
 
@@ -134,7 +134,7 @@ namespace Mzinga.CoreTest
 
             for (int i = 0; i < iterations; i++)
             {
-                Board b = new Board("InProgress;White[13];WQ[1,0,-1];WS1[0,0,0];WS2[2,-1,-1];WB1[0,1,-1];WB2[2,-2,0];WG1[3,-1,-2];WG2[4,-2,-2];WG3[5,-2,-3];WA1[3,0,-3];WA2[6,-2,-4];WA3[5,-3,-2];BQ[-2,1,1];BS1[-1,1,0];BS2[-3,2,1];BB1[-1,0,1];BB2[-3,3,0];BG1[-4,2,2];BG2[-5,3,2];BG3[-6,3,3];BA1[-4,1,3];BA2[-7,3,4];BA3[-6,4,2]");
+                Board b = new Board("Base;InProgress;White[13];WQ[1,0,-1];WS1[0,0,0];WS2[2,-1,-1];WB1[0,1,-1];WB2[2,-2,0];WG1[3,-1,-2];WG2[4,-2,-2];WG3[5,-2,-3];WA1[3,0,-3];WA2[6,-2,-4];WA3[5,-3,-2];BQ[-2,1,1];BS1[-1,1,0];BS2[-3,2,1];BB1[-1,0,1];BB2[-3,3,0];BG1[-4,2,2];BG2[-5,3,2];BG3[-6,3,3];BA1[-4,1,3];BA2[-7,3,4];BA3[-6,4,2]");
 
                 Stopwatch sw = Stopwatch.StartNew();
                 MoveSet moves = b.GetValidMoves();
