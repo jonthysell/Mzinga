@@ -720,6 +720,10 @@ namespace Mzinga.Core
                                 return GetValidSoldierAntMovements(targetPiece);
                             case BugType.Mosquito:
                                 return GetValidMosquitoMovements(targetPiece);
+                            case BugType.Ladybug:
+                                return GetValidLadybugMovements(targetPiece);
+                            case BugType.Pillbug:
+                                return GetValidPillbugMovements(targetPiece);
                         }
                     }
                 }
@@ -944,11 +948,27 @@ namespace Mzinga.Core
                         case BugType.SoldierAnt:
                             moves.Add(GetValidSoldierAntMovements(targetPiece));
                             break;
+                        case BugType.Ladybug:
+                            moves.Add(GetValidLadybugMovements(targetPiece));
+                            break;
+                        case BugType.Pillbug:
+                            moves.Add(GetValidPillbugMovements(targetPiece));
+                            break;
                     }
                 }
             }
 
             return moves;
+        }
+
+        private MoveSet GetValidLadybugMovements(Piece targetPiece)
+        {
+            return new MoveSet();
+        }
+
+        private MoveSet GetValidPillbugMovements(Piece targetPiece)
+        {
+            return new MoveSet();
         }
 
         private MoveSet GetValidSlides(Piece targetPiece, int? maxRange)
