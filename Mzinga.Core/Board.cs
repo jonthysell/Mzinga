@@ -718,6 +718,8 @@ namespace Mzinga.Core
                                 return GetValidGrasshopperMovements(targetPiece);
                             case BugType.SoldierAnt:
                                 return GetValidSoldierAntMovements(targetPiece);
+                            case BugType.Mosquito:
+                                return GetValidMosquitoMovements(targetPiece);
                         }
                     }
                 }
@@ -906,6 +908,47 @@ namespace Mzinga.Core
         {
             // Get all slides all the way around
             return GetValidSlides(targetPiece, null);
+        }
+
+        private MoveSet GetValidMosquitoMovements(Piece targetPiece)
+        {
+            if (targetPiece.Position.Stack > 0)
+            {
+                // Mosquito on top acts like a beetle
+                return GetValidBeetleMovements(targetPiece);
+            }
+
+            MoveSet moves = new MoveSet();
+
+            for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
+            {
+                Position neighbor = targetPiece.Position.NeighborAt(dir);
+                Piece piece = GetPieceOnTopInternal(neighbor);
+
+                if (null != piece)
+                {
+                    switch (piece.BugType)
+                    {
+                        case BugType.QueenBee:
+                            moves.Add(GetValidQueenBeeMovements(targetPiece));
+                            break;
+                        case BugType.Spider:
+                            moves.Add(GetValidSpiderMovements(targetPiece));
+                            break;
+                        case BugType.Beetle:
+                            moves.Add(GetValidBeetleMovements(targetPiece));
+                            break;
+                        case BugType.Grasshopper:
+                            moves.Add(GetValidGrasshopperMovements(targetPiece));
+                            break;
+                        case BugType.SoldierAnt:
+                            moves.Add(GetValidSoldierAntMovements(targetPiece));
+                            break;
+                    }
+                }
+            }
+
+            return moves;
         }
 
         private MoveSet GetValidSlides(Piece targetPiece, int? maxRange)
