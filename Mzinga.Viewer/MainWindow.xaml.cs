@@ -115,10 +115,10 @@ namespace Mzinga.Viewer
             SoldierAntBrush = new SolidColorBrush(Colors.Blue);
 
             MosquitoBrush = new SolidColorBrush(Colors.DarkGray);
-            LadybugBrush = new SolidColorBrush(Colors.Red);
-            PillbugBrush = new SolidColorBrush(Colors.Aqua);
+            LadybugBrush = new SolidColorBrush(Colors.DarkRed);
+            PillbugBrush = new SolidColorBrush(Colors.Teal);
 
-            DisabledPieceBrush = new SolidColorBrush(Colors.Gray);
+            DisabledPieceBrush = new SolidColorBrush(Colors.LightGray);
 
             // Bind board updates to VM
             if (null != VM)
