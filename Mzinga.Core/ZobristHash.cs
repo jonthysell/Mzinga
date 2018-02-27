@@ -34,6 +34,7 @@ namespace Mzinga.Core
 
         private static long _next = 1;
         private static long _hashPartByTurnColor = 0;
+        private static long[] _hashPartByLastMovedPiece = new long[EnumUtils.NumPieceNames];
         private static Dictionary<Position, long>[] _hashPartByPosition = new Dictionary<Position, long>[EnumUtils.NumPieceNames];
 
         public ZobristHash()
@@ -46,6 +47,14 @@ namespace Mzinga.Core
             Value ^= _hashPartByPosition[(int)pieceName][position];
         }
 
+        public void ToggleLastMovedPiece(PieceName pieceName)
+        {
+            if (pieceName != PieceName.INVALID)
+            {
+                Value ^= _hashPartByLastMovedPiece[(int)pieceName];
+            }
+        }
+
         public void ToggleTurn()
         {
             Value ^= _hashPartByTurnColor;
@@ -55,6 +64,11 @@ namespace Mzinga.Core
         {
             _next = 1;
             _hashPartByTurnColor = Rand64();
+
+            for (int i = 0; i < _hashPartByLastMovedPiece.Length; i++)
+            {
+                _hashPartByLastMovedPiece[i] = Rand64();
+            }
 
             IEnumerable<Position> uniquePositions = Position.GetUniquePositions(NumUniquePositions);
 

@@ -472,7 +472,7 @@ namespace Mzinga.Engine
 
         private void StartPonder()
         {
-            if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard)
+            if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard && _gameBoard.GameInProgress)
             {
                 _gameAI.BestMoveFound -= OnBestMoveFound;
 

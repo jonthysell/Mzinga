@@ -60,6 +60,7 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             CurrentTurn++;
+            LastPieceMoved = move.PieceName;
 
             bool whiteQueenSurrounded = (CountNeighbors(PieceName.WhiteQueenBee) == 6);
             bool blackQueenSurrounded = (CountNeighbors(PieceName.BlackQueenBee) == 6);

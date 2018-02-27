@@ -233,6 +233,27 @@ namespace Mzinga.Core
             }
         }
 
+        public PieceName LastPieceMoved
+        {
+            get
+            {
+                return _lastPieceMoved;
+            }
+            protected set
+            {
+                PieceName old = _lastPieceMoved;
+
+                _lastPieceMoved = value;
+
+                if (old != value)
+                {
+                    _zobristHash.ToggleLastMovedPiece(old);
+                    _zobristHash.ToggleLastMovedPiece(value);
+                }
+            }
+        }
+        private PieceName _lastPieceMoved = PieceName.INVALID;
+
         #endregion
 
         #region Caches
@@ -703,28 +724,59 @@ namespace Mzinga.Core
                         // Look for valid new placements
                         return GetValidPlacements(targetPiece);
                     }
-                    else if (targetPiece.InPlay && CurrentTurnQueenInPlay && PieceIsOnTop(targetPiece) && CanMoveWithoutBreakingHive(targetPiece))
+                    else if (targetPiece.PieceName != LastPieceMoved && targetPiece.InPlay && CurrentTurnQueenInPlay && PieceIsOnTop(targetPiece))
                     {
-                        // Look for valid moves of already played pieces
-                        switch (targetPiece.BugType)
+                        MoveSet validMoves = new MoveSet();
+
+                        if (CanMoveWithoutBreakingHive(targetPiece))
                         {
-                            case BugType.QueenBee:
-                                return GetValidQueenBeeMovements(targetPiece);
-                            case BugType.Spider:
-                                return GetValidSpiderMovements(targetPiece);
-                            case BugType.Beetle:
-                                return GetValidBeetleMovements(targetPiece);
-                            case BugType.Grasshopper:
-                                return GetValidGrasshopperMovements(targetPiece);
-                            case BugType.SoldierAnt:
-                                return GetValidSoldierAntMovements(targetPiece);
-                            case BugType.Mosquito:
-                                return GetValidMosquitoMovements(targetPiece);
-                            case BugType.Ladybug:
-                                return GetValidLadybugMovements(targetPiece);
-                            case BugType.Pillbug:
-                                return GetValidPillbugMovements(targetPiece);
+                            // Look for basic valid moves of played pieces who can move
+                            switch (targetPiece.BugType)
+                            {
+                                case BugType.QueenBee:
+                                    validMoves.Add(GetValidQueenBeeMovements(targetPiece));
+                                    break;
+                                case BugType.Spider:
+                                    validMoves.Add(GetValidSpiderMovements(targetPiece));
+                                    break;
+                                case BugType.Beetle:
+                                    validMoves.Add(GetValidBeetleMovements(targetPiece));
+                                    break;
+                                case BugType.Grasshopper:
+                                    validMoves.Add(GetValidGrasshopperMovements(targetPiece));
+                                    break;
+                                case BugType.SoldierAnt:
+                                    validMoves.Add(GetValidSoldierAntMovements(targetPiece));
+                                    break;
+                                case BugType.Mosquito:
+                                    validMoves.Add(GetValidMosquitoMovements(targetPiece, false));
+                                    break;
+                                case BugType.Ladybug:
+                                    validMoves.Add(GetValidLadybugMovements(targetPiece));
+                                    break;
+                                case BugType.Pillbug:
+                                    validMoves.Add(GetValidPillbugBasicMovements(targetPiece));
+                                    validMoves.Add(GetValidPillbugSpecialAbilityMovements(targetPiece));
+                                    break;
+                            }
                         }
+                        else
+                        {
+                            // Check for special ability moves
+                            switch (targetPiece.BugType)
+                            {
+                                case BugType.Mosquito:
+                                    validMoves.Add(GetValidMosquitoMovements(targetPiece, true));
+                                    break;
+                                case BugType.Pillbug:
+                                    validMoves.Add(GetValidPillbugSpecialAbilityMovements(targetPiece));
+                                    break;
+                            }
+                        }
+
+                        
+
+                        return validMoves;
                     }
                 }
             }
@@ -914,9 +966,9 @@ namespace Mzinga.Core
             return GetValidSlides(targetPiece, null);
         }
 
-        private MoveSet GetValidMosquitoMovements(Piece targetPiece)
+        private MoveSet GetValidMosquitoMovements(Piece targetPiece, bool specialAbilityOnly)
         {
-            if (targetPiece.Position.Stack > 0)
+            if (targetPiece.Position.Stack > 0 && !specialAbilityOnly)
             {
                 // Mosquito on top acts like a beetle
                 return GetValidBeetleMovements(targetPiece);
@@ -931,29 +983,40 @@ namespace Mzinga.Core
 
                 if (null != piece)
                 {
-                    switch (piece.BugType)
+                    if (specialAbilityOnly)
                     {
-                        case BugType.QueenBee:
-                            validMoves.Add(GetValidQueenBeeMovements(targetPiece));
-                            break;
-                        case BugType.Spider:
-                            validMoves.Add(GetValidSpiderMovements(targetPiece));
-                            break;
-                        case BugType.Beetle:
-                            validMoves.Add(GetValidBeetleMovements(targetPiece));
-                            break;
-                        case BugType.Grasshopper:
-                            validMoves.Add(GetValidGrasshopperMovements(targetPiece));
-                            break;
-                        case BugType.SoldierAnt:
-                            validMoves.Add(GetValidSoldierAntMovements(targetPiece));
-                            break;
-                        case BugType.Ladybug:
-                            validMoves.Add(GetValidLadybugMovements(targetPiece));
-                            break;
-                        case BugType.Pillbug:
-                            validMoves.Add(GetValidPillbugMovements(targetPiece));
-                            break;
+                        if (piece.BugType == BugType.Pillbug)
+                        {
+                            validMoves.Add(GetValidPillbugSpecialAbilityMovements(targetPiece));
+                        }
+                    }
+                    else
+                    {
+                        switch (piece.BugType)
+                        {
+                            case BugType.QueenBee:
+                                validMoves.Add(GetValidQueenBeeMovements(targetPiece));
+                                break;
+                            case BugType.Spider:
+                                validMoves.Add(GetValidSpiderMovements(targetPiece));
+                                break;
+                            case BugType.Beetle:
+                                validMoves.Add(GetValidBeetleMovements(targetPiece));
+                                break;
+                            case BugType.Grasshopper:
+                                validMoves.Add(GetValidGrasshopperMovements(targetPiece));
+                                break;
+                            case BugType.SoldierAnt:
+                                validMoves.Add(GetValidSoldierAntMovements(targetPiece));
+                                break;
+                            case BugType.Ladybug:
+                                validMoves.Add(GetValidLadybugMovements(targetPiece));
+                                break;
+                            case BugType.Pillbug:
+                                validMoves.Add(GetValidPillbugBasicMovements(targetPiece));
+                                validMoves.Add(GetValidPillbugSpecialAbilityMovements(targetPiece));
+                                break;
+                        }
                     }
                 }
             }
@@ -998,9 +1061,45 @@ namespace Mzinga.Core
             return validMoves;
         }
 
-        private MoveSet GetValidPillbugMovements(Piece targetPiece)
+        private MoveSet GetValidPillbugBasicMovements(Piece targetPiece)
         {
-            return new MoveSet();
+            return GetValidSlides(targetPiece, 1);
+        }
+
+        private MoveSet GetValidPillbugSpecialAbilityMovements(Piece targetPiece)
+        {
+            MoveSet validMoves = new MoveSet();
+
+            Position positionAboveTargetPiece = targetPiece.Position.GetAbove();
+
+            for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
+            {
+                Position neighbor = targetPiece.Position.NeighborAt(dir);
+                Piece piece = GetPiece(neighbor);
+                if (null != piece && piece.PieceName != LastPieceMoved && null == piece.PieceAbove && CanMoveWithoutBreakingHive(piece))
+                {
+                    // Piece can be moved
+                    Move firstMove = new Move(piece.PieceName, positionAboveTargetPiece);
+                    if (GetValidBeetleMovements(piece).Contains(firstMove))
+                    {
+                        // Piece can be moved on top
+                        Position pieceStartingPosition = piece.Position;
+                        MovePiece(piece, positionAboveTargetPiece, false);
+
+                        foreach (Move secondMove in GetValidBeetleMovements(piece))
+                        {
+                            if (secondMove.Position.Stack == 0 && secondMove.Position != pieceStartingPosition)
+                            {
+                                validMoves.Add(secondMove);
+                            }
+                        }
+
+                        MovePiece(piece, pieceStartingPosition, false);
+                    }
+                }
+            }
+
+            return validMoves;
         }
 
         private MoveSet GetValidSlides(Piece targetPiece, int? maxRange)

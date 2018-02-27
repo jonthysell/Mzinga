@@ -88,70 +88,68 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move, "You can't play, the game is over.");
             }
 
-            if (move.Color != CurrentTurnColor)
+            if (!GetValidMoves().Contains(move))
             {
-                throw new InvalidMoveException(move, "It's not that player's turn.");
-            }
-
-            if (!EnumUtils.IsEnabled(move.PieceName, ExpansionPieces))
-            {
-                throw new InvalidMoveException(move, "That piece is not enabled in this game.");
-            }
-
-            if (null == move.Position)
-            {
-                throw new InvalidMoveException(move, "You can't put a piece back into your hand.");
-            }
-
-            if (CurrentPlayerTurn == 1 && move.BugType == BugType.QueenBee)
-            {
-                throw new InvalidMoveException(move, "You can't play your Queen Bee on your first turn.");
-            }
-
-            Piece targetPiece = GetPiece(move.PieceName);
-
-            if (!CurrentTurnQueenInPlay)
-            {
-                if (CurrentPlayerTurn == 4 && targetPiece.BugType != BugType.QueenBee)
+                if (move.Color != CurrentTurnColor)
                 {
-                    throw new InvalidMoveException(move, "You must play your Queen Bee on or before your fourth turn.");
+                    throw new InvalidMoveException(move, "It's not that player's turn.");
                 }
-                else if (targetPiece.InPlay)
+
+                if (!EnumUtils.IsEnabled(move.PieceName, ExpansionPieces))
                 {
-                    throw new InvalidMoveException(move, "You can't move a piece in play until you've played your Queen Bee.");
+                    throw new InvalidMoveException(move, "That piece is not enabled in this game.");
                 }
-            }
 
-            if (!PlacingPieceInOrder(targetPiece))
-            {
-                throw new InvalidMoveException(move, "When there are multiple pieces of the same bug type, you must play the pieces in order.");
-            }
-
-            if (HasPieceAt(move.Position))
-            {
-                throw new InvalidMoveException(move, "You can't move there because a piece already exists at that position.");
-            }
-
-            if (targetPiece.InPlay)
-            {
-                if (targetPiece.Position == move.Position)
+                if (null == move.Position)
                 {
-                    throw new InvalidMoveException(move, "You can't move a piece to its current position.");
+                    throw new InvalidMoveException(move, "You can't put a piece back into your hand.");
                 }
-                else if (!PieceIsOnTop(targetPiece))
-                {
-                    throw new InvalidMoveException(move, "You can't move that piece because it has another piece on top of it.");
-                }
-                else if (!CanMoveWithoutBreakingHive(targetPiece))
-                {
-                    throw new InvalidMoveException(move, "You can't move that piece because it will break the hive.");
-                }
-            }
 
-            MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
+                if (CurrentPlayerTurn == 1 && move.BugType == BugType.QueenBee)
+                {
+                    throw new InvalidMoveException(move, "You can't play your Queen Bee on your first turn.");
+                }
 
-            if (!validMoves.Contains(move))
-            {
+                Piece targetPiece = GetPiece(move.PieceName);
+
+                if (!CurrentTurnQueenInPlay)
+                {
+                    if (CurrentPlayerTurn == 4 && targetPiece.BugType != BugType.QueenBee)
+                    {
+                        throw new InvalidMoveException(move, "You must play your Queen Bee on or before your fourth turn.");
+                    }
+                    else if (targetPiece.InPlay)
+                    {
+                        throw new InvalidMoveException(move, "You can't move a piece in play until you've played your Queen Bee.");
+                    }
+                }
+
+                if (!PlacingPieceInOrder(targetPiece))
+                {
+                    throw new InvalidMoveException(move, "When there are multiple pieces of the same bug type, you must play the pieces in order.");
+                }
+
+                if (HasPieceAt(move.Position))
+                {
+                    throw new InvalidMoveException(move, "You can't move there because a piece already exists at that position.");
+                }
+
+                if (targetPiece.InPlay)
+                {
+                    if (targetPiece.Position == move.Position)
+                    {
+                        throw new InvalidMoveException(move, "You can't move a piece to its current position.");
+                    }
+                    else if (!PieceIsOnTop(targetPiece))
+                    {
+                        throw new InvalidMoveException(move, "You can't move that piece because it has another piece on top of it.");
+                    }
+                    else if (!CanMoveWithoutBreakingHive(targetPiece))
+                    {
+                        throw new InvalidMoveException(move, "You can't move that piece because it will break the hive.");
+                    }
+                }
+
                 throw new InvalidMoveException(move);
             }
 
@@ -191,6 +189,8 @@ namespace Mzinga.Core
             _boardHistory.Add(move, originalPosition);
 
             CurrentTurn++;
+            LastPieceMoved = move.PieceName;
+
             OnBoardChanged();
         }
 
@@ -208,8 +208,12 @@ namespace Mzinga.Core
                 Piece targetPiece = GetPiece(item.Move.PieceName);
                 MovePiece(targetPiece, item.OriginalPosition);
             }
-            
+
+            Move previousMove = _boardHistory.LastMove?.Move;
+
+            LastPieceMoved = null != previousMove ? previousMove.PieceName : PieceName.INVALID;
             CurrentTurn--;
+
             OnBoardChanged();
         }
 
