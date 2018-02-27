@@ -56,7 +56,7 @@ namespace Mzinga.Core
 
         #endregion
 
-        public GameBoard() : base() { }
+        public GameBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
 
         protected GameBoard(string boardString) : base(boardString) { }
 
@@ -88,11 +88,14 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move, "You can't play, the game is over.");
             }
 
-            Piece targetPiece = GetPiece(move.PieceName);
-
-            if (targetPiece.Color != CurrentTurnColor)
+            if (move.Color != CurrentTurnColor)
             {
                 throw new InvalidMoveException(move, "It's not that player's turn.");
+            }
+
+            if (!EnumUtils.IsEnabled(move.PieceName, ExpansionPieces))
+            {
+                throw new InvalidMoveException(move, "That piece is not enabled in this game.");
             }
 
             if (null == move.Position)
@@ -104,6 +107,8 @@ namespace Mzinga.Core
             {
                 throw new InvalidMoveException(move, "You can't play your Queen Bee on your first turn.");
             }
+
+            Piece targetPiece = GetPiece(move.PieceName);
 
             if (!CurrentTurnQueenInPlay)
             {

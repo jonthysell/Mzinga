@@ -93,6 +93,24 @@ namespace Mzinga.Core
             }
         }
 
+        public static bool IsEnabled(PieceName pieceName, ExpansionPieces enabledExpansionPieces)
+        {
+            switch (pieceName)
+            {
+                case PieceName.WhiteMosquito:
+                case PieceName.BlackMosquito:
+                    return (enabledExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+                case PieceName.WhiteLadybug:
+                case PieceName.BlackLadybug:
+                    return (enabledExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+                case PieceName.WhitePillbug:
+                case PieceName.BlackPillbug:
+                    return (enabledExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+                default:
+                    return true;
+            }
+        }
+
         public static string GetShortName(PieceName pieceName)
         {
             if (pieceName == PieceName.INVALID)
@@ -136,6 +154,9 @@ namespace Mzinga.Core
             "WA1",
             "WA2",
             "WA3",
+            "WM",
+            "WL",
+            "WP",
             "BQ",
             "BS1",
             "BS2",
@@ -146,10 +167,13 @@ namespace Mzinga.Core
             "BG3",
             "BA1",
             "BA2",
-            "BA3"
+            "BA3",
+            "BM",
+            "BL",
+            "BP",
         };
 
-        public const int NumPieceNames = 22;
+        public const int NumPieceNames = 28;
 
         #endregion
 
@@ -170,6 +194,9 @@ namespace Mzinga.Core
                 case PieceName.WhiteSoldierAnt1:
                 case PieceName.WhiteSoldierAnt2:
                 case PieceName.WhiteSoldierAnt3:
+                case PieceName.WhiteMosquito:
+                case PieceName.WhiteLadybug:
+                case PieceName.WhitePillbug:
                     return Color.White;
                 case PieceName.BlackQueenBee:
                 case PieceName.BlackSpider1:
@@ -182,6 +209,9 @@ namespace Mzinga.Core
                 case PieceName.BlackSoldierAnt1:
                 case PieceName.BlackSoldierAnt2:
                 case PieceName.BlackSoldierAnt3:
+                case PieceName.BlackMosquito:
+                case PieceName.BlackLadybug:
+                case PieceName.BlackPillbug:
                     return Color.Black;
             }
 
@@ -236,12 +266,36 @@ namespace Mzinga.Core
                 case PieceName.BlackSoldierAnt2:
                 case PieceName.BlackSoldierAnt3:
                     return BugType.SoldierAnt;
+                case PieceName.WhiteMosquito:
+                case PieceName.BlackMosquito:
+                    return BugType.Mosquito;
+                case PieceName.WhiteLadybug:
+                case PieceName.BlackLadybug:
+                    return BugType.Ladybug;
+                case PieceName.WhitePillbug:
+                case PieceName.BlackPillbug:
+                    return BugType.Pillbug;
             }
 
             throw new ArgumentOutOfRangeException("pieceName");
         }
 
-        public const int NumBugTypes = 5;
+        public static bool IsEnabled(BugType bugType, ExpansionPieces enabledExpansionPieces)
+        {
+            switch (bugType)
+            {
+                case BugType.Mosquito:
+                    return (enabledExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+                case BugType.Ladybug:
+                    return (enabledExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+                case BugType.Pillbug:
+                    return (enabledExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+                default:
+                    return true;
+            }
+        }
+
+        public const int NumBugTypes = 8;
 
         #endregion
     }
@@ -268,7 +322,10 @@ namespace Mzinga.Core
         Spider,
         Beetle,
         Grasshopper,
-        SoldierAnt
+        SoldierAnt,
+        Mosquito,
+        Ladybug,
+        Pillbug,
     }
 
     public enum PieceName
@@ -285,6 +342,9 @@ namespace Mzinga.Core
         WhiteSoldierAnt1,
         WhiteSoldierAnt2,
         WhiteSoldierAnt3,
+        WhiteMosquito,
+        WhiteLadybug,
+        WhitePillbug,
         BlackQueenBee,
         BlackSpider1,
         BlackSpider2,
@@ -295,6 +355,9 @@ namespace Mzinga.Core
         BlackGrassHopper3,
         BlackSoldierAnt1,
         BlackSoldierAnt2,
-        BlackSoldierAnt3
+        BlackSoldierAnt3,
+        BlackMosquito,
+        BlackLadybug,
+        BlackPillbug,
     }
 }

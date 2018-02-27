@@ -48,17 +48,17 @@ namespace Mzinga.CoreTest
             GameBoard b = new GameBoard();
             Assert.IsNotNull(b);
 
-            int numBugsWithoutQueen = EnumUtils.NumBugTypes - 1;
+            int numBaseBugsWithoutQueen = EnumUtils.NumBugTypes - 4;
 
             MoveSet validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
-            Assert.AreEqual(numBugsWithoutQueen, validMoves.Count);
+            Assert.AreEqual(numBaseBugsWithoutQueen, validMoves.Count);
 
             b.Play(new Move(PieceName.WhiteSpider1, Position.Origin));
 
             validMoves = b.GetValidMoves();
             Assert.IsNotNull(validMoves);
-            Assert.AreEqual(numBugsWithoutQueen * EnumUtils.NumDirections, validMoves.Count);
+            Assert.AreEqual(numBaseBugsWithoutQueen * EnumUtils.NumDirections, validMoves.Count);
         }
 
         [TestMethod]

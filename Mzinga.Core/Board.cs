@@ -95,6 +95,8 @@ namespace Mzinga.Core
             }
         }
 
+        public ExpansionPieces ExpansionPieces { get; private set; } = ExpansionPieces.None;
+
         public string BoardString
         {
             get
@@ -109,7 +111,7 @@ namespace Mzinga.Core
 
                     for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                     {
-                        if (_pieces[i].InPlay)
+                        if (null != _pieces[i] && _pieces[i].InPlay)
                         {
                             sb.AppendFormat("{0}{1}", _pieces[i].ToString(), BoardStringSeparator);
                         }
@@ -153,7 +155,7 @@ namespace Mzinga.Core
             {
                 for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
-                    if (_pieces[i].InPlay)
+                    if (null != _pieces[i] && _pieces[i].InPlay)
                     {
                         yield return (PieceName)i;
                     }
@@ -167,7 +169,7 @@ namespace Mzinga.Core
             {
                 for (int i = 0; i < EnumUtils.NumPieceNames / 2; i++)
                 {
-                    if (_pieces[i].InHand)
+                    if (null != _pieces[i] && _pieces[i].InHand)
                     {
                         yield return (PieceName)i;
                     }
@@ -181,7 +183,7 @@ namespace Mzinga.Core
             {
                 for (int i = EnumUtils.NumPieceNames / 2; i < EnumUtils.NumPieceNames; i++)
                 {
-                    if (_pieces[i].InHand)
+                    if (null != _pieces[i] && _pieces[i].InHand)
                     {
                         yield return (PieceName)i;
                     }
@@ -244,12 +246,9 @@ namespace Mzinga.Core
 
         #endregion
 
-        public Board()
+        public Board(ExpansionPieces expansionPieces = ExpansionPieces.None)
         {
-            for (int i = 0; i < EnumUtils.NumPieceNames; i++)
-            {
-                _pieces[i] = new Piece((PieceName)i);
-            }
+            InitPieces(expansionPieces);
         }
 
         public Board(string boardString) : this()
@@ -317,6 +316,16 @@ namespace Mzinga.Core
             if (!IsOneHive())
             {
                 throw new ArgumentException("The boardString violates the one-hive rule.", "boardString");
+            }
+        }
+
+        private void InitPieces(ExpansionPieces expansionPieces)
+        {
+            ExpansionPieces = expansionPieces;
+
+            for (int i = 0; i < EnumUtils.NumPieceNames; i++)
+            {
+                _pieces[i] = EnumUtils.IsEnabled((PieceName)i, ExpansionPieces) ? new Piece((PieceName)i) : null;
             }
         }
 
@@ -464,7 +473,7 @@ namespace Mzinga.Core
             foreach (PieceName pieceName in EnumUtils.PieceNames)
             {
                 Piece piece = GetPiece(pieceName);
-                if (piece.InHand)
+                if (null == piece || piece.InHand)
                 {
                     partOfHive[(int)pieceName] = true;
                     piecesVisited++;
@@ -555,14 +564,17 @@ namespace Mzinga.Core
             {
                 Piece targetPiece = GetPiece(pieceName);
 
-                _boardMetrics[pieceName].InPlay = targetPiece.InPlay ? 1 : 0;
+                if (null != targetPiece)
+                {
+                    _boardMetrics[pieceName].InPlay = targetPiece.InPlay ? 1 : 0;
 
-                // Move metrics
-                MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
+                    // Move metrics
+                    MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
 
-                _boardMetrics[pieceName].ValidMoveCount = validMoves.Count;
-                _boardMetrics[pieceName].IsPinned = _boardMetrics[pieceName].ValidMoveCount == 0 ? 1 : 0;
-                _boardMetrics[pieceName].NeighborCount = CountNeighbors(targetPiece);
+                    _boardMetrics[pieceName].ValidMoveCount = validMoves.Count;
+                    _boardMetrics[pieceName].IsPinned = _boardMetrics[pieceName].ValidMoveCount == 0 ? 1 : 0;
+                    _boardMetrics[pieceName].NeighborCount = CountNeighbors(targetPiece);
+                }
             }
         }
 
@@ -652,7 +664,7 @@ namespace Mzinga.Core
 
         private MoveSet GetValidMovesInternal(Piece targetPiece)
         {
-            if (GameInProgress)
+            if (null != targetPiece && GameInProgress)
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
                 {
@@ -724,7 +736,7 @@ namespace Mzinga.Core
                 for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
                     Piece piece = _pieces[i];
-                    if (piece.InPlay && PieceIsOnTop(piece) && piece.Color == targetColor)
+                    if (null != piece && piece.InPlay && PieceIsOnTop(piece) && piece.Color == targetColor)
                     {
                         // Piece is in play, on the top and is the right color, look through neighbors
                         Position bottomPosition = GetPieceOnBottom(piece).Position;
@@ -1043,6 +1055,15 @@ namespace Mzinga.Core
         Draw,
         WhiteWins,
         BlackWins
+    }
+
+    [Flags]
+    public enum ExpansionPieces
+    {
+        None = 0x0,
+        Mosquito = 0x1,
+        Ladybug = 0x2,
+        Pillbug = 0x4,
     }
 
     [Serializable]
