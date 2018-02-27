@@ -74,6 +74,7 @@
                                   VerticalContentAlignment="Center" />
                         <CheckBox Content="Pillbug"
                                   IsChecked="{Binding IncludePillbug}"
+                                  IsEnabled="False"
                                   Margin="5"
                                   VerticalAlignment="Center"
                                   VerticalContentAlignment="Center" />
