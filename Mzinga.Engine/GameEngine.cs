@@ -129,7 +129,14 @@ namespace Mzinga.Engine
                         PrintBoard();
                         break;
                     case "newgame":
-                        NewGame();
+                        if (paramCount == 0)
+                        {
+                            NewGame(ExpansionPieces.None);
+                        }
+                        else
+                        {
+                            NewGame(EnumUtils.ParseExpansionPieces(split[1]));
+                        }
                         break;
                     case "play":
                         if (paramCount < 1)
@@ -268,9 +275,9 @@ namespace Mzinga.Engine
             ConsoleOut(_gameBoard.ToString());
         }
 
-        private void NewGame()
+        private void NewGame(ExpansionPieces expansionPieces)
         {
-            _gameBoard = new GameBoard();
+            _gameBoard = new GameBoard(expansionPieces);
 
             _gameAI.ResetCaches();
 
@@ -470,7 +477,7 @@ namespace Mzinga.Engine
                 _gameAI.BestMoveFound -= OnBestMoveFound;
 
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async ()=> await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
+                _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
                 _isPondering = true;
             }
