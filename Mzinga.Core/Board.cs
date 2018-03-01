@@ -241,14 +241,18 @@ namespace Mzinga.Core
             }
             protected set
             {
-                PieceName old = _lastPieceMoved;
-
-                _lastPieceMoved = value;
-
-                if (old != value && ((ExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug))
+                // Only update when Pillbug is enabled
+                if ((ExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug)
                 {
-                    _zobristHash.ToggleLastMovedPiece(old);
-                    _zobristHash.ToggleLastMovedPiece(value);
+                    PieceName old = _lastPieceMoved;
+
+                    _lastPieceMoved = value;
+
+                    if (old != value)
+                    {
+                        _zobristHash.ToggleLastMovedPiece(old);
+                        _zobristHash.ToggleLastMovedPiece(value);
+                    }
                 }
             }
         }
