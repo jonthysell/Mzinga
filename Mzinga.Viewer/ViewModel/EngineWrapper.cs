@@ -590,6 +590,7 @@ namespace Mzinga.Viewer.ViewModel
 
                 TargetPiece = bestMove.PieceName;
                 TargetPosition = bestMove.Position;
+                TargetMove = bestMove;
             }
             catch (Exception)
             {
