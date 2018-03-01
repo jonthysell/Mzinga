@@ -68,6 +68,8 @@ namespace Mzinga.Core.AI
         private FixedCache<long, double> _cachedBoardScores = new FixedCache<long, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
 
+        private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
+
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
@@ -422,7 +424,7 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || gameBoard.GameIsOver)
             {
-                return await QuiescenceSearchAsync(gameBoard, alpha, beta, color, token);
+                return await QuiescenceSearchAsync(gameBoard, QuiescentSearchMaxDepth, alpha, beta, color, token);
             }
 
             double? bestValue = null;
@@ -498,13 +500,13 @@ namespace Mzinga.Core.AI
 
         #region QuiescenceSearch
 
-        private async Task<double?> QuiescenceSearchAsync(GameBoard gameBoard, double alpha, double beta, int color, CancellationToken token)
+        private async Task<double?> QuiescenceSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
         {
             double bestValue = color * CalculateBoardScore(gameBoard);
 
             alpha = Math.Max(alpha, bestValue);
 
-            if (alpha >= beta)
+            if (alpha >= beta || depth == 0 || gameBoard.GameIsOver)
             {
                 return bestValue;
             }
@@ -517,7 +519,7 @@ namespace Mzinga.Core.AI
                 }
 
                 gameBoard.TrustedPlay(move);
-                double? value = -1 * await QuiescenceSearchAsync(gameBoard, -beta, -alpha, -color, token);
+                double? value = -1 * await QuiescenceSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
@@ -559,7 +561,7 @@ namespace Mzinga.Core.AI
 
             foreach (Move move in gameBoard.GetValidMoves())
             {
-                if (queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
+                if (!move.IsPass && queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
                 {
                     // Move is to a neighbor, and is not from a neighbor
                     yield return move;
