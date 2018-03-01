@@ -1,44 +1,42 @@
 # Mzinga #
 
-Mzinga is an open-source AI to play the board game Hive. It is architected similar to various chess-playing AIs, consisting of:
+Mzinga is an open-source software project to play the board game [Hive](Hive), with the primary goal of building a community of developers who create Hive-playing AIs.
 
-* A set of standardized commands similar to the Universal Chess Interface
-* An command-line reference engine, which accepts the standardized commands
-* A general board UI which can interface with any engine that implements the standardized commands
+To that end, Mzinga proposes a [Universal Hive Protocol](https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol) to support interoperability for Hive-playing software.
 
-The goal is not to simply implement Hive in code, but to establish a standard way for programmers to create their own AI players. The hope is that this will encourage explorations around Hive AI.
+For more information, please checkout the [Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki).
 
-## Components ##
+## Projects ##
 
 Mzinga is developed in C# for .NET 4.5.
 
-### Mzinga.Core.dll ###
+### Mzinga.Core ###
 
-Mzinga.Core implements all of the rules of the core Hive game (no expansion pieces), and in that respect it is complete. It also contains the game AI, though playable, is not very strong.
+Mzinga.Core.dll is the main code library containing all of the logical components necessary to represent and play Hive, as well as the all of the algorithms for Mzinga's AI.
 
 Expansion pieces will be added eventually, but most future investment in Mzinga.Core will be to improve the game AI.
 
-### Mzinga.Engine.exe ###
+### Mzinga.Engine ###
 
-Mzinga.Engine is a command-line interface which can read input commands, send them to Mzinga.Core and output the results. Through it you can actually play a game of Hive. It's very thin (all of the real logic is in Mzinga.Core) and is therefore complete.
+Mzinga.Engine.exe is Mzinga's engine, a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
 
-### Mzinga.Viewer.exe ###
+By itself it is a relatively thin application, as it relies heavily on Mzinga.Core to handle the actual game logic.
 
-Mzinga.Viewer provides a GUI with which to interface with Mzinga.Engine. Currently it provides a graphically rendered gameboard and allows users to play games with Mzinga.Engine.
+### Mzinga.Viewer ###
 
-Future investment includes continuing to expose Mzinga.Engine functionality and improving the usability for players.
+Mzinga.Viewer.exe is Mzinga's viewer a graphical application which can drive Mzinga.Engine(or any engine that implements the specifications of the Universal Hive Protocol).
+
+Mzinga.Viewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
 
 ## Other Components ##
 
-### Mzinga.CoreTest.dll ###
+### Mzinga.CoreTest ###
 
-Mzinga.CoreTest contains unit tests for Mzinga.Core.
+Mzinga.CoreTest.dll contains unit tests for Mzinga.Core.
 
-Future investment includes increasing code coverage with more tests.
+### Mzinga.Trainer ###
 
-### Mzinga.Trainer.exe ###
-
-Mzinga.Trainer is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
+Mzinga.Trainer.exe is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
 
 ## Copyright ##
 
