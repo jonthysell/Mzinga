@@ -245,7 +245,7 @@ namespace Mzinga.Core
 
                 _lastPieceMoved = value;
 
-                if (old != value)
+                if (old != value && ((ExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug))
                 {
                     _zobristHash.ToggleLastMovedPiece(old);
                     _zobristHash.ToggleLastMovedPiece(value);
@@ -575,6 +575,9 @@ namespace Mzinga.Core
             HashSet<Position> validPlacements = _cachedValidPlacementPositions;
             _cachedValidPlacementPositions = null;
 
+            PieceName lastPieceMoved = _lastPieceMoved;
+            _lastPieceMoved = PieceName.INVALID;
+
             // Spoof going to the next turn to get the opponent's metrics
             _currentTurn++;
             _zobristHash.ToggleTurn();
@@ -585,6 +588,7 @@ namespace Mzinga.Core
             // Returned, so reload saved valid moves/placements into cache
             _cachedValidPlacementPositions = validPlacements;
             _cachedValidMovesByPiece = validMoves;
+            _lastPieceMoved = lastPieceMoved;
 
             return _boardMetrics;
         }
