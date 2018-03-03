@@ -28,6 +28,8 @@ using System;
 using System.Reflection;
 using System.Text;
 
+using Mzinga.Core;
+
 namespace Mzinga.Trainer
 {
     public class Program
@@ -166,6 +168,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-MaxDepth              The maximum ply depth of the AI search");
             Console.WriteLine("-TurnMaxTime           The maximum time to let the AI think on its turn");
             Console.WriteLine("-BattleTimeLimit       The maximum time to let a battle run before declaring a draw");
+            Console.WriteLine("-GameType              Base,Base+M,Base+L,Base+P,Base+ML,Base+MP,Base+LP,Base+MLP");
             Console.WriteLine();
         }
 
@@ -326,6 +329,10 @@ namespace Mzinga.Trainer
                     case "btl":
                     case "battletimelimit":
                         trainerSettings.BattleTimeLimit = TimeSpan.Parse(args[++i]);
+                        break;
+                    case "gt":
+                    case "gametype":
+                        trainerSettings.GameType = EnumUtils.ParseExpansionPieces(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));

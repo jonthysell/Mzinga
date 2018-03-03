@@ -316,7 +316,7 @@ namespace Mzinga.Trainer
             }
 
             // Create Game
-            GameBoard gameBoard = new GameBoard();
+            GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
 
             // Create AIs
             GameAI whiteAI = new GameAI(whiteProfile.MetricWeights, TrainerSettings.TransTableSize);
