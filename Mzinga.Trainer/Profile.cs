@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -415,7 +415,7 @@ namespace Mzinga.Trainer
             int eloRating = EloUtils.DefaultRating;
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
-            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights, parentB.MetricWeights, minMix, maxMix);
+            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights.GetNormalized(), parentB.MetricWeights.GetNormalized(), minMix, maxMix);
 
             DateTime creationTimestamp = DateTime.Now;
 
