@@ -193,7 +193,7 @@ namespace Mzinga.Core.AI
         }
 
         private const string KeySeperator = ".";
-        public const int NumBugTypeWeights = 4;
+        public const int NumBugTypeWeights = 7;
     }
 
     public enum BugTypeWeight
