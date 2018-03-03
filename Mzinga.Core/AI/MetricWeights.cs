@@ -199,8 +199,11 @@ namespace Mzinga.Core.AI
     public enum BugTypeWeight
     {
         InPlayWeight = 0,
-        ValidMoveWeight,
         IsPinnedWeight,
-        NeighborWeight,
+        IsCoveredWeight,
+        NoisyMoveWeight,
+        QuietMoveWeight,
+        FriendlyNeighborWeight,
+        EnemyNeighborWeight,
     }
 }

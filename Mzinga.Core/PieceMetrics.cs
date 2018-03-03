@@ -29,8 +29,11 @@ namespace Mzinga.Core
     public class PieceMetrics
     {
         public int InPlay = 0;
-        public int ValidMoveCount = 0;
         public int IsPinned = 0;
-        public int NeighborCount = 0;
+        public int IsCovered = 0;
+        public int NoisyMoveCount = 0;
+        public int QuietMoveCount = 0;
+        public int FriendlyNeighborCount = 0;
+        public int EnemyNeighborCount = 0;
     }
 }

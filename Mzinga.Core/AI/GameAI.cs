@@ -511,62 +511,36 @@ namespace Mzinga.Core.AI
                 return bestValue;
             }
 
-            foreach (Move move in GetNoisyMoves(gameBoard))
+            foreach (Move move in gameBoard.GetValidMoves())
             {
-                if (token.IsCancellationRequested)
+                if (gameBoard.IsNoisyMove(move))
                 {
-                    return null;
-                }
+                    if (token.IsCancellationRequested)
+                    {
+                        return null;
+                    }
 
-                gameBoard.TrustedPlay(move);
-                double? value = -1 * await QuiescenceSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
-                gameBoard.UndoLastMove();
+                    gameBoard.TrustedPlay(move);
+                    double? value = -1 * await QuiescenceSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    gameBoard.UndoLastMove();
 
-                if (!value.HasValue)
-                {
-                    return null;
-                }
+                    if (!value.HasValue)
+                    {
+                        return null;
+                    }
 
-                bestValue = Math.Max(bestValue, value.Value);
+                    bestValue = Math.Max(bestValue, value.Value);
 
-                alpha = Math.Max(alpha, bestValue);
+                    alpha = Math.Max(alpha, bestValue);
 
-                if (alpha >= beta)
-                {
-                    break;
+                    if (alpha >= beta)
+                    {
+                        break;
+                    }
                 }
             }
 
             return bestValue;
-        }
-
-        private IEnumerable<Move> GetNoisyMoves(GameBoard gameBoard)
-        {
-            // Build up a list of positions around the enemy queen
-            HashSet<Position> queenNeighbors = new HashSet<Position>();
-
-            Position queenPosition = gameBoard.GetPiecePosition(gameBoard.CurrentTurnColor == Color.White ? PieceName.BlackQueenBee : PieceName.WhiteQueenBee);
-
-            if (null == queenPosition)
-            {
-                // Queen is not yet in play
-                yield break;
-            }
-
-            // Add queen's neighboring positions
-            for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
-            {
-                queenNeighbors.Add(queenPosition.NeighborAt(dir));
-            }
-
-            foreach (Move move in gameBoard.GetValidMoves())
-            {
-                if (!move.IsPass && queenNeighbors.Contains(move.Position) && !queenNeighbors.Contains(gameBoard.GetPiecePosition(move.PieceName)))
-                {
-                    // Move is to a neighbor, and is not from a neighbor
-                    yield return move;
-                }
-            }
         }
 
         #endregion
@@ -619,8 +593,11 @@ namespace Mzinga.Core.AI
 
                 score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
                 score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.ValidMoveWeight) * boardMetrics[pieceName].ValidMoveCount;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.NeighborWeight) * boardMetrics[pieceName].NeighborCount;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.IsCoveredWeight) * boardMetrics[pieceName].IsCovered;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.NoisyMoveWeight) * boardMetrics[pieceName].NoisyMoveCount;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.QuietMoveWeight) * boardMetrics[pieceName].QuietMoveCount;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) * boardMetrics[pieceName].FriendlyNeighborCount;
+                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.EnemyNeighborWeight) * boardMetrics[pieceName].EnemyNeighborCount;
             }
 
             return score;

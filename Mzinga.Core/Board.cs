@@ -267,6 +267,8 @@ namespace Mzinga.Core
         private HashSet<Position> _cachedValidPlacementPositions = null;
         private HashSet<Position> _visitedPlacements = new HashSet<Position>();
 
+        private HashSet<Position> _cachedEnemyQueenNeighbors = null;
+
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
 
         public int ValidMoveCacheResets { get; private set; } = 0;
@@ -573,11 +575,14 @@ namespace Mzinga.Core
             SetCurrentPlayerMetrics();
 
             // Save off current valid moves/placements since we'll be returning to it
-            MoveSet[] validMoves = _cachedValidMovesByPiece;
+            MoveSet[] validMovesByPiece = _cachedValidMovesByPiece;
             _cachedValidMovesByPiece = null;
 
-            HashSet<Position> validPlacements = _cachedValidPlacementPositions;
+            HashSet<Position> validPlacementPositions = _cachedValidPlacementPositions;
             _cachedValidPlacementPositions = null;
+
+            HashSet<Position> enemyQueenNeighbors = _cachedEnemyQueenNeighbors;
+            _cachedEnemyQueenNeighbors = null;
 
             PieceName lastPieceMoved = _lastPieceMoved;
             _lastPieceMoved = PieceName.INVALID;
@@ -590,9 +595,10 @@ namespace Mzinga.Core
             _zobristHash.ToggleTurn();
 
             // Returned, so reload saved valid moves/placements into cache
-            _cachedValidPlacementPositions = validPlacements;
-            _cachedValidMovesByPiece = validMoves;
             _lastPieceMoved = lastPieceMoved;
+            _cachedEnemyQueenNeighbors = enemyQueenNeighbors;
+            _cachedValidPlacementPositions = validPlacementPositions;
+            _cachedValidMovesByPiece = validMovesByPiece;
 
             return _boardMetrics;
         }
@@ -608,35 +614,94 @@ namespace Mzinga.Core
                     _boardMetrics[pieceName].InPlay = targetPiece.InPlay ? 1 : 0;
 
                     // Move metrics
-                    MoveSet validMoves = GetValidMoves(targetPiece.PieceName);
+                    int totalMoves = CountNoisyMoves(GetValidMoves(targetPiece.PieceName), out _boardMetrics[pieceName].NoisyMoveCount, out _boardMetrics[pieceName].QuietMoveCount);
 
-                    _boardMetrics[pieceName].ValidMoveCount = validMoves.Count;
-                    _boardMetrics[pieceName].IsPinned = _boardMetrics[pieceName].ValidMoveCount == 0 ? 1 : 0;
-                    _boardMetrics[pieceName].NeighborCount = CountNeighbors(targetPiece);
+                    _boardMetrics[pieceName].IsPinned = totalMoves == 0 ? 1 : 0;
+                    _boardMetrics[pieceName].IsCovered = targetPiece.InPlay && null != targetPiece.PieceAbove ? 1 : 0;
+
+                    CountNeighbors(targetPiece, out _boardMetrics[pieceName].FriendlyNeighborCount, out _boardMetrics[pieceName].EnemyNeighborCount);
                 }
             }
         }
 
         protected int CountNeighbors(PieceName pieceName)
         {
-            return CountNeighbors(GetPiece(pieceName));
+            int friendlyCount;
+            int enemyCount;
+            return CountNeighbors(GetPiece(pieceName), out friendlyCount, out enemyCount);
         }
 
-        private int CountNeighbors(Piece piece)
+        private int CountNeighbors(Piece piece, out int friendlyCount, out int enemyCount)
         {
-            if (piece.InHand)
+            friendlyCount = 0;
+            enemyCount = 0;
+
+            if (piece.InPlay)
             {
-                return 0;
+                for (int i = 0; i < EnumUtils.NumDirections; i++)
+                {
+                    Piece neighbor = GetPiece(piece.Position.NeighborAt(i));
+                    if (null != neighbor)
+                    {
+                        if (neighbor.Color == piece.Color)
+                        {
+                            friendlyCount++;
+                        }
+                        else
+                        {
+                            enemyCount++;
+                        }
+                    }
+                }
             }
 
-            int count = 0;
+            return friendlyCount + enemyCount;
+        }
 
-            for (int i = 0; i < EnumUtils.NumDirections; i++)
+        private int CountNoisyMoves(MoveSet moves, out int noisyCount, out int quietCount)
+        {
+            noisyCount = 0;
+            quietCount = 0;
+
+            foreach (Move move in moves)
             {
-                count += HasPieceAt(piece.Position.NeighborAt(i)) ? 1 : 0;
+                if (IsNoisyMove(move))
+                {
+                    noisyCount++;
+                }
+                else
+                {
+                    quietCount++;
+                }
             }
 
-            return count;
+            return noisyCount + quietCount;
+        }
+
+        public bool IsNoisyMove(Move move)
+        {
+            if (null == move || move.IsPass)
+            {
+                return false;
+            }
+
+            if (null == _cachedEnemyQueenNeighbors)
+            {
+                _cachedEnemyQueenNeighbors = new HashSet<Position>();
+
+                Position enemyQueenPosition = GetPiecePosition(CurrentTurnColor == Color.White ? PieceName.BlackQueenBee : PieceName.WhiteQueenBee);
+
+                if (null != enemyQueenPosition)
+                {
+                    // Add queen's neighboring positions
+                    for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
+                    {
+                        _cachedEnemyQueenNeighbors.Add(enemyQueenPosition.NeighborAt(dir));
+                    }
+                }
+            }
+
+            return _cachedEnemyQueenNeighbors.Contains(move.Position) && !_cachedEnemyQueenNeighbors.Contains(GetPiecePosition(move.PieceName));
         }
 
         #endregion
@@ -1245,6 +1310,7 @@ namespace Mzinga.Core
         {
             _cachedValidMovesByPiece = null;
             _cachedValidPlacementPositions = null;
+            _cachedEnemyQueenNeighbors = null;
             ValidMoveCacheResets++;
 
             _boardString = null;
