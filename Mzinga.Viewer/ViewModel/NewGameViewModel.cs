@@ -225,7 +225,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return new RelayCommand(() =>
+                return _accept ?? (_accept = new RelayCommand(() =>
                 {
                     try
                     {
@@ -236,15 +236,16 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                });
+                }));
             }
         }
+        private RelayCommand _accept = null;
 
         public RelayCommand Reject
         {
             get
             {
-                return new RelayCommand(() =>
+                return _reject ?? (_reject = new RelayCommand(() =>
                 {
                     try
                     {
@@ -255,9 +256,10 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                });
+                }));
             }
         }
+        private RelayCommand _reject = null;
 
         public GameSettings Settings { get; private set; }
 

@@ -64,13 +64,13 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
-                RaisePropertyChanged("NewGame");
-                RaisePropertyChanged("PlayTarget");
-                RaisePropertyChanged("Pass");
-                RaisePropertyChanged("UndoLastMove");
-                RaisePropertyChanged("FindBestMove");
-                RaisePropertyChanged("ShowViewerConfig");
-                RaisePropertyChanged("CheckForUpdatesAsync");
+                NewGame.RaiseCanExecuteChanged();
+                PlayTarget.RaiseCanExecuteChanged();
+                Pass.RaiseCanExecuteChanged();
+                UndoLastMove.RaiseCanExecuteChanged();
+                FindBestMove.RaiseCanExecuteChanged();
+                ShowViewerConfig.RaiseCanExecuteChanged();
+                CheckForUpdatesAsync.RaiseCanExecuteChanged();
             }
         }
         private bool _isIdle;
@@ -250,7 +250,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return new RelayCommand(() =>
+                return _newGame ?? (_newGame = new RelayCommand(() =>
                 {
                     try
                     {
@@ -273,15 +273,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, ()=>
                 {
                     return IsIdle;
-                });
+                }));
             }
         }
+        private RelayCommand _newGame = null;
 
         public RelayCommand PlayTarget
         {
             get
             {
-                return new RelayCommand(() =>
+                return _playTarget ?? (_playTarget = new RelayCommand(() =>
                 {
                     try
                     {
@@ -294,15 +295,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove);
-                });
+                }));
             }
         }
+        private RelayCommand _playTarget = null;
 
         public RelayCommand Pass
         {
             get
             {
-                return new RelayCommand(() =>
+                return _pass ?? (_pass = new RelayCommand(() =>
                 {
                     try
                     {
@@ -315,15 +317,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass);
-                });
+                }));
             }
         }
+        private RelayCommand _pass = null;
 
         public RelayCommand UndoLastMove
         {
             get
             {
-                return new RelayCommand(() =>
+                return _undoLastMove ?? (_undoLastMove = new RelayCommand(() =>
                 {
                     try
                     {
@@ -336,15 +339,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanUndoLastMove;
-                });
+                }));
             }
         }
+        private RelayCommand _undoLastMove = null;
 
         public RelayCommand FindBestMove
         {
             get
             {
-                return new RelayCommand(() =>
+                return _findBestMove ?? (_findBestMove = new RelayCommand(() =>
                 {
                     try
                     {
@@ -357,15 +361,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanFindBestMove;
-                });
+                }));
             }
         }
+        private RelayCommand _findBestMove = null;
 
         public RelayCommand ShowEngineConsole
         {
             get
             {
-                return new RelayCommand(() =>
+                return _showEngineConsole ?? (_showEngineConsole = new RelayCommand(() =>
                 {
                     try
                     {
@@ -375,15 +380,16 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                });
+                }));
             }
         }
+        private RelayCommand _showEngineConsole = null;
 
         public RelayCommand ShowViewerConfig
         {
             get
             {
-                return new RelayCommand(() =>
+                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
                 {
                     try
                     {
@@ -393,8 +399,8 @@ namespace Mzinga.Viewer.ViewModel
                             {
                                 AppVM.ViewerConfig.CopyFrom(config);
                                 RaisePropertyChanged("ViewerConfig");
-                                RaisePropertyChanged("PlayTarget");
-                                RaisePropertyChanged("Pass");
+                                PlayTarget.RaiseCanExecuteChanged();
+                                Pass.RaiseCanExecuteChanged();
                             }
                             catch (Exception ex)
                             {
@@ -409,15 +415,16 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle;
-                });
+                }));
             }
         }
+        private RelayCommand _showViewerConfig = null;
 
         public RelayCommand CheckForUpdatesAsync
         {
             get
             {
-                return new RelayCommand(async () =>
+                return _checkForUpdatesAsync ?? (_checkForUpdatesAsync = new RelayCommand(async () =>
                 {
                     try
                     {
@@ -435,9 +442,10 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && !UpdateUtils.IsCheckingforUpdate;
-                });
+                }));
             }
         }
+        private RelayCommand _checkForUpdatesAsync = null;
 
         public MainViewModel()
         {
@@ -456,13 +464,13 @@ namespace Mzinga.Viewer.ViewModel
             AppVM.EngineWrapper.TargetPieceUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("TargetMove");
-                RaisePropertyChanged("PlayTarget");
+                PlayTarget.RaiseCanExecuteChanged();
             };
 
             AppVM.EngineWrapper.TargetPositionUpdated += (sender, args) =>
             {
                 RaisePropertyChanged("TargetMove");
-                RaisePropertyChanged("PlayTarget");
+                PlayTarget.RaiseCanExecuteChanged();
             };
 
             AppVM.EngineWrapper.IsIdleUpdated += (sender, args) =>
@@ -476,10 +484,9 @@ namespace Mzinga.Viewer.ViewModel
         private void OnBoardUpdated(object sender, EventArgs args)
         {
             RaisePropertyChanged("Board");
-            RaisePropertyChanged("Pass");
-            RaisePropertyChanged("PlayBestMove");
-            RaisePropertyChanged("FindBestMove");
-            RaisePropertyChanged("UndoLastMove");
+            Pass.RaiseCanExecuteChanged();
+            FindBestMove.RaiseCanExecuteChanged();
+            UndoLastMove.RaiseCanExecuteChanged();
             RaisePropertyChanged("GameState");
 
             AppVM.DoOnUIThread(() =>

@@ -61,7 +61,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
-                RaisePropertyChanged("SendEngineCommand");
+                SendEngineCommand.RaiseCanExecuteChanged();
             }
         }
         private bool _isIdle;
@@ -84,7 +84,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _engineInputText = value;
                 RaisePropertyChanged("EngineInputText");
-                RaisePropertyChanged("SendEngineCommand");
+                SendEngineCommand.RaiseCanExecuteChanged();
             }
         }
         private string _engineInputText = "";
@@ -93,7 +93,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return new RelayCommand(() =>
+                return _sendEngineCommand ?? (_sendEngineCommand = new RelayCommand(() =>
                 {
                     try
                     {
@@ -110,9 +110,10 @@ namespace Mzinga.Viewer.ViewModel
                 }, () =>
                 {
                     return IsIdle && !string.IsNullOrWhiteSpace(EngineInputText);
-                });
+                }));
             }
         }
+        private RelayCommand _sendEngineCommand = null;
 
         public EngineConsoleViewModel()
         {
