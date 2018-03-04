@@ -43,6 +43,9 @@
                         <CheckBox Content="Only allow valid moves"
                                   IsChecked="{Binding BlockInvalidMoves}"
                                   Margin="5" />
+                        <CheckBox Content="Require move confirmation"
+                                  IsChecked="{Binding RequireMoveConfirmation}"
+                                  Margin="5" />
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="Visual Preferences"

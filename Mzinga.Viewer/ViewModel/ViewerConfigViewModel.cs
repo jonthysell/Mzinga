@@ -149,6 +149,19 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public bool RequireMoveConfirmation
+        {
+            get
+            {
+                return Config.RequireMoveConfirmation;
+            }
+            set
+            {
+                Config.RequireMoveConfirmation = value;
+                RaisePropertyChanged("RequireMoveConfirmation");
+            }
+        }
+
         public RelayCommand Accept
         {
             get

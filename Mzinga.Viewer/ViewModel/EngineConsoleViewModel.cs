@@ -119,12 +119,18 @@ namespace Mzinga.Viewer.ViewModel
         {
             AppVM.EngineWrapper.EngineTextUpdated += (sender, args) =>
             {
-                RaisePropertyChanged("EngineOutputText");
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("EngineOutputText");
+                });
             };
 
             AppVM.EngineWrapper.IsIdleUpdated += (sender, args) =>
             {
-                IsIdle = AppVM.EngineWrapper.IsIdle;
+                AppVM.DoOnUIThread(() =>
+                {
+                    IsIdle = AppVM.EngineWrapper.IsIdle;
+                });
             };
 
             IsIdle = true;

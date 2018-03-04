@@ -80,6 +80,8 @@ namespace Mzinga.Viewer.ViewModel
 
         public bool BlockInvalidMoves { get; set; } = true;
 
+        public bool RequireMoveConfirmation { get; set; } = true;
+
         public ViewerConfig() { }
 
         public void LoadConfig(Stream inputStream)
@@ -123,6 +125,9 @@ namespace Mzinga.Viewer.ViewModel
                                 break;
                             case "BlockInvalidMoves":
                                 BlockInvalidMoves = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
+                                break;
+                            case "RequireMoveConfirmation":
+                                RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
                                 break;
                         }
                     }
@@ -173,6 +178,7 @@ namespace Mzinga.Viewer.ViewModel
                 writer.WriteElementString("HighlightValidMoves", HighlightValidMoves.ToString());
                 writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
                 writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
+                writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
 
                 writer.WriteEndElement();
             }
@@ -195,6 +201,7 @@ namespace Mzinga.Viewer.ViewModel
             clone.HighlightLastMovePlayed = HighlightLastMovePlayed;
 
             clone.BlockInvalidMoves = BlockInvalidMoves;
+            clone.RequireMoveConfirmation = RequireMoveConfirmation;
 
             return clone;
         }
@@ -219,6 +226,7 @@ namespace Mzinga.Viewer.ViewModel
             HighlightLastMovePlayed = config.HighlightLastMovePlayed;
 
             BlockInvalidMoves = config.BlockInvalidMoves;
+            RequireMoveConfirmation = config.RequireMoveConfirmation;
         }
     }
 

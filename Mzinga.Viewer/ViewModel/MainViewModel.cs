@@ -449,61 +449,89 @@ namespace Mzinga.Viewer.ViewModel
 
         public MainViewModel()
         {
-            AppVM.EngineWrapper.BoardUpdated += OnBoardUpdated;
+            AppVM.EngineWrapper.BoardUpdated += (sender, args) =>
+            {
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("Board");
+                    PlayTarget.RaiseCanExecuteChanged();
+                    Pass.RaiseCanExecuteChanged();
+                    FindBestMove.RaiseCanExecuteChanged();
+                    UndoLastMove.RaiseCanExecuteChanged();
+                    RaisePropertyChanged("GameState");
+
+                    switch (Board.BoardState)
+                    {
+                        case BoardState.WhiteWins:
+                            Messenger.Default.Send(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
+                            break;
+                        case BoardState.BlackWins:
+                            Messenger.Default.Send(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
+                            break;
+                        case BoardState.Draw:
+                            Messenger.Default.Send(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
+                            break;
+                    }
+                });
+            };
 
             AppVM.EngineWrapper.ValidMovesUpdated += (sender, args) =>
             {
-                RaisePropertyChanged("ValidMoves");
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("ValidMoves");
+                });
             };
 
             AppVM.EngineWrapper.BoardHistoryUpdated += (sender, args) =>
             {
-                RaisePropertyChanged("BoardHistory");
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("BoardHistory");
+                });
             };
 
             AppVM.EngineWrapper.TargetPieceUpdated += (sender, args) =>
             {
-                RaisePropertyChanged("TargetMove");
-                PlayTarget.RaiseCanExecuteChanged();
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("TargetMove");
+                    PlayTarget.RaiseCanExecuteChanged();
+                });
             };
 
             AppVM.EngineWrapper.TargetPositionUpdated += (sender, args) =>
             {
-                RaisePropertyChanged("TargetMove");
-                PlayTarget.RaiseCanExecuteChanged();
+                AppVM.DoOnUIThread(() =>
+                {
+                    RaisePropertyChanged("TargetMove");
+                    PlayTarget.RaiseCanExecuteChanged();
+
+                    if (!ViewerConfig.RequireMoveConfirmation)
+                    {
+                        if (PlayTarget.CanExecute(null) && null != AppVM.EngineWrapper.TargetMove)
+                        {
+                            // Only fast-play if a move is selected
+                            PlayTarget.Execute(null);
+                        }
+                        else if (Pass.CanExecute(null) && AppVM.EngineWrapper.CanPass)
+                        {
+                            // Only fast-pass if pass is available
+                            Pass.Execute(null);
+                        }
+                    }
+                });
             };
 
             AppVM.EngineWrapper.IsIdleUpdated += (sender, args) =>
             {
-                IsIdle = AppVM.EngineWrapper.IsIdle;
+                AppVM.DoOnUIThread(() =>
+                {
+                    IsIdle = AppVM.EngineWrapper.IsIdle;
+                });
             };
 
             IsIdle = true;
-        }
-
-        private void OnBoardUpdated(object sender, EventArgs args)
-        {
-            RaisePropertyChanged("Board");
-            Pass.RaiseCanExecuteChanged();
-            FindBestMove.RaiseCanExecuteChanged();
-            UndoLastMove.RaiseCanExecuteChanged();
-            RaisePropertyChanged("GameState");
-
-            AppVM.DoOnUIThread(() =>
-            {
-                switch (Board.BoardState)
-                {
-                    case BoardState.WhiteWins:
-                        Messenger.Default.Send(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
-                        break;
-                    case BoardState.BlackWins:
-                        Messenger.Default.Send(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
-                        break;
-                    case BoardState.Draw:
-                        Messenger.Default.Send(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
-                        break;
-                }
-            });
         }
 
         internal void CanvasClick(double cursorX, double cursorY)
