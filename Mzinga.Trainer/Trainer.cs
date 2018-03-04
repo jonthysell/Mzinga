@@ -566,7 +566,7 @@ namespace Mzinga.Trainer
 
                     profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}", p.Id, p.Name, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
 
-                    MetricWeights normalized = p.MetricWeights.GetNormalized(1000, true);
+                    MetricWeights normalized = p.MetricWeights.GetNormalized();
 
                     MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                     {

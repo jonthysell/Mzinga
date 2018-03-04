@@ -161,7 +161,7 @@ namespace Mzinga.Engine
 
             if (null != MetricWeights)
             {
-                ai.MetricWeights.CopyFrom(MetricWeights);
+                ai.MetricWeights.CopyFrom(MetricWeights.GetNormalized());
             }
 
             return ai;

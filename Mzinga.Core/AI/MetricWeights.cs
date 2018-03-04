@@ -72,7 +72,7 @@ namespace Mzinga.Core.AI
             return clone;
         }
 
-        public MetricWeights GetNormalized(double targetMaxValue = short.MaxValue, bool round = true)
+        public MetricWeights GetNormalized(double targetMaxValue = 100.0, bool round = true, int decimals = 2)
         {
             if (targetMaxValue <= 0.0)
             {
@@ -104,7 +104,7 @@ namespace Mzinga.Core.AI
             // Populate clone with normalized weights
             for (int i = 0; i < clone._bugTypeWeights.Length; i++)
             {
-                clone._bugTypeWeights[i] = round ? Math.Round(dblWeights[i]) : dblWeights[i];
+                clone._bugTypeWeights[i] = round ? Math.Round(dblWeights[i], decimals) : dblWeights[i];
             }
 
             return clone;

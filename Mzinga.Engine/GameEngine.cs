@@ -90,7 +90,7 @@ namespace Mzinga.Engine
             }
             else
             {
-                ConsoleOut("{0};{1};{2}", args.Move, args.Depth, args.Score);
+                ConsoleOut("{0};{1};{2:0.00}", args.Move, args.Depth, args.Score);
             }
         }
 
