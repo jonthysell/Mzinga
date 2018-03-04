@@ -91,6 +91,7 @@
                     Grid.Column="1"
                     Grid.Row="0"
                     IsEnabled="{Binding IsIdle}"
+                    MouseRightButtonUp="CancelClick"
                     Name="BlackHandStackPanel"
                     Orientation="Horizontal" />
         <Canvas Background="White"
@@ -99,12 +100,14 @@
                 Grid.Row="1"
                 IsEnabled="{Binding IsIdle}"
                 MouseLeftButtonUp="BoardCanvas_MouseLeftButtonUp"
+                MouseRightButtonUp="CancelClick"
                 Name="BoardCanvas"
                 SizeChanged="BoardCanvas_SizeChanged" />
         <StackPanel Background="White"
                     Grid.Column="1"
                     Grid.Row="2"
                     IsEnabled="{Binding IsIdle}"
+                    MouseRightButtonUp="CancelClick"
                     Name="WhiteHandStackPanel"
                     Orientation="Horizontal" />
         <Grid Grid.Column="2"

@@ -627,6 +627,7 @@ namespace Mzinga.Viewer
             }
 
             pieceCanvas.MouseLeftButtonUp += PieceCanvas_MouseLeftButtonUp;
+            pieceCanvas.MouseRightButtonUp += CancelClick;
 
             return pieceCanvas;
         }
@@ -646,6 +647,11 @@ namespace Mzinga.Viewer
         {
             Point p = CanvasCursorPosition;
             VM.CanvasClick(p.X, p.Y);
+        }
+
+        private void CancelClick(object sender, MouseButtonEventArgs e)
+        {
+            VM.CancelClick();
         }
 
         private DateTime LastRedrawOnSizeChange = DateTime.Now;

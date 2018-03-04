@@ -566,5 +566,13 @@ namespace Mzinga.Viewer.ViewModel
                 AppVM.EngineWrapper.TargetPiece = clickedPiece;
             }
         }
+
+        internal void CancelClick()
+        {
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
+            {
+                AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
+            }
+        }
     }
 }
