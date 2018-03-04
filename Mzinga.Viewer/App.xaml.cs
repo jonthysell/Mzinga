@@ -65,7 +65,7 @@ namespace Mzinga.Viewer
             try
             {
                 SaveConfig();
-                AppVM.EngineWrapper.Close();
+                AppVM.EngineWrapper.StopEngine();
                 MessageHandlers.UnregisterMessageHandlers(this);
             }
             catch (Exception ex)

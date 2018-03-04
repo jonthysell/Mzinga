@@ -122,6 +122,7 @@
     <Compile Include="ScrollingTextBox.cs" />
     <Compile Include="UpdateUtils.cs" />
     <Compile Include="ViewModel\BoardHistoryExtensions.cs" />
+    <Compile Include="ViewModel\CLIEngineWrapper.cs" />
     <Compile Include="ViewModel\EngineWrapper.cs" />
     <Compile Include="ViewModel\Exceptions.cs" />
     <Compile Include="ViewModel\ExceptionViewModel.cs" />

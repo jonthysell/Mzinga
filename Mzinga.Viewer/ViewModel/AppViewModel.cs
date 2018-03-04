@@ -87,7 +87,8 @@ namespace Mzinga.Viewer.ViewModel
 
             DoOnUIThread = doOnUIThread;
 
-            EngineWrapper = new EngineWrapper(ViewerConfig.EngineCommand);
+            EngineWrapper = new CLIEngineWrapper(ViewerConfig.EngineCommand);
+            EngineWrapper.StartEngine();
         }
     }
 }

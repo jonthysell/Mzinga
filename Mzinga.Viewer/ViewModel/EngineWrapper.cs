@@ -26,15 +26,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 
 using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModel
 {
-    public class EngineWrapper
+    public abstract class EngineWrapper
     {
         public ViewerBoard Board
         {
@@ -85,7 +82,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 return _isIdle;
             }
-            private set
+            protected set
             {
                 _isIdle = value;
                 OnIsIdleUpdate();
@@ -274,52 +271,28 @@ namespace Mzinga.Viewer.ViewModel
         public event EventHandler TargetPieceUpdated;
         public event EventHandler TargetPositionUpdated;
 
-        private Process _process;
-        private StreamWriter _writer;
         private List<string> _outputLines;
 
         private Queue<string> _inputToProcess;
         private EngineCommand? _currentlyRunningCommand = null;
 
-        public EngineWrapper(string engineCommand)
+        public EngineWrapper()
         {
             _outputLines = new List<string>();
             _inputToProcess = new Queue<string>();
-            StartEngine(engineCommand);
-        }
-
-        private void StartEngine(string engineName)
-        {
-            if (string.IsNullOrWhiteSpace(engineName))
-            {
-                throw new ArgumentNullException("engineName");
-            }
-
-            _outputLines.Clear();
-
-            _process = new Process();
-            _process.StartInfo.FileName = engineName;
-            _process.StartInfo.UseShellExecute = false;
-            _process.StartInfo.CreateNoWindow = true;
-            _process.StartInfo.RedirectStandardInput = true;
-            _process.StartInfo.RedirectStandardOutput = true;
-            _process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-
-            _process.OutputDataReceived += EngineOutputDataReceived;
 
             _inputToProcess.Enqueue("info");
             _currentlyRunningCommand = EngineCommand.Info;
-
-            IsIdle = false;
-            _process.Start();
-            _process.BeginOutputReadLine();
-
-            _writer = _process.StandardInput;
         }
 
-        private void EngineOutputDataReceived(object sender, DataReceivedEventArgs e)
+        public abstract void StartEngine();
+
+        public abstract void StopEngine();
+
+        protected abstract void OnEngineInput(string command);
+
+        protected void OnEngineOutput(string line)
         {
-            string line = e.Data;
             EngineTextAppendLine(line);
             _outputLines.Add(line);
 
@@ -328,7 +301,7 @@ namespace Mzinga.Viewer.ViewModel
                 try
                 {
                     string[] outputLines = _outputLines.ToArray();
-                    ReadEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
+                    ProcessEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
                 }
                 catch (Exception ex)
                 {
@@ -346,15 +319,6 @@ namespace Mzinga.Viewer.ViewModel
                 // Got a preliminary bestmove result, update the TargetMove but don't autoplay it
                 ProcessBestMove(line, false);
             }
-        }
-
-        public void Close()
-        {
-            _process.CancelOutputRead();
-            _writer.WriteLine("exit");
-            _process.WaitForExit();
-            _process.Close();
-            _process = null;
         }
 
         public void NewGame(GameSettings settings)
@@ -462,8 +426,7 @@ namespace Mzinga.Viewer.ViewModel
                 string command = _inputToProcess.Peek();
                 EngineTextAppendLine(command);
                 _currentlyRunningCommand = IdentifyCommand(command);
-                _writer.WriteLine(command);
-                _writer.Flush();
+                OnEngineInput(command);
             }
             else
             {
@@ -513,7 +476,7 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
-        private void ReadEngineOutput(EngineCommand command, string[] outputLines)
+        private void ProcessEngineOutput(EngineCommand command, string[] outputLines)
         {
             string errorMessage = "";
             string invalidMoveMessage = "";
