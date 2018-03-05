@@ -461,9 +461,7 @@ namespace Mzinga.Core.AI
 
         private List<EvaluatedMove> GetPreSortedValidMoves(GameBoard gameBoard, EvaluatedMove bestMove)
         {
-            List<Move> validMoves = new List<Move>(gameBoard.GetValidMoves());
-
-            validMoves.Sort((a, b) => { return PreSortMoves(a, b, gameBoard, bestMove?.Move); });
+            List<Move> validMoves = GetPreSortedValidMoves(gameBoard, bestMove?.Move);
 
             List<EvaluatedMove> evaluatedMoves = new List<EvaluatedMove>(validMoves.Count);
             foreach (Move move in validMoves)
