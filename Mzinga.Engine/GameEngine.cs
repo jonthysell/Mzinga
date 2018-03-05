@@ -113,8 +113,9 @@ namespace Mzinga.Engine
                 string cmd = split[0].ToLower();
 
                 int paramCount = split.Length - 1;
-
+#if !DEBUG
                 StopPonder();
+#endif
 
                 switch (cmd)
                 {
@@ -226,8 +227,9 @@ namespace Mzinga.Engine
                 ErrorOut(ex);
             }
             ConsoleOut("ok");
-
+#if !DEBUG
             StartPonder();
+#endif
         }
 
         private void ErrorOut(Exception ex)
@@ -367,7 +369,7 @@ namespace Mzinga.Engine
 
             CancellationToken token = OnStartAsyncCommand();
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Math.Max(0, Environment.ProcessorCount - 1), token);
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Config.MaxHelperThreads, token);
             task.Wait();
 
             OnEndAsyncCommand();

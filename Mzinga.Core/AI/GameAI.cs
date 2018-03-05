@@ -232,14 +232,20 @@ namespace Mzinga.Core.AI
                 // Fire BestMoveFound for current depth
                 OnBestMoveFound(bestMoveParams, movesToEvaluate.BestMove);
 
-                if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
+                if (double.IsInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                 {
-                    // The best move wins the game, stop searching
+                    // The best move ends the game, stop searching
                     break;
                 }
 
                 // Prune game-losing moves if possible
                 movesToEvaluate.PruneGameLosingMoves();
+
+                if (movesToEvaluate.Count == 1)
+                {
+                    // Only one move, no reason to keep looking
+                    break;
+                }
 
                 if (token.IsCancellationRequested)
                 {
@@ -303,10 +309,12 @@ namespace Mzinga.Core.AI
 
             if (bestValue <= alphaOriginal)
             {
+                // Losing move since alphaOriginal os negative infinity in this function
                 tEntry.Type = TranspositionTableEntryType.UpperBound;
             }
             else
             {
+                // Move is a lower bound winning move if bestValue >= beta (always infinity in this function), otherwise it's exact
                 tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
                 tEntry.BestMove = evaluatedMoves.BestMove.Move;
             }
