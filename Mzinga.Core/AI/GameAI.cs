@@ -186,29 +186,28 @@ namespace Mzinga.Core.AI
 
         private async Task<EvaluatedMoveCollection> EvaluateMovesAsync(GameBoard gameBoard, BestMoveParams bestMoveParams, CancellationToken token)
         {
-            MoveSet validMoves = gameBoard.GetValidMoves();
-
             EvaluatedMoveCollection movesToEvaluate = new EvaluatedMoveCollection();
 
-            foreach (Move move in validMoves)
-            {
-                movesToEvaluate.Add(new EvaluatedMove(move));
-            }
+            EvaluatedMove bestMove = null;
 
             // Try to get cached best move if available
             long key = gameBoard.ZobristKey;
             TranspositionTableEntry tEntry;
             if (_transpositionTable.TryLookup(key, out tEntry) && null != tEntry.BestMove)
             {
-                movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
-                OnBestMoveFound(bestMoveParams, movesToEvaluate.BestMove);
-
-                if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
-                {
-                    // The best move wins the game, no need to search
-                    return movesToEvaluate;
-                }
+                bestMove = new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth);
+                OnBestMoveFound(bestMoveParams, bestMove);
             }
+
+            if (null != bestMove && double.IsPositiveInfinity(bestMove.ScoreAfterMove))
+            {
+                // Winning move, don't search
+                movesToEvaluate.Add(bestMove);
+                return movesToEvaluate;
+            }
+
+            List<EvaluatedMove> validMoves = GetPreSortedValidMoves(gameBoard, bestMove);
+            movesToEvaluate.Add(validMoves, false);
 
             if (movesToEvaluate.Count <= 1 || bestMoveParams.MaxSearchDepth == 0)
             {
@@ -272,7 +271,7 @@ namespace Mzinga.Core.AI
                 if (token.IsCancellationRequested)
                 {
                     // Cancel
-                    return new EvaluatedMoveCollection(movesToEvaluate);
+                    return new EvaluatedMoveCollection(movesToEvaluate, false);
                 }
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
@@ -282,7 +281,7 @@ namespace Mzinga.Core.AI
                 if (!value.HasValue)
                 {
                     // Cancel occurred during evaluation
-                    return new EvaluatedMoveCollection(movesToEvaluate);
+                    return new EvaluatedMoveCollection(movesToEvaluate, false);
                 }
 
                 EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, value.Value, depth);
@@ -458,6 +457,21 @@ namespace Mzinga.Core.AI
             }
 
             return bestValue;
+        }
+
+        private List<EvaluatedMove> GetPreSortedValidMoves(GameBoard gameBoard, EvaluatedMove bestMove)
+        {
+            List<Move> validMoves = new List<Move>(gameBoard.GetValidMoves());
+
+            validMoves.Sort((a, b) => { return PreSortMoves(a, b, gameBoard, bestMove?.Move); });
+
+            List<EvaluatedMove> evaluatedMoves = new List<EvaluatedMove>(validMoves.Count);
+            foreach (Move move in validMoves)
+            {
+                evaluatedMoves.Add(move == bestMove?.Move ? bestMove : new EvaluatedMove(move));
+            }
+
+            return evaluatedMoves;
         }
 
         private List<Move> GetPreSortedValidMoves(GameBoard gameBoard, Move bestMove)

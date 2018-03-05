@@ -70,16 +70,23 @@ namespace Mzinga.Core.AI
             _evaluatedMoves = new List<EvaluatedMove>();
         }
 
-        public EvaluatedMoveCollection(IEnumerable<EvaluatedMove> evaluatedMoves) : this()
+        public EvaluatedMoveCollection(IEnumerable<EvaluatedMove> evaluatedMoves, bool resort) : this()
         {
-            Add(evaluatedMoves);
+            Add(evaluatedMoves, resort);
         }
 
-        public void Add(IEnumerable<EvaluatedMove> evaluatedMoves)
+        public void Add(IEnumerable<EvaluatedMove> evaluatedMoves, bool resort)
         {
             foreach (EvaluatedMove evaluatedMove in evaluatedMoves)
             {
-                Add(evaluatedMove);
+                if (resort)
+                {
+                    Add(evaluatedMove);
+                }
+                else
+                {
+                    _evaluatedMoves.Add(evaluatedMove);
+                }
             }
         }
 
@@ -104,29 +111,6 @@ namespace Mzinga.Core.AI
             else
             {
                 _evaluatedMoves.Insert(index, evaluatedMove);
-            }
-        }
-
-        public void Update(EvaluatedMove evaluatedMove)
-        {
-            int foundIndex = -1;
-
-            for (int i = 0; i < _evaluatedMoves.Count; i++)
-            {
-                if (evaluatedMove.Move == _evaluatedMoves[i].Move)
-                {
-                    if (evaluatedMove.Depth > _evaluatedMoves[i].Depth)
-                    {
-                        foundIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            if (foundIndex >= 0)
-            {
-                _evaluatedMoves.RemoveAt(foundIndex);
-                Add(evaluatedMove);
             }
         }
 
@@ -157,14 +141,6 @@ namespace Mzinga.Core.AI
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public IEnumerable<Move> AsMoveEnumerable()
-        {
-            foreach (EvaluatedMove em in _evaluatedMoves)
-            {
-                yield return em.Move;
-            }
         }
 
         private int SearchFor(EvaluatedMove evaluatedMove)
