@@ -33,8 +33,6 @@ namespace Mzinga.Core.AI
 {
     public class GameAI
     {
-        public MetricWeights MetricWeights { get; private set; }
-
         public BestMoveMetrics BestMoveMetrics
         {
             get
@@ -64,6 +62,8 @@ namespace Mzinga.Core.AI
         public event BestMoveFoundEventHandler BestMoveFound;
 
         private TranspositionTable _transpositionTable;
+        private MetricWeights _metricWeights;
+
 
         private FixedCache<long, double> _cachedBoardScores = new FixedCache<long, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
@@ -73,7 +73,7 @@ namespace Mzinga.Core.AI
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
-            MetricWeights = new MetricWeights();
+            _metricWeights = new MetricWeights();
         }
 
         public GameAI(MetricWeights metricWeights)
@@ -83,7 +83,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("metricWeights");
             }
 
-            MetricWeights = metricWeights.GetNormalized();
+            _metricWeights = metricWeights.GetNormalized();
             _transpositionTable = new TranspositionTable();
         }
 
@@ -109,7 +109,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
             }
 
-            MetricWeights = metricWeights.GetNormalized();
+            _metricWeights = metricWeights.GetNormalized();
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
         }
 
@@ -595,13 +595,13 @@ namespace Mzinga.Core.AI
 
                 double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
 
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.IsCoveredWeight) * boardMetrics[pieceName].IsCovered;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.NoisyMoveWeight) * boardMetrics[pieceName].NoisyMoveCount;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.QuietMoveWeight) * boardMetrics[pieceName].QuietMoveCount;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) * boardMetrics[pieceName].FriendlyNeighborCount;
-                score += colorValue * MetricWeights.Get(bugType, BugTypeWeight.EnemyNeighborWeight) * boardMetrics[pieceName].EnemyNeighborCount;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.IsCoveredWeight) * boardMetrics[pieceName].IsCovered;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.NoisyMoveWeight) * boardMetrics[pieceName].NoisyMoveCount;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.QuietMoveWeight) * boardMetrics[pieceName].QuietMoveCount;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) * boardMetrics[pieceName].FriendlyNeighborCount;
+                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.EnemyNeighborWeight) * boardMetrics[pieceName].EnemyNeighborCount;
             }
 
             return score;
