@@ -28,7 +28,7 @@ using System;
 
 namespace Mzinga.Core
 {
-    public class Move : PiecePositionBase, IEquatable<Move>, IComparable<Move>
+    public class Move : PiecePositionBase, IEquatable<Move>
     {
         public static Move Pass
         {
@@ -90,36 +90,6 @@ namespace Mzinga.Core
 
             PieceName = pieceName;
             Position = position;
-        }
-
-        public int CompareTo(Move move)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            int pieceCompare = ((int)PieceName).CompareTo((int)move.PieceName);
-
-            if (pieceCompare != 0)
-            {
-                return pieceCompare;
-            }
-
-            if (null == Position && null == move.Position)
-            {
-                return 0;
-            }
-            else if (null == Position && null != move.Position)
-            {
-                return -1;
-            }
-            else if (null != Position && null == move.Position)
-            {
-                return 1;
-            }
-
-            return Position.CompareTo(move.Position);
         }
 
         public bool Equals(Move move)

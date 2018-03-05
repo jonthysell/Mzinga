@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
-    public class Position : IEquatable<Position>, IComparable<Position>
+    public class Position : IEquatable<Position>
     {
         public static Position Origin
         {
@@ -309,38 +309,7 @@ namespace Mzinga.Core
 
             return string.Format("{1}{0}{2}{0}{3}", PositionStringSeparator, X, Y, Z);
         }
-
-        public int CompareTo(Position position)
-        {
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
-            int xCompare = X.CompareTo(position.X);
-
-            if (xCompare != 0)
-            {
-                return xCompare;
-            }
-
-            int yCompare = Y.CompareTo(position.Y);
-
-            if (yCompare != 0)
-            {
-                return yCompare;
-            }
-
-            int zCompare = Z.CompareTo(position.Z);
-
-            if (zCompare != 0)
-            {
-                return zCompare;
-            }
-
-            return Stack.CompareTo(position.Stack);
-        }
-
+        
         private static readonly int[][] _neighborDeltas = new int[][]
         {
             new int[] { 0, 1, -1 },

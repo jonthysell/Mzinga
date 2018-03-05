@@ -83,32 +83,28 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public bool Add(EvaluatedMove evaluatedMove)
+        public void Add(EvaluatedMove evaluatedMove)
         {
             int index = SearchFor(evaluatedMove);
 
             if (index < 0)
             {
                 index = ~index;
-
-                if (index == 0)
-                {
-                    BestScore = evaluatedMove.ScoreAfterMove;
-                }
-
-                if (index == _evaluatedMoves.Count)
-                {
-                    _evaluatedMoves.Add(evaluatedMove);
-                }
-                else
-                {
-                    _evaluatedMoves.Insert(index, evaluatedMove);
-                }
-
-                return true;
             }
 
-            return false;
+            if (index == 0)
+            {
+                BestScore = evaluatedMove.ScoreAfterMove;
+            }
+
+            if (index == _evaluatedMoves.Count)
+            {
+                _evaluatedMoves.Add(evaluatedMove);
+            }
+            else
+            {
+                _evaluatedMoves.Insert(index, evaluatedMove);
+            }
         }
 
         public void Update(EvaluatedMove evaluatedMove)
@@ -131,6 +127,25 @@ namespace Mzinga.Core.AI
             {
                 _evaluatedMoves.RemoveAt(foundIndex);
                 Add(evaluatedMove);
+            }
+        }
+
+        public void PruneGameLosingMoves()
+        {
+            int firstGameLosingMoveIndex = -1;
+
+            for (int i = 0; i < _evaluatedMoves.Count; i++)
+            {
+                if (double.IsNegativeInfinity(_evaluatedMoves[i].ScoreAfterMove))
+                {
+                    firstGameLosingMoveIndex = i;
+                    break;
+                }
+            }
+
+            if (firstGameLosingMoveIndex > 0)
+            {
+                _evaluatedMoves.RemoveRange(firstGameLosingMoveIndex, _evaluatedMoves.Count - firstGameLosingMoveIndex);
             }
         }
 

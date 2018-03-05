@@ -33,7 +33,7 @@ namespace Mzinga.Core.AI
 {
     public class GameAI
     {
-        public MetricWeights MetricWeights { get; private set; } = new MetricWeights();
+        public MetricWeights MetricWeights { get; private set; }
 
         public BestMoveMetrics BestMoveMetrics
         {
@@ -73,6 +73,7 @@ namespace Mzinga.Core.AI
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
+            MetricWeights = new MetricWeights();
         }
 
         public GameAI(MetricWeights metricWeights)
@@ -82,7 +83,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("metricWeights");
             }
 
-            MetricWeights.CopyFrom(metricWeights);
+            MetricWeights = metricWeights.GetNormalized();
             _transpositionTable = new TranspositionTable();
         }
 
@@ -108,7 +109,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
             }
 
-            MetricWeights.CopyFrom(metricWeights);
+            MetricWeights = metricWeights.GetNormalized();
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
         }
 
@@ -231,9 +232,9 @@ namespace Mzinga.Core.AI
                 movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
                 OnBestMoveFound(movesToEvaluate.BestMove);
 
-                if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
+                if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                 {
-                    // The best move ends the game, stop searching
+                    // The best move wins the game, no need to search
                     return movesToEvaluate;
                 }
             }
@@ -261,11 +262,14 @@ namespace Mzinga.Core.AI
                 // Fire BestMoveFound for current depth
                 OnBestMoveFound(movesToEvaluate.BestMove);
 
-                if (movesToEvaluate.BestMove.ScoreAfterMove == double.PositiveInfinity || movesToEvaluate.BestMove.ScoreAfterMove == double.NegativeInfinity)
+                if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                 {
-                    // The best move ends the game, stop searching
+                    // The best move wins the game, stop searching
                     break;
                 }
+
+                // Prune game-losing moves if possible
+                movesToEvaluate.PruneGameLosingMoves();
 
                 if (token.IsCancellationRequested)
                 {
@@ -430,7 +434,7 @@ namespace Mzinga.Core.AI
             double? bestValue = null;
             Move bestMove = tEntry?.BestMove;
 
-            List<Move> moves = new List<Move>(gameBoard.GetValidMoves().Shuffle());
+            List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
 
             if (null != bestMove)
             {

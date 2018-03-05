@@ -456,43 +456,6 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Position_CompareToEqualsTest()
-        {
-            foreach (int[] coordinate in _validXYZCoordinates)
-            {
-                Position p1 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
-                Position p2 = new Position(coordinate[0], coordinate[1], coordinate[2], coordinate[3]);
-
-                TestUtils.AssertCompareToEqualTo<Position>(p1, p2);
-                TestUtils.AssertCompareToEqualTo<Position>(p2, p1);
-            }
-        }
-
-        [TestMethod]
-        public void Position_CompareToNotEqualsTest()
-        {
-            Position[] sortedPositions = new Position[]
-            {
-                new Position(-1, 0, 1, 0),
-                new Position(-1, 0, 1, 1),
-                new Position(-1, 1, 0, 0),
-                new Position(-1, 1, 0, 1),
-                new Position(0, 0, 0, 0),
-                new Position(0, 0, 0, 1),
-                new Position(1, -1, 0, 0),
-                new Position(1, -1, 0, 1),
-                new Position(1, 0, -1, 0),
-                new Position(1, 0, -1, 1),
-            };
-
-            for (int i = 1; i < sortedPositions.Length; i++)
-            {
-                TestUtils.AssertCompareToLessThan<Position>(sortedPositions[i - 1], sortedPositions[i]);
-                TestUtils.AssertCompareToGreaterThan<Position>(sortedPositions[i], sortedPositions[i-1]);
-            }
-        }
-
-        [TestMethod]
         public void Position_ToStringXYZTest()
         {
             foreach (int[] coordinate in _validXYZCoordinates)

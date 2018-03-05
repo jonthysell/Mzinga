@@ -157,14 +157,16 @@ namespace Mzinga.Engine
 
         public GameAI GetGameAI()
         {
-            GameAI ai = TranspositionTableSizeMB.HasValue ? new GameAI(TranspositionTableSizeMB.Value) : new GameAI();
-
-            if (null != MetricWeights)
+            if (TranspositionTableSizeMB.HasValue)
             {
-                ai.MetricWeights.CopyFrom(MetricWeights.GetNormalized());
+                return null != MetricWeights? new GameAI(MetricWeights, TranspositionTableSizeMB.Value) : new GameAI(TranspositionTableSizeMB.Value);
+            }
+            else if (null != MetricWeights)
+            {
+                return new GameAI(MetricWeights);
             }
 
-            return ai;
+            return new GameAI();
         }
     }
 

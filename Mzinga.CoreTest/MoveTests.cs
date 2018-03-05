@@ -205,54 +205,6 @@ namespace Mzinga.CoreTest
         }
 
         [TestMethod]
-        public void Move_CompareToEqualsTest()
-        {
-            foreach (PieceName pieceName in EnumUtils.PieceNames)
-            {
-                Move m1 = new Move(pieceName, Position.Origin);
-                Move m2 = new Move(pieceName, Position.Origin);
-
-                TestUtils.AssertCompareToEqualTo<Move>(m1, m2);
-                TestUtils.AssertCompareToEqualTo<Move>(m2, m1);
-            }
-        }
-
-        [TestMethod]
-        public void Move_CompareToNotEqualsTest()
-        {
-            Move[] sortedMoves = new Move[]
-            {
-                Move.Pass,
-                new Move(PieceName.WhiteQueenBee, new Position(-1, 0, 1, 0)),
-                new Move(PieceName.WhiteQueenBee, new Position(-1, 1, 0, 0)),
-                new Move(PieceName.WhiteQueenBee, new Position(0, 0, 0, 0)),
-                new Move(PieceName.WhiteQueenBee, new Position(1, -1, 0, 0)),
-                new Move(PieceName.WhiteQueenBee, new Position(1, 0, -1, 0)),
-                new Move(PieceName.WhiteSoldierAnt3, new Position(-1, 0, 1, 0)),
-                new Move(PieceName.WhiteSoldierAnt3, new Position(-1, 1, 0, 0)),
-                new Move(PieceName.WhiteSoldierAnt3, new Position(0, 0, 0, 0)),
-                new Move(PieceName.WhiteSoldierAnt3, new Position(1, -1, 0, 0)),
-                new Move(PieceName.WhiteSoldierAnt3, new Position(1, 0, -1, 0)),
-                new Move(PieceName.BlackQueenBee, new Position(-1, 0, 1, 0)),
-                new Move(PieceName.BlackQueenBee, new Position(-1, 1, 0, 0)),
-                new Move(PieceName.BlackQueenBee, new Position(0, 0, 0, 0)),
-                new Move(PieceName.BlackQueenBee, new Position(1, -1, 0, 0)),
-                new Move(PieceName.BlackQueenBee, new Position(1, 0, -1, 0)),
-                new Move(PieceName.BlackSoldierAnt3, new Position(-1, 0, 1, 0)),
-                new Move(PieceName.BlackSoldierAnt3, new Position(-1, 1, 0, 0)),
-                new Move(PieceName.BlackSoldierAnt3, new Position(0, 0, 0, 0)),
-                new Move(PieceName.BlackSoldierAnt3, new Position(1, -1, 0, 0)),
-                new Move(PieceName.BlackSoldierAnt3, new Position(1, 0, -1, 0)),
-            };
-
-            for (int i = 1; i < sortedMoves.Length; i++)
-            {
-                TestUtils.AssertCompareToLessThan<Move>(sortedMoves[i - 1], sortedMoves[i]);
-                TestUtils.AssertCompareToGreaterThan<Move>(sortedMoves[i], sortedMoves[i - 1]);
-            }
-        }
-
-        [TestMethod]
         public void Move_ToStringTest()
         {
             foreach (PieceName pieceName in EnumUtils.PieceNames)
