@@ -97,10 +97,16 @@ namespace Mzinga.CoreTest
             GameBoard gb = new GameBoard();
             GameAI ai = GetTestGameAI();
 
-            Stopwatch sw = Stopwatch.StartNew();
+            int maxDepth = 0;
+
+            ai.BestMoveFound += (sender, e) =>
+            {
+                maxDepth = Math.Max(maxDepth, e.Depth);
+            };
+
             Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
 
-            TraceBestMoveMetrics(ai.BestMoveMetrics);
+            Trace.WriteLine(string.Format("Max Depth: {0}", maxDepth));
         }
 
         [TestMethod]
@@ -111,9 +117,16 @@ namespace Mzinga.CoreTest
 
             GameAI ai = GetTestGameAI();
 
+            int maxDepth = 0;
+
+            ai.BestMoveFound += (sender, e) =>
+            {
+                maxDepth = Math.Max(maxDepth, e.Depth);
+            };
+
             Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
 
-            TraceBestMoveMetrics(ai.BestMoveMetrics);
+            Trace.WriteLine(string.Format("Max Depth: {0}", maxDepth));
         }
 
         [TestMethod]
@@ -126,13 +139,6 @@ namespace Mzinga.CoreTest
         public void GameAI_BlockWinningMoveIsBestMoveTest()
         {
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_BlockWinningMoveIsBestMoveTest.csv");
-        }
-
-        private void TraceBestMoveMetrics(BestMoveMetrics metrics)
-        {
-            Trace.WriteLine(string.Format("Elapsed Time: {0}", metrics.ElapsedTime));
-            Trace.WriteLine(string.Format("Moves Evaluated: {0}", metrics.MovesEvaluated));
-            Trace.WriteLine(string.Format("Average Depth: {0}", metrics.AverageDepth));
         }
 
         private GameBoard GetBoardOnFifthTurn()

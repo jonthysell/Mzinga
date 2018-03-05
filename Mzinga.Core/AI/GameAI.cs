@@ -33,32 +33,6 @@ namespace Mzinga.Core.AI
 {
     public class GameAI
     {
-        public BestMoveMetrics BestMoveMetrics
-        {
-            get
-            {
-                return _bestMoveMetrics;
-            }
-            private set
-            {
-                if (null != value)
-                {
-                    _bestMoveMetricsHistory.AddLast(value);
-                }
-                _bestMoveMetrics = value;
-            }
-        }
-        private BestMoveMetrics _bestMoveMetrics = null;
-
-        public IEnumerable<BestMoveMetrics> BestMoveMetricsHistory
-        {
-            get
-            {
-                return _bestMoveMetricsHistory;
-            }
-        }
-        private LinkedList<BestMoveMetrics> _bestMoveMetricsHistory = new LinkedList<BestMoveMetrics>();
-
         public event BestMoveFoundEventHandler BestMoveFound;
 
         private TranspositionTable _transpositionTable;
@@ -103,7 +77,7 @@ namespace Mzinga.Core.AI
             {
                 throw new ArgumentNullException("metricWeights");
             }
-            
+
             if (transpositionTableSizeMB <= 0)
             {
                 throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
@@ -115,8 +89,6 @@ namespace Mzinga.Core.AI
 
         public void ResetCaches()
         {
-            BestMoveMetrics = null;
-            _bestMoveMetricsHistory.Clear();
             _transpositionTable.Clear();
         }
 
@@ -189,31 +161,30 @@ namespace Mzinga.Core.AI
                 throw new Exception("Game is over.");
             }
 
-            BestMoveMetrics = new BestMoveMetrics(maxDepth, maxTime, maxHelperThreads);
+            BestMoveParams bestMoveParams = new BestMoveParams()
+            {
+                MaxSearchDepth = maxDepth,
+                MaxSearchTime = maxTime,
+                MaxHelperThreads = maxHelperThreads,
+            };
 
-            BestMoveMetrics.Start();
-
-            EvaluatedMoveCollection evaluatedMoves = await EvaluateMovesAsync(gameBoard, token);
+            EvaluatedMoveCollection evaluatedMoves = await EvaluateMovesAsync(gameBoard, bestMoveParams, token);
 
             if (evaluatedMoves.Count == 0)
             {
                 return null;
             }
 
-            foreach (EvaluatedMove evaluatedMove in evaluatedMoves)
+            // Make sure at least one move is reported
+            if (null == bestMoveParams.BestMove)
             {
-                BestMoveMetrics.IncrementMoves(evaluatedMove.Depth);
+                OnBestMoveFound(bestMoveParams, evaluatedMoves.BestMove);
             }
 
-            BestMoveMetrics.End();
-
-            // Make sure at least one move is reported
-            OnBestMoveFound(evaluatedMoves.BestMove);
-
-            return evaluatedMoves.BestMove.Move;
+            return bestMoveParams.BestMove.Move;
         }
 
-        private async Task<EvaluatedMoveCollection> EvaluateMovesAsync(GameBoard gameBoard, CancellationToken token)
+        private async Task<EvaluatedMoveCollection> EvaluateMovesAsync(GameBoard gameBoard, BestMoveParams bestMoveParams, CancellationToken token)
         {
             MoveSet validMoves = gameBoard.GetValidMoves();
 
@@ -230,7 +201,7 @@ namespace Mzinga.Core.AI
             if (_transpositionTable.TryLookup(key, out tEntry) && null != tEntry.BestMove)
             {
                 movesToEvaluate.Update(new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth));
-                OnBestMoveFound(movesToEvaluate.BestMove);
+                OnBestMoveFound(bestMoveParams, movesToEvaluate.BestMove);
 
                 if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                 {
@@ -239,7 +210,7 @@ namespace Mzinga.Core.AI
                 }
             }
 
-            if (movesToEvaluate.Count <= 1 || BestMoveMetrics.MaxSearchDepth == 0)
+            if (movesToEvaluate.Count <= 1 || bestMoveParams.MaxSearchDepth == 0)
             {
                 // No need to search
                 return movesToEvaluate;
@@ -247,11 +218,11 @@ namespace Mzinga.Core.AI
 
             // Iterative search
             int depth = 1 + Math.Max(0, movesToEvaluate.BestMove.Depth);
-            while (depth <= BestMoveMetrics.MaxSearchDepth)
+            while (depth <= bestMoveParams.MaxSearchDepth)
             {
                 // Start LazySMP helper threads
                 CancellationTokenSource helperCTS = new CancellationTokenSource();
-                Task[] helperThreads = StartHelperThreads(gameBoard, depth, BestMoveMetrics.MaxHelperThreads, helperCTS);
+                Task[] helperThreads = StartHelperThreads(gameBoard, depth, bestMoveParams.MaxHelperThreads, helperCTS);
 
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = await EvaluateMovesToDepthAsync(gameBoard, depth, movesToEvaluate, token);
@@ -260,7 +231,7 @@ namespace Mzinga.Core.AI
                 EndHelperThreads(helperThreads, helperCTS);
 
                 // Fire BestMoveFound for current depth
-                OnBestMoveFound(movesToEvaluate.BestMove);
+                OnBestMoveFound(bestMoveParams, movesToEvaluate.BestMove);
 
                 if (double.IsPositiveInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                 {
@@ -349,14 +320,14 @@ namespace Mzinga.Core.AI
             return evaluatedMoves;
         }
 
-        private void OnBestMoveFound(EvaluatedMove evaluatedMove)
+        private void OnBestMoveFound(BestMoveParams bestMoveParams, EvaluatedMove evaluatedMove)
         {
-            if (null != BestMoveFound && evaluatedMove != BestMoveMetrics.BestMove)
+            if (null != BestMoveFound && evaluatedMove != bestMoveParams.BestMove)
             {
                 BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
                 BestMoveFound.Invoke(this, args);
             }
-            BestMoveMetrics.BestMove = evaluatedMove;
+            bestMoveParams.BestMove = evaluatedMove;
         }
 
         #endregion
@@ -605,6 +576,18 @@ namespace Mzinga.Core.AI
             }
 
             return score;
+        }
+
+        #endregion
+
+        #region BestMoveParams
+
+        private class BestMoveParams
+        {
+            public int MaxSearchDepth;
+            public TimeSpan MaxSearchTime;
+            public int MaxHelperThreads;
+            public EvaluatedMove BestMove = null;
         }
 
         #endregion
