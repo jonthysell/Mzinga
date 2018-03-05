@@ -405,18 +405,7 @@ namespace Mzinga.Core.AI
             double? bestValue = null;
             Move bestMove = tEntry?.BestMove;
 
-            List<Move> moves = new List<Move>(gameBoard.GetValidMoves());
-
-            if (null != bestMove)
-            {
-                // Put the best move from a previous search first
-                int bestIndex = moves.IndexOf(bestMove);
-                if (bestIndex > 0)
-                {
-                    moves[bestIndex] = moves[0];
-                    moves[0] = bestMove;
-                }
-            }
+            List<Move> moves = GetPreSortedValidMoves(gameBoard, bestMove);
 
             foreach (Move move in moves)
             {
@@ -469,6 +458,43 @@ namespace Mzinga.Core.AI
             }
 
             return bestValue;
+        }
+
+        private List<Move> GetPreSortedValidMoves(GameBoard gameBoard, Move bestMove)
+        {
+            List<Move> validMoves = new List<Move>(gameBoard.GetValidMoves());
+
+            validMoves.Sort((a, b) => { return PreSortMoves(a, b, gameBoard, bestMove); });
+
+            return validMoves;
+        }
+
+        private static int PreSortMoves(Move a, Move b, GameBoard gameBoard, Move bestMove)
+        {
+            // Put the best move from a previous search first
+            if (null != bestMove)
+            {
+                if (a == bestMove)
+                {
+                    return -1;
+                }
+                else if (b == bestMove)
+                {
+                    return 1;
+                }
+            }
+
+            // Put noisy moves first
+            if (gameBoard.IsNoisyMove(a) && !gameBoard.IsNoisyMove(b))
+            {
+                return -1;
+            }
+            else if (gameBoard.IsNoisyMove(b) && !gameBoard.IsNoisyMove(a))
+            {
+                return 1;
+            }
+
+            return 0;
         }
 
         #endregion
