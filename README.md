@@ -14,8 +14,6 @@ Mzinga is developed in C# for .NET 4.5.
 
 Mzinga.Core.dll is the main code library containing all of the logical components necessary to represent and play Hive, as well as the all of the algorithms for Mzinga's AI.
 
-Expansion pieces will be added eventually, but most future investment in Mzinga.Core will be to improve the game AI.
-
 ### Mzinga.Engine ###
 
 Mzinga.Engine.exe is Mzinga's engine, a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
@@ -24,7 +22,7 @@ By itself it is a relatively thin application, as it relies heavily on Mzinga.Co
 
 ### Mzinga.Viewer ###
 
-Mzinga.Viewer.exe is Mzinga's viewer a graphical application which can drive Mzinga.Engine(or any engine that implements the specifications of the Universal Hive Protocol).
+Mzinga.Viewer.exe is Mzinga's viewer a graphical application which can drive Mzinga.Engine (or any engine that implements the specifications of the Universal Hive Protocol).
 
 Mzinga.Viewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
 
