@@ -90,6 +90,7 @@ namespace Mzinga.Core.AI
         public void ResetCaches()
         {
             _transpositionTable.Clear();
+            _cachedBoardScores.Clear();
         }
 
         #region Move Evaluation
