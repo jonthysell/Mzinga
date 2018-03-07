@@ -462,14 +462,24 @@ namespace Mzinga.Engine
                 throw new PerftInvalidDepthException(maxDepth);
             }
 
+            CancellationToken token = OnStartAsyncCommand();
+
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                long nodes = _gameBoard.ParallelPerft(depth, Environment.ProcessorCount);
+                Task<long?> task = _gameBoard.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token);
+                task.Wait();
                 sw.Stop();
 
-                ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), nodes, sw.ElapsedMilliseconds, Math.Round(nodes / (double)sw.ElapsedMilliseconds, 1));
+                if (!task.Result.HasValue)
+                {
+                    break;
+                }
+
+                ConsoleOut("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), task.Result.Value, sw.ElapsedMilliseconds, Math.Round(task.Result.Value / (double)sw.ElapsedMilliseconds, 1));
             }
+
+            OnEndAsyncCommand();
         }
 
         private void StartPonder()

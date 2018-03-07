@@ -220,31 +220,15 @@ namespace Mzinga.Core
         // Following the example at https://chessprogramming.wikispaces.com/Perft
         public long CalculatePerft(int depth)
         {
-            if (depth == 0)
-            {
-                return 1;
-            }
+            CancellationTokenSource cts = new CancellationTokenSource();
 
-            MoveSet validMoves = GetValidMoves();
+            Task<long?> task = CalculatePerftAsync(depth, cts.Token);
+            task.Wait();
 
-            if (depth == 1)
-            {
-                return validMoves.Count;
-            }
-
-            long nodes = 0;
-
-            foreach (Move move in validMoves)
-            {
-                TrustedPlay(move);
-                nodes += CalculatePerft(depth - 1);
-                UndoLastMove();
-            }
-
-            return nodes;
+            return task.Result.Value;
         }
 
-        public long ParallelPerft(int depth, int maxThreads)
+        public async Task<long?> CalculatePerftAsync(int depth, CancellationToken token)
         {
             if (depth == 0)
             {
@@ -258,15 +242,77 @@ namespace Mzinga.Core
                 return validMoves.Count;
             }
 
-            ParallelOptions po = new ParallelOptions();
-            po.MaxDegreeOfParallelism = Math.Max(1, maxThreads);
+            long? nodes = null;
 
-            long nodes = 0;
-            Parallel.ForEach(validMoves, po, (move) =>
+            foreach (Move move in validMoves)
             {
-                GameBoard clone = Clone();
-                clone.TrustedPlay(move);
-                Interlocked.Add(ref nodes, clone.CalculatePerft(depth - 1));
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                TrustedPlay(move);
+                long? value = await CalculatePerftAsync(depth - 1, token);
+                UndoLastMove();
+
+                if (!value.HasValue)
+                {
+                    return null;
+                }
+
+                if (!nodes.HasValue)
+                {
+                    nodes = 0;
+                }
+
+                nodes += value;
+            }
+
+            return nodes;
+        }
+
+        public async Task<long?> ParallelPerftAsync(int depth, int maxThreads, CancellationToken token)
+        {
+            if (depth == 0)
+            {
+                return 1;
+            }
+
+            MoveSet validMoves = GetValidMoves();
+
+            if (depth == 1)
+            {
+                return validMoves.Count;
+            }
+
+            long? nodes = await Task.Run(() =>
+            {
+                ParallelOptions po = new ParallelOptions();
+                po.MaxDegreeOfParallelism = Math.Max(1, maxThreads);
+
+                long n = 0;
+                ParallelLoopResult loopResult = Parallel.ForEach(validMoves, po, async (move, state) =>
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        state.Stop();
+                        return;
+                    }
+
+                    GameBoard clone = Clone();
+                    clone.TrustedPlay(move);
+                    long? value = await clone.CalculatePerftAsync(depth - 1, token);
+
+                    if (!value.HasValue)
+                    {
+                        state.Stop();
+                        return;
+                    }
+
+                    Interlocked.Add(ref n, value.Value);
+                });
+
+                return loopResult.IsCompleted && !token.IsCancellationRequested ? (long?)n : null;
             });
 
             return nodes;
