@@ -33,7 +33,7 @@ namespace Mzinga.Core.AI
 {
     public class GameAI
     {
-        public event BestMoveFoundEventHandler BestMoveFound;
+        public event EventHandler<BestMoveFoundEventArgs> BestMoveFound;
 
         private TranspositionTable _transpositionTable;
         private MetricWeights _metricWeights;
@@ -638,8 +638,6 @@ namespace Mzinga.Core.AI
 
         #endregion
     }
-
-    public delegate void BestMoveFoundEventHandler(object sender, BestMoveFoundEventArgs args);
 
     public class BestMoveFoundEventArgs : EventArgs
     {
