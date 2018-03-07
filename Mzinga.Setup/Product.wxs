@@ -28,11 +28,10 @@
 
     <Feature Id="ProductFeature" Title="Mzinga.Viewer" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
-      <ComponentGroupRef Id="ProductResources" />
       <ComponentGroupRef Id="ProductShortcuts" />
     </Feature>
 
-    <Icon Id="icon.ico" SourceFile="$(var.Mzinga.Viewer.TargetDir)\Resources\mzinga.ico"/>
+    <Icon Id="icon.ico" SourceFile="$(var.Mzinga.Viewer.ProjectDir)\Resources\mzinga.ico"/>
 
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     <Property Id="ARPHELPLINK" Value="http://jonthysell.com" />
@@ -61,7 +60,6 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLFOLDER" Name="Mzinga">
-          <Directory Id="ResourcesFolder" Name="Resources" />
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
@@ -97,11 +95,6 @@
       </Component>
       <Component>
         <File Source="$(var.Mzinga.Viewer.TargetDir)\System.Windows.Interactivity.dll" />
-      </Component>
-    </ComponentGroup>
-    <ComponentGroup Id="ProductResources" Directory="ResourcesFolder">
-      <Component>
-        <File Source="$(var.Mzinga.Viewer.TargetDir)\Resources\mzinga.ico" />
       </Component>
     </ComponentGroup>
     <ComponentGroup Id="ProductShortcuts" Directory="ApplicationProgramsFolder">

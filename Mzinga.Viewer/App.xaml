@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Mzinga.Viewer"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
-        <BitmapImage x:Key="MzingaIcon">pack://siteoforigin:,,,/Resources/mzinga.ico</BitmapImage>
+        <BitmapImage x:Key="MzingaIcon">pack://application:,,,/Resources/mzinga.ico</BitmapImage>
         <BitmapImage x:Key="ErrorIcon32">pack://application:,,,/Resources/error32.png</BitmapImage>
         <BitmapImage x:Key="InformationIcon32">pack://application:,,,/Resources/information32.png</BitmapImage>
         <local:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
