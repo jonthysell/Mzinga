@@ -30,7 +30,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core;
 
-namespace Mzinga.CoreTest
+namespace Mzinga.Test
 {
     [TestClass]
     public class MoveSetTests

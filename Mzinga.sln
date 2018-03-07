@@ -1,23 +1,36 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Core", "Mzinga.Core\Mzinga.Core.csproj", "{6E780540-68A7-4F84-9306-6231EC5427CA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.CoreTest", "Mzinga.CoreTest\Mzinga.CoreTest.csproj", "{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Test", "Mzinga.Test\Mzinga.Test.csproj", "{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433} = {6273E30D-EAAA-42F3-BCDC-3AD28AEED433}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Engine", "Mzinga.Engine\Mzinga.Engine.csproj", "{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Viewer", "Mzinga.Viewer\Mzinga.Viewer.csproj", "{AB491FF7-2645-4DF0-AF16-EE5AD7222A35}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Mzinga Setup", "Mzinga Setup\Mzinga Setup.wixproj", "{EB905695-D35D-4B73-AE9C-DDFF734604F8}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Mzinga.Setup", "Mzinga.Setup\Mzinga.Setup.wixproj", "{EB905695-D35D-4B73-AE9C-DDFF734604F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Trainer", "Mzinga.Trainer\Mzinga.Trainer.csproj", "{9824E8FD-6155-4C02-A3A4-5D39355F01FE}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Mzinga.Shared", "Mzinga.Shared\Mzinga.Shared.shproj", "{3A664979-A4DB-4C05-BD8F-C6A1799624DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{24128C00-9C69-459C-9806-53D626397A62}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		update.xml = update.xml
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Mzinga.Shared\Mzinga.Shared.projitems*{3a664979-a4db-4c05-bd8f-c6a1799624df}*SharedItemsImports = 13
+		Mzinga.Shared\Mzinga.Shared.projitems*{6273e30d-eaaa-42f3-bcdc-3ad28aeed433}*SharedItemsImports = 4
+		Mzinga.Shared\Mzinga.Shared.projitems*{9824e8fd-6155-4c02-a3a4-5d39355f01fe}*SharedItemsImports = 4
+		Mzinga.Shared\Mzinga.Shared.projitems*{ab491ff7-2645-4df0-af16-ee5ad7222a35}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,18 +41,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|x86.ActiveCfg = Debug|x86
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Debug|x86.Build.0 = Debug|x86
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|x86.ActiveCfg = Release|x86
-		{6E780540-68A7-4F84-9306-6231EC5427CA}.Release|x86.Build.0 = Release|x86
 		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -104,6 +105,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7E6442F-EC30-439E-94E5-88EBBBDBC184}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true

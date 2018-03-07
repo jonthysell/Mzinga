@@ -46,11 +46,11 @@ namespace Mzinga.Engine
         {
             get
             {
-                // Hard min is 0, hard max is Environment.ProcessorCount - 1
+                // Hard min is 0, hard max is (Environment.ProcessorCount / 2) - 1
 #if DEBUG
                 return 0;
 #else
-                return Math.Max(0, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, Environment.ProcessorCount - 1) : Environment.ProcessorCount - 1);
+                return Math.Max(0, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, (Environment.ProcessorCount / 2) - 1) : (Environment.ProcessorCount / 2) - 1);
 #endif
             }
         }

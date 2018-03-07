@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3a664979-a4db-4c05-bd8f-c6a1799624df</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Mzinga</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\EvaluatedMove.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\EvaluatedMoveCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\GameAI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\MetricWeights.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\TranspositionTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Board.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\BoardHistory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\BoardMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\CacheMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\CacheMetricsSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\EnumUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\FixedCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\GameBoard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\IEnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Move.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\MoveSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Piece.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PieceMetrics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\PiecePositionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Position.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ZobristHash.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngineConfig.cs" />
+  </ItemGroup>
+</Project>

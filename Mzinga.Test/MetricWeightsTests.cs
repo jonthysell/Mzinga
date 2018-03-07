@@ -30,7 +30,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core.AI;
 
-namespace Mzinga.CoreTest
+namespace Mzinga.Test
 {
     [TestClass]
     public class MetricWeightsTests

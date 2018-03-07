@@ -64,21 +64,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
-      <Link>Properties\SharedInfo.cs</Link>
-    </Compile>
-    <Compile Include="GameEngine.cs" />
-    <Compile Include="GameEngineConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\SharedInfo.cs">
+      <DependentUpon>SharedInfo.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mzinga.Core\Mzinga.Core.csproj">
-      <Project>{6e780540-68a7-4f84-9306-6231ec5427ca}</Project>
-      <Name>Mzinga.Core</Name>
-    </ProjectReference>
+    <Content Include="Properties\SharedInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SharedInfo.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
+  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)$(TargetName).exe $(SolutionDir)Mzinga.Viewer\$(OutDir)
+copy $(TargetDir)$(TargetName).pdb $(SolutionDir)Mzinga.Viewer\$(OutDir)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

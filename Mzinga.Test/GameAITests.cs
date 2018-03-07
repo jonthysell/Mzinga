@@ -31,7 +31,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mzinga.Core;
 using Mzinga.Core.AI;
 
-namespace Mzinga.CoreTest
+namespace Mzinga.Test
 {
     [TestClass]
     [DeploymentItem("TestCases\\GameAITests")]

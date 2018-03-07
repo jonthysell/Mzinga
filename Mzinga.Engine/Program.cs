@@ -105,16 +105,11 @@ namespace Mzinga.Engine
 
         static GameEngineConfig GetDefaultConfig()
         {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (StreamWriter sw = new StreamWriter(ms))
-                {
-                    sw.Write(DefaultConfig);
-                    sw.Flush();
+            byte[] rawData = Encoding.UTF8.GetBytes(DefaultConfig);
 
-                    ms.Position = 0;
-                    return new GameEngineConfig(ms);
-                }
+            using (MemoryStream ms = new MemoryStream(rawData))
+            {
+                return new GameEngineConfig(ms);
             }
         }
 
