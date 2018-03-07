@@ -73,9 +73,6 @@
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
       <Component>
-        <File Source="$(var.Mzinga.Core.TargetPath)" />
-      </Component>
-      <Component>
         <File Source="$(var.Mzinga.Engine.TargetPath)" />
       </Component>
       <Component>

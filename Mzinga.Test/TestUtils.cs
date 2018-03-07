@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Mzinga.CoreTest
+namespace Mzinga.Test
 {
     public class TestUtils
     {

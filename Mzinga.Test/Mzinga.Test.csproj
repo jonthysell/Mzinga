@@ -6,8 +6,8 @@
     <ProjectGuid>{B9817AC4-3097-4A72-9A50-D9F56D47AF2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mzinga.CoreTest</RootNamespace>
-    <AssemblyName>Mzinga.CoreTest</AssemblyName>
+    <RootNamespace>Mzinga.Test</RootNamespace>
+    <AssemblyName>Mzinga.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -69,7 +69,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
+    <Compile Include="..\Mzinga.Engine\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
     <Compile Include="TranspositionTableTests.cs" />
@@ -85,12 +85,11 @@
     <Compile Include="TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mzinga.Core\Mzinga.Core.csproj">
-      <Project>{6e780540-68a7-4f84-9306-6231ec5427ca}</Project>
-      <Name>Mzinga.Core</Name>
+    <ProjectReference Include="..\Mzinga.Engine\Mzinga.Engine.csproj">
+      <Project>{6273e30d-eaaa-42f3-bcdc-3ad28aeed433}</Project>
+      <Name>Mzinga.Engine</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="TestCases\GameAITests\GameAI_BlockWinningMoveIsBestMoveTest.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -93,7 +93,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\Mzinga.Core\Properties\SharedInfo.cs">
+    <Compile Include="..\Mzinga.Engine\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
     <Compile Include="EnumMatchToBooleanConverter.cs" />
@@ -203,16 +203,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mzinga.Core\Mzinga.Core.csproj">
-      <Project>{6e780540-68a7-4f84-9306-6231ec5427ca}</Project>
-      <Name>Mzinga.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Mzinga.Engine\Mzinga.Engine.csproj">
-      <Project>{6273e30d-eaaa-42f3-bcdc-3ad28aeed433}</Project>
-      <Name>Mzinga.Engine</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\error32.png" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +211,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
