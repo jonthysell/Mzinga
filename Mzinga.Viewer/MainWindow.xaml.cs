@@ -68,7 +68,31 @@ namespace Mzinga.Viewer
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
 
-        private double StackShiftRatio = 0.1;
+        private bool RaiseStackedPieces
+        {
+            get
+            {
+                return _raiseStackedPieces;
+            }
+            set
+            {
+                bool oldValue = _raiseStackedPieces;
+                if (oldValue != value)
+                {
+                    _raiseStackedPieces = value;
+                    DrawBoard(LastBoard);
+                }
+            }
+        }
+        private bool _raiseStackedPieces;
+
+        private double StackShiftRatio
+        {
+            get
+            {
+                return RaiseStackedPieces ? 0.5 : 0.1;
+            }
+        }
 
         private Board LastBoard;
 
@@ -672,6 +696,24 @@ namespace Mzinga.Viewer
             {
                 DrawBoard(LastBoard);
                 LastRedrawOnSizeChange = DateTime.Now;
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.X)
+            {
+                RaiseStackedPieces = false;
+                e.Handled = true;
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.X)
+            {
+                RaiseStackedPieces = true;
+                e.Handled = true;
             }
         }
     }

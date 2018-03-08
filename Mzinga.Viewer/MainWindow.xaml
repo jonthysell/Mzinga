@@ -2,6 +2,8 @@
         ForceCursor="True"
         Height="600"
         Icon="{DynamicResource MzingaIcon}"
+        KeyDown="Window_KeyDown"
+        KeyUp="Window_KeyUp"
         MinHeight="480"
         MinWidth="640"
         Title="{Binding Title, FallbackValue=Mzinga.Viewer}"
