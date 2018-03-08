@@ -511,8 +511,10 @@ namespace Mzinga.Viewer
 
             Polygon hex = new Polygon
             {
-                StrokeThickness = 2
+                StrokeThickness = size / 10
             };
+
+            hex.StrokeLineJoin = PenLineJoin.Round;
 
             switch (hexType)
             {
