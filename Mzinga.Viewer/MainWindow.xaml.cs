@@ -232,7 +232,7 @@ namespace Mzinga.Viewer
 
                             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
-                            Polygon hex = GetHex(center, size, hexType, hexOrientation);
+                            Shape hex = GetHex(center, size, hexType, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
                             bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
@@ -276,7 +276,7 @@ namespace Mzinga.Viewer
                     {
                         Point center = GetPoint(lastMoveStart, size, hexOrientation, true);
 
-                        Polygon hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -288,7 +288,7 @@ namespace Mzinga.Viewer
                     {
                         Point center = GetPoint(lastMoveEnd, size, hexOrientation, true);
 
-                        Polygon hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -307,7 +307,7 @@ namespace Mzinga.Viewer
                         {
                             Point center = GetPoint(selectedPiecePosition, size, hexOrientation, true);
 
-                            Polygon hex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
+                            Shape hex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
                             minPoint = Min(center, size, minPoint);
@@ -327,7 +327,7 @@ namespace Mzinga.Viewer
                             {
                                 Point center = GetPoint(validMove.Position, size, hexOrientation);
 
-                                Polygon hex = GetHex(center, size, HexType.ValidMove, hexOrientation);
+                                Shape hex = GetHex(center, size, HexType.ValidMove, hexOrientation);
                                 BoardCanvas.Children.Add(hex);
 
                                 minPoint = Min(center, size, minPoint);
@@ -344,7 +344,7 @@ namespace Mzinga.Viewer
                     {
                         Point center = GetPoint(targetPosition, size, hexOrientation,  true);
 
-                        Polygon hex = GetHex(center, size, HexType.SelectedMove, hexOrientation);
+                        Shape hex = GetHex(center, size, HexType.SelectedMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -365,6 +365,8 @@ namespace Mzinga.Viewer
                 double offsetX = canvasCenterX - boardCenterX;
                 double offsetY = canvasCenterY - boardCenterY;
 
+                TranslateTransform translate = new TranslateTransform(offsetX, offsetY);
+
                 foreach (UIElement child in BoardCanvas.Children)
                 {
                     if (null != (child as TextBlock)) // Hex labels
@@ -372,17 +374,9 @@ namespace Mzinga.Viewer
                         Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
                         Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
                     }
-                    else if (null != (child as Polygon)) // Hexes
+                    else if (null != (child as Shape)) // Hexes
                     {
-                        Polygon hex = (Polygon)child;
-                        PointCollection oldPoints = new PointCollection(hex.Points);
-
-                        hex.Points.Clear();
-
-                        foreach (Point oldPoint in oldPoints)
-                        {
-                            hex.Points.Add(new Point(oldPoint.X + offsetX, oldPoint.Y + offsetY));
-                        }
+                        child.RenderTransform = translate;
                     }
                 }
 
@@ -497,7 +491,7 @@ namespace Mzinga.Viewer
             return pieces;
         }
 
-        private Polygon GetHex(Point center, double size, HexType hexType, HexOrientation hexOrientation)
+        private Shape GetHex(Point center, double size, HexType hexType, HexOrientation hexOrientation)
         {
             if (null == center)
             {
@@ -509,12 +503,12 @@ namespace Mzinga.Viewer
                 throw new ArgumentOutOfRangeException("size");
             }
 
-            Polygon hex = new Polygon
-            {
-                StrokeThickness = size / 10
-            };
+            double strokeThickness = size / 10;
 
-            hex.StrokeLineJoin = PenLineJoin.Round;
+            Path hex = new Path
+            {
+                StrokeThickness = strokeThickness
+            };
 
             switch (hexType)
             {
@@ -528,6 +522,7 @@ namespace Mzinga.Viewer
                     break;
                 case HexType.ValidMove:
                     hex.Fill = SelectedMoveBodyBrush;
+                    hex.Stroke = SelectedMoveBodyBrush;
                     break;
                 case HexType.SelectedPiece:
                     hex.Stroke = SelectedMoveEdgeBrush;
@@ -541,16 +536,35 @@ namespace Mzinga.Viewer
                     break;
             }
 
-            PointCollection points = new PointCollection();
+            PathGeometry data = new PathGeometry();
+            PathFigure figure = new PathFigure();
+            figure.IsClosed = true;
 
-            for (int i = 0; i < 6; i++)
+            double hexRadius = size - 0.75 * strokeThickness;
+
+            for (int i = 0; i <= 6; i++)
             {
                 double angle_deg = 60.0 * i + (hexOrientation == HexOrientation.PointyTop ? 30.0 : 0);
-                double angle_rad = Math.PI / 180 * angle_deg;
-                points.Add(new Point(center.X + size * Math.Cos(angle_rad), center.Y + size * Math.Sin(angle_rad)));
+
+                double angle_rad1 = Math.PI / 180 * (angle_deg - 6);
+                double angle_rad2 = Math.PI / 180 * (angle_deg + 6);
+
+                Point p1 = new Point(center.X + hexRadius * Math.Cos(angle_rad1), center.Y + hexRadius * Math.Sin(angle_rad1));
+                Point p2 = new Point(center.X + hexRadius * Math.Cos(angle_rad2), center.Y + hexRadius * Math.Sin(angle_rad2));
+
+                if (i == 0)
+                {
+                    figure.StartPoint = p2;
+                }
+                else
+                {
+                    figure.Segments.Add(new LineSegment(p1, true));
+                    figure.Segments.Add(new ArcSegment() { Point = p2, IsStroked = true, IsSmoothJoin = true, SweepDirection = SweepDirection.Counterclockwise });
+                }
             }
 
-            hex.Points = points;
+            data.Figures.Add(figure);
+            hex.Data = data;
 
             return hex;
         }
@@ -639,7 +653,7 @@ namespace Mzinga.Viewer
 
             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
-            Polygon hex = GetHex(center, size, hexType, hexOrientation);
+            Shape hex = GetHex(center, size, hexType, hexOrientation);
             TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
@@ -658,7 +672,7 @@ namespace Mzinga.Viewer
             // Add highlight if the piece is selected
             if (VM.AppVM.EngineWrapper.TargetPiece == piece.PieceName)
             {
-                Polygon highlightHex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
+                Shape highlightHex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
                 pieceCanvas.Children.Add(highlightHex);
             }
 
