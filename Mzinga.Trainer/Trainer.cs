@@ -686,6 +686,9 @@ namespace Mzinga.Trainer
                     Log("Lifecycle progress: {0:P2} ETA {1}.", progress, ToString(timeRemaining));
                 }
 
+                // Output analysis
+                Analyze(path);
+
                 gen++;
             }
 
