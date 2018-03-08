@@ -4,6 +4,7 @@
         Icon="{DynamicResource MzingaIcon}"
         KeyDown="Window_KeyDown"
         KeyUp="Window_KeyUp"
+        Loaded="Window_Loaded"
         MinHeight="480"
         MinWidth="640"
         Title="{Binding Title, FallbackValue=Mzinga.Viewer}"

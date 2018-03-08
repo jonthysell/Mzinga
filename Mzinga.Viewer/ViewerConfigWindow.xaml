@@ -17,6 +17,38 @@
                    Width="32" />
             <StackPanel Margin="5"
                         Orientation="Vertical">
+                <GroupBox Header="Engine Preferences"
+                          Margin="5">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Type:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center"
+                                   Width="50" />
+                            <RadioButton Content="Internal"
+                                         GroupName="EngineType"
+                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Internal}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="External"
+                                         GroupName="EngineType"
+                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                        </StackPanel>
+                        <TextBox IsEnabled="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                 Margin="5"
+                                 Text="{Binding EngineCommandLine}" />
+                        <Label Content="Note: Restart viewer to take effect."
+                               HorizontalAlignment="Center"
+                               Margin="5"
+                               Padding="0"
+                               VerticalAlignment="Center" />
+                    </StackPanel>
+                </GroupBox>
                 <GroupBox Header="Play Preferences"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
@@ -100,6 +132,11 @@
                     Width="75" />
             <Button Command="{Binding Reject}"
                     Content="Cancel"
+                    Margin="5"
+                    Style="{DynamicResource CleanButton}"
+                    Width="75" />
+            <Button Command="{Binding Reset}"
+                    Content="Reset"
                     Margin="5"
                     Style="{DynamicResource CleanButton}"
                     Width="75" />

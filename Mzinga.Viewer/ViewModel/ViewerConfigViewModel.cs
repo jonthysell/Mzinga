@@ -43,6 +43,33 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public EngineType EngineType
+        {
+            get
+            {
+                return Config.EngineType;
+            }
+            set
+            {
+                Config.EngineType = value;
+                RaisePropertyChanged("EngineType");
+                RaisePropertyChanged("EngineCommandLine");
+            }
+        }
+
+        public string EngineCommandLine
+        {
+            get
+            {
+                return Config.EngineCommandLine;
+            }
+            set
+            {
+                Config.EngineCommandLine = value;
+                RaisePropertyChanged("EngineCommandLine");
+            }
+        }
+
         public HexOrientation HexOrientation
         {
             get
@@ -201,6 +228,36 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private RelayCommand _reject = null;
+
+        public RelayCommand Reset
+        {
+            get
+            {
+                return _reset ?? (_reset = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Config = new ViewerConfig();
+                        RaisePropertyChanged("EngineType");
+                        RaisePropertyChanged("EngineCommandLine");
+                        RaisePropertyChanged("HexOrientation");
+                        RaisePropertyChanged("NotationType");
+                        RaisePropertyChanged("DisablePiecesInHandWithNoMoves");
+                        RaisePropertyChanged("DisablePiecesInPlayWithNoMoves");
+                        RaisePropertyChanged("HighlightTargetMove");
+                        RaisePropertyChanged("HighlightValidMoves");
+                        RaisePropertyChanged("HighlightLastMovePlayed");
+                        RaisePropertyChanged("BlockInvalidMoves");
+                        RaisePropertyChanged("RequireMoveConfirmation");
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _reset = null;
 
         public ViewerConfig Config { get; private set; }
 

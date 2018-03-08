@@ -715,6 +715,14 @@ namespace Mzinga.Viewer
             }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (null != VM.AppVM.EngineExceptionOnStart)
+            {
+                ExceptionUtils.HandleException(new Exception("Unable to start the external engine so used the internal one instead.", VM.AppVM.EngineExceptionOnStart));
+            }
+        }
+
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.X)

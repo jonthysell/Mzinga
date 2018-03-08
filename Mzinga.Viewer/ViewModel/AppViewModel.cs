@@ -61,6 +61,8 @@ namespace Mzinga.Viewer.ViewModel
 
         public EngineWrapper EngineWrapper { get; private set; }
 
+        public Exception EngineExceptionOnStart { get; private set; } = null;
+
         public static void Init(ViewerConfig viewerConfig, DoOnUIThread doOnUIThread)
         {
             if (null != Instance)
@@ -87,8 +89,30 @@ namespace Mzinga.Viewer.ViewModel
 
             DoOnUIThread = doOnUIThread;
 
-            EngineWrapper = new CLIEngineWrapper(ViewerConfig.EngineCommand);
-            EngineWrapper.StartEngine();
+            try
+            {
+                // Try starting external engine
+                switch (ViewerConfig.EngineType)
+                {
+                    case EngineType.CommandLine:
+                        EngineWrapper = new CLIEngineWrapper(ViewerConfig.EngineCommandLine);
+                        EngineWrapper.StartEngine();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                EngineWrapper?.StopEngine();
+                EngineWrapper = null;
+                EngineExceptionOnStart = ex;
+            }
+
+            if (null == EngineWrapper)
+            {
+                // No engine started, use an internal one
+                EngineWrapper = new InternalEngineWrapper();
+                EngineWrapper.StartEngine();
+            }
         }
     }
 }

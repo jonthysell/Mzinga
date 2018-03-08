@@ -32,7 +32,35 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class ViewerConfig
     {
-        public string EngineCommand { get; set; } = "Mzinga.Engine.exe";
+        public EngineType EngineType
+        {
+            get
+            {
+                return _engineType;
+            }
+            set
+            {
+                _engineType = value;
+                if (_engineType == EngineType.CommandLine && string.IsNullOrWhiteSpace(EngineCommandLine))
+                {
+                    EngineCommandLine = MzingaEngineCommandLine;
+                }
+            }
+        }
+        private EngineType _engineType = EngineType.CommandLine;
+
+        public string EngineCommandLine
+        {
+            get
+            {
+                return _engineCommandLine;
+            }
+            set
+            {
+                _engineCommandLine = string.IsNullOrWhiteSpace(value) ? MzingaEngineCommandLine : value.Trim();
+            }
+        }
+        private string _engineCommandLine = MzingaEngineCommandLine;
 
         public HexOrientation HexOrientation
         {
@@ -99,8 +127,11 @@ namespace Mzinga.Viewer.ViewModel
                     {
                         switch (reader.Name)
                         {
-                            case "EngineCommand":
-                                EngineCommand = ParseStringValue(reader.ReadElementContentAsString(), EngineCommand);
+                            case "EngineType":
+                                EngineType = ParseEnumValue(reader.ReadElementContentAsString(), EngineType);
+                                break;
+                            case "EngineCommandLine":
+                                EngineCommandLine = ParseStringValue(reader.ReadElementContentAsString(), EngineCommandLine);
                                 break;
                             case "HexOrientation":
                                 HexOrientation = ParseEnumValue(reader.ReadElementContentAsString(), HexOrientation);
@@ -171,7 +202,8 @@ namespace Mzinga.Viewer.ViewModel
                 writer.WriteAttributeString("version", AppViewModel.FullVersion);
                 writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
-                writer.WriteElementString("EngineCommand", EngineCommand);
+                writer.WriteElementString("EngineType", EngineType.ToString());
+                writer.WriteElementString("EngineCommandLine", EngineCommandLine);
                 writer.WriteElementString("HexOrientation", HexOrientation.ToString());
                 writer.WriteElementString("NotationType", NotationType.ToString());
                 writer.WriteElementString("DisablePiecesInHandWithNoMoves", DisablePiecesInHandWithNoMoves.ToString());
@@ -190,7 +222,8 @@ namespace Mzinga.Viewer.ViewModel
         {
             ViewerConfig clone = new ViewerConfig
             {
-                EngineCommand = EngineCommand,
+                EngineCommandLine = EngineCommandLine,
+                EngineType = EngineType,
 
                 HexOrientation = HexOrientation,
                 NotationType = NotationType,
@@ -216,7 +249,8 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("config");
             }
 
-            EngineCommand = config.EngineCommand;
+            EngineCommandLine = config.EngineCommandLine;
+            EngineType = config.EngineType;
 
             HexOrientation = config.HexOrientation;
             NotationType = config.NotationType;
@@ -231,6 +265,8 @@ namespace Mzinga.Viewer.ViewModel
             BlockInvalidMoves = config.BlockInvalidMoves;
             RequireMoveConfirmation = config.RequireMoveConfirmation;
         }
+
+        private const string MzingaEngineCommandLine = "Mzinga.Engine.exe";
     }
 
     public enum HexOrientation
@@ -243,5 +279,11 @@ namespace Mzinga.Viewer.ViewModel
     {
         Mzinga,
         BoardSpace
+    }
+
+    public enum EngineType
+    {
+        Internal,
+        CommandLine,
     }
 }

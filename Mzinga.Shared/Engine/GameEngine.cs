@@ -512,6 +512,7 @@ namespace Mzinga.Engine
 
         private void Exit()
         {
+            _gameBoard = null;
             ExitRequested = true;
         }
 

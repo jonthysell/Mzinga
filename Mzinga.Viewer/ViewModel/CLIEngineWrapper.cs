@@ -69,11 +69,17 @@ namespace Mzinga.Viewer.ViewModel
 
         public override void StopEngine()
         {
-            _process.CancelOutputRead();
-            _writer.WriteLine("exit");
-            _process.WaitForExit();
-            _process.Close();
+            try
+            {
+                _process.CancelOutputRead();
+                _writer.WriteLine("exit");
+                _process.WaitForExit(WaitForExitTimeoutMS);
+                _process.Close();
+            }
+            catch (Exception) { }
+
             _process = null;
+            _writer = null;
         }
 
         protected override void OnEngineInput(string command)
@@ -81,5 +87,7 @@ namespace Mzinga.Viewer.ViewModel
             _writer.WriteLine(command);
             _writer.Flush();
         }
+
+        private const int WaitForExitTimeoutMS = 10 * 1000;
     }
 }
