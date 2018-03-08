@@ -14,8 +14,6 @@ Mzinga is developed in C# for .NET 4.5.
 
 Mzinga.Engine.exe is Mzinga's engine, a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
 
-By itself it is a relatively thin application, as it relies heavily on Mzinga.Core to handle the actual game logic.
-
 ### Mzinga.Viewer ###
 
 Mzinga.Viewer.exe is Mzinga's viewer, a graphical application which can drive Mzinga.Engine (or any engine that implements the specifications of the Universal Hive Protocol).
