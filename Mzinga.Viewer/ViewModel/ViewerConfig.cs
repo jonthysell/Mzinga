@@ -159,8 +159,10 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("outputStream");
             }
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
 
             using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
             {
@@ -186,22 +188,23 @@ namespace Mzinga.Viewer.ViewModel
 
         public ViewerConfig Clone()
         {
-            ViewerConfig clone = new ViewerConfig();
+            ViewerConfig clone = new ViewerConfig
+            {
+                EngineCommand = EngineCommand,
 
-            clone.EngineCommand = EngineCommand;
+                HexOrientation = HexOrientation,
+                NotationType = NotationType,
 
-            clone.HexOrientation = HexOrientation;
-            clone.NotationType = NotationType;
+                DisablePiecesInHandWithNoMoves = DisablePiecesInHandWithNoMoves,
+                DisablePiecesInPlayWithNoMoves = DisablePiecesInPlayWithNoMoves,
 
-            clone.DisablePiecesInHandWithNoMoves = DisablePiecesInHandWithNoMoves;
-            clone.DisablePiecesInPlayWithNoMoves = DisablePiecesInPlayWithNoMoves;
+                HighlightTargetMove = HighlightTargetMove,
+                HighlightValidMoves = HighlightValidMoves,
+                HighlightLastMovePlayed = HighlightLastMovePlayed,
 
-            clone.HighlightTargetMove = HighlightTargetMove;
-            clone.HighlightValidMoves = HighlightValidMoves;
-            clone.HighlightLastMovePlayed = HighlightLastMovePlayed;
-
-            clone.BlockInvalidMoves = BlockInvalidMoves;
-            clone.RequireMoveConfirmation = RequireMoveConfirmation;
+                BlockInvalidMoves = BlockInvalidMoves,
+                RequireMoveConfirmation = RequireMoveConfirmation
+            };
 
             return clone;
         }

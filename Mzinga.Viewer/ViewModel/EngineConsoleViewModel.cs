@@ -64,7 +64,7 @@ namespace Mzinga.Viewer.ViewModel
                 SendEngineCommand.RaiseCanExecuteChanged();
             }
         }
-        private bool _isIdle;
+        private bool _isIdle = true;
 
         public string EngineOutputText
         {
@@ -132,8 +132,6 @@ namespace Mzinga.Viewer.ViewModel
                     IsIdle = AppVM.EngineWrapper.IsIdle;
                 });
             };
-
-            IsIdle = true;
         }
     }
 }

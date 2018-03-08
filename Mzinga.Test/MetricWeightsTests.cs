@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System.IO;
+using System.Text;
 using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -58,16 +59,11 @@ namespace Mzinga.Test
             {
                 if (null == _testMetricWeights)
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        using (StreamWriter sw = new StreamWriter(ms))
-                        {
-                            sw.Write(TestMetricWeightsXml);
-                            sw.Flush();
+                    byte[] rawData = Encoding.UTF8.GetBytes(TestMetricWeightsXml);
 
-                            ms.Position = 0;
-                            _testMetricWeights = MetricWeights.ReadMetricWeightsXml(XmlReader.Create(ms));
-                        }
+                    using (MemoryStream ms = new MemoryStream(rawData))
+                    {
+                        _testMetricWeights = MetricWeights.ReadMetricWeightsXml(XmlReader.Create(ms));
                     }
                 }
 

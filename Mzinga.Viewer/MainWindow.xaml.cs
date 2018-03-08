@@ -103,8 +103,10 @@ namespace Mzinga.Viewer
             BlackBrush = new SolidColorBrush(Colors.Black);
 
             SelectedMoveEdgeBrush = new SolidColorBrush(Colors.Orange);
-            SelectedMoveBodyBrush = new SolidColorBrush(Colors.Aqua);
-            SelectedMoveBodyBrush.Opacity = 0.25;
+            SelectedMoveBodyBrush = new SolidColorBrush(Colors.Aqua)
+            {
+                Opacity = 0.25
+            };
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
@@ -483,8 +485,10 @@ namespace Mzinga.Viewer
                 throw new ArgumentOutOfRangeException("size");
             }
 
-            Polygon hex = new Polygon();
-            hex.StrokeThickness = 2;
+            Polygon hex = new Polygon
+            {
+                StrokeThickness = 2
+            };
 
             switch (hexType)
             {
@@ -537,9 +541,11 @@ namespace Mzinga.Viewer
                 throw new ArgumentOutOfRangeException("size");
             }
 
-            TextBlock hexText = new TextBlock();
-            hexText.Text = EnumUtils.GetShortName(pieceName).Substring(1);
-            hexText.FontFamily = new FontFamily("Lucida Console");
+            TextBlock hexText = new TextBlock
+            {
+                Text = EnumUtils.GetShortName(pieceName).Substring(1),
+                FontFamily = new FontFamily("Lucida Console")
+            };
 
             switch (EnumUtils.GetBugType(pieceName))
             {
@@ -584,8 +590,10 @@ namespace Mzinga.Viewer
 
         private static SolidColorBrush MixSolidColorBrushes(SolidColorBrush b1, SolidColorBrush b2)
         {
-            SolidColorBrush result = new SolidColorBrush();
-            result.Color = System.Windows.Media.Color.FromScRgb((b1.Color.ScA + b2.Color.ScA) / 2, (b1.Color.ScR + b2.Color.ScR) / 2, (b1.Color.ScG + b2.Color.ScG) / 2, (b1.Color.ScB + b2.Color.ScB) / 2);
+            SolidColorBrush result = new SolidColorBrush
+            {
+                Color = System.Windows.Media.Color.FromScRgb((b1.Color.ScA + b2.Color.ScA) / 2, (b1.Color.ScR + b2.Color.ScR) / 2, (b1.Color.ScG + b2.Color.ScG) / 2, (b1.Color.ScB + b2.Color.ScB) / 2)
+            };
             return result;
         }
 
@@ -608,13 +616,15 @@ namespace Mzinga.Viewer
             Polygon hex = GetHex(center, size, hexType, hexOrientation);
             TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
 
-            Canvas pieceCanvas = new Canvas();
-            pieceCanvas.Height = size * 2;
-            pieceCanvas.Width = size * 2;
-            pieceCanvas.Margin = new Thickness(PieceCanvasMargin);
-            pieceCanvas.Background = (piece.Color == Core.Color.White) ? WhiteHandStackPanel.Background : BlackHandStackPanel.Background;
+            Canvas pieceCanvas = new Canvas
+            {
+                Height = size * 2,
+                Width = size * 2,
+                Margin = new Thickness(PieceCanvasMargin),
+                Background = (piece.Color == Core.Color.White) ? WhiteHandStackPanel.Background : BlackHandStackPanel.Background,
 
-            pieceCanvas.Name = EnumUtils.GetShortName(piece.PieceName);
+                Name = EnumUtils.GetShortName(piece.PieceName)
+            };
 
             pieceCanvas.Children.Add(hex);
             pieceCanvas.Children.Add(hexText);

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,11 +36,14 @@ namespace Mzinga.Viewer
     {
         public static Point CorrectGetPosition(Visual relativeTo)
         {
-            Win32Point w32Mouse = new Win32Point();
-            GetCursorPos(ref w32Mouse);
+            NativeMethods.Win32Point w32Mouse = new NativeMethods.Win32Point();
+            NativeMethods.GetCursorPos(ref w32Mouse);
             return relativeTo.PointFromScreen(new Point(w32Mouse.X, w32Mouse.Y));
         }
+    }
 
+    internal static partial class NativeMethods
+    {
         [StructLayout(LayoutKind.Sequential)]
         internal struct Win32Point
         {

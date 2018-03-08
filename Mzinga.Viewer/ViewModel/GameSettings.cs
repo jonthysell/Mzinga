@@ -102,17 +102,18 @@ namespace Mzinga.Viewer.ViewModel
 
         public GameSettings Clone()
         {
-            GameSettings clone = new GameSettings();
+            GameSettings clone = new GameSettings
+            {
+                WhitePlayerType = WhitePlayerType,
+                BlackPlayerType = BlackPlayerType,
 
-            clone.WhitePlayerType = WhitePlayerType;
-            clone.BlackPlayerType = BlackPlayerType;
+                ExpansionPieces = ExpansionPieces,
 
-            clone.ExpansionPieces = ExpansionPieces;
+                BestMoveType = BestMoveType,
 
-            clone.BestMoveType = BestMoveType;
-
-            clone.BestMoveMaxDepth = BestMoveMaxDepth;
-            clone.BestMoveMaxTime = BestMoveMaxTime;
+                BestMoveMaxDepth = BestMoveMaxDepth,
+                BestMoveMaxTime = BestMoveMaxTime
+            };
 
             return clone;
         }

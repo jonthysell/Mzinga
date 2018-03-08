@@ -111,11 +111,13 @@ namespace Mzinga.Test
 
         private TranspositionTableEntry CreateMaxEntry(int id)
         {
-            TranspositionTableEntry te = new TranspositionTableEntry();
-            te.Depth = 0;
-            te.Type = TranspositionTableEntryType.Exact;
-            te.Value = 0;
-            te.BestMove = new Move(PieceName.WhiteSoldierAnt1, new Position(0, 0, 0, 0));
+            TranspositionTableEntry te = new TranspositionTableEntry
+            {
+                Depth = 0,
+                Type = TranspositionTableEntryType.Exact,
+                Value = 0,
+                BestMove = new Move(PieceName.WhiteSoldierAnt1, new Position(0, 0, 0, 0))
+            };
             return te;
         }
     }

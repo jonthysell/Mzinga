@@ -171,7 +171,7 @@ namespace Mzinga.Viewer.ViewModel
                     try
                     {
                         Accepted = true;
-                        RequestClose?.Invoke();
+                        RequestClose?.Invoke(this, null);
                     }
                     catch (Exception ex)
                     {
@@ -191,7 +191,7 @@ namespace Mzinga.Viewer.ViewModel
                     try
                     {
                         Accepted = false;
-                        RequestClose?.Invoke();
+                        RequestClose?.Invoke(this, null);
                     }
                     catch (Exception ex)
                     {
@@ -206,7 +206,7 @@ namespace Mzinga.Viewer.ViewModel
 
         public bool Accepted { get; private set; }
 
-        public event Action RequestClose;
+        public event EventHandler RequestClose;
 
         public Action<ViewerConfig> Callback { get; private set; }
 

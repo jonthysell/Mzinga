@@ -1344,7 +1344,6 @@ namespace Mzinga.Core
         Pillbug = 0x4,
     }
 
-    [Serializable]
     public class InvalidMoveException : Exception
     {
         public Move Move { get; private set; }

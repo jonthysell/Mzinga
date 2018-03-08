@@ -56,9 +56,11 @@ namespace Mzinga.Viewer
 
         private static void ShowException(ExceptionMessage message)
         {
-            ExceptionWindow window = new ExceptionWindow();
-            window.DataContext = message.ExceptionVM;
-            message.ExceptionVM.RequestClose += () =>
+            ExceptionWindow window = new ExceptionWindow
+            {
+                DataContext = message.ExceptionVM
+            };
+            message.ExceptionVM.RequestClose += (sender, e) =>
             {
                 window.Close();
             };
@@ -67,9 +69,11 @@ namespace Mzinga.Viewer
 
         private static void ShowInformation(InformationMessage message)
         {
-            InformationWindow window = new InformationWindow();
-            window.DataContext = message.InformationVM;
-            message.InformationVM.RequestClose += () =>
+            InformationWindow window = new InformationWindow
+            {
+                DataContext = message.InformationVM
+            };
+            message.InformationVM.RequestClose += (sender, e) =>
             {
                 window.Close();
             };
@@ -88,9 +92,11 @@ namespace Mzinga.Viewer
 
         private static void ShowNewGame(NewGameMessage message)
         {
-            NewGameWindow window = new NewGameWindow();
-            window.DataContext = message.NewGameVM;
-            message.NewGameVM.RequestClose += () =>
+            NewGameWindow window = new NewGameWindow
+            {
+                DataContext = message.NewGameVM
+            };
+            message.NewGameVM.RequestClose += (sender, e) =>
             {
                 window.Close();
             };
@@ -100,9 +106,11 @@ namespace Mzinga.Viewer
 
         private static void ShowViewerConfig(ViewerConfigMessage message)
         {
-            ViewerConfigWindow window = new ViewerConfigWindow();
-            window.DataContext = message.ViewerConfigVM;
-            message.ViewerConfigVM.RequestClose += () =>
+            ViewerConfigWindow window = new ViewerConfigWindow
+            {
+                DataContext = message.ViewerConfigVM
+            };
+            message.ViewerConfigVM.RequestClose += (sender, e) =>
             {
                 window.Close();
             };

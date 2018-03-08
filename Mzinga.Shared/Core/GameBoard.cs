@@ -287,8 +287,10 @@ namespace Mzinga.Core
 
             long? nodes = await Task.Run(() =>
             {
-                ParallelOptions po = new ParallelOptions();
-                po.MaxDegreeOfParallelism = Math.Max(1, maxThreads);
+                ParallelOptions po = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = Math.Max(1, maxThreads)
+                };
 
                 long n = 0;
                 ParallelLoopResult loopResult = Parallel.ForEach(validMoves, po, async (move, state) =>

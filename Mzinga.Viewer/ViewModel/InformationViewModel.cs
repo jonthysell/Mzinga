@@ -75,7 +75,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        RequestClose?.Invoke();
+                        RequestClose?.Invoke(this, null);
                     }
                     catch (Exception ex)
                     {
@@ -86,7 +86,7 @@ namespace Mzinga.Viewer.ViewModel
         }
         private RelayCommand _accept = null;
 
-        public event Action RequestClose;
+        public event EventHandler RequestClose;
 
         public Action Callback { get; private set; }
 

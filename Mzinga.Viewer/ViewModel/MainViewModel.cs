@@ -73,7 +73,7 @@ namespace Mzinga.Viewer.ViewModel
                 CheckForUpdatesAsync.RaiseCanExecuteChanged();
             }
         }
-        private bool _isIdle;
+        private bool _isIdle = true;
 
         public ViewerConfig ViewerConfig
         {
@@ -530,8 +530,6 @@ namespace Mzinga.Viewer.ViewModel
                     IsIdle = AppVM.EngineWrapper.IsIdle;
                 });
             };
-
-            IsIdle = true;
         }
 
         internal void CanvasClick(double cursorX, double cursorY)

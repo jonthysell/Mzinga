@@ -208,8 +208,10 @@ namespace Mzinga.Trainer
 
             matches = new List<Tuple<Profile, Profile>>(matches.Take(remaining));
 
-            ParallelOptions po = new ParallelOptions();
-            po.MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles;
+            ParallelOptions po = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles
+            };
 
             Parallel.ForEach(matches, po, (match, loopState) =>
             {
@@ -811,8 +813,10 @@ namespace Mzinga.Trainer
 
                 Profile[] winners = new Profile[(int)Math.Round(currentTier.Length / 2.0)];
 
-                ParallelOptions po = new ParallelOptions();
-                po.MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles;
+                ParallelOptions po = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles
+                };
 
                 Parallel.For(0, winners.Length, po, (i, loopState) =>
                 {

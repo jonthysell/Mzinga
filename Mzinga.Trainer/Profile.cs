@@ -232,8 +232,10 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("outputStream");
             }
 
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
 
             using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
             {

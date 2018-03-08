@@ -69,7 +69,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     try
                     {
-                        RequestClose?.Invoke();
+                        RequestClose?.Invoke(this, null);
                     }
                     catch (Exception ex)
                     {
@@ -97,7 +97,7 @@ namespace Mzinga.Viewer.ViewModel
         }
         private Exception _exception;
 
-        public event Action RequestClose;
+        public event EventHandler RequestClose;
 
         public ExceptionViewModel(Exception exception)
         {
