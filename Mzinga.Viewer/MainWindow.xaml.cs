@@ -237,7 +237,7 @@ namespace Mzinga.Viewer
 
                             bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
-                            TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
+                            UIElement hexText = GetHexText(center, size, piece.PieceName, disabled);
                             BoardCanvas.Children.Add(hexText);
 
                             minPoint = Min(center, size, minPoint);
@@ -369,7 +369,7 @@ namespace Mzinga.Viewer
 
                 foreach (UIElement child in BoardCanvas.Children)
                 {
-                    if (null != (child as TextBlock)) // Hex labels
+                    if (null != (child as Border)) // Hex labels
                     {
                         Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
                         Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
@@ -569,7 +569,7 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private TextBlock GetHexText(Point center, double size, PieceName pieceName, bool disabled)
+        private Border GetHexText(Point center, double size, PieceName pieceName, bool disabled)
         {
             if (null == center)
             {
@@ -584,7 +584,9 @@ namespace Mzinga.Viewer
             TextBlock hexText = new TextBlock
             {
                 Text = EnumUtils.GetShortName(pieceName).Substring(1),
-                FontFamily = new FontFamily("Lucida Console")
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontFamily = new FontFamily("Arial Black")
             };
 
             switch (EnumUtils.GetBugType(pieceName))
@@ -620,12 +622,18 @@ namespace Mzinga.Viewer
                 hexText.Foreground = MixSolidColorBrushes((SolidColorBrush)hexText.Foreground, DisabledPieceBrush);
             }
 
-            hexText.FontSize = size;
+            hexText.FontSize = size * 0.75;
 
-            Canvas.SetLeft(hexText, center.X - (hexText.Text.Length * (hexText.FontSize / 3.5)));
+            Canvas.SetLeft(hexText, center.X - (hexText.Text.Length * (hexText.FontSize / 3.0)));
             Canvas.SetTop(hexText, center.Y - (hexText.FontSize / 2.0));
 
-            return hexText;
+            Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
+            b.Child = hexText;
+            
+            Canvas.SetLeft(b, center.X - (b.Width / 2.0));
+            Canvas.SetTop(b, center.Y - (b.Height / 2.0));
+
+            return b;
         }
 
         private static SolidColorBrush MixSolidColorBrushes(SolidColorBrush b1, SolidColorBrush b2)
@@ -654,7 +662,7 @@ namespace Mzinga.Viewer
             HexType hexType = (piece.Color == Core.Color.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Shape hex = GetHex(center, size, hexType, hexOrientation);
-            TextBlock hexText = GetHexText(center, size, piece.PieceName, disabled);
+            UIElement hexText = GetHexText(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
             {
