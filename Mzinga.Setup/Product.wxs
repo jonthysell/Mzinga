@@ -83,6 +83,7 @@
       </Component>
       <Component>
         <File Source="$(var.Mzinga.Viewer.TargetDir)\GalaSoft.MvvmLight.dll" />
+        <File Source="$(var.Mzinga.Viewer.TargetDir)\MVVM Light License.txt" />
       </Component>
       <Component>
         <File Source="$(var.Mzinga.Viewer.TargetDir)\GalaSoft.MvvmLight.Extras.dll" />
