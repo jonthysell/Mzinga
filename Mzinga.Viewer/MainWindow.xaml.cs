@@ -546,8 +546,8 @@ namespace Mzinga.Viewer
             {
                 double angle_deg = 60.0 * i + (hexOrientation == HexOrientation.PointyTop ? 30.0 : 0);
 
-                double angle_rad1 = Math.PI / 180 * (angle_deg - 6);
-                double angle_rad2 = Math.PI / 180 * (angle_deg + 6);
+                double angle_rad1 = Math.PI / 180 * (angle_deg - 3);
+                double angle_rad2 = Math.PI / 180 * (angle_deg + 3);
 
                 Point p1 = new Point(center.X + hexRadius * Math.Cos(angle_rad1), center.Y + hexRadius * Math.Sin(angle_rad1));
                 Point p2 = new Point(center.X + hexRadius * Math.Cos(angle_rad2), center.Y + hexRadius * Math.Sin(angle_rad2));

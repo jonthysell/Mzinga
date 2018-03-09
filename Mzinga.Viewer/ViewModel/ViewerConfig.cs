@@ -47,7 +47,7 @@ namespace Mzinga.Viewer.ViewModel
                 }
             }
         }
-        private EngineType _engineType = EngineType.CommandLine;
+        private EngineType _engineType = EngineType.Internal;
 
         public string EngineCommandLine
         {
