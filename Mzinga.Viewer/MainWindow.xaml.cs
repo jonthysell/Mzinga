@@ -134,15 +134,15 @@ namespace Mzinga.Viewer
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
-            QueenBeeBrush = new SolidColorBrush(Colors.Gold);
-            SpiderBrush = new SolidColorBrush(Colors.Brown);
-            BeetleBrush = new SolidColorBrush(Colors.Purple);
-            GrasshopperBrush = new SolidColorBrush(Colors.Green);
-            SoldierAntBrush = new SolidColorBrush(Colors.Blue);
+            QueenBeeBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 250, G = 167, B = 29, A = 255 });
+            SpiderBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 139, G = 63, B = 27, A = 255 });
+            BeetleBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 149, G = 101, B = 194, A = 255 });
+            GrasshopperBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 65, G = 157, B = 70, A = 255 });
+            SoldierAntBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 37, G = 141, B = 193, A = 255 });
 
-            MosquitoBrush = new SolidColorBrush(Colors.DarkGray);
-            LadybugBrush = new SolidColorBrush(Colors.DarkRed);
-            PillbugBrush = new SolidColorBrush(Colors.Teal);
+            MosquitoBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 111, G = 111, B = 97, A = 255 });
+            LadybugBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 211, G = 17, B = 69, A = 255 });
+            PillbugBrush = new SolidColorBrush(new System.Windows.Media.Color() { R = 30, G = 183, B = 182, A = 255 });
 
             DisabledPieceBrush = new SolidColorBrush(Colors.LightGray);
 
