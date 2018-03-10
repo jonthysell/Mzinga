@@ -352,7 +352,7 @@ namespace Mzinga.Viewer
                     }
                 }
 
-                // Translate everything on the board
+                // Translate all game elements on the board
                 double boardWidth = Math.Abs(maxPoint.X - minPoint.X);
                 double boardHeight = Math.Abs(maxPoint.Y - minPoint.Y);
 
@@ -384,6 +384,23 @@ namespace Mzinga.Viewer
                 CanvasOffsetY = offsetY;
 
                 VM.CanvasHexRadius = size;
+
+                // Add HUD elements
+
+                // Add lift text
+                if (maxStack > 0)
+                {
+                    Border liftBorder = new Border() { Width = BoardCanvas.ActualWidth, Height = BoardCanvas.ActualHeight };
+
+                    TextBlock liftText = new TextBlock();
+                    liftText.HorizontalAlignment = HorizontalAlignment.Center;
+                    liftText.VerticalAlignment = VerticalAlignment.Bottom;
+                    liftText.Text = "Press 'x' to show covered tiles.";
+
+                    liftBorder.Child = liftText;
+
+                    BoardCanvas.Children.Add(liftBorder);
+                }
             }
 
             LastBoard = board;
