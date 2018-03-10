@@ -110,7 +110,7 @@ namespace Mzinga.Viewer.ViewModel
             if (null == EngineWrapper)
             {
                 // No engine started, use an internal one
-                EngineWrapper = new InternalEngineWrapper();
+                EngineWrapper = new InternalEngineWrapper(ProgramTitle);
                 EngineWrapper.StartEngine();
             }
         }

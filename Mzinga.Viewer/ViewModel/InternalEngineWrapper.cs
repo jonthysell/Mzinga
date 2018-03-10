@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Threading.Tasks;
 
 using Mzinga.Engine;
@@ -32,11 +33,13 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class InternalEngineWrapper : EngineWrapper
     {
+        private string _id;
         private GameEngine _gameEngine;
         private GameEngineConfig _gameEngineConfig;
 
-        public InternalEngineWrapper() : base()
+        public InternalEngineWrapper(string id) : base()
         {
+            _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException("id");
             _gameEngineConfig = GameEngineConfig.GetDefaultConfig();
         }
 
@@ -44,7 +47,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             IsIdle = false;
 
-            _gameEngine = new GameEngine("Mzinga.Internal", GameEngineConfig.GetDefaultConfig(), (format, args) =>
+            _gameEngine = new GameEngine(_id, GameEngineConfig.GetDefaultConfig(), (format, args) =>
             {
                 OnEngineOutput(string.Format(format, args));
             });
