@@ -127,7 +127,7 @@ namespace Mzinga.Core
         }
         private string _boardString = null;
 
-        public long ZobristKey
+        public ulong ZobristKey
         {
             get
             {

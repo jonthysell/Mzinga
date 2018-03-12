@@ -30,12 +30,12 @@ namespace Mzinga.Core
 {
     public class ZobristHash
     {
-        public long Value { get; private set; }
+        public ulong Value { get; private set; }
 
-        private static long _next = 1;
-        private static long _hashPartByTurnColor = 0;
-        private static long[] _hashPartByLastMovedPiece = new long[EnumUtils.NumPieceNames];
-        private static Dictionary<Position, long>[] _hashPartByPosition = new Dictionary<Position, long>[EnumUtils.NumPieceNames];
+        private static ulong _next = 1;
+        private static ulong _hashPartByTurnColor = 0;
+        private static ulong[] _hashPartByLastMovedPiece = new ulong[EnumUtils.NumPieceNames];
+        private static Dictionary<Position, ulong>[] _hashPartByPosition = new Dictionary<Position, ulong>[EnumUtils.NumPieceNames];
 
         public ZobristHash()
         {
@@ -74,7 +74,7 @@ namespace Mzinga.Core
 
             for (int i = 0; i < _hashPartByPosition.Length; i++)
             {
-                _hashPartByPosition[i] = new Dictionary<Position, long>();
+                _hashPartByPosition[i] = new Dictionary<Position, ulong>();
 
                 foreach (Position pos in uniquePositions)
                 {
@@ -83,7 +83,7 @@ namespace Mzinga.Core
             }
         }
 
-        private static long Rand64()
+        private static ulong Rand64()
         {
             _next = _next * 1103515245 + 12345;
             return _next;

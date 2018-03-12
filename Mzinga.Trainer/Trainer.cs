@@ -332,7 +332,7 @@ namespace Mzinga.Trainer
             DateTime battleStart = DateTime.Now;
             TimeSpan battleElapsed = TimeSpan.Zero;
 
-            List<long> boardKeys = new List<long>();
+            List<ulong> boardKeys = new List<ulong>();
 
             // Play Game
             while (gameBoard.GameInProgress)

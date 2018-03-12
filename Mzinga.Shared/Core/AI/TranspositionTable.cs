@@ -28,7 +28,7 @@ using System;
 
 namespace Mzinga.Core.AI
 {
-    public class TranspositionTable : FixedCache<long, TranspositionTableEntry>
+    public class TranspositionTable : FixedCache<ulong, TranspositionTableEntry>
     {
         public TranspositionTable(long sizeInBytes = DefaultSizeInBytes) : base(GetCapacity(sizeInBytes), TranspostionTableReplaceEntryPredicate) { }
 
@@ -47,7 +47,7 @@ namespace Mzinga.Core.AI
             return entry.Depth > existingEntry.Depth;
         }
 
-        private static readonly long EntrySizeInBytes = (4 * sizeof(long)) // Key size x4
+        private static readonly long EntrySizeInBytes = (4 * sizeof(ulong)) // Key size x4
                                                         + IntPtr.Size // Wrapped entry pointer
                                                         + IntPtr.Size // Wrapped entry, LinkedList node pointer
                                                         + IntPtr.Size // Wrapped entry, entry pointer

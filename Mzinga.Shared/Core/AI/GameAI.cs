@@ -39,7 +39,7 @@ namespace Mzinga.Core.AI
         private MetricWeights _metricWeights;
 
 
-        private FixedCache<long, double> _cachedBoardScores = new FixedCache<long, double>(DefaultBoardScoresCacheSize);
+        private FixedCache<long, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
 
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
@@ -192,7 +192,7 @@ namespace Mzinga.Core.AI
             EvaluatedMove bestMove = null;
 
             // Try to get cached best move if available
-            long key = gameBoard.ZobristKey;
+            ulong key = gameBoard.ZobristKey;
             TranspositionTableEntry tEntry;
             if (_transpositionTable.TryLookup(key, out tEntry) && null != tEntry.BestMove)
             {
@@ -304,7 +304,7 @@ namespace Mzinga.Core.AI
                 }
             }
 
-            long key = gameBoard.ZobristKey;
+            ulong key = gameBoard.ZobristKey;
 
             TranspositionTableEntry tEntry = new TranspositionTableEntry();
 
@@ -381,7 +381,7 @@ namespace Mzinga.Core.AI
         {
             double alphaOriginal = alpha;
 
-            long key = gameBoard.ZobristKey;
+            ulong key = gameBoard.ZobristKey;
 
             TranspositionTableEntry tEntry;
             if (_transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth >= depth)
@@ -586,7 +586,7 @@ namespace Mzinga.Core.AI
                 return 0.0;
             }
 
-            long key = gameBoard.ZobristKey;
+            ulong key = gameBoard.ZobristKey;
 
             double score;
             if (_cachedBoardScores.TryLookup(key, out score))
