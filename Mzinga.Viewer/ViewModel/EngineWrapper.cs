@@ -689,10 +689,12 @@ namespace Mzinga.Viewer.ViewModel
             OnTimedCommandProgressUpdated(true, 0.0);
 
             _timedCommandCTS = new CancellationTokenSource();
+            CancellationToken token = _timedCommandCTS.Token;
+
             _timedCommandTask = Task.Run(() =>
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                while (sw.Elapsed <= duration && !_timedCommandCTS.Token.IsCancellationRequested)
+                while (sw.Elapsed <= duration && !token.IsCancellationRequested)
                 {
                     OnTimedCommandProgressUpdated(true, sw.Elapsed.TotalMilliseconds / duration.TotalMilliseconds);
                     Thread.Sleep(100);

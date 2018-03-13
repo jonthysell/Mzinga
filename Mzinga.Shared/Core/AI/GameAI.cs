@@ -173,14 +173,11 @@ namespace Mzinga.Core.AI
 
             if (evaluatedMoves.Count == 0)
             {
-                return null;
+                throw new Exception("No moves after evaluation!");
             }
 
             // Make sure at least one move is reported
-            if (null == bestMoveParams.BestMove)
-            {
-                OnBestMoveFound(bestMoveParams, evaluatedMoves.BestMove);
-            }
+            OnBestMoveFound(bestMoveParams, evaluatedMoves.BestMove);
 
             return bestMoveParams.BestMove.Move;
         }
@@ -242,7 +239,7 @@ namespace Mzinga.Core.AI
                 // Prune game-losing moves if possible
                 movesToEvaluate.PruneGameLosingMoves();
 
-                if (movesToEvaluate.Count == 1)
+                if (movesToEvaluate.Count <= 1)
                 {
                     // Only one move, no reason to keep looking
                     break;
@@ -330,12 +327,16 @@ namespace Mzinga.Core.AI
 
         private void OnBestMoveFound(BestMoveParams bestMoveParams, EvaluatedMove evaluatedMove)
         {
-            if (null != BestMoveFound && evaluatedMove != bestMoveParams.BestMove)
+            if (null == evaluatedMove)
             {
-                BestMoveFoundEventArgs args = new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove);
-                BestMoveFound.Invoke(this, args);
+                throw new ArgumentNullException("evaluatedMove");
             }
-            bestMoveParams.BestMove = evaluatedMove;
+
+            if (evaluatedMove != bestMoveParams.BestMove)
+            {
+                BestMoveFound?.Invoke(this, new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove));
+                bestMoveParams.BestMove = evaluatedMove;
+            }
         }
 
         #endregion

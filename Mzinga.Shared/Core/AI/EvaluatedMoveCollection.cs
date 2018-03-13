@@ -48,8 +48,6 @@ namespace Mzinga.Core.AI
             }
         }
 
-        public double BestScore { get; private set; }
-
         public EvaluatedMove BestMove
         {
             get
@@ -97,11 +95,6 @@ namespace Mzinga.Core.AI
             if (index < 0)
             {
                 index = ~index;
-            }
-
-            if (index == 0)
-            {
-                BestScore = evaluatedMove.ScoreAfterMove;
             }
 
             if (index == _evaluatedMoves.Count)

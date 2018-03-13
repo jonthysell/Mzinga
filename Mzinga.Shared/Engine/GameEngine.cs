@@ -84,14 +84,17 @@ namespace Mzinga.Engine
 
         private void OnBestMoveFound(object sender, BestMoveFoundEventArgs args)
         {
-            if (null == args || null == args.Move)
+            if (null == args)
             {
-                ConsoleOut("");
+                throw new ArgumentNullException("args");
             }
-            else
+
+            if (null == args.Move)
             {
-                ConsoleOut("{0};{1};{2:0.00}", args.Move, args.Depth, args.Score);
+                throw new Exception("Null move reported!");
             }
+
+            ConsoleOut("{0};{1};{2:0.00}", args.Move, args.Depth, args.Score);
         }
 
         public void TryCancelAsyncCommand()
@@ -372,6 +375,13 @@ namespace Mzinga.Engine
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Config.MaxHelperThreads, token);
             task.Wait();
 
+            if (null == task.Result)
+            {
+                throw new Exception("Null move returned!");
+            }
+
+            ConsoleOut(task.Result.ToString());
+
             OnEndAsyncCommand();
         }
 
@@ -391,6 +401,13 @@ namespace Mzinga.Engine
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Config.MaxHelperThreads, token);
             task.Wait();
+
+            if (null == task.Result)
+            {
+                throw new Exception("Null move returned!");
+            }
+
+            ConsoleOut(task.Result.ToString());
 
             OnEndAsyncCommand();
         }
@@ -416,6 +433,13 @@ namespace Mzinga.Engine
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Config.MaxHelperThreads, token);
             task.Wait();
+
+            if (null == task.Result)
+            {
+                throw new Exception("Null move returned!");
+            }
+
+            ConsoleOut(task.Result.ToString());
 
             OnEndAsyncCommand();
         }
