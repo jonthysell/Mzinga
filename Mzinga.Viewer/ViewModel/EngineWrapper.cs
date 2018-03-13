@@ -700,13 +700,13 @@ namespace Mzinga.Viewer.ViewModel
                     Thread.Sleep(100);
                 }
                 OnTimedCommandProgressUpdated(true, 1.0);
-            });
+            }, token);
         }
 
         private void StopTimedCommand()
         {
-            _timedCommandCTS?.Cancel();
-            _timedCommandTask?.Wait();
+            _timedCommandCTS.Cancel();
+            _timedCommandTask.Wait(_timedCommandCTS.Token);
             OnTimedCommandProgressUpdated(false);
 
             _timedCommandCTS = null;
