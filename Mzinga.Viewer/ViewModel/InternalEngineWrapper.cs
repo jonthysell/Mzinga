@@ -66,7 +66,10 @@ namespace Mzinga.Viewer.ViewModel
         {
             Task.Run(() =>
             {
-                _gameEngine.ParseCommand(command);
+                lock (_gameEngine)
+                {
+                    _gameEngine.ParseCommand(command);
+                }
             });
         }
     }
