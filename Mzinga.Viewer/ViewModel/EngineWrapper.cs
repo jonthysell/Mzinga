@@ -26,6 +26,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Mzinga.Core;
 
@@ -271,10 +274,15 @@ namespace Mzinga.Viewer.ViewModel
         public event EventHandler TargetPieceUpdated;
         public event EventHandler TargetPositionUpdated;
 
+        public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
+
         private List<string> _outputLines;
 
         private Queue<string> _inputToProcess;
         private EngineCommand? _currentlyRunningCommand = null;
+
+        private CancellationTokenSource _timedCommandCTS = null;
+        private Task _timedCommandTask = null;
 
         public EngineWrapper()
         {
@@ -373,6 +381,7 @@ namespace Mzinga.Viewer.ViewModel
             }
             else
             {
+                StartTimedCommand(CurrentGameSettings.BestMoveMaxTime.Value);
                 SendCommand("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
             }
         }
@@ -528,6 +537,7 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.BestMove:
                     // Update the target move (and potentially auto-play it)
                     ProcessBestMove(lastLine, true);
+                    StopTimedCommand();
                     break;
                 case EngineCommand.History:
                     BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
@@ -630,6 +640,7 @@ namespace Mzinga.Viewer.ViewModel
                 }
                 else
                 {
+                    StartTimedCommand(CurrentGameSettings.BestMoveMaxTime.Value);
                     SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
                 }
             }
@@ -668,6 +679,38 @@ namespace Mzinga.Viewer.ViewModel
             TargetPositionUpdated?.Invoke(this, null);
         }
 
+        private void OnTimedCommandProgressUpdated(bool isRunning, double progress = 1.0)
+        {
+            TimedCommandProgressUpdated?.Invoke(this, new TimedCommandProgressEventArgs(isRunning, progress));
+        }
+
+        private void StartTimedCommand(TimeSpan duration)
+        {
+            OnTimedCommandProgressUpdated(true, 0.0);
+
+            _timedCommandCTS = new CancellationTokenSource();
+            _timedCommandTask = Task.Run(() =>
+            {
+                Stopwatch sw = Stopwatch.StartNew();
+                while (sw.Elapsed <= duration && !_timedCommandCTS.Token.IsCancellationRequested)
+                {
+                    OnTimedCommandProgressUpdated(true, sw.Elapsed.TotalMilliseconds / duration.TotalMilliseconds);
+                    Thread.Sleep(100);
+                }
+                OnTimedCommandProgressUpdated(true, 1.0);
+            });
+        }
+
+        private void StopTimedCommand()
+        {
+            _timedCommandCTS?.Cancel();
+            _timedCommandTask?.Wait();
+            OnTimedCommandProgressUpdated(false);
+
+            _timedCommandCTS = null;
+            _timedCommandTask = null;
+        }
+
         private enum EngineCommand
         {
             Unknown = -1,
@@ -682,6 +725,18 @@ namespace Mzinga.Viewer.ViewModel
             Undo,
             History,
             Exit
+        }
+    }
+
+    public class TimedCommandProgressEventArgs : EventArgs
+    {
+        public bool IsRunning { get; private set; }
+        public double Progress { get; private set; }
+
+        public TimedCommandProgressEventArgs(bool isRunning, double progress)
+        {
+            IsRunning = isRunning;
+            Progress = progress;
         }
     }
 }

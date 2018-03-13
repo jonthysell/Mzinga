@@ -84,6 +84,43 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public bool IsRunningTimedCommand
+        {
+            get
+            {
+                return _isRunningTimeCommand;
+            }
+            private set
+            {
+                _isRunningTimeCommand = value;
+                RaisePropertyChanged("IsRunningTimedCommand");
+                RaisePropertyChanged("IsRunningIndeterminateCommand");
+            }
+        }
+        private bool _isRunningTimeCommand = false;
+
+        public bool IsRunningIndeterminateCommand
+        {
+            get
+            {
+                return !IsRunningTimedCommand;
+            }
+        }
+
+        public double TimedCommandProgress
+        {
+            get
+            {
+                return _timedCommandProgress;
+            }
+            private set
+            {
+                _timedCommandProgress = Math.Max(0.0, Math.Min(1.0, value));
+                RaisePropertyChanged("TimedCommandProgress");
+            }
+        }
+        private double _timedCommandProgress = 0.0;
+
         public ViewerConfig ViewerConfig
         {
             get
@@ -537,6 +574,15 @@ namespace Mzinga.Viewer.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     IsIdle = AppVM.EngineWrapper.IsIdle;
+                });
+            };
+
+            AppVM.EngineWrapper.TimedCommandProgressUpdated += (sender, args) =>
+            {
+                AppVM.DoOnUIThread(() =>
+                {
+                    IsRunningTimedCommand = args.IsRunning;
+                    TimedCommandProgress = args.Progress;
                 });
             };
         }

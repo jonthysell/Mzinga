@@ -160,8 +160,11 @@
         <ProgressBar Grid.Column="2"
                      Grid.Row="3"
                      HorizontalAlignment="Stretch"
-                     IsIndeterminate="True"
+                     IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
                      Margin="5"
+                     Maximum="1.0"
+                     Minimum="0.0"
+                     Value="{Binding TimedCommandProgress}"
                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" />
     </Grid>
 </Window>

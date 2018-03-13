@@ -196,8 +196,8 @@ namespace Mzinga.Viewer
                 int whiteHandCount = board.WhiteHand.Count();
                 int blackHandCount = board.BlackHand.Count();
 
-                int horizontalPiecesMin = 2 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
-                int verticalPiecesMin = 1 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
+                int horizontalPiecesMin = 3 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
+                int verticalPiecesMin = 2 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
 
                 double size = 0.5 * Math.Min(BoardCanvas.ActualHeight / verticalPiecesMin, BoardCanvas.ActualWidth / horizontalPiecesMin);
 
