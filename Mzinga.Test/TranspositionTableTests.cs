@@ -56,7 +56,7 @@ namespace Mzinga.Test
             long startMemoryUsage = GC.GetTotalMemory(true);
             for (int i = 0; i < tt.Capacity; i++)
             {
-                long key = i;
+                ulong key = (ulong)i;
                 tt.Store(key, CreateMaxEntry(i));
             }
             long endMemoryUsage = GC.GetTotalMemory(true);
@@ -88,7 +88,7 @@ namespace Mzinga.Test
                 // Fill
                 for (int j = 0; j < tt.Capacity; j++)
                 {
-                    long key = j;
+                    ulong key = (ulong)j;
                     tt.Store(key, CreateMaxEntry(j));
                 }
 
@@ -97,7 +97,7 @@ namespace Mzinga.Test
                 {
                     TranspositionTableEntry newEntry = CreateMaxEntry(j);
                     newEntry.Depth++;
-                    long key = j;
+                    ulong key = (ulong)j;
                     tt.Store(key, newEntry);
                 }
 
