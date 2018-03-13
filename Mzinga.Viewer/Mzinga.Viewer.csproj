@@ -104,6 +104,7 @@
     <Compile Include="EngineConsoleWindow.xaml.cs">
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="IdleBoolToWaitCursorConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ViewerConfigWindow.xaml.cs">

@@ -7,6 +7,7 @@
         <BitmapImage x:Key="MzingaIcon">pack://application:,,,/Resources/mzinga.ico</BitmapImage>
         <BitmapImage x:Key="ErrorIcon32">pack://application:,,,/Resources/error32.png</BitmapImage>
         <BitmapImage x:Key="InformationIcon32">pack://application:,,,/Resources/information32.png</BitmapImage>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
         <local:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
         <!-- Adapted from http://www.infosysblogs.com/microsoft/2010/07/wpf_-_disabled_look_for_button.html -->

@@ -64,6 +64,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
+                RaisePropertyChanged("IsBusy");
                 NewGame.RaiseCanExecuteChanged();
                 PlayTarget.RaiseCanExecuteChanged();
                 Pass.RaiseCanExecuteChanged();
@@ -74,6 +75,14 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private bool _isIdle = true;
+
+        public bool IsBusy
+        {
+            get
+            {
+                return !IsIdle;
+            }
+        }
 
         public ViewerConfig ViewerConfig
         {

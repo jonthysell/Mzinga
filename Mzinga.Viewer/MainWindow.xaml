@@ -5,8 +5,8 @@
         KeyDown="Window_KeyDown"
         KeyUp="Window_KeyUp"
         Loaded="Window_Loaded"
-        MinHeight="480"
-        MinWidth="640"
+        MinHeight="600"
+        MinWidth="800"
         Title="{Binding Title, FallbackValue=Mzinga.Viewer}"
         Width="800"
         WindowStartupLocation="CenterScreen"
@@ -132,17 +132,17 @@
             </GroupBox>
         </Grid>
         <Grid Grid.Column="0"
-              Grid.ColumnSpan="3"
+              Grid.ColumnSpan="2"
               Grid.Row="3"
               Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition MinWidth="120"
+                                  Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0"
                         Grid.Row="0"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Stretch"
                         Orientation="Horizontal">
                 <Label Content="State:"
                        FontWeight="Bold" />
@@ -150,20 +150,18 @@
             </StackPanel>
             <StackPanel Grid.Column="1"
                         Grid.Row="0"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                <Label Content="Moves:"
-                       FontWeight="Bold" />
-                <Label Content="{Binding ValidMoves}" />
-            </StackPanel>
-            <StackPanel Grid.Column="2"
-                        Grid.Row="0"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="Stretch"
                         Orientation="Horizontal">
                 <Label Content="Target:"
                        FontWeight="Bold" />
                 <Label Content="{Binding TargetMove}" />
             </StackPanel>
         </Grid>
+        <ProgressBar Grid.Column="2"
+                     Grid.Row="3"
+                     HorizontalAlignment="Stretch"
+                     IsIndeterminate="True"
+                     Margin="5"
+                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" />
     </Grid>
 </Window>

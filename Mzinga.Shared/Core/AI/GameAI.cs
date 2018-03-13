@@ -39,7 +39,7 @@ namespace Mzinga.Core.AI
         private MetricWeights _metricWeights;
 
 
-        private FixedCache<long, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
+        private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
 
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
