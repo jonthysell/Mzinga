@@ -705,12 +705,18 @@ namespace Mzinga.Viewer.ViewModel
 
         private void StopTimedCommand()
         {
-            _timedCommandCTS.Cancel();
-            _timedCommandTask.Wait(_timedCommandCTS.Token);
-            OnTimedCommandProgressUpdated(false);
-
-            _timedCommandCTS = null;
-            _timedCommandTask = null;
+            try
+            {
+                _timedCommandCTS.Cancel();
+                _timedCommandTask.Wait(_timedCommandCTS.Token);
+            }
+            catch (OperationCanceledException) { }
+            finally
+            {
+                OnTimedCommandProgressUpdated(false);
+                _timedCommandCTS = null;
+                _timedCommandTask = null;
+            }
         }
 
         private enum EngineCommand
