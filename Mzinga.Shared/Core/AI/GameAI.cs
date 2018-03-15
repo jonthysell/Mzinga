@@ -270,6 +270,8 @@ namespace Mzinga.Core.AI
 
             EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
+            bool firstMove = true;
+
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
                 if (token.IsCancellationRequested)
@@ -278,8 +280,27 @@ namespace Mzinga.Core.AI
                     return new EvaluatedMoveCollection(movesToEvaluate, false);
                 }
 
+                double? value = null;
+
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
-                double? value = -1 * await NegaMaxSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+
+                if (firstMove)
+                {
+                    // Full window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    firstMove = false;
+                }
+                else
+                {
+                    // Null window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
+                    if (value.HasValue && value > alpha && value < beta)
+                    {
+                        // Research with full window
+                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    }
+                }
+
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
@@ -357,7 +378,7 @@ namespace Mzinga.Core.AI
                     GameBoard clone = gameBoard.Clone();
                     helperThreads[i] = Task.Factory.StartNew(async () =>
                     {
-                        await NegaMaxSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, tokenSource.Token);
+                        await PrincipalVariationSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, tokenSource.Token);
                     });
                 }
             }
@@ -378,7 +399,7 @@ namespace Mzinga.Core.AI
 
         #region NegaMax Search
 
-        private async Task<double?> NegaMaxSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
+        private async Task<double?> PrincipalVariationSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
         {
             double alphaOriginal = alpha;
 
@@ -416,6 +437,8 @@ namespace Mzinga.Core.AI
 
             List<Move> moves = GetPreSortedValidMoves(gameBoard, bestMove);
 
+            bool firstMove = true;
+
             foreach (Move move in moves)
             {
                 if (token.IsCancellationRequested)
@@ -423,8 +446,27 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
+                double? value = null;
+
                 gameBoard.TrustedPlay(move);
-                double? value = -1 * await NegaMaxSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+
+                if (firstMove)
+                {
+                    // Full window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    firstMove = false;
+                }
+                else
+                {
+                    // Null window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
+                    if (value.HasValue && value > alpha && value < beta)
+                    {
+                        // Research with full window
+                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    }
+                }
+
                 gameBoard.UndoLastMove();
 
                 if (!value.HasValue)
