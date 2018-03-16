@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Xml;
 
@@ -88,7 +89,7 @@ namespace Mzinga.Trainer
         }
         private static Random _random;
 
-        public Profile(Guid id, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        private Profile(Guid id, string name, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
             if (null == startMetricWeights)
             {
@@ -102,6 +103,8 @@ namespace Mzinga.Trainer
 
             Id = id;
 
+            Name = name;
+
             StartMetricWeights = startMetricWeights;
             EndMetricWeights = endMetricWeights;
 
@@ -109,7 +112,7 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        public Profile(Guid id, int generation, Guid? parentA, Guid? parentB, int eloRating, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
             if (generation < 0)
             {
@@ -142,6 +145,8 @@ namespace Mzinga.Trainer
             }
 
             Id = id;
+
+            Name = name;
 
             Generation = generation;
 
@@ -433,7 +438,12 @@ namespace Mzinga.Trainer
         {
             MetricWeights startMetricWeights = GenerateMetricWeights(minWeight, maxWeight);
             MetricWeights endMetricWeights = GenerateMetricWeights(minWeight, maxWeight);
-            return new Profile(Guid.NewGuid(), startMetricWeights, endMetricWeights);
+
+            Guid id = Guid.NewGuid();
+
+            string name = GenerateName(id);
+
+            return new Profile(id, name, startMetricWeights, endMetricWeights);
         }
 
         public static Profile Mate(Profile parentA, Profile parentB, double minMix, double maxMix)
@@ -454,6 +464,9 @@ namespace Mzinga.Trainer
             }
 
             Guid id = Guid.NewGuid();
+
+            string name = GenerateName(id);
+
             int eloRating = EloUtils.DefaultRating;
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
@@ -462,7 +475,7 @@ namespace Mzinga.Trainer
 
             DateTime creationTimestamp = DateTime.Now;
 
-            return new Profile(id, generation, parentA.Id, parentB.Id, eloRating, startMetricWeights, endMetricWeights);
+            return new Profile(id, name, generation, parentA.Id, parentB.Id, eloRating, startMetricWeights, endMetricWeights);
         }
 
         private static MetricWeights GenerateMetricWeights(double minWeight, double maxWeight)
@@ -495,5 +508,28 @@ namespace Mzinga.Trainer
 
             return mw;
         }
+
+        private static string GenerateName(Guid id)
+        {
+            string shortId = id.ToString().Substring(0, _syllables.Length);
+
+            string name = "";
+
+            for (int i = 0; i < shortId.Length; i++)
+            {
+                int j = int.Parse(shortId[i].ToString(), NumberStyles.HexNumber) % _syllables[i].Length;
+                name += _syllables[i][j];
+            }
+
+            return name;
+        }
+
+        private static string[][] _syllables = new string[][]
+        {
+            new string[] { "Fu", "I", "Je", "Ki", "Ku", "M", "Ma", "Mo", "Na", "Ng", "Sa", "Si", "Ta", "Te", "Ti", "Zu" },
+            new string[] { "", "ba", "ha", "hi", "ka", "ki", "ku", "li", "ma", "na", "ni", "si", "ta", "ti", "wa", "ya" },
+            new string[] { "", "aka", "ake", "ali", "ama", "ana", "ani", "ati", "ika", "iku", "ili", "ini", "kwa", "mba", "sha", "uwa" },
+            new string[] { "ba", "go", "ji", "ita", "la", "mi", "ne", "ni", "nyi", "ra", "ri", "si", "tu", "we", "ye", "za" },
+        };
     }
 }
