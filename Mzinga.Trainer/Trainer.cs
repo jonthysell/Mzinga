@@ -557,7 +557,8 @@ namespace Mzinga.Trainer
 
                 MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                 {
-                    headerSB.AppendFormat(",{0}.{1}", bugType, bugTypeWeight);
+                    headerSB.AppendFormat(",Start{0}.{1}", bugType, bugTypeWeight);
+                    headerSB.AppendFormat(",End{0}.{1}", bugType, bugTypeWeight);
                 });
 
                 sw.WriteLine(headerSB.ToString());
