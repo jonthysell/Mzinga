@@ -431,7 +431,7 @@ namespace Mzinga.Trainer
                 }
             }
 
-            return new Profile(id, name, generation, parentA, parentB, eloRating, wins, losses, draws, startMetricWeights, endMetricWeights ?? startMetricWeights, creationTimestamp, lastUpdateTimestamp);
+            return new Profile(id, name ?? GenerateName(id), generation, parentA, parentB, eloRating, wins, losses, draws, startMetricWeights, endMetricWeights ?? startMetricWeights, creationTimestamp, lastUpdateTimestamp);
         }
 
         public static Profile Generate(double minWeight, double maxWeight)
