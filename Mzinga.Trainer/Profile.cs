@@ -528,7 +528,7 @@ namespace Mzinga.Trainer
         {
             new string[] { "Fu", "I", "Je", "Ki", "Ku", "M", "Ma", "Mo", "Na", "Ng", "Sa", "Si", "Ta", "Te", "Ti", "Zu" },
             new string[] { "", "ba", "ha", "hi", "ka", "ki", "ku", "li", "ma", "na", "ni", "si", "ta", "ti", "wa", "ya" },
-            new string[] { "", "aka", "ake", "ali", "ama", "ana", "ani", "ati", "ika", "iku", "ili", "ini", "kwa", "mba", "sha", "uwa" },
+            new string[] { "", "kwa", "mba", "sha", },
             new string[] { "ba", "go", "ji", "ita", "la", "mi", "ne", "ni", "nyi", "ra", "ri", "si", "tu", "we", "ye", "za" },
         };
     }
