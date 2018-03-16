@@ -36,8 +36,9 @@ namespace Mzinga.Core.AI
         public event EventHandler<BestMoveFoundEventArgs> BestMoveFound;
 
         private TranspositionTable _transpositionTable;
-        private MetricWeights _metricWeights;
 
+        private MetricWeights _startMetricWeights;
+        private MetricWeights _endMetricWeights;
 
         private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
@@ -47,18 +48,26 @@ namespace Mzinga.Core.AI
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
-            _metricWeights = new MetricWeights();
+            _startMetricWeights = new MetricWeights();
+            _endMetricWeights = new MetricWeights();
         }
 
-        public GameAI(MetricWeights metricWeights)
+        public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
-            if (null == metricWeights)
+            if (null == startMetricWeights)
             {
-                throw new ArgumentNullException("metricWeights");
+                throw new ArgumentNullException("startMetricWeights");
             }
 
-            _metricWeights = metricWeights.GetNormalized();
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
+            }
+
             _transpositionTable = new TranspositionTable();
+
+            _startMetricWeights = startMetricWeights.GetNormalized();
+            _endMetricWeights = endMetricWeights.GetNormalized();
         }
 
         public GameAI(int transpositionTableSizeMB)
@@ -69,13 +78,21 @@ namespace Mzinga.Core.AI
             }
 
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
+
+            _startMetricWeights = new MetricWeights();
+            _endMetricWeights = new MetricWeights();
         }
 
-        public GameAI(MetricWeights metricWeights, int transpositionTableSizeMB)
+        public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights, int transpositionTableSizeMB)
         {
-            if (null == metricWeights)
+            if (null == startMetricWeights)
             {
-                throw new ArgumentNullException("metricWeights");
+                throw new ArgumentNullException("startMetricWeights");
+            }
+
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
             }
 
             if (transpositionTableSizeMB <= 0)
@@ -83,8 +100,10 @@ namespace Mzinga.Core.AI
                 throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
             }
 
-            _metricWeights = metricWeights.GetNormalized();
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
+
+            _startMetricWeights = startMetricWeights.GetNormalized();
+            _endMetricWeights = endMetricWeights.GetNormalized();
         }
 
         public void ResetCaches()
@@ -639,14 +658,29 @@ namespace Mzinga.Core.AI
 
             BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
 
-            score = CalculateBoardScore(boardMetrics);
+            double endScore = CalculateBoardScore(boardMetrics, _endMetricWeights);
+
+            if (boardMetrics.PiecesInHand == 0)
+            {
+                // In "end-game", no need to blend
+                score = endScore;
+            }
+            else
+            {
+                // Pieces still in hand, blend start and end scores
+                double startScore = CalculateBoardScore(boardMetrics, _startMetricWeights);
+
+                double startRatio = boardMetrics.PiecesInHand / (double)(boardMetrics.PiecesInHand + boardMetrics.PiecesInPlay);
+
+                score = (startRatio * startScore) + ((1 - startRatio) * endScore);
+            }
 
             _cachedBoardScores.Store(key, score);
 
             return score;
         }
 
-        private double CalculateBoardScore(BoardMetrics boardMetrics)
+        private double CalculateBoardScore(BoardMetrics boardMetrics, MetricWeights metricWeights)
         {
             double score = 0;
 
@@ -656,13 +690,13 @@ namespace Mzinga.Core.AI
 
                 double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
 
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.IsCoveredWeight) * boardMetrics[pieceName].IsCovered;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.NoisyMoveWeight) * boardMetrics[pieceName].NoisyMoveCount;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.QuietMoveWeight) * boardMetrics[pieceName].QuietMoveCount;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) * boardMetrics[pieceName].FriendlyNeighborCount;
-                score += colorValue * _metricWeights.Get(bugType, BugTypeWeight.EnemyNeighborWeight) * boardMetrics[pieceName].EnemyNeighborCount;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.IsCoveredWeight) * boardMetrics[pieceName].IsCovered;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.NoisyMoveWeight) * boardMetrics[pieceName].NoisyMoveCount;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.QuietMoveWeight) * boardMetrics[pieceName].QuietMoveCount;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) * boardMetrics[pieceName].FriendlyNeighborCount;
+                score += colorValue * metricWeights.Get(bugType, BugTypeWeight.EnemyNeighborWeight) * boardMetrics[pieceName].EnemyNeighborCount;
             }
 
             return score;

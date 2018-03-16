@@ -30,6 +30,9 @@ namespace Mzinga.Core
     {
         public BoardState BoardState;
 
+        public int PiecesInPlay = 0;
+        public int PiecesInHand = 0;
+
         public PieceMetrics this[PieceName pieceName]
         {
             get

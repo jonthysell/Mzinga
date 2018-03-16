@@ -570,6 +570,8 @@ namespace Mzinga.Core
         public BoardMetrics GetBoardMetrics()
         {
             _boardMetrics.BoardState = BoardState;
+            _boardMetrics.PiecesInPlay = 0;
+            _boardMetrics.PiecesInHand = 0;
 
             // Get the metrics for the current turn
             SetCurrentPlayerMetrics();
@@ -611,7 +613,16 @@ namespace Mzinga.Core
 
                 if (null != targetPiece)
                 {
-                    _boardMetrics[pieceName].InPlay = targetPiece.InPlay ? 1 : 0;
+                    if (targetPiece.InPlay)
+                    {
+                        _boardMetrics.PiecesInPlay++;
+                        _boardMetrics[pieceName].InPlay = 1;
+                    }
+                    else
+                    {
+                        _boardMetrics.PiecesInHand++;
+                        _boardMetrics[pieceName].InPlay = 0;
+                    }
 
                     // Move metrics
                     int totalMoves = CountNoisyMoves(GetValidMoves(targetPiece.PieceName), out _boardMetrics[pieceName].NoisyMoveCount, out _boardMetrics[pieceName].QuietMoveCount);

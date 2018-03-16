@@ -31,6 +31,8 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using Mzinga.Engine;
+
 namespace Mzinga.Test
 {
     public class TestUtils
@@ -150,6 +152,15 @@ namespace Mzinga.Test
             " \t ",
             "\t \t",
         };
+
+        public static GameEngineConfig DefaultGameEngineConfig
+        {
+            get
+            {
+                return _defaultGameEngineConfig ?? (_defaultGameEngineConfig = GameEngineConfig.GetDefaultConfig());
+            }
+        }
+        private static GameEngineConfig _defaultGameEngineConfig;
     }
 
     public interface ITestCase

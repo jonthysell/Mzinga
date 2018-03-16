@@ -57,7 +57,9 @@ namespace Mzinga.Trainer
 
         public int EloRating { get; private set; } = EloUtils.DefaultRating;
 
-        public MetricWeights MetricWeights { get; private set; }
+        public MetricWeights StartMetricWeights { get; private set; }
+
+        public MetricWeights EndMetricWeights { get; private set; }
 
         public DateTime CreationTimestamp { get; private set; }
 
@@ -86,22 +88,28 @@ namespace Mzinga.Trainer
         }
         private static Random _random;
 
-        public Profile(Guid id, MetricWeights metricWeights)
+        public Profile(Guid id, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
-            if (null == metricWeights)
+            if (null == startMetricWeights)
             {
-                throw new ArgumentNullException("metricWeights");
+                throw new ArgumentNullException("startMetricWeights");
+            }
+
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
             }
 
             Id = id;
 
-            MetricWeights = metricWeights;
+            StartMetricWeights = startMetricWeights;
+            EndMetricWeights = endMetricWeights;
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        public Profile(Guid id, int generation, Guid? parentA, Guid? parentB, int eloRating, MetricWeights metricWeights)
+        public Profile(Guid id, int generation, Guid? parentA, Guid? parentB, int eloRating, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
             if (generation < 0)
             {
@@ -123,9 +131,14 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("eloRating");
             }
 
-            if (null == metricWeights)
+            if (null == startMetricWeights)
             {
-                throw new ArgumentNullException("metricWeights");
+                throw new ArgumentNullException("startMetricWeights");
+            }
+
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
             }
 
             Id = id;
@@ -137,13 +150,14 @@ namespace Mzinga.Trainer
 
             EloRating = eloRating;
 
-            MetricWeights = metricWeights;
+            StartMetricWeights = startMetricWeights;
+            EndMetricWeights = endMetricWeights;
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, int wins, int losses, int draws, MetricWeights metricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
+        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, int wins, int losses, int draws, MetricWeights startMetricWeights, MetricWeights endMetricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
         {
             if (generation < 0)
             {
@@ -170,9 +184,14 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("draws");
             }
 
-            if (null == metricWeights)
+            if (null == startMetricWeights)
             {
-                throw new ArgumentNullException("metricWeights");
+                throw new ArgumentNullException("startMetricWeights");
+            }
+
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
             }
 
             Id = id;
@@ -189,7 +208,8 @@ namespace Mzinga.Trainer
             Losses = losses;
             Draws = draws;
 
-            MetricWeights = metricWeights;
+            StartMetricWeights = startMetricWeights;
+            EndMetricWeights = endMetricWeights;
 
             CreationTimestamp = creationTimestamp;
             LastUpdatedTimestamp = lastUpdatedTimestamp;
@@ -295,19 +315,33 @@ namespace Mzinga.Trainer
                 writer.WriteValue(LastUpdatedTimestamp);
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("MetricWeights");
+                writer.WriteStartElement("StartMetricWeights");
 
                 MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                 {
                     string key = MetricWeights.GetKeyName(bugType, bugTypeWeight);
-                    double value = MetricWeights.Get(bugType, bugTypeWeight);
+                    double value = StartMetricWeights.Get(bugType, bugTypeWeight);
 
                     writer.WriteStartElement(key);
                     writer.WriteValue(value);
                     writer.WriteEndElement();
                 });
 
-                writer.WriteEndElement(); // </MetricWeights>
+                writer.WriteEndElement(); // </StartMetricWeights>
+
+                writer.WriteStartElement("EndMetricWeights");
+
+                MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
+                {
+                    string key = MetricWeights.GetKeyName(bugType, bugTypeWeight);
+                    double value = EndMetricWeights.Get(bugType, bugTypeWeight);
+
+                    writer.WriteStartElement(key);
+                    writer.WriteValue(value);
+                    writer.WriteEndElement();
+                });
+
+                writer.WriteEndElement(); // </EndMetricWeights>
 
                 writer.WriteEndElement(); // </Profile>
             }
@@ -333,7 +367,8 @@ namespace Mzinga.Trainer
             int losses = 0;
             int draws = 0;
 
-            MetricWeights metricWeights = null;
+            MetricWeights startMetricWeights = null;
+            MetricWeights endMetricWeights = null;
 
             DateTime creationTimestamp = DateTime.Now;
             DateTime lastUpdateTimestamp = creationTimestamp;
@@ -380,20 +415,25 @@ namespace Mzinga.Trainer
                                 lastUpdateTimestamp = reader.ReadElementContentAsDateTime();
                                 break;
                             case "MetricWeights":
-                                metricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
+                            case "StartMetricWeights":
+                                startMetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
+                                break;
+                            case "EndMetricWeights":
+                                endMetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
                                 break;
                         }
                     }
                 }
             }
 
-            return new Profile(id, name, generation, parentA, parentB, eloRating, wins, losses, draws, metricWeights, creationTimestamp, lastUpdateTimestamp);
+            return new Profile(id, name, generation, parentA, parentB, eloRating, wins, losses, draws, startMetricWeights, endMetricWeights ?? startMetricWeights, creationTimestamp, lastUpdateTimestamp);
         }
 
         public static Profile Generate(double minWeight, double maxWeight)
         {
-            MetricWeights metricWeights = GenerateMetricWeights(minWeight, maxWeight);
-            return new Profile(Guid.NewGuid(), metricWeights);
+            MetricWeights startMetricWeights = GenerateMetricWeights(minWeight, maxWeight);
+            MetricWeights endMetricWeights = GenerateMetricWeights(minWeight, maxWeight);
+            return new Profile(Guid.NewGuid(), startMetricWeights, endMetricWeights);
         }
 
         public static Profile Mate(Profile parentA, Profile parentB, double minMix, double maxMix)
@@ -417,11 +457,12 @@ namespace Mzinga.Trainer
             int eloRating = EloUtils.DefaultRating;
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
-            MetricWeights metricWeights = MixMetricWeights(parentA.MetricWeights.GetNormalized(), parentB.MetricWeights.GetNormalized(), minMix, maxMix);
+            MetricWeights startMetricWeights = MixMetricWeights(parentA.StartMetricWeights.GetNormalized(), parentB.StartMetricWeights.GetNormalized(), minMix, maxMix);
+            MetricWeights endMetricWeights = MixMetricWeights(parentA.EndMetricWeights.GetNormalized(), parentB.EndMetricWeights.GetNormalized(), minMix, maxMix);
 
             DateTime creationTimestamp = DateTime.Now;
 
-            return new Profile(id, generation, parentA.Id, parentB.Id, eloRating, metricWeights);
+            return new Profile(id, generation, parentA.Id, parentB.Id, eloRating, startMetricWeights, endMetricWeights);
         }
 
         private static MetricWeights GenerateMetricWeights(double minWeight, double maxWeight)

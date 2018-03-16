@@ -156,7 +156,7 @@ namespace Mzinga.Test
 
         public static GameAI GetTestGameAI()
         {
-            return new GameAI(MetricWeightsTests.TestMetricWeights);
+            return TestUtils.DefaultGameEngineConfig.GetGameAI();
         }
 
         private class GameAIBestMoveTestCase : ITestCase

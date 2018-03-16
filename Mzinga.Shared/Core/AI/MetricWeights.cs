@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -121,7 +121,7 @@ namespace Mzinga.Core.AI
 
             while (xmlReader.Read())
             {
-                if (xmlReader.IsStartElement() && xmlReader.Name != "MetricWeights")
+                if (xmlReader.IsStartElement() && !xmlReader.Name.EndsWith("MetricWeights"))
                 {
                     string key = xmlReader.Name;
                     double value = xmlReader.ReadElementContentAsDouble();

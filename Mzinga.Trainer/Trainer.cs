@@ -321,9 +321,9 @@ namespace Mzinga.Trainer
             GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
 
             // Create AIs
-            GameAI whiteAI = new GameAI(whiteProfile.MetricWeights, TrainerSettings.TransTableSize);
+            GameAI whiteAI = new GameAI(whiteProfile.StartMetricWeights, whiteProfile.EndMetricWeights, TrainerSettings.TransTableSize);
 
-            GameAI blackAI = new GameAI(blackProfile.MetricWeights, TrainerSettings.TransTableSize);
+            GameAI blackAI = new GameAI(blackProfile.StartMetricWeights, blackProfile.EndMetricWeights, TrainerSettings.TransTableSize);
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
@@ -568,11 +568,13 @@ namespace Mzinga.Trainer
 
                     profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}", p.Id, p.Name, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
 
-                    MetricWeights normalized = p.MetricWeights.GetNormalized();
+                    MetricWeights startNormalized = p.StartMetricWeights.GetNormalized();
+                    MetricWeights endNormalized = p.EndMetricWeights.GetNormalized();
 
                     MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                     {
-                        profileSB.AppendFormat(",{0}", normalized.Get(bugType, bugTypeWeight));
+                        profileSB.AppendFormat(",{0}", startNormalized.Get(bugType, bugTypeWeight));
+                        profileSB.AppendFormat(",{0}", endNormalized.Get(bugType, bugTypeWeight));
                     });
 
                     sw.WriteLine(profileSB.ToString());
