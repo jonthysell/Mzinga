@@ -35,10 +35,10 @@ namespace Mzinga.Core.AI
     {
         public event EventHandler<BestMoveFoundEventArgs> BestMoveFound;
 
-        private TranspositionTable _transpositionTable;
+        public MetricWeights StartMetricWeights { get; private set; }
+        public MetricWeights EndMetricWeights { get; private set; }
 
-        private MetricWeights _startMetricWeights;
-        private MetricWeights _endMetricWeights;
+        private TranspositionTable _transpositionTable;
 
         private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
@@ -48,8 +48,8 @@ namespace Mzinga.Core.AI
         public GameAI()
         {
             _transpositionTable = new TranspositionTable();
-            _startMetricWeights = new MetricWeights();
-            _endMetricWeights = new MetricWeights();
+            StartMetricWeights = new MetricWeights();
+            EndMetricWeights = new MetricWeights();
         }
 
         public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
@@ -66,8 +66,8 @@ namespace Mzinga.Core.AI
 
             _transpositionTable = new TranspositionTable();
 
-            _startMetricWeights = startMetricWeights.GetNormalized();
-            _endMetricWeights = endMetricWeights.GetNormalized();
+            StartMetricWeights = startMetricWeights.Clone();
+            EndMetricWeights = endMetricWeights.Clone();
         }
 
         public GameAI(int transpositionTableSizeMB)
@@ -79,8 +79,8 @@ namespace Mzinga.Core.AI
 
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
 
-            _startMetricWeights = new MetricWeights();
-            _endMetricWeights = new MetricWeights();
+            StartMetricWeights = new MetricWeights();
+            EndMetricWeights = new MetricWeights();
         }
 
         public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights, int transpositionTableSizeMB)
@@ -102,8 +102,8 @@ namespace Mzinga.Core.AI
 
             _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
 
-            _startMetricWeights = startMetricWeights.GetNormalized();
-            _endMetricWeights = endMetricWeights.GetNormalized();
+            StartMetricWeights = startMetricWeights.Clone();
+            EndMetricWeights = endMetricWeights.Clone();
         }
 
         public void ResetCaches()
@@ -416,7 +416,7 @@ namespace Mzinga.Core.AI
 
         #endregion
 
-        #region NegaMax Search
+        #region Principal Variation Search
 
         private async Task<double?> PrincipalVariationSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
         {
@@ -582,7 +582,7 @@ namespace Mzinga.Core.AI
 
         #endregion
 
-        #region QuiescenceSearch
+        #region Quiescence Search
 
         private async Task<double?> QuiescenceSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
         {
@@ -658,29 +658,35 @@ namespace Mzinga.Core.AI
 
             BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
 
-            double endScore = CalculateBoardScore(boardMetrics, _endMetricWeights);
-
-            if (boardMetrics.PiecesInHand == 0)
-            {
-                // In "end-game", no need to blend
-                score = endScore;
-            }
-            else
-            {
-                // Pieces still in hand, blend start and end scores
-                double startScore = CalculateBoardScore(boardMetrics, _startMetricWeights);
-
-                double startRatio = boardMetrics.PiecesInHand / (double)(boardMetrics.PiecesInHand + boardMetrics.PiecesInPlay);
-
-                score = (startRatio * startScore) + ((1 - startRatio) * endScore);
-            }
+            score = CalculateBoardScore(boardMetrics, StartMetricWeights, EndMetricWeights);
 
             _cachedBoardScores.Store(key, score);
 
             return score;
         }
 
-        private double CalculateBoardScore(BoardMetrics boardMetrics, MetricWeights metricWeights)
+        private static double CalculateBoardScore(BoardMetrics boardMetrics, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        {
+            double endScore = CalculateBoardScore(boardMetrics, endMetricWeights);
+
+            if (boardMetrics.PiecesInHand == 0)
+            {
+                // In "end-game", no need to blend
+                return endScore;
+            }
+            else
+            {
+                // Pieces still in hand, blend start and end scores
+                double startScore = CalculateBoardScore(boardMetrics, startMetricWeights);
+
+                double startRatio = boardMetrics.PiecesInHand / (double)(boardMetrics.PiecesInHand + boardMetrics.PiecesInPlay);
+                double endRatio = 1 - startRatio;
+
+                return (startRatio * startScore) + (endRatio * endScore);
+            }
+        }
+
+        private static double CalculateBoardScore(BoardMetrics boardMetrics, MetricWeights metricWeights)
         {
             double score = 0;
 
@@ -701,6 +707,183 @@ namespace Mzinga.Core.AI
 
             return score;
         }
+
+        #endregion
+
+        #region TreeStrap
+
+        // TreeStrap algorithms taken from http://papers.nips.cc/paper/3722-bootstrapping-from-game-tree-search.pdf
+
+        public async Task TreeStrapAsync(GameBoard gameBoard, int maxDepth, int maxHelperThreads, CancellationToken token)
+        {
+           await TreeStrapAsync(gameBoard, maxDepth, TimeSpan.MaxValue, maxHelperThreads, token);
+        }
+
+        public async Task TreeStrapAsync(GameBoard gameBoard, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        {
+            await TreeStrapAsync(gameBoard, int.MaxValue, maxTime, maxHelperThreads, token);
+        }
+
+        private async Task TreeStrapAsync(GameBoard gameBoard, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        {
+            if (null == gameBoard)
+            {
+                throw new ArgumentNullException("gameBoard");
+            }
+
+            if (maxDepth < 0)
+            {
+                throw new ArgumentOutOfRangeException("maxDepth");
+            }
+
+            if (maxTime < TimeSpan.Zero)
+            {
+                throw new ArgumentOutOfRangeException("maxTime");
+            }
+
+            if (maxHelperThreads < 0)
+            {
+                throw new ArgumentOutOfRangeException("maxHelperThreads");
+            }
+
+            // Make sure we have a clean state
+            ResetCaches();
+
+            while (gameBoard.GameInProgress)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                CancellationTokenSource searchCancelationToken = new CancellationTokenSource();
+
+                if (maxTime < TimeSpan.MaxValue)
+                {
+                    searchCancelationToken.CancelAfter(maxTime);
+                }
+
+                // Get best move
+                Move bestMove = await GetBestMoveAsync(gameBoard, maxDepth, maxTime, maxHelperThreads, searchCancelationToken.Token);
+
+                // Get delta metric weights
+                MetricWeights deltaStart;
+                MetricWeights deltaEnd;
+
+                HashSet<ulong> visitedKeys = new HashSet<ulong>();
+                DeltaFromTransTable(gameBoard, visitedKeys, token, out deltaStart, out deltaEnd);
+
+                // Update metric weights with delta
+                StartMetricWeights.Add(deltaStart);
+                EndMetricWeights.Add(deltaEnd);
+
+                // Play best move and reset caches
+                gameBoard.TrustedPlay(bestMove);
+                ResetCaches();
+            }
+        }
+
+        private void DeltaFromTransTable(GameBoard gameBoard, HashSet<ulong> visitedKeys, CancellationToken token, out MetricWeights deltaStart, out MetricWeights deltaEnd)
+        {
+            MetricWeights ds = new MetricWeights();
+            MetricWeights de = new MetricWeights();
+
+            ulong key = gameBoard.ZobristKey;
+            bool newKey = visitedKeys.Add(key);
+
+            TranspositionTableEntry tEntry;
+            if (newKey && _transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
+            {
+                double colorValue = gameBoard.CurrentTurnColor == Color.White ? 1.0 : -1.0;
+
+                double boardScore = colorValue * TruncateBounds(CalculateBoardScore(gameBoard));
+
+                double storedValue = TruncateBounds(tEntry.Value);
+
+                BoardMetrics boardMetrics = gameBoard.GetBoardMetrics();
+
+                MetricWeights startGradient = GetGradient(boardMetrics);
+                MetricWeights endGradient = startGradient.Clone();
+
+                double scaleFactor = TreeStrapStepConstant * (storedValue - boardScore);
+
+                double startRatio = boardMetrics.PiecesInHand / (double)(boardMetrics.PiecesInHand + boardMetrics.PiecesInPlay);
+                double endRatio = 1 - startRatio;
+
+                startGradient.Scale(scaleFactor * startRatio * colorValue);
+                endGradient.Scale(scaleFactor * endRatio * colorValue);
+
+                if ((tEntry.Type == TranspositionTableEntryType.LowerBound || tEntry.Type == TranspositionTableEntryType.Exact) && storedValue > boardScore)
+                {
+                    ds.Add(startGradient);
+                    de.Add(endGradient);
+                }
+
+                if ((tEntry.Type == TranspositionTableEntryType.UpperBound || tEntry.Type == TranspositionTableEntryType.Exact) && storedValue < boardScore)
+                {
+                    ds.Add(startGradient);
+                    de.Add(endGradient);
+                }
+
+                foreach (Move move in gameBoard.GetValidMoves())
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    gameBoard.TrustedPlay(move);
+                    MetricWeights ds1;
+                    MetricWeights de1;
+                    DeltaFromTransTable(gameBoard, visitedKeys, token, out ds1, out de1);
+                    ds.Add(ds1);
+                    de.Add(de1);
+                    gameBoard.UndoLastMove();
+                }
+            }
+
+            deltaStart = ds;
+            deltaEnd = de;
+        }
+
+        private MetricWeights GetGradient(BoardMetrics boardMetrics)
+        {
+            MetricWeights gradient = new MetricWeights();
+
+            foreach (PieceName pieceName in EnumUtils.PieceNames)
+            {
+                BugType bugType = EnumUtils.GetBugType(pieceName);
+
+                double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
+
+                gradient.Set(bugType, BugTypeWeight.InPlayWeight, gradient.Get(bugType, BugTypeWeight.InPlayWeight) + colorValue * boardMetrics[pieceName].InPlay);
+                gradient.Set(bugType, BugTypeWeight.IsPinnedWeight, gradient.Get(bugType, BugTypeWeight.IsPinnedWeight) + colorValue * boardMetrics[pieceName].IsPinned);
+                gradient.Set(bugType, BugTypeWeight.IsCoveredWeight, gradient.Get(bugType, BugTypeWeight.IsCoveredWeight) + colorValue * boardMetrics[pieceName].IsCovered);
+                gradient.Set(bugType, BugTypeWeight.NoisyMoveWeight, gradient.Get(bugType, BugTypeWeight.NoisyMoveWeight) + colorValue * boardMetrics[pieceName].NoisyMoveCount);
+                gradient.Set(bugType, BugTypeWeight.QuietMoveWeight, gradient.Get(bugType, BugTypeWeight.QuietMoveWeight) + colorValue * boardMetrics[pieceName].QuietMoveCount);
+                gradient.Set(bugType, BugTypeWeight.FriendlyNeighborWeight, gradient.Get(bugType, BugTypeWeight.FriendlyNeighborWeight) + colorValue * boardMetrics[pieceName].FriendlyNeighborCount);
+                gradient.Set(bugType, BugTypeWeight.EnemyNeighborWeight, gradient.Get(bugType, BugTypeWeight.EnemyNeighborWeight) + colorValue * boardMetrics[pieceName].EnemyNeighborCount);
+            }
+
+            return gradient;
+        }
+
+        private double TruncateBounds(double value)
+        {
+            if (double.IsPositiveInfinity(value))
+            {
+                return TreeStrapInfinity;
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                return -TreeStrapInfinity;
+            }
+
+            return Math.Max(-0.95 * TreeStrapInfinity, Math.Min(0.95 * TreeStrapInfinity, value));
+        }
+
+        private const double TreeStrapStepConstant = 1e-6;
+        private const double TreeStrapInfinity = 1e6;
 
         #endregion
 

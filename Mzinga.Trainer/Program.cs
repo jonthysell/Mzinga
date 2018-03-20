@@ -82,6 +82,9 @@ namespace Mzinga.Trainer
                         case Command.Tournament:
                             t.Tournament();
                             break;
+                        case Command.AutoTrain:
+                            t.AutoTrain();
+                            break;
                         default:
                             ShowHelp();
                             break;
@@ -140,6 +143,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("lifecycle              Battle, cull, mate cycle for profiles");
             Console.WriteLine("mate                   Mate every profile with each other");
             Console.WriteLine("tournament             Fight an single elimination tournament");
+            Console.WriteLine("autotrain              Train a single profile against itself");
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -169,6 +173,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-TurnMaxTime           The maximum time to let the AI think on its turn");
             Console.WriteLine("-BattleTimeLimit       The maximum time to let a battle run before declaring a draw");
             Console.WriteLine("-GameType              Base,Base+M,Base+L,Base+P,Base+ML,Base+MP,Base+LP,Base+MLP");
+            Console.WriteLine("-TargetProfilePath     The target profile");
             Console.WriteLine();
         }
 
@@ -222,6 +227,10 @@ namespace Mzinga.Trainer
                 case "t":
                 case "tournament":
                     cmd = Command.Tournament;
+                    break;
+                case "at":
+                case "autotrain":
+                    cmd = Command.AutoTrain;
                     break;
             }
 
@@ -334,6 +343,10 @@ namespace Mzinga.Trainer
                     case "gametype":
                         trainerSettings.GameType = EnumUtils.ParseExpansionPieces(args[++i]);
                         break;
+                    case "tpp":
+                    case "targetprofilepath":
+                        trainerSettings.TargetProfilePath = args[++i];
+                        break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));
                 }
@@ -354,6 +367,7 @@ namespace Mzinga.Trainer
         Generate,
         Lifecycle,
         Mate,
-        Tournament
+        Tournament,
+        AutoTrain
     }
 }

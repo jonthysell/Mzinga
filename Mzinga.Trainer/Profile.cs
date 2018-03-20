@@ -245,6 +245,24 @@ namespace Mzinga.Trainer
             Update();
         }
 
+        public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        {
+            if (null == startMetricWeights)
+            {
+                throw new ArgumentNullException("startMetricWeights");
+            }
+
+            if (null == endMetricWeights)
+            {
+                throw new ArgumentNullException("endMetricWeights");
+            }
+
+            StartMetricWeights = startMetricWeights;
+            EndMetricWeights = endMetricWeights;
+
+            Update();
+        }
+
         private void Update()
         {
             LastUpdatedTimestamp = DateTime.Now;

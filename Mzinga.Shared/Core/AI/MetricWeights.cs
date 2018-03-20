@@ -57,11 +57,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentNullException("source");
             }
 
-            IterateOverWeights((bugType, bugTypeWeight) =>
-            {
-                double value = source.Get(bugType, bugTypeWeight);
-                Set(bugType, bugTypeWeight, value);
-            });
+            Array.Copy(source._bugTypeWeights, _bugTypeWeights, source._bugTypeWeights.Length);
         }
 
         public MetricWeights Clone()
@@ -72,7 +68,7 @@ namespace Mzinga.Core.AI
             return clone;
         }
 
-        public MetricWeights GetNormalized(double targetMaxValue = 100.0, bool round = true, int decimals = 2)
+        public MetricWeights GetNormalized(double targetMaxValue = 100.0, bool round = true, int decimals = 6)
         {
             if (targetMaxValue <= 0.0)
             {
@@ -108,6 +104,27 @@ namespace Mzinga.Core.AI
             }
 
             return clone;
+        }
+
+        public void Add(MetricWeights a)
+        {
+            if (null == a)
+            {
+                throw new ArgumentNullException("a");
+            }
+
+            for (int i = 0; i < _bugTypeWeights.Length; i++)
+            {
+                _bugTypeWeights[i] += a._bugTypeWeights[i];
+            }
+        }
+
+        public void Scale(double factor)
+        {
+            for (int i = 0; i < _bugTypeWeights.Length; i++)
+            {
+                _bugTypeWeights[i] *= factor;
+            }
         }
 
         public static MetricWeights ReadMetricWeightsXml(XmlReader xmlReader)

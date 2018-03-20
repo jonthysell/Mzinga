@@ -273,5 +273,22 @@ namespace Mzinga.Trainer
         private TimeSpan? _battleTimeLimit = null;
 
         public ExpansionPieces GameType { get; set; } = ExpansionPieces.None;
+
+        public string TargetProfilePath
+        {
+            get
+            {
+                return _targetProfilePath;
+            }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException();
+                }
+                _targetProfilePath = value;
+            }
+        }
+        private string _targetProfilePath = null;
     }
 }

@@ -574,8 +574,8 @@ namespace Mzinga.Trainer
 
                     MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
                     {
-                        profileSB.AppendFormat(",{0}", startNormalized.Get(bugType, bugTypeWeight));
-                        profileSB.AppendFormat(",{0}", endNormalized.Get(bugType, bugTypeWeight));
+                        profileSB.AppendFormat(",{0:0.00}", startNormalized.Get(bugType, bugTypeWeight));
+                        profileSB.AppendFormat(",{0:0.00}", endNormalized.Get(bugType, bugTypeWeight));
                     });
 
                     sw.WriteLine(profileSB.ToString());
@@ -949,6 +949,63 @@ namespace Mzinga.Trainer
 
             Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
             Log("Tournament Highest Elo: {0}", ToString(best));
+        }
+
+        public void AutoTrain()
+        {
+            AutoTrain(TrainerSettings.TargetProfilePath);
+        }
+
+        private void AutoTrain(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+
+            Log("AutoTrain start.");
+
+            // Read profile
+            Profile profile;
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                profile = Profile.ReadXml(fs);
+            }
+
+            int battleCount = 0;
+
+            // Create AI
+            GameAI gameAI = new GameAI(profile.StartMetricWeights, profile.EndMetricWeights, TrainerSettings.TransTableSize);
+
+            while (TrainerSettings.MaxBattles == TrainerSettings.MaxMaxBattles || battleCount < TrainerSettings.MaxBattles)
+            {
+                Log("AutoTrain battle {0} start.", battleCount + 1);
+
+                // Create Game
+                GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+                cts.CancelAfter(TrainerSettings.BattleTimeLimit);
+
+                Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, 0, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, 0, cts.Token);
+                treeStrapTask.Wait();
+
+                // Update profile with final MetricWeights
+                profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights);
+
+                // Write profile
+                using (FileStream fs = new FileStream(path, FileMode.Create))
+                {
+                    profile.WriteXml(fs);
+                }
+
+                Log("AutoTrain battle {0} end {1};{2}[{3}].", battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
+                battleCount++;
+            }
+
+            Log("AutoTrain end.");
         }
 
         private List<Profile> LoadProfiles(string path)
