@@ -1060,12 +1060,14 @@ namespace Mzinga.Core
 
             MoveSet validMoves = new MoveSet();
 
+            bool[] bugTypesEvaluated = new bool[EnumUtils.NumBugTypes];
+
             for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
             {
                 Position neighbor = targetPiece.Position.NeighborAt(dir);
                 Piece piece = GetPieceOnTopInternal(neighbor);
 
-                if (null != piece)
+                if (null != piece && !bugTypesEvaluated[(int)(piece.BugType)])
                 {
                     if (specialAbilityOnly)
                     {
@@ -1102,6 +1104,7 @@ namespace Mzinga.Core
                                 break;
                         }
                     }
+                    bugTypesEvaluated[(int)(piece.BugType)] = true;
                 }
             }
 
