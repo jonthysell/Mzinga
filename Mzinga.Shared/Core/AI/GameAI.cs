@@ -749,11 +749,25 @@ namespace Mzinga.Core.AI
             // Make sure we have a clean state
             ResetCaches();
 
+            List<ulong> boardKeys = new List<ulong>();
+
             while (gameBoard.GameInProgress)
             {
                 if (token.IsCancellationRequested)
                 {
                     break;
+                }
+
+                boardKeys.Add(gameBoard.ZobristKey);
+
+                if (boardKeys.Count >= 6)
+                {
+                    int lastIndex = boardKeys.Count - 1;
+                    if (boardKeys[lastIndex] == boardKeys[lastIndex - 4] && boardKeys[lastIndex - 1] == boardKeys[lastIndex - 5])
+                    {
+                        // We're in a loop, exit now
+                        break;
+                    }
                 }
 
                 CancellationTokenSource searchCancelationToken = new CancellationTokenSource();
@@ -879,7 +893,7 @@ namespace Mzinga.Core.AI
                 return -TreeStrapInfinity;
             }
 
-            return Math.Max(-0.95 * TreeStrapInfinity, Math.Min(0.95 * TreeStrapInfinity, value));
+            return Math.Max(-0.99 * TreeStrapInfinity, Math.Min(0.99 * TreeStrapInfinity, value));
         }
 
         private const double TreeStrapStepConstant = 1e-6;
