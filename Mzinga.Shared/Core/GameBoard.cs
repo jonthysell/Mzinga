@@ -58,7 +58,7 @@ namespace Mzinga.Core
 
         public GameBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
 
-        protected GameBoard(string boardString) : base(boardString) { }
+        internal GameBoard(string boardString) : base(boardString) { }
 
         public GameBoard Clone()
         {

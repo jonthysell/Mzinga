@@ -130,7 +130,14 @@ namespace Mzinga.Engine
                         Help();
                         break;
                     case "board":
-                        PrintBoard();
+                        if (paramCount == 0)
+                        {
+                            Board();
+                        }
+                        else
+                        {
+                            Board(split[1]);
+                        }
                         break;
                     case "newgame":
                         if (paramCount == 0)
@@ -270,8 +277,15 @@ namespace Mzinga.Engine
             ConsoleOut("exit");
         }
 
-        private void PrintBoard()
+        private void Board(string boardString = null)
         {
+#if DEBUG
+            if (!string.IsNullOrWhiteSpace(boardString))
+            {
+                _gameBoard = new GameBoard(boardString);
+                _gameAI.ResetCaches();
+            }
+#endif
             if (null == _gameBoard)
             {
                 throw new NoBoardException();
