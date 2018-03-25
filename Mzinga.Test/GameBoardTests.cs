@@ -203,13 +203,6 @@ namespace Mzinga.Test
         }
     }
 
-    public class MockGameBoard : GameBoard
-    {
-        public MockGameBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
-
-        public MockGameBoard(string boardString) : base(boardString) { }
-    }
-
     static partial class PositionExtensions
     {
         public static Position NeighborAt(this Position pos, Direction[] directions)

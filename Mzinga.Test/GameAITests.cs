@@ -161,7 +161,7 @@ namespace Mzinga.Test
 
         private class GameAIBestMoveTestCase : ITestCase
         {
-            public MockGameBoard gameBoard;
+            public GameBoard gameBoard;
             public int maxDepth;
 
             public Move ExpectedBestMove;
@@ -185,7 +185,7 @@ namespace Mzinga.Test
 
                 string[] vals = s.Split('\t');
 
-                gameBoard = new MockGameBoard(vals[0]);
+                gameBoard = new GameBoard(vals[0]);
                 maxDepth = int.Parse(vals[1]);
                 ExpectedBestMove = new Move(vals[2]);
             }
