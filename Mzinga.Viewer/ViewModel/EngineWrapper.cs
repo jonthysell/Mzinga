@@ -381,7 +381,6 @@ namespace Mzinga.Viewer.ViewModel
             }
             else
             {
-                StartTimedCommand(CurrentGameSettings.BestMoveMaxTime.Value);
                 SendCommand("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
             }
         }
@@ -411,6 +410,8 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             command = string.Format(command, args);
+
+            TryStartTimedCommand(command);
 
             EngineCommand cmd = IdentifyCommand(command);
 
@@ -537,7 +538,7 @@ namespace Mzinga.Viewer.ViewModel
                 case EngineCommand.BestMove:
                     // Update the target move (and potentially auto-play it)
                     ProcessBestMove(lastLine, true);
-                    StopTimedCommand();
+                    TryStopTimedCommand();
                     break;
                 case EngineCommand.History:
                     BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
@@ -640,7 +641,6 @@ namespace Mzinga.Viewer.ViewModel
                 }
                 else
                 {
-                    StartTimedCommand(CurrentGameSettings.BestMoveMaxTime.Value);
                     SendCommandInternal("bestmove time {0}", CurrentGameSettings.BestMoveMaxTime);
                 }
             }
@@ -684,6 +684,24 @@ namespace Mzinga.Viewer.ViewModel
             TimedCommandProgressUpdated?.Invoke(this, new TimedCommandProgressEventArgs(isRunning, progress));
         }
 
+        private void TryStartTimedCommand(string command)
+        {
+            EngineCommand cmd = IdentifyCommand(command);
+
+            if (cmd == EngineCommand.BestMove)
+            {
+                string[] split = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (split.Length > 2 && split[1] == "time")
+                {
+                    TimeSpan ts;
+                    if (TimeSpan.TryParse(split[2], out ts))
+                    {
+                        StartTimedCommand(ts);
+                    }
+                }
+            }
+        }
+
         private void StartTimedCommand(TimeSpan duration)
         {
             OnTimedCommandProgressUpdated(true, 0.0);
@@ -701,6 +719,14 @@ namespace Mzinga.Viewer.ViewModel
                 }
                 OnTimedCommandProgressUpdated(true, 1.0);
             }, token);
+        }
+
+        private void TryStopTimedCommand()
+        {
+            if (null != _timedCommandCTS && null != _timedCommandTask)
+            {
+                StopTimedCommand();
+            }
         }
 
         private void StopTimedCommand()
