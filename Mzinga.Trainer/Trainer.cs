@@ -321,9 +321,19 @@ namespace Mzinga.Trainer
             GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
 
             // Create AIs
-            GameAI whiteAI = new GameAI(whiteProfile.StartMetricWeights, whiteProfile.EndMetricWeights, TrainerSettings.TransTableSize);
+            GameAI whiteAI = new GameAI(new GameAIConfig()
+            {
+                StartMetricWeights = whiteProfile.StartMetricWeights,
+                EndMetricWeights = whiteProfile.EndMetricWeights,
+                TranspositionTableSizeMB = TrainerSettings.TransTableSize,
+            });
 
-            GameAI blackAI = new GameAI(blackProfile.StartMetricWeights, blackProfile.EndMetricWeights, TrainerSettings.TransTableSize);
+            GameAI blackAI = new GameAI(new GameAIConfig()
+            {
+                StartMetricWeights = blackProfile.StartMetricWeights,
+                EndMetricWeights = blackProfile.EndMetricWeights,
+                TranspositionTableSizeMB = TrainerSettings.TransTableSize,
+            });
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
@@ -984,7 +994,12 @@ namespace Mzinga.Trainer
             int battleCount = 0;
 
             // Create AI
-            GameAI gameAI = new GameAI(profile.StartMetricWeights, profile.EndMetricWeights, TrainerSettings.TransTableSize);
+            GameAI gameAI = new GameAI(new GameAIConfig()
+            {
+                StartMetricWeights = profile.StartMetricWeights,
+                EndMetricWeights = profile.EndMetricWeights,
+                TranspositionTableSizeMB = TrainerSettings.TransTableSize,
+            });
 
             while (TrainerSettings.MaxBattles == TrainerSettings.MaxMaxBattles || battleCount < TrainerSettings.MaxBattles)
             {

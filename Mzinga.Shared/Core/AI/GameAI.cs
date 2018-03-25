@@ -38,6 +38,8 @@ namespace Mzinga.Core.AI
         public MetricWeights StartMetricWeights { get; private set; }
         public MetricWeights EndMetricWeights { get; private set; }
 
+        private int _maxBranchingFactor = int.MaxValue; // To prevent search explosion
+
         private TranspositionTable _transpositionTable;
 
         private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
@@ -47,63 +49,45 @@ namespace Mzinga.Core.AI
 
         public GameAI()
         {
-            _transpositionTable = new TranspositionTable();
             StartMetricWeights = new MetricWeights();
             EndMetricWeights = new MetricWeights();
-        }
-
-        public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
-        {
-            if (null == startMetricWeights)
-            {
-                throw new ArgumentNullException("startMetricWeights");
-            }
-
-            if (null == endMetricWeights)
-            {
-                throw new ArgumentNullException("endMetricWeights");
-            }
 
             _transpositionTable = new TranspositionTable();
-
-            StartMetricWeights = startMetricWeights.Clone();
-            EndMetricWeights = endMetricWeights.Clone();
         }
 
-        public GameAI(int transpositionTableSizeMB)
+        public GameAI(GameAIConfig config)
         {
-            if (transpositionTableSizeMB <= 0)
+            if (null == config)
             {
-                throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
+                throw new ArgumentNullException("config");
             }
 
-            _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
+            StartMetricWeights = config.StartMetricWeights?.Clone() ?? new MetricWeights();
+            EndMetricWeights = config.EndMetricWeights?.Clone() ?? new MetricWeights();
 
-            StartMetricWeights = new MetricWeights();
-            EndMetricWeights = new MetricWeights();
-        }
-
-        public GameAI(MetricWeights startMetricWeights, MetricWeights endMetricWeights, int transpositionTableSizeMB)
-        {
-            if (null == startMetricWeights)
+            if (config.TranspositionTableSizeMB.HasValue)
             {
-                throw new ArgumentNullException("startMetricWeights");
+                if (config.TranspositionTableSizeMB.Value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("config.TranspositionTableSizeMB");
+                }
+
+                _transpositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value * 1024 * 1024);
+            }
+            else
+            {
+                _transpositionTable = new TranspositionTable();
             }
 
-            if (null == endMetricWeights)
+            if (config.MaxBranchingFactor.HasValue)
             {
-                throw new ArgumentNullException("endMetricWeights");
+                if (config.MaxBranchingFactor.Value <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("config.MaxBranchingFactor");
+                }
+
+                _maxBranchingFactor = config.MaxBranchingFactor.Value;
             }
-
-            if (transpositionTableSizeMB <= 0)
-            {
-                throw new ArgumentOutOfRangeException("transpositionTableSizeMB");
-            }
-
-            _transpositionTable = new TranspositionTable(transpositionTableSizeMB * 1024 * 1024);
-
-            StartMetricWeights = startMetricWeights.Clone();
-            EndMetricWeights = endMetricWeights.Clone();
         }
 
         public void ResetCaches()
@@ -530,6 +514,10 @@ namespace Mzinga.Core.AI
             return bestValue;
         }
 
+        #endregion
+
+        #region Pre-Sorted Moves
+
         private List<EvaluatedMove> GetPreSortedValidMoves(GameBoard gameBoard, EvaluatedMove bestMove)
         {
             List<Move> validMoves = GetPreSortedValidMoves(gameBoard, bestMove?.Move);
@@ -548,6 +536,12 @@ namespace Mzinga.Core.AI
             List<Move> validMoves = new List<Move>(gameBoard.GetValidMoves());
 
             validMoves.Sort((a, b) => { return PreSortMoves(a, b, gameBoard, bestMove); });
+
+            if (validMoves.Count > _maxBranchingFactor)
+            {
+                // Too many moves, reduce branching factor
+                validMoves.RemoveRange(_maxBranchingFactor, validMoves.Count - _maxBranchingFactor);
+            }
 
             return validMoves;
         }

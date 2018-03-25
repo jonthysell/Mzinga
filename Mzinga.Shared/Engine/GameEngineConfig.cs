@@ -59,6 +59,8 @@ namespace Mzinga.Engine
         }
         private int? _maxHelperThreads = null;
 
+        public int? MaxBranchingFactor { get; private set; } = null;
+
         #endregion
 
         public GameEngineConfig(Stream inputStream)
@@ -119,6 +121,9 @@ namespace Mzinga.Engine
                         case "PonderDuringIdle":
                             ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
                             break;
+                        case "MaxBranchingFactor":
+                            ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
+                            break;
                     }
                 }
             }
@@ -166,18 +171,24 @@ namespace Mzinga.Engine
             }
         }
 
+        private void ParseMaxBranchingFactorValue(string rawValue)
+        {
+            int intValue;
+            if (int.TryParse(rawValue, out intValue))
+            {
+                MaxBranchingFactor = intValue;
+            }
+        }
+
         public GameAI GetGameAI()
         {
-            if (TranspositionTableSizeMB.HasValue)
+            return new GameAI(new GameAIConfig()
             {
-                return null != StartMetricWeights ? new GameAI(StartMetricWeights, EndMetricWeights ?? StartMetricWeights, TranspositionTableSizeMB.Value) : new GameAI(TranspositionTableSizeMB.Value);
-            }
-            else if (null != StartMetricWeights)
-            {
-                return new GameAI(StartMetricWeights, EndMetricWeights ?? StartMetricWeights);
-            }
-
-            return new GameAI();
+                StartMetricWeights = StartMetricWeights,
+                EndMetricWeights = EndMetricWeights ?? StartMetricWeights,
+                MaxBranchingFactor = MaxBranchingFactor,
+                TranspositionTableSizeMB = TranspositionTableSizeMB,
+            });
         }
 
         public static GameEngineConfig GetDefaultConfig()
