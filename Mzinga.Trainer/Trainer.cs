@@ -334,30 +334,37 @@ namespace Mzinga.Trainer
 
             List<ulong> boardKeys = new List<ulong>();
 
-            // Play Game
-            while (gameBoard.GameInProgress)
+            try
             {
-                boardKeys.Add(gameBoard.ZobristKey);
-
-                if (boardKeys.Count >= 6)
+                // Play Game
+                while (gameBoard.GameInProgress)
                 {
-                    int lastIndex = boardKeys.Count - 1;
-                    if (boardKeys[lastIndex] == boardKeys[lastIndex - 4] && boardKeys[lastIndex - 1] == boardKeys[lastIndex - 5])
+                    boardKeys.Add(gameBoard.ZobristKey);
+
+                    if (boardKeys.Count >= 6)
                     {
-                        Log("Battle loop-out.");
+                        int lastIndex = boardKeys.Count - 1;
+                        if (boardKeys[lastIndex] == boardKeys[lastIndex - 4] && boardKeys[lastIndex - 1] == boardKeys[lastIndex - 5])
+                        {
+                            Log("Battle loop-out.");
+                            break;
+                        }
+                    }
+
+                    battleElapsed = DateTime.Now - battleStart;
+                    if (battleElapsed > timeLimit)
+                    {
+                        Log("Battle time-out.");
                         break;
                     }
-                }
 
-                battleElapsed = DateTime.Now - battleStart;
-                if (battleElapsed > timeLimit)
-                {
-                    Log("Battle time-out.");
-                    break;
+                    Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
+                    gameBoard.Play(move);
                 }
-
-                Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
-                gameBoard.Play(move);
+            }
+            catch (Exception ex)
+            {
+                Log("Battle interrupted with exception: {0}", ex.Message);
             }
 
             BoardState boardState = gameBoard.GameInProgress ? BoardState.Draw : gameBoard.BoardState;
@@ -983,25 +990,33 @@ namespace Mzinga.Trainer
             {
                 Log("AutoTrain battle {0} start.", battleCount + 1);
 
-                // Create Game
-                GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
-
-                CancellationTokenSource cts = new CancellationTokenSource();
-                cts.CancelAfter(TrainerSettings.BattleTimeLimit);
-
-                Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, 0, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, 0, cts.Token);
-                treeStrapTask.Wait();
-
-                // Update profile with final MetricWeights
-                profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights);
-
-                // Write profile
-                using (FileStream fs = new FileStream(path, FileMode.Create))
+                try
                 {
-                    profile.WriteXml(fs);
+                    // Create Game
+                    GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
+
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    cts.CancelAfter(TrainerSettings.BattleTimeLimit);
+
+                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, 0, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, 0, cts.Token);
+                    treeStrapTask.Wait();
+
+                    // Update profile with final MetricWeights
+                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights);
+
+                    // Write profile
+                    using (FileStream fs = new FileStream(path, FileMode.Create))
+                    {
+                        profile.WriteXml(fs);
+                    }
+
+                    Log("AutoTrain battle {0} end {1};{2}[{3}].", battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
+                }
+                catch (Exception ex)
+                {
+                    Log("AutoTrain battle {0} interrupted with exception {1}.", battleCount + 1, ex.Message);
                 }
 
-                Log("AutoTrain battle {0} end {1};{2}[{3}].", battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
                 battleCount++;
             }
 
