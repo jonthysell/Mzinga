@@ -174,6 +174,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-BattleTimeLimit       The maximum time to let a battle run before declaring a draw");
             Console.WriteLine("-GameType              Base,Base+M,Base+L,Base+P,Base+ML,Base+MP,Base+LP,Base+MLP");
             Console.WriteLine("-TargetProfilePath     The target profile");
+            Console.WriteLine("-FindPuzzleCandidates  Output puzzle candidates during battles");
             Console.WriteLine();
         }
 
@@ -346,6 +347,10 @@ namespace Mzinga.Trainer
                     case "tpp":
                     case "targetprofilepath":
                         trainerSettings.TargetProfilePath = args[++i];
+                        break;
+                    case "findpuzzlecandidates":
+                    case "fpc":
+                        trainerSettings.FindPuzzleCandidates = bool.Parse(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));

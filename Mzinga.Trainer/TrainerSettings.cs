@@ -290,5 +290,7 @@ namespace Mzinga.Trainer
             }
         }
         private string _targetProfilePath = null;
+
+        public bool FindPuzzleCandidates { get; set; } = true;
     }
 }

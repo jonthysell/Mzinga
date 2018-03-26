@@ -328,12 +328,22 @@ namespace Mzinga.Trainer
                 TranspositionTableSizeMB = TrainerSettings.TransTableSize,
             });
 
+            if (TrainerSettings.FindPuzzleCandidates)
+            {
+                whiteAI.BestMoveFound += GetPuzzleCandidateHandler(gameBoard);
+            }
+
             GameAI blackAI = new GameAI(new GameAIConfig()
             {
                 StartMetricWeights = blackProfile.StartMetricWeights,
                 EndMetricWeights = blackProfile.EndMetricWeights,
                 TranspositionTableSizeMB = TrainerSettings.TransTableSize,
             });
+
+            if (TrainerSettings.FindPuzzleCandidates)
+            {
+                blackAI.BestMoveFound += GetPuzzleCandidateHandler(gameBoard);
+            }
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
@@ -1005,11 +1015,19 @@ namespace Mzinga.Trainer
             {
                 Log("AutoTrain battle {0} start.", battleCount + 1);
 
+                // Create Game
+                GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
+
+                EventHandler<BestMoveFoundEventArgs> puzzleCandidateHandler = null;
+
+                if (TrainerSettings.FindPuzzleCandidates)
+                {
+                    puzzleCandidateHandler = GetPuzzleCandidateHandler(gameBoard);
+                    gameAI.BestMoveFound += puzzleCandidateHandler;
+                }
+
                 try
                 {
-                    // Create Game
-                    GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
-
                     CancellationTokenSource cts = new CancellationTokenSource();
                     cts.CancelAfter(TrainerSettings.BattleTimeLimit);
 
@@ -1030,6 +1048,13 @@ namespace Mzinga.Trainer
                 catch (Exception ex)
                 {
                     Log("AutoTrain battle {0} interrupted with exception {1}.", battleCount + 1, ex.Message);
+                }
+                finally
+                {
+                    if (null != puzzleCandidateHandler)
+                    {
+                        gameAI.BestMoveFound -= puzzleCandidateHandler;
+                    }
                 }
 
                 battleCount++;
@@ -1155,6 +1180,22 @@ namespace Mzinga.Trainer
                 progress = completed / total;
                 timeRemaining = TimeSpan.FromMilliseconds(avgMs * remaining);
             }
+        }
+
+        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(GameBoard gameBoard)
+        {
+            return (sender, args) =>
+            {
+                if (IsPuzzleCandidate(args))
+                {
+                    Log("Puzzle Candidate: {0} {1} {2}", gameBoard.BoardString, args.Depth, args.Move.ToString());
+                }
+            };
+        }
+
+        private bool IsPuzzleCandidate(BestMoveFoundEventArgs args)
+        {
+            return args.Depth % 2 == 1 && double.IsPositiveInfinity(args.Score);
         }
 
         private string ToString(TimeSpan ts)
