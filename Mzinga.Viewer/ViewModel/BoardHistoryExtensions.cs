@@ -33,9 +33,21 @@ namespace Mzinga.Viewer.ViewModel
 {
     static class BoardHistoryExtensions
     {
-        public static IEnumerable<Tuple<ViewerBoard, BoardHistoryItem>>EnumerateWithBoard(this BoardHistory boardHistory, ExpansionPieces expansionPieces)
+        public static IEnumerable<Tuple<ViewerBoard, BoardHistoryItem>>EnumerateWithBoard(this BoardHistory boardHistory, ViewerBoard currentBoard)
         {
-            ViewerBoard board = new ViewerBoard(expansionPieces);
+            // Create a copy of the current board
+            ViewerBoard board = new ViewerBoard(currentBoard.ToString());
+
+            List<BoardHistoryItem> reversedHistory = new List<BoardHistoryItem>(boardHistory);
+            reversedHistory.Reverse();
+
+            // "Undo" moves in the boardHistory
+            foreach (BoardHistoryItem item in reversedHistory)
+            {
+                board.SimulateUndo(item);
+            }
+
+            // "Play" forward returning the board state along the way
             foreach (BoardHistoryItem item in boardHistory)
             {
                 yield return new Tuple<ViewerBoard, BoardHistoryItem>(board, item);

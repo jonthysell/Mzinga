@@ -30,8 +30,6 @@ namespace Mzinga.Viewer.ViewModel
 {
     public class ViewerBoard : Board
     {
-        public ViewerBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
-
         public ViewerBoard(string boardString) : base(boardString) { }
 
         public new PieceName GetPiece(Position position)
@@ -60,8 +58,25 @@ namespace Mzinga.Viewer.ViewModel
             }
 
             CurrentTurn++;
-            LastPieceMoved = move.PieceName;
 
+            BoardUpdated();
+        }
+
+        public void SimulateUndo(BoardHistoryItem item)
+        {
+            if (!item.Move.IsPass)
+            {
+                Piece targetPiece = GetPiece(item.Move.PieceName);
+                MovePiece(targetPiece, item.OriginalPosition);
+            }
+
+            CurrentTurn--;
+
+            BoardUpdated();
+        }
+
+        private void BoardUpdated()
+        {
             bool whiteQueenSurrounded = (CountNeighbors(PieceName.WhiteQueenBee) == 6);
             bool blackQueenSurrounded = (CountNeighbors(PieceName.BlackQueenBee) == 6);
 

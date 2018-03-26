@@ -147,7 +147,7 @@ namespace Mzinga.Viewer.ViewModel
                 {
                     int count = 1;
                     bool isWhite = true;
-                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard(Board.ExpansionPieces))
+                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard(Board))
                     {
                         string countString = count.ToString() + ". ";
                         if (isWhite)
@@ -445,6 +445,8 @@ namespace Mzinga.Viewer.ViewModel
                             {
                                 AppVM.ViewerConfig.CopyFrom(config);
                                 RaisePropertyChanged("ViewerConfig");
+                                RaisePropertyChanged("BoardHistory");
+                                RaisePropertyChanged("TargetMove");
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
                             }

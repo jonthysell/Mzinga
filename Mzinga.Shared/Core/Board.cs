@@ -101,31 +101,25 @@ namespace Mzinga.Core
         {
             get
             {
-                if (null == _boardString)
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendFormat("{0}{1}", EnumUtils.GetExpansionPiecesString(ExpansionPieces), BoardStringSeparator);
+
+                sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
+
+                sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
+
+                for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
-                    StringBuilder sb = new StringBuilder();
-
-                    sb.AppendFormat("{0}{1}", EnumUtils.GetExpansionPiecesString(ExpansionPieces), BoardStringSeparator);
-
-                    sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
-
-                    sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
-
-                    for (int i = 0; i < EnumUtils.NumPieceNames; i++)
+                    if (null != _pieces[i] && _pieces[i].InPlay)
                     {
-                        if (null != _pieces[i] && _pieces[i].InPlay)
-                        {
-                            sb.AppendFormat("{0}{1}", _pieces[i].ToString(), BoardStringSeparator);
-                        }
+                        sb.AppendFormat("{0}{1}", _pieces[i].ToString(), BoardStringSeparator);
                     }
-
-                    _boardString = sb.ToString().TrimEnd(BoardStringSeparator);
                 }
 
-                return _boardString;
+                return sb.ToString().TrimEnd(BoardStringSeparator);
             }
         }
-        private string _boardString = null;
 
         public ulong ZobristKey
         {
@@ -1326,8 +1320,6 @@ namespace Mzinga.Core
             _cachedValidPlacementPositions = null;
             _cachedEnemyQueenNeighbors = null;
             ValidMoveCacheResets++;
-
-            _boardString = null;
         }
 
         #endregion
