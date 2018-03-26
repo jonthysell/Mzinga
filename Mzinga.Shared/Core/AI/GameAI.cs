@@ -273,8 +273,6 @@ namespace Mzinga.Core.AI
 
             EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
-            bool firstMove = true;
-
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
                 if (token.IsCancellationRequested)
@@ -283,26 +281,9 @@ namespace Mzinga.Core.AI
                     return new EvaluatedMoveCollection(movesToEvaluate, false);
                 }
 
-                double? value = null;
-
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
 
-                if (firstMove)
-                {
-                    // Full window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
-                    firstMove = false;
-                }
-                else
-                {
-                    // Null window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
-                    if (value.HasValue && value > alpha && value < beta)
-                    {
-                        // Research with full window
-                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
-                    }
-                }
+                double? value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
 
                 gameBoard.UndoLastMove();
 
