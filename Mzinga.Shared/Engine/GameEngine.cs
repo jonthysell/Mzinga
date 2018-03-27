@@ -163,14 +163,7 @@ namespace Mzinga.Engine
                         Pass();
                         break;
                     case "validmoves":
-                        if (paramCount == 0)
-                        {
-                            ValidMoves();
-                        }
-                        else
-                        {
-                            ValidMoves(split[1]);
-                        }
+                        ValidMoves();
                         break;
                     case "bestmove":
                         if (paramCount == 0)
@@ -348,27 +341,6 @@ namespace Mzinga.Engine
             }
 
             MoveSet validMoves = _gameBoard.GetValidMoves();
-            ConsoleOut(validMoves.ToString());
-        }
-
-        private void ValidMoves(string pieceName)
-        {
-            if (null == _gameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            if (string.IsNullOrWhiteSpace(pieceName))
-            {
-                throw new ArgumentNullException(pieceName);
-            }
-
-            if (_gameBoard.GameIsOver)
-            {
-                throw new GameIsOverException();
-            }
-
-            MoveSet validMoves = _gameBoard.GetValidMoves(EnumUtils.ParseShortName(pieceName));
             ConsoleOut(validMoves.ToString());
         }
 
