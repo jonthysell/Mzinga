@@ -79,6 +79,8 @@ namespace Mzinga.Viewer.ViewModel
         }
         private BoardHistory _boardHistory;
 
+        public EngineOptions EngineOptions { get; private set; }
+
         public bool IsIdle
         {
             get
@@ -288,6 +290,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             _outputLines = new List<string>();
             _inputToProcess = new Queue<string>();
+            EngineOptions = new EngineOptions();
 
             _inputToProcess.Enqueue("info");
             _currentlyRunningCommand = EngineCommand.Info;
@@ -385,6 +388,51 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
 
+        public void OptionsList()
+        {
+            SendCommand("options");
+        }
+
+        public void OptionsSet(string key, string value)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            SendCommand("options set {0} {1}", key, value);
+        }
+
+        public void OptionsSet(IDictionary<string, string> options)
+        {
+            if (null == options)
+            {
+                throw new ArgumentNullException("options");
+            }
+
+            if (IsIdle)
+            {
+                IsIdle = false;
+                try
+                {
+                    foreach (KeyValuePair<string, string> kvp in options)
+                    {
+                        SendCommandInternal("options set {0} {1}", kvp.Key, kvp.Value);
+                    }
+                }
+                catch (Exception)
+                {
+                    IsIdle = true;
+                    throw;
+                }
+            }
+        }
+
         public void SendCommand(string command, params object[] args)
         {
             if (IsIdle)
@@ -479,6 +527,8 @@ namespace Mzinga.Viewer.ViewModel
                     return EngineCommand.Undo;
                 case "history":
                     return EngineCommand.History;
+                case "options":
+                    return EngineCommand.Options;
                 case "exit":
                     return EngineCommand.Exit;
                 default:
@@ -542,6 +592,11 @@ namespace Mzinga.Viewer.ViewModel
                     break;
                 case EngineCommand.History:
                     BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
+                    break;
+                case EngineCommand.Options:
+                    string[] optionLines = new string[outputLines.Length - 1];
+                    Array.Copy(outputLines, optionLines, optionLines.Length);
+                    EngineOptions.ParseEngineOptionLines(optionLines);
                     break;
                 case EngineCommand.Info:
                 case EngineCommand.Help:
@@ -758,6 +813,7 @@ namespace Mzinga.Viewer.ViewModel
             BestMove,
             Undo,
             History,
+            Options,
             Exit
         }
     }

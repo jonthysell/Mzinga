@@ -107,6 +107,9 @@
     <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="IdleBoolToWaitCursorConverter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="EngineOptionsWindow.xaml.cs">
+      <DependentUpon>EngineOptionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewerConfigWindow.xaml.cs">
       <DependentUpon>ViewerConfigWindow.xaml</DependentUpon>
     </Compile>
@@ -126,6 +129,8 @@
     <Compile Include="ScrollingTextBox.cs" />
     <Compile Include="UpdateUtils.cs" />
     <Compile Include="ViewModel\BoardHistoryExtensions.cs" />
+    <Compile Include="ViewModel\ObservableEngineOption.cs" />
+    <Compile Include="ViewModel\EngineOptions.cs" />
     <Compile Include="ViewModel\InternalEngineWrapper.cs" />
     <Compile Include="ViewModel\CLIEngineWrapper.cs" />
     <Compile Include="ViewModel\EngineWrapper.cs" />
@@ -134,6 +139,7 @@
     <Compile Include="ViewModel\BoardExtensions.cs" />
     <Compile Include="ViewModel\NotationUtils.cs" />
     <Compile Include="ViewModel\ViewerBoard.cs" />
+    <Compile Include="ViewModel\EngineOptionsViewModel.cs" />
     <Compile Include="ViewModel\ViewerConfigViewModel.cs" />
     <Compile Include="ViewModel\PositionUtils.cs" />
     <Compile Include="ViewModel\ViewerConfig.cs" />
@@ -147,6 +153,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="EngineConsoleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EngineOptionsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

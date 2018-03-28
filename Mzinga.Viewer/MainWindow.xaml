@@ -73,6 +73,10 @@
                             Content="Show Console"
                             Margin="5"
                             Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding ShowEngineOptions}"
+                            Content="Engine Options"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
             <GroupBox FontWeight="Bold"

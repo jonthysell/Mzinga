@@ -41,6 +41,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => ShowConfirmation(message));
             Messenger.Default.Register<NewGameMessage>(recipient, (message) => ShowNewGame(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, (message) => ShowViewerConfig(message));
+            Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
         }
 
@@ -51,6 +52,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<ConfirmationMessage>(recipient);
             Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<ViewerConfigMessage>(recipient);
+            Messenger.Default.Unregister<EngineOptionsMessage>(recipient);
             Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
 
@@ -111,6 +113,20 @@ namespace Mzinga.Viewer
                 DataContext = message.ViewerConfigVM
             };
             message.ViewerConfigVM.RequestClose += (sender, e) =>
+            {
+                window.Close();
+            };
+            window.ShowDialog();
+            message.Process();
+        }
+
+        private static void ShowEngineOptions(EngineOptionsMessage message)
+        {
+            EngineOptionsWindow window = new EngineOptionsWindow
+            {
+                DataContext = message.EngineOptionsVM
+            };
+            message.EngineOptionsVM.RequestClose += (sender, e) =>
             {
                 window.Close();
             };

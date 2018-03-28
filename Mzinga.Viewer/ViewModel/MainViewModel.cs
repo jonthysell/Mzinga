@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 using Mzinga.Core;
@@ -430,6 +431,38 @@ namespace Mzinga.Viewer.ViewModel
             }
         }
         private RelayCommand _showEngineConsole = null;
+
+        public RelayCommand ShowEngineOptions
+        {
+            get
+            {
+                return _showEngineOptions ?? (_showEngineOptions = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new EngineOptionsMessage(AppVM.EngineWrapper.EngineOptions, (changedOptions) =>
+                        {
+                            try
+                            {
+                                AppVM.EngineWrapper.OptionsSet(changedOptions);
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle;
+                }));
+            }
+        }
+        private RelayCommand _showEngineOptions = null;
 
         public RelayCommand ShowViewerConfig
         {

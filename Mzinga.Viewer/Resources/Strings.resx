@@ -153,4 +153,7 @@
   <data name="ViewerConfigTitle" xml:space="preserve">
     <value>Viewer Settings</value>
   </data>
+  <data name="EngineOptionsTitle" xml:space="preserve">
+    <value>Engine Options</value>
+  </data>
 </root>

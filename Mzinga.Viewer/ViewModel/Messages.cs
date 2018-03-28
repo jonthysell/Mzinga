@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
 using GalaSoft.MvvmLight.Messaging;
 
@@ -100,6 +101,21 @@ namespace Mzinga.Viewer.ViewModel
         public void Process()
         {
             ViewerConfigVM.ProcessClose();
+        }
+    }
+
+    public class EngineOptionsMessage : MessageBase
+    {
+        public EngineOptionsViewModel EngineOptionsVM { get; private set; }
+
+        public EngineOptionsMessage(EngineOptions options = null, Action<IDictionary<string, string>> callback = null) : base()
+        {
+            EngineOptionsVM = new EngineOptionsViewModel(options, callback);
+        }
+
+        public void Process()
+        {
+            EngineOptionsVM.ProcessClose();
         }
     }
 

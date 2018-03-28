@@ -746,6 +746,8 @@ namespace Mzinga.Viewer
             {
                 ExceptionUtils.HandleException(new Exception("Unable to start the external engine so used the internal one instead.", VM.AppVM.EngineExceptionOnStart));
             }
+
+            VM.AppVM.EngineWrapper.OptionsList();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)

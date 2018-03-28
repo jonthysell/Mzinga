@@ -79,6 +79,15 @@ namespace Mzinga.Viewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Engine Options.
+        /// </summary>
+        internal static string EngineOptionsTitle {
+            get {
+                return ResourceManager.GetString("EngineOptionsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exception details: {0}.
         /// </summary>
         internal static string ExceptionViewModelDetailsFormat {
