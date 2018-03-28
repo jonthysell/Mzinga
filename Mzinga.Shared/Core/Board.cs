@@ -1187,21 +1187,25 @@ namespace Mzinga.Core
         {
             MoveSet validMoves = new MoveSet();
 
-            HashSet<Position> visitedPositions = new HashSet<Position>();
-            visitedPositions.Add(targetPiece.Position);
+            Position startingPosition = targetPiece.Position;
 
-            GetValidSlides(targetPiece, visitedPositions, 0, maxRange, validMoves);
+            HashSet<Position> visitedPositions = new HashSet<Position>();
+            visitedPositions.Add(startingPosition);
+
+            MovePiece(targetPiece, null, false);
+            GetValidSlides(targetPiece.PieceName, startingPosition, visitedPositions, 0, maxRange, validMoves);
+            MovePiece(targetPiece, startingPosition, false);
 
             return validMoves;
         }
 
-        private void GetValidSlides(Piece targetPiece, HashSet<Position> visitedPositions, int currentRange, int? maxRange, MoveSet validMoves)
+        private void GetValidSlides(PieceName target, Position currentPosition, HashSet<Position> visitedPositions, int currentRange, int? maxRange, MoveSet validMoves)
         {
             if (!maxRange.HasValue || currentRange < maxRange.Value)
             {
                 foreach (Direction slideDirection in EnumUtils.Directions)
                 {
-                    Position slidePosition = targetPiece.Position.NeighborAt(slideDirection);
+                    Position slidePosition = currentPosition.NeighborAt(slideDirection);
 
                     if (!visitedPositions.Contains(slidePosition) && !HasPieceAt(slidePosition))
                     {
@@ -1210,20 +1214,17 @@ namespace Mzinga.Core
                         Direction right = EnumUtils.RightOf(slideDirection);
                         Direction left = EnumUtils.LeftOf(slideDirection);
 
-                        if (HasPieceAt(targetPiece.Position.NeighborAt(right)) != HasPieceAt(targetPiece.Position.NeighborAt(left)))
+                        if (HasPieceAt(currentPosition.NeighborAt(right)) != HasPieceAt(currentPosition.NeighborAt(left)))
                         {
                             // Can slide into slide position
-                            Move move = new Move(targetPiece.PieceName, slidePosition);
+                            Move move = new Move(target, slidePosition);
 
                             if (validMoves.Add(move))
                             {
                                 // Sliding from this position has not been tested yet
                                 visitedPositions.Add(move.Position);
 
-                                Position preSlidePosition = targetPiece.Position;
-                                MovePiece(targetPiece, move.Position, false);
-                                GetValidSlides(targetPiece, visitedPositions, currentRange + 1, maxRange, validMoves);
-                                MovePiece(targetPiece, preSlidePosition, false);
+                                GetValidSlides(target, slidePosition, visitedPositions, currentRange + 1, maxRange, validMoves);
                             }
                         }
                     }
