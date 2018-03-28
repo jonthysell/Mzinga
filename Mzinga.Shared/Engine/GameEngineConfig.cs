@@ -129,7 +129,7 @@ namespace Mzinga.Engine
             }
         }
 
-        private void ParseTranspositionTableSizeMBValue(string rawValue)
+        public void ParseTranspositionTableSizeMBValue(string rawValue)
         {
             int intValue;
             if (int.TryParse(rawValue, out intValue))
@@ -138,7 +138,14 @@ namespace Mzinga.Engine
             }
         }
 
-        private void ParseMaxHelperThreadsValue(string rawValue)
+        public void GetTranspositionTableSizeMBValue(out string type, out string value, out string values)
+        {
+            type = "int";
+            value = (TranspositionTableSizeMB.HasValue ? TranspositionTableSizeMB.Value : TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
+            values = string.Format("{0};{1}", 1, Environment.Is64BitProcess ? 2048 : 1024);
+        }
+
+        public void ParseMaxHelperThreadsValue(string rawValue)
         {
             int intValue;
             MaxHelperThreadsType enumValue;
@@ -162,7 +169,32 @@ namespace Mzinga.Engine
             }
         }
 
-        private void ParsePonderDuringIdleValue(string rawValue)
+        public void GetMaxHelperThreadsValue(out string type, out string value, out string values)
+        {
+            type = "enum";
+            
+            if (!_maxHelperThreads.HasValue)
+            {
+                value = "Auto";
+            }
+            else if (_maxHelperThreads.Value == 0)
+            {
+                value = "None";
+            }
+            else
+            {
+                value = _maxHelperThreads.Value.ToString();
+            }
+
+            values = "Auto;None";
+
+            for (int i = 1; i <= (Environment.ProcessorCount / 2) - 1; i++)
+            {
+                values += ";" + i.ToString();
+            }
+        }
+
+        public void ParsePonderDuringIdleValue(string rawValue)
         {
             PonderDuringIdleType enumValue;
             if (Enum.TryParse(rawValue, out enumValue))
@@ -171,13 +203,27 @@ namespace Mzinga.Engine
             }
         }
 
-        private void ParseMaxBranchingFactorValue(string rawValue)
+        public void GetPonderDuringIdleValue(out string type, out string value, out string values)
+        {
+            type = "enum";
+            value = PonderDuringIdle.ToString();
+            values = "Disabled;SingleThreaded;MultiThreaded";
+        }
+
+        public void ParseMaxBranchingFactorValue(string rawValue)
         {
             int intValue;
             if (int.TryParse(rawValue, out intValue))
             {
                 MaxBranchingFactor = intValue;
             }
+        }
+
+        public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
+        {
+            type = "int";
+            value = (MaxBranchingFactor.HasValue ? MaxBranchingFactor.Value : int.MaxValue).ToString();
+            values = string.Format("{0};{1}", 1, int.MaxValue);
         }
 
         public GameAI GetGameAI()

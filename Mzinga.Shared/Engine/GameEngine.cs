@@ -196,6 +196,24 @@ namespace Mzinga.Engine
                     case "history":
                         History();
                         break;
+                    case "options":
+                        if (paramCount == 0)
+                        {
+                            OptionsList();
+                        }
+                        else if (paramCount >= 2 && split[1].ToLower() == "get")
+                        {
+                            OptionsGet(split[2]);
+                        }
+                        else if (paramCount >= 3 && split[1].ToLower() == "set")
+                        {
+                            OptionsSet(split[2], split[3]);
+                        }
+                        else
+                        {
+                            throw new CommandException();
+                        }
+                        break;
                     case "perft":
                         if (paramCount == 0)
                         {
@@ -266,6 +284,7 @@ namespace Mzinga.Engine
             ConsoleOut("bestmove");
             ConsoleOut("undo");
             ConsoleOut("history");
+            ConsoleOut("options");
             ConsoleOut("perft");
             ConsoleOut("exit");
         }
@@ -458,6 +477,89 @@ namespace Mzinga.Engine
 
             BoardHistory history = new BoardHistory(_gameBoard.BoardHistory);
             ConsoleOut(history.ToString());
+        }
+
+        private void OptionsList()
+        {
+            OptionsGet("MaxBranchingFactor");
+            OptionsGet("MaxHelperThreads");
+            OptionsGet("PonderDuringIdle");
+            OptionsGet("TranspositionTableSizeMB");
+        }
+
+        private void OptionsGet(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            key = key.Trim();
+
+            string value = "";
+            string type = "";
+            string values = "";
+
+            switch (key)
+            {
+                case "MaxBranchingFactor":
+                    Config.GetMaxBranchingFactorValue(out type, out value, out values);
+                    break;
+                case "MaxHelperThreads":
+                    Config.GetMaxHelperThreadsValue(out type, out value, out values);
+                    break;
+                case "PonderDuringIdle":
+                    Config.GetPonderDuringIdleValue(out type, out value, out values);
+                    break;
+                case "TranspositionTableSizeMB":
+                    Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
+                    break;
+                default:
+                    throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
+            }
+
+            ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, values));
+        }
+
+        private void OptionsSet(string key, string value)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            key = key.Trim();
+
+            bool refreshAI = false;
+
+            switch (key)
+            {
+                case "MaxBranchingFactor":
+                    Config.ParseMaxBranchingFactorValue(value);
+                    OptionsGet("MaxBranchingFactor");
+                    refreshAI = true;
+                    break;
+                case "MaxHelperThreads":
+                    Config.ParseMaxHelperThreadsValue(value);
+                    OptionsGet("MaxHelperThreads");
+                    break;
+                case "PonderDuringIdle":
+                    Config.ParsePonderDuringIdleValue(value);
+                    OptionsGet("PonderDuringIdle");
+                    break;
+                case "TranspositionTableSizeMB":
+                    Config.ParseTranspositionTableSizeMBValue(value);
+                    OptionsGet("TranspositionTableSizeMB");
+                    refreshAI = true;
+                    break;
+                default:
+                    throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
+            }
+
+            if (refreshAI)
+            {
+                _gameAI = Config.GetGameAI();
+            }
         }
 
         private void Perft(int maxDepth = Int32.MaxValue)

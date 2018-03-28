@@ -23,7 +23,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\EnumUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\FixedCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\GameBoard.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\IEnumerableExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Move.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\MoveSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Piece.cs" />
