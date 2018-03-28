@@ -76,10 +76,19 @@ namespace Mzinga.Engine
             Config = config;
             ConsoleOut = consoleOut;
 
-            _gameAI = Config.GetGameAI();
-            _gameAI.BestMoveFound += OnBestMoveFound;
+            InitAI();
 
             ExitRequested = false;
+        }
+
+        private void InitAI()
+        {
+            _gameAI = Config.GetGameAI();
+
+            if (Config.ReportIntermediateBestMoves)
+            {
+                _gameAI.BestMoveFound += OnBestMoveFound;
+            }
         }
 
         private void OnBestMoveFound(object sender, BestMoveFoundEventArgs args)
@@ -328,6 +337,7 @@ namespace Mzinga.Engine
             }
 
             _gameBoard.Play(new Move(moveString));
+
             ConsoleOut(_gameBoard.ToString());
         }
 
@@ -344,6 +354,7 @@ namespace Mzinga.Engine
             }
 
             _gameBoard.Pass();
+
             ConsoleOut(_gameBoard.ToString());
         }
 
@@ -360,6 +371,7 @@ namespace Mzinga.Engine
             }
 
             MoveSet validMoves = _gameBoard.GetValidMoves();
+
             ConsoleOut(validMoves.ToString());
         }
 
@@ -465,6 +477,7 @@ namespace Mzinga.Engine
             {
                 _gameBoard.UndoLastMove();
             }
+
             ConsoleOut(_gameBoard.ToString());
         }
 
@@ -476,6 +489,7 @@ namespace Mzinga.Engine
             }
 
             BoardHistory history = new BoardHistory(_gameBoard.BoardHistory);
+
             ConsoleOut(history.ToString());
         }
 
@@ -485,6 +499,7 @@ namespace Mzinga.Engine
             OptionsGet("MaxHelperThreads");
             OptionsGet("PonderDuringIdle");
             OptionsGet("TranspositionTableSizeMB");
+            OptionsGet("ReportIntermediateBestMoves");
         }
 
         private void OptionsGet(string key)
@@ -514,11 +529,21 @@ namespace Mzinga.Engine
                 case "TranspositionTableSizeMB":
                     Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
                     break;
+                case "ReportIntermediateBestMoves":
+                    Config.GetReportIntermediateBestMovesValue(out type, out value, out values);
+                    break;
                 default:
                     throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
             }
 
-            ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, values));
+            if (string.IsNullOrWhiteSpace(values))
+            {
+                ConsoleOut(string.Format("{0};{1};{2}", key, type, value));
+            }
+            else
+            {
+                ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, values));
+            }
         }
 
         private void OptionsSet(string key, string value)
@@ -536,29 +561,31 @@ namespace Mzinga.Engine
             {
                 case "MaxBranchingFactor":
                     Config.ParseMaxBranchingFactorValue(value);
-                    OptionsGet("MaxBranchingFactor");
                     refreshAI = true;
                     break;
                 case "MaxHelperThreads":
                     Config.ParseMaxHelperThreadsValue(value);
-                    OptionsGet("MaxHelperThreads");
                     break;
                 case "PonderDuringIdle":
                     Config.ParsePonderDuringIdleValue(value);
-                    OptionsGet("PonderDuringIdle");
                     break;
                 case "TranspositionTableSizeMB":
                     Config.ParseTranspositionTableSizeMBValue(value);
-                    OptionsGet("TranspositionTableSizeMB");
+                    refreshAI = true;
+                    break;
+                case "ReportIntermediateBestMoves":
+                    Config.ParseReportIntermediateBestMovesValue(value);
                     refreshAI = true;
                     break;
                 default:
                     throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
             }
 
+            OptionsGet(key);
+
             if (refreshAI)
             {
-                _gameAI = Config.GetGameAI();
+                InitAI();
             }
         }
 
@@ -598,7 +625,10 @@ namespace Mzinga.Engine
         {
             if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard && _gameBoard.GameInProgress)
             {
-                _gameAI.BestMoveFound -= OnBestMoveFound;
+                if (Config.ReportIntermediateBestMoves)
+                {
+                    _gameAI.BestMoveFound -= OnBestMoveFound;
+                }
 
                 _ponderCTS = new CancellationTokenSource();
                 _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
@@ -617,7 +647,11 @@ namespace Mzinga.Engine
                 _ponderCTS = null;
                 _ponderTask = null;
 
-                _gameAI.BestMoveFound += OnBestMoveFound;
+                if (Config.ReportIntermediateBestMoves)
+                {
+                    _gameAI.BestMoveFound += OnBestMoveFound;
+                }
+
                 _isPondering = false;
             }
         }

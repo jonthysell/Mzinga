@@ -61,6 +61,8 @@ namespace Mzinga.Engine
 
         public int? MaxBranchingFactor { get; private set; } = null;
 
+        public bool ReportIntermediateBestMoves { get; private set; } = false;
+
         #endregion
 
         public GameEngineConfig(Stream inputStream)
@@ -124,6 +126,9 @@ namespace Mzinga.Engine
                         case "MaxBranchingFactor":
                             ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
                             break;
+                        case "ReportIntermediateBestMoves":
+                            ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
+                            break;
                     }
                 }
             }
@@ -164,7 +169,6 @@ namespace Mzinga.Engine
                     case MaxHelperThreadsType.Auto:
                         _maxHelperThreads = null;
                         break;
-
                 }
             }
         }
@@ -226,6 +230,22 @@ namespace Mzinga.Engine
             values = string.Format("{0};{1}", 1, int.MaxValue);
         }
 
+        public void ParseReportIntermediateBestMovesValue(string rawValue)
+        {
+            bool boolValue;
+            if (bool.TryParse(rawValue, out boolValue))
+            {
+                ReportIntermediateBestMoves = boolValue;
+            }
+        }
+
+        public void GetReportIntermediateBestMovesValue(out string type, out string value, out string values)
+        {
+            type = "bool";
+            value = ReportIntermediateBestMoves.ToString();
+            values = "";
+        }
+
         public GameAI GetGameAI()
         {
             return new GameAI(new GameAIConfig()
@@ -253,6 +273,7 @@ namespace Mzinga.Engine
 <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
 <MaxHelperThreads>Auto</MaxHelperThreads>
 <PonderDuringIdle>SingleThreaded</PonderDuringIdle>
+<ReportIntermediateBestMoves>False</ReportIntermediateBestMoves>
 <StartMetricWeights>
 <QueenBee.InPlayWeight>-31.271265238491477</QueenBee.InPlayWeight>
 <QueenBee.IsPinnedWeight>2.0334710106223222</QueenBee.IsPinnedWeight>
