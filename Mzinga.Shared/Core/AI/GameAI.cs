@@ -38,7 +38,9 @@ namespace Mzinga.Core.AI
         public MetricWeights StartMetricWeights { get; private set; }
         public MetricWeights EndMetricWeights { get; private set; }
 
-        private int _maxBranchingFactor = int.MaxValue; // To prevent search explosion
+        private int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
+
+        public const int MaxMaxBranchingFactor = 500;
 
         private TranspositionTable _transpositionTable;
 

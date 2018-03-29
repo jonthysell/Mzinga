@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Text;
 
 using GalaSoft.MvvmLight;
 
@@ -34,6 +35,26 @@ namespace Mzinga.Viewer.ViewModel
     public abstract class ObservableEngineOption : ObservableObject
     {
         public string Key { get; private set; }
+
+        public string FriendlyKey
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < Key.Length; i++)
+                {
+                    if (i > 0 && char.IsUpper(Key[i]) && char.IsLower(Key[i-1]))
+                    {
+                        sb.Append(" ");
+                    }
+
+                    sb.Append(Key[i]);
+                }
+
+                return sb.ToString();
+            }
+        }
 
         public ObservableEngineOption(EngineOption option)
         {
@@ -73,49 +94,33 @@ namespace Mzinga.Viewer.ViewModel
             }
             set
             {
-                if (value < _minValue || value > _maxValue)
+                try
                 {
-                    throw new ArgumentOutOfRangeException();
+                    if (value < MinValue || value > MaxValue)
+                    {
+                        throw new ArgumentOutOfRangeException(Key, string.Format("Value must be between {0} and {1}.", MinValue, MaxValue));
+                    }
+                    _value = value;
                 }
-                _value = value;
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+                
                 RaisePropertyChanged("Value");
             }
         }
         private int _value;
 
-        public int MinValue
-        {
-            get
-            {
-                return _minValue;
-            }
-            set
-            {
-                _minValue = value;
-                RaisePropertyChanged("MinValue");
-            }
-        }
-        private int _minValue;
+        public int MinValue { get; private set; }
 
-        public int MaxValue
-        {
-            get
-            {
-                return _maxValue;
-            }
-            set
-            {
-                _maxValue = value;
-                RaisePropertyChanged("MaxValue");
-            }
-        }
-        private int _maxValue;
+        public int MaxValue { get; private set; }
 
         public ObservableIntegerEngineOption(IntegerEngineOption option) : base(option)
         {
             _value = option.Value;
-            _minValue = option.MinValue;
-            _maxValue = option.MaxValue;
+            MinValue = option.MinValue;
+            MaxValue = option.MaxValue;
         }
     }
 
@@ -129,49 +134,32 @@ namespace Mzinga.Viewer.ViewModel
             }
             set
             {
-                if (value < _minValue || value > _maxValue)
+                try
                 {
-                    throw new ArgumentOutOfRangeException();
+                    if (value < MinValue || value > MaxValue)
+                    {
+                        throw new ArgumentOutOfRangeException(Key, string.Format("Value must be between {0} and {1}.", MinValue, MaxValue));
+                    }
+                    _value = value;
                 }
-                _value = value;
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
                 RaisePropertyChanged("Value");
             }
         }
         private double _value;
 
-        public double MinValue
-        {
-            get
-            {
-                return _minValue;
-            }
-            set
-            {
-                _minValue = value;
-                RaisePropertyChanged("MinValue");
-            }
-        }
-        private double _minValue;
+        public double MinValue { get; private set; }
 
-        public double MaxValue
-        {
-            get
-            {
-                return _maxValue;
-            }
-            set
-            {
-                _maxValue = value;
-                RaisePropertyChanged("MaxValue");
-            }
-        }
-        private double _maxValue;
+        public double MaxValue { get; private set; }
 
         public ObservableDoubleEngineOption(DoubleEngineOption option) : base(option)
         {
             _value = option.Value;
-            _minValue = option.MinValue;
-            _maxValue = option.MaxValue;
+            MinValue = option.MinValue;
+            MaxValue = option.MaxValue;
         }
     }
 
@@ -191,14 +179,7 @@ namespace Mzinga.Viewer.ViewModel
         }
         private string _value;
 
-        public ObservableCollection<string> Values
-        {
-            get
-            {
-                return _values;
-            }
-        }
-        private ObservableCollection<string> _values = new ObservableCollection<string>();
+        public ObservableCollection<string> Values { get; private set; }  =  new ObservableCollection<string>();
 
         public ObservableEnumEngineOption(EnumEngineOption option) : base(option)
         {
@@ -206,7 +187,7 @@ namespace Mzinga.Viewer.ViewModel
             
             foreach (string value in option.Values)
             {
-                _values.Add(value);
+                Values.Add(value);
             }
         }
     }

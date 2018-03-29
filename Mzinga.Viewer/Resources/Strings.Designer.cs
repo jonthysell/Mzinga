@@ -169,7 +169,7 @@ namespace Mzinga.Viewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Viewer Settings.
+        ///   Looks up a localized string similar to Viewer Options.
         /// </summary>
         internal static string ViewerConfigTitle {
             get {

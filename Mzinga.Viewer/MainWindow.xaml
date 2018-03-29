@@ -62,33 +62,39 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox FontWeight="Bold"
-                      Header="Engine"
+                      Header="AI"
                       Margin="5">
                 <StackPanel>
                     <Button Command="{Binding FindBestMove}"
                             Content="Find Best Move"
                             Margin="5"
                             Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding ShowEngineConsole}"
-                            Content="Show Console"
+                </StackPanel>
+            </GroupBox>
+            <GroupBox FontWeight="Bold"
+                      Header="Options"
+                      Margin="5">
+                <StackPanel>
+                    <Button Command="{Binding ShowViewerConfig}"
+                            Content="Viewer"
                             Margin="5"
                             Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding ShowEngineOptions}"
-                            Content="Engine Options"
+                            Content="Engine"
                             Margin="5"
                             Style="{DynamicResource CleanButton}" />
                 </StackPanel>
             </GroupBox>
             <GroupBox FontWeight="Bold"
-                      Header="Settings"
+                      Header="Other"
                       Margin="5">
                 <StackPanel>
-                    <Button Command="{Binding ShowViewerConfig}"
-                            Content="Viewer Config"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
                     <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
                             Content="Update Check"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}" />
+                    <Button Command="{Binding ShowEngineConsole}"
+                            Content="Console"
                             Margin="5"
                             Style="{DynamicResource CleanButton}" />
                 </StackPanel>

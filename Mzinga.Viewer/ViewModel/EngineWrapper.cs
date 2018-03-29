@@ -415,20 +415,23 @@ namespace Mzinga.Viewer.ViewModel
                 throw new ArgumentNullException("options");
             }
 
-            if (IsIdle)
+            if (options.Count > 0)
             {
-                IsIdle = false;
-                try
+                if (IsIdle)
                 {
-                    foreach (KeyValuePair<string, string> kvp in options)
+                    IsIdle = false;
+                    try
                     {
-                        SendCommandInternal("options set {0} {1}", kvp.Key, kvp.Value);
+                        foreach (KeyValuePair<string, string> kvp in options)
+                        {
+                            SendCommandInternal("options set {0} {1}", kvp.Key, kvp.Value);
+                        }
                     }
-                }
-                catch (Exception)
-                {
-                    IsIdle = true;
-                    throw;
+                    catch (Exception)
+                    {
+                        IsIdle = true;
+                        throw;
+                    }
                 }
             }
         }

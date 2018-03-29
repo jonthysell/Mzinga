@@ -139,7 +139,7 @@ namespace Mzinga.Engine
             int intValue;
             if (int.TryParse(rawValue, out intValue))
             {
-                TranspositionTableSizeMB = intValue;
+                TranspositionTableSizeMB = Math.Max(MinTranspositionTableSizeMB, Math.Min(intValue, Environment.Is64BitProcess ? MaxTranspositionTableSizeMB64Bit : MaxTranspositionTableSizeMB32Bit));
             }
         }
 
@@ -147,7 +147,7 @@ namespace Mzinga.Engine
         {
             type = "int";
             value = (TranspositionTableSizeMB.HasValue ? TranspositionTableSizeMB.Value : TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
-            values = string.Format("{0};{1}", 1, Environment.Is64BitProcess ? 2048 : 1024);
+            values = string.Format("{0};{1}", MinTranspositionTableSizeMB, Environment.Is64BitProcess ? MaxTranspositionTableSizeMB64Bit : MaxTranspositionTableSizeMB32Bit);
         }
 
         public void ParseMaxHelperThreadsValue(string rawValue)
@@ -157,7 +157,7 @@ namespace Mzinga.Engine
 
             if (int.TryParse(rawValue, out intValue))
             {
-                _maxHelperThreads = intValue;
+                _maxHelperThreads = Math.Max(MinHelperThreads, Math.Min(intValue, (Environment.ProcessorCount / 2) - 1));
             }
             else if (Enum.TryParse(rawValue, out enumValue))
             {
@@ -219,15 +219,15 @@ namespace Mzinga.Engine
             int intValue;
             if (int.TryParse(rawValue, out intValue))
             {
-                MaxBranchingFactor = intValue;
+                MaxBranchingFactor = Math.Max(MinMaxBranchingFactor, Math.Min(intValue, GameAI.MaxMaxBranchingFactor));
             }
         }
 
         public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (MaxBranchingFactor.HasValue ? MaxBranchingFactor.Value : int.MaxValue).ToString();
-            values = string.Format("{0};{1}", 1, int.MaxValue);
+            value = (MaxBranchingFactor.HasValue ? MaxBranchingFactor.Value : GameAI.MaxMaxBranchingFactor).ToString();
+            values = string.Format("{0};{1}", MinMaxBranchingFactor, GameAI.MaxMaxBranchingFactor);
         }
 
         public void ParseReportIntermediateBestMovesValue(string rawValue)
@@ -266,6 +266,14 @@ namespace Mzinga.Engine
                 return new GameEngineConfig(ms);
             }
         }
+
+        private const int MinTranspositionTableSizeMB = 1;
+        private const int MaxTranspositionTableSizeMB32Bit = 1024;
+        private const int MaxTranspositionTableSizeMB64Bit = 2048;
+
+        private const int MinHelperThreads = 0;
+
+        private const int MinMaxBranchingFactor = 1;
 
         private const string DefaultConfig = @"<?xml version=""1.0"" encoding=""utf-8"" ?>
 <Mzinga.Engine>

@@ -22,7 +22,7 @@
                     <ItemsControl.Resources>
                         <DataTemplate DataType="{x:Type vm:ObservableBooleanEngineOption}">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding Key}"
+                                <Label Content="{Binding FriendlyKey}"
                                        Margin="5"
                                        MinWidth="200"
                                        Padding="0"
@@ -34,7 +34,7 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableIntegerEngineOption}">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding Key}"
+                                <Label Content="{Binding FriendlyKey}"
                                        Margin="5"
                                        MinWidth="200"
                                        Padding="0"
@@ -46,7 +46,7 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableDoubleEngineOption}">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding Key}"
+                                <Label Content="{Binding FriendlyKey}"
                                        Margin="5"
                                        MinWidth="200"
                                        Padding="0"
@@ -58,7 +58,7 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableEnumEngineOption}">
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="{Binding Key}"
+                                <Label Content="{Binding FriendlyKey}"
                                        Margin="5"
                                        MinWidth="200"
                                        Padding="0"

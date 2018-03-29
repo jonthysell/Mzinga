@@ -3,7 +3,7 @@
         MinWidth="100"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        Title="{Binding Title, FallbackValue=Viewer Config}"
+        Title="{Binding Title, FallbackValue=Viewer Options}"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.ViewerConfigWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -17,7 +17,7 @@
                    Width="32" />
             <StackPanel Margin="5"
                         Orientation="Vertical">
-                <GroupBox Header="Engine Preferences"
+                <GroupBox Header="Engine"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -49,7 +49,7 @@
                                VerticalAlignment="Center" />
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Play Preferences"
+                <GroupBox Header="Play"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -80,7 +80,7 @@
                                   Margin="5" />
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Visual Preferences"
+                <GroupBox Header="Visuals"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">

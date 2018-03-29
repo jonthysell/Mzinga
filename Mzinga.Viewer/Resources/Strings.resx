@@ -151,7 +151,7 @@
     <value>New Game</value>
   </data>
   <data name="ViewerConfigTitle" xml:space="preserve">
-    <value>Viewer Settings</value>
+    <value>Viewer Options</value>
   </data>
   <data name="EngineOptionsTitle" xml:space="preserve">
     <value>Engine Options</value>
