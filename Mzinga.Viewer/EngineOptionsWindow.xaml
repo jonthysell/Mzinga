@@ -63,10 +63,10 @@
                                        MinWidth="200"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <ComboBox ItemsSource="{Binding Values}"
+                                <ComboBox ItemsSource="{Binding FriendlyValues}"
                                           Margin="5"
                                           MinWidth="150"
-                                          SelectedItem="{Binding Value}" />
+                                          SelectedIndex="{Binding SelectedValueIndex}" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.Resources>

@@ -40,25 +40,30 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < Key.Length; i++)
-                {
-                    if (i > 0 && char.IsUpper(Key[i]) && char.IsLower(Key[i-1]))
-                    {
-                        sb.Append(" ");
-                    }
-
-                    sb.Append(Key[i]);
-                }
-
-                return sb.ToString();
+                return GetFriendly(Key);
             }
         }
 
         public ObservableEngineOption(EngineOption option)
         {
             Key = option.Key;
+        }
+
+        protected string GetFriendly(string s)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (i > 0 && char.IsUpper(s[i]) && char.IsLower(s[i - 1]))
+                {
+                    sb.Append(" ");
+                }
+
+                sb.Append(s[i]);
+            }
+
+            return sb.ToString();
         }
     }
 
@@ -165,30 +170,51 @@ namespace Mzinga.Viewer.ViewModel
 
     public class ObservableEnumEngineOption : ObservableEngineOption
     {
+        public int SelectedValueIndex
+        {
+            get
+            {
+                return _selectedValueIndex;
+            }
+            set
+            {
+                _selectedValueIndex = value;
+                RaisePropertyChanged("SelectedValueIndex");
+                RaisePropertyChanged("Value");
+                RaisePropertyChanged("FriendlyValue");
+            }
+        }
+        private int _selectedValueIndex = 0;
+
         public string Value
         {
             get
             {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-                RaisePropertyChanged("Value");
+                return Values[SelectedValueIndex];
             }
         }
-        private string _value;
+
+        public string FriendlyValue
+        {
+            get
+            {
+                return FriendlyValues[SelectedValueIndex];
+            }
+        }
 
         public ObservableCollection<string> Values { get; private set; }  =  new ObservableCollection<string>();
 
+        public ObservableCollection<string> FriendlyValues { get; private set; } = new ObservableCollection<string>();
+
         public ObservableEnumEngineOption(EnumEngineOption option) : base(option)
         {
-            _value = option.Value;
-            
             foreach (string value in option.Values)
             {
                 Values.Add(value);
+                FriendlyValues.Add(GetFriendly(value));
             }
+
+            _selectedValueIndex = Array.IndexOf(option.Values, option.Value);
         }
     }
 }
