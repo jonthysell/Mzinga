@@ -51,9 +51,9 @@ namespace Mzinga.Engine
             {
                 // Hard min is 0, hard max is (Environment.ProcessorCount / 2) - 1
 #if DEBUG
-                return 0;
+                return MinMaxHelperThreads;
 #else
-                return Math.Max(0, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, (Environment.ProcessorCount / 2) - 1) : (Environment.ProcessorCount / 2) - 1);
+                return Math.Max(MinMaxHelperThreads, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, MaxMaxHelperThreads) : MaxMaxHelperThreads);
 #endif
             }
         }
@@ -157,7 +157,7 @@ namespace Mzinga.Engine
 
             if (int.TryParse(rawValue, out intValue))
             {
-                _maxHelperThreads = Math.Max(MinHelperThreads, Math.Min(intValue, (Environment.ProcessorCount / 2) - 1));
+                _maxHelperThreads = Math.Max(MinMaxHelperThreads, Math.Min(intValue, MaxMaxHelperThreads));
             }
             else if (Enum.TryParse(rawValue, out enumValue))
             {
@@ -192,7 +192,7 @@ namespace Mzinga.Engine
 
             values = "Auto;None";
 
-            for (int i = 1; i <= (Environment.ProcessorCount / 2) - 1; i++)
+            for (int i = 1; i <= MaxMaxHelperThreads; i++)
             {
                 values += ";" + i.ToString();
             }
@@ -271,7 +271,8 @@ namespace Mzinga.Engine
         private const int MaxTranspositionTableSizeMB32Bit = 1024;
         private const int MaxTranspositionTableSizeMB64Bit = 2048;
 
-        private const int MinHelperThreads = 0;
+        private const int MinMaxHelperThreads = 0;
+        private static int MaxMaxHelperThreads { get { return (Environment.ProcessorCount / 2) - 1; } }
 
         private const int MinMaxBranchingFactor = 1;
 
