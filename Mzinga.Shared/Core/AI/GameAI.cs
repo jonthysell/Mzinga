@@ -271,12 +271,16 @@ namespace Mzinga.Core.AI
 
             double alphaOriginal = alpha;
 
-            double bestValue = double.NegativeInfinity;
+            double? bestValue = null;
 
             EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
+            bool firstMove = true;
+
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
             {
+                bool updateAlpha = false;
+
                 if (token.IsCancellationRequested)
                 {
                     // Cancel
@@ -285,7 +289,26 @@ namespace Mzinga.Core.AI
 
                 gameBoard.TrustedPlay(moveToEvaluate.Move);
 
-                double? value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                double? value = null;
+
+                if (firstMove)
+                {
+                    // Full window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    updateAlpha = true;
+                    firstMove = false;
+                }
+                else
+                {
+                    // Null window search
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
+                    if (value.HasValue && value > alpha && value < beta)
+                    {
+                        // Research with full window
+                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                        updateAlpha = true;
+                    }
+                }
 
                 gameBoard.UndoLastMove();
 
@@ -298,10 +321,17 @@ namespace Mzinga.Core.AI
                 EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, value.Value, depth);
                 evaluatedMoves.Add(evaluatedMove);
 
-                bestValue = Math.Max(bestValue, value.Value);
-                alpha = Math.Max(alpha, value.Value);
+                if (updateAlpha)
+                {
+                    alpha = Math.Max(alpha, value.Value);
+                }
 
-                if (alpha >= beta)
+                if (!bestValue.HasValue || value >= bestValue)
+                {
+                    bestValue = value;
+                }
+
+                if (bestValue >= beta)
                 {
                     // A winning move has been found, since beta is always infinity in this function
                     break;
@@ -324,7 +354,7 @@ namespace Mzinga.Core.AI
                 tEntry.BestMove = evaluatedMoves.BestMove.Move;
             }
 
-            tEntry.Value = bestValue;
+            tEntry.Value = bestValue.Value;
             tEntry.Depth = depth;
 
             _transpositionTable.Store(key, tEntry);
@@ -427,6 +457,8 @@ namespace Mzinga.Core.AI
 
             foreach (Move move in moves)
             {
+                bool updateAlpha = false;
+
                 if (token.IsCancellationRequested)
                 {
                     return null;
@@ -440,6 +472,7 @@ namespace Mzinga.Core.AI
                 {
                     // Full window search
                     value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    updateAlpha = true;
                     firstMove = false;
                 }
                 else
@@ -450,6 +483,7 @@ namespace Mzinga.Core.AI
                     {
                         // Research with full window
                         value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                        updateAlpha = true;
                     }
                 }
 
@@ -460,15 +494,18 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
+                if (updateAlpha)
+                {
+                    alpha = Math.Max(alpha, value.Value);
+                }
+
                 if (!bestValue.HasValue || value >= bestValue)
                 {
                     bestValue = value;
                     bestMove = move;
                 }
 
-                alpha = Math.Max(alpha, bestValue.Value);
-
-                if (alpha >= beta)
+                if (bestValue >= beta)
                 {
                     break;
                 }
