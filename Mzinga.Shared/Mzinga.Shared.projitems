@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\EvaluatedMoveCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\GameAI.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\GameAIConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AI\ListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\MetricWeights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\TranspositionTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Board.cs" />

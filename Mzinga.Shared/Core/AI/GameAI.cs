@@ -294,18 +294,18 @@ namespace Mzinga.Core.AI
                 if (firstMove)
                 {
                     // Full window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, OrderType.Default, token);
                     updateAlpha = true;
                     firstMove = false;
                 }
                 else
                 {
                     // Null window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, OrderType.Default, token);
                     if (value.HasValue && value > alpha && value < beta)
                     {
                         // Research with full window
-                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, OrderType.Default, token);
                         updateAlpha = true;
                     }
                 }
@@ -394,7 +394,7 @@ namespace Mzinga.Core.AI
                     GameBoard clone = gameBoard.Clone();
                     helperThreads[i] = Task.Factory.StartNew(async () =>
                     {
-                        await PrincipalVariationSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, tokenSource.Token);
+                        await PrincipalVariationSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, (OrderType)(2 - (i % 2)), tokenSource.Token);
                     });
                 }
             }
@@ -415,7 +415,7 @@ namespace Mzinga.Core.AI
 
         #region Principal Variation Search
 
-        private async Task<double?> PrincipalVariationSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, CancellationToken token)
+        private async Task<double?> PrincipalVariationSearchAsync(GameBoard gameBoard, int depth, double alpha, double beta, int color, OrderType orderType, CancellationToken token)
         {
             double alphaOriginal = alpha;
 
@@ -455,7 +455,7 @@ namespace Mzinga.Core.AI
 
             bool firstMove = true;
 
-            foreach (Move move in moves)
+            foreach (Move move in moves.GetEnumerableByOrderType(orderType))
             {
                 bool updateAlpha = false;
 
@@ -471,18 +471,18 @@ namespace Mzinga.Core.AI
                 if (firstMove)
                 {
                     // Full window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, orderType, token);
                     updateAlpha = true;
                     firstMove = false;
                 }
                 else
                 {
                     // Null window search
-                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, token);
+                    value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -alpha - double.Epsilon, -alpha, -color, orderType, token);
                     if (value.HasValue && value > alpha && value < beta)
                     {
                         // Research with full window
-                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, token);
+                        value = -1 * await PrincipalVariationSearchAsync(gameBoard, depth - 1, -beta, -alpha, -color, orderType, token);
                         updateAlpha = true;
                     }
                 }
