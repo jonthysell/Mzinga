@@ -462,10 +462,10 @@ namespace Mzinga.Trainer
         {
             if (TrainerSettings.MaxDepth >= 0)
             {
-                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth, 0);
+                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads);
             }
 
-            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime, 0);
+            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads);
         }
 
         public void Cull()
@@ -1031,7 +1031,7 @@ namespace Mzinga.Trainer
                     CancellationTokenSource cts = new CancellationTokenSource();
                     cts.CancelAfter(TrainerSettings.BattleTimeLimit);
 
-                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, 0, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, 0, cts.Token);
+                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token);
                     treeStrapTask.Wait();
 
                     // Update profile with final MetricWeights

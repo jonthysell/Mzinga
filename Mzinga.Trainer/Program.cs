@@ -175,6 +175,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-GameType              Base,Base+M,Base+L,Base+P,Base+ML,Base+MP,Base+LP,Base+MLP");
             Console.WriteLine("-TargetProfilePath     The target profile");
             Console.WriteLine("-FindPuzzleCandidates  Output puzzle candidates during battles");
+            Console.WriteLine("-MaxHelperThreads      The maximum helper threads for each AI to use");
             Console.WriteLine();
         }
 
@@ -351,6 +352,10 @@ namespace Mzinga.Trainer
                     case "findpuzzlecandidates":
                     case "fpc":
                         trainerSettings.FindPuzzleCandidates = bool.Parse(args[++i]);
+                        break;
+                    case "maxhelperthreads":
+                    case "mht":
+                        trainerSettings.MaxHelperThreads = int.Parse(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));

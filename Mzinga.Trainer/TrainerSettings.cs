@@ -292,5 +292,7 @@ namespace Mzinga.Trainer
         private string _targetProfilePath = null;
 
         public bool FindPuzzleCandidates { get; set; } = false;
+
+        public int MaxHelperThreads { get; set; } = 0;
     }
 }
