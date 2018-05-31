@@ -602,6 +602,9 @@ namespace Mzinga.Core
         {
             bool pullbugEnabled = EnumUtils.IsEnabled(BugType.Pillbug, ExpansionPieces);
 
+            MoveSet pillbugMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
+            MoveSet mosquitoMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
+
             foreach (PieceName pieceName in CurrentTurnPieces)
             {
                 Piece targetPiece = GetPiece(pieceName);
@@ -624,10 +627,6 @@ namespace Mzinga.Core
 
                     if (pullbugEnabled)
                     {
-                        // Check if the pillbug/mosquito can move the current piece
-                        MoveSet pillbugMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
-                        MoveSet mosquitoMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
-
                         if (targetPiece.BugType == BugType.Pillbug)
                         {
                             // Check if the current player's mosquito can move it
