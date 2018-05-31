@@ -169,6 +169,24 @@ namespace Mzinga.Core
             return _moves.Contains(move);
         }
 
+        public bool Contains(PieceName pieceName)
+        {
+            if (pieceName == PieceName.INVALID)
+            {
+                throw new ArgumentOutOfRangeException("pieceName");
+            }
+
+            foreach (Move move in _moves)
+            {
+                if (move.PieceName == pieceName)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void Lock()
         {
             IsLocked = true;

@@ -563,9 +563,8 @@ namespace Mzinga.Core
 
         public BoardMetrics GetBoardMetrics()
         {
+            _boardMetrics.Reset();
             _boardMetrics.BoardState = BoardState;
-            _boardMetrics.PiecesInPlay = 0;
-            _boardMetrics.PiecesInHand = 0;
 
             // Get the metrics for the current turn
             SetCurrentPlayerMetrics();
@@ -601,6 +600,8 @@ namespace Mzinga.Core
 
         private void SetCurrentPlayerMetrics()
         {
+            bool pullbugEnabled = EnumUtils.IsEnabled(BugType.Pillbug, ExpansionPieces);
+
             foreach (PieceName pieceName in CurrentTurnPieces)
             {
                 Piece targetPiece = GetPiece(pieceName);
@@ -619,9 +620,33 @@ namespace Mzinga.Core
                     }
 
                     // Move metrics
-                    int totalMoves = CountNoisyMoves(GetValidMoves(targetPiece.PieceName), out _boardMetrics[pieceName].NoisyMoveCount, out _boardMetrics[pieceName].QuietMoveCount);
+                    bool isPinned = IsPinned(pieceName, out _boardMetrics[pieceName].NoisyMoveCount, out _boardMetrics[pieceName].QuietMoveCount);
 
-                    _boardMetrics[pieceName].IsPinned = totalMoves == 0 ? 1 : 0;
+                    if (pullbugEnabled)
+                    {
+                        // Check if the pillbug/mosquito can move the current piece
+                        MoveSet pillbugMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
+                        MoveSet mosquitoMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
+
+                        if (targetPiece.BugType == BugType.Pillbug)
+                        {
+                            // Check if the current player's mosquito can move it
+                            isPinned = isPinned && !mosquitoMoves.Contains(pieceName);
+
+                        }
+                        else if (targetPiece.BugType == BugType.Mosquito)
+                        {
+                            // Check if the current player's pillbug can move it
+                            isPinned = isPinned && !pillbugMoves.Contains(pieceName);
+                        }
+                        else
+                        {
+                            // Check if the current player's pillbug or mosquito can move it
+                            isPinned = isPinned && !mosquitoMoves.Contains(pieceName) && !pillbugMoves.Contains(pieceName);
+                        }
+                    }
+
+                    _boardMetrics[pieceName].IsPinned = isPinned ? 1 : 0;
                     _boardMetrics[pieceName].IsCovered = targetPiece.InPlay && null != targetPiece.PieceAbove ? 1 : 0;
 
                     CountNeighbors(targetPiece, out _boardMetrics[pieceName].FriendlyNeighborCount, out _boardMetrics[pieceName].EnemyNeighborCount);
@@ -663,13 +688,20 @@ namespace Mzinga.Core
             return friendlyCount + enemyCount;
         }
 
-        private int CountNoisyMoves(MoveSet moves, out int noisyCount, out int quietCount)
+        private bool IsPinned(PieceName pieceName, out int noisyCount, out int quietCount)
         {
             noisyCount = 0;
             quietCount = 0;
 
-            foreach (Move move in moves)
+            bool isPinned = true;
+
+            foreach (Move move in GetValidMoves(pieceName))
             {
+                if (move.PieceName == pieceName)
+                {
+                    isPinned = false;
+                }
+
                 if (IsNoisyMove(move))
                 {
                     noisyCount++;
@@ -680,7 +712,7 @@ namespace Mzinga.Core
                 }
             }
 
-            return noisyCount + quietCount;
+            return isPinned;
         }
 
         public bool IsNoisyMove(Move move)
@@ -735,13 +767,8 @@ namespace Mzinga.Core
             return moves;
         }
 
-        public MoveSet GetValidMoves(PieceName pieceName)
+        private MoveSet GetValidMoves(PieceName pieceName)
         {
-            if (pieceName == PieceName.INVALID)
-            {
-                throw new ArgumentOutOfRangeException("pieceName");
-            }
-
             if (null == _cachedValidMovesByPiece)
             {
                 _cachedValidMovesByPiece = new MoveSet[EnumUtils.NumPieceNames];

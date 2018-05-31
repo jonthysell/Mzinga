@@ -50,5 +50,23 @@ namespace Mzinga.Core
                 _pieceMetrics[i] = new PieceMetrics();
             }
         }
+
+        public void Reset()
+        {
+            BoardState = BoardState.NotStarted;
+            PiecesInPlay = 0;
+            PiecesInHand = 0;
+
+            for (int i = 0; i < _pieceMetrics.Length; i++)
+            {
+                _pieceMetrics[i].InPlay = 0;
+                _pieceMetrics[i].IsPinned = 0;
+                _pieceMetrics[i].IsCovered = 0;
+                _pieceMetrics[i].NoisyMoveCount = 0;
+                _pieceMetrics[i].QuietMoveCount = 0;
+                _pieceMetrics[i].FriendlyNeighborCount = 0;
+                _pieceMetrics[i].EnemyNeighborCount = 0;
+            }
+        }
     }
 }
