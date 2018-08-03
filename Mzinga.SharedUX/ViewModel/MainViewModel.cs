@@ -29,13 +29,12 @@ using System.Collections.Generic;
 using System.Text;
 
 using Mzinga.Core;
-using Mzinga.Viewer.Resources;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
@@ -51,7 +50,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return AppViewModel.ProgramTitle;
+                return AppVM.ProgramTitle;
             }
         }
 
@@ -72,7 +71,9 @@ namespace Mzinga.Viewer.ViewModel
                 UndoLastMove.RaiseCanExecuteChanged();
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
-                CheckForUpdatesAsync.RaiseCanExecuteChanged();
+#if WINDOWS_WPF
+            CheckForUpdatesAsync.RaiseCanExecuteChanged();
+#endif
             }
         }
         private bool _isIdle = true;
@@ -153,7 +154,7 @@ namespace Mzinga.Viewer.ViewModel
                         string countString = count.ToString() + ". ";
                         if (isWhite)
                         {
-                            sb.AppendFormat(Strings.BoardHistoryItemFormat, countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
+                            sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
                         }
                         else
                         {
@@ -164,7 +165,7 @@ namespace Mzinga.Viewer.ViewModel
                                 spacing += " ";
                             }
 
-                            sb.AppendFormat(Strings.BoardHistoryItemFormat, spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
+                            sb.AppendFormat("{0}{1}", spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
                             count++;
                         }
 
@@ -183,23 +184,23 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                string state = Strings.GameStateNoGame;
+                string state = "A game has not been started.";
 
                 if (null != Board)
                 {
                     switch (Board.BoardState)
                     {
                         case BoardState.Draw:
-                            state = Strings.GameStateDraw;
+                            state = "The game is a draw.";
                             break;
                         case BoardState.WhiteWins:
-                            state = Strings.GameStateWhiteWon;
+                            state = "White has won the game.";
                             break;
                         case BoardState.BlackWins:
-                            state = Strings.GameStateBlackWon;
+                            state = "Black has won the game.";
                             break;
                         default:
-                            state = (Board.CurrentTurnColor == Color.White) ? Strings.GameStateWhitesTurn : Strings.GameStateBlacksTurn;
+                            state = (Board.CurrentTurnColor == PlayerColor.White) ? "It's white's turn." : "It's black's turn.";
                             break;
                     }
                 }
@@ -501,6 +502,7 @@ namespace Mzinga.Viewer.ViewModel
         }
         private RelayCommand _showViewerConfig = null;
 
+#if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync
         {
             get
@@ -510,7 +512,7 @@ namespace Mzinga.Viewer.ViewModel
                     try
                     {
                         IsIdle = false;
-                        await UpdateUtils.UpdateCheckAsync(true, true);
+                        await Viewer.UpdateUtils.UpdateCheckAsync(true, true);
                     }
                     catch (Exception ex)
                     {
@@ -522,11 +524,12 @@ namespace Mzinga.Viewer.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && !UpdateUtils.IsCheckingforUpdate;
+                    return IsIdle && !Viewer.UpdateUtils.IsCheckingforUpdate;
                 }));
             }
         }
         private RelayCommand _checkForUpdatesAsync = null;
+#endif
 
         public MainViewModel()
         {
@@ -544,13 +547,13 @@ namespace Mzinga.Viewer.ViewModel
                     switch (Board.BoardState)
                     {
                         case BoardState.WhiteWins:
-                            Messenger.Default.Send(new InformationMessage(Strings.GameStateWhiteWon, Strings.GameOverTitle));
+                            Messenger.Default.Send(new InformationMessage("White has won the game.", "Game Over"));
                             break;
                         case BoardState.BlackWins:
-                            Messenger.Default.Send(new InformationMessage(Strings.GameStateBlackWon, Strings.GameOverTitle));
+                            Messenger.Default.Send(new InformationMessage("Black has won the game.", "Game Over"));
                             break;
                         case BoardState.Draw:
-                            Messenger.Default.Send(new InformationMessage(Strings.GameStateDraw, Strings.GameOverTitle));
+                            Messenger.Default.Send(new InformationMessage("The game is a draw.", "Game Over"));
                             break;
                     }
                 });

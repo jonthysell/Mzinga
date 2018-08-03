@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>766f35b9-dcfc-4358-8a3a-68e61c6d3baa</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Mzinga.SharedUX</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BoolToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnumMatchToBooleanConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IdleBoolToWaitCursorConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)BoardHistoryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineConsoleViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EngineOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineOptionsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EngineWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ExceptionUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ExceptionViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\InformationViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InternalEngineWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Messages.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NotationUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewerBoard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewerConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewerConfigViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)XamlBoardRenderer.cs" />
+  </ItemGroup>
+</Project>

@@ -29,7 +29,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace Mzinga.Viewer.ViewModel
+using Mzinga.SharedUX;
+
+namespace Mzinga.Viewer
 {
     public class CLIEngineWrapper : EngineWrapper
     {

@@ -1,10 +1,10 @@
 ﻿// 
-// BoolToVisibilityConverter.cs
+// EnumMatchToBooleanConverter.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,48 +25,56 @@
 // THE SOFTWARE.
 
 using System;
+
+#if WINDOWS_UWP
+using Windows.UI.Xaml.Data;
+#elif WINDOWS_WPF
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Markup;
+#endif
 
-namespace Mzinga.Viewer
+// Class adapted from http://wpftutorial.net/RadioButton.html
+
+namespace Mzinga.SharedUX
 {
-    public class BoolToVisibilityConverter : MarkupExtension, IValueConverter
+    public class EnumMatchToBooleanConverter : IValueConverter
     {
-        public override object ProvideValue(IServiceProvider serviceProvider)
-        {
-            return _converter ?? (_converter = new BoolToVisibilityConverter());
-        }
-        private static BoolToVisibilityConverter _converter = null;
-
-        #region IValueConverter Members
-
+#if WINDOWS_UWP
+        public object Convert(object value, Type targetType, object parameter, string language)
+#else
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
         {
-            if (null != value as bool?)
+            if (null == value || null == parameter)
             {
-                if (!(bool)value)
-                {
-                    return Visibility.Collapsed;
-                }
+                return false;
             }
 
-            return Visibility.Visible;
+            string checkValue = value.ToString();
+            string targetValue = parameter.ToString();
+
+            return checkValue.Equals(targetValue, StringComparison.OrdinalIgnoreCase);
         }
 
+#if WINDOWS_UWP
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
         {
-            Visibility visibility = (Visibility)value;
-
-            if (visibility == Visibility.Visible)
+            if (null == value || null == parameter)
             {
-                return true;
+                return null;
             }
 
-            return false;
-        }
+            bool? useValue = value as bool?;
 
-        #endregion
-    }
+            if (useValue.HasValue && useValue.Value)
+            {
+                return Enum.Parse(targetType, parameter.ToString());
+            }
+
+            return null;
+        }
+    } 
 }

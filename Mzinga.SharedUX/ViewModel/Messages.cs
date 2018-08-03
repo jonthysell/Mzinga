@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using GalaSoft.MvvmLight.Messaging;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class ExceptionMessage : MessageBase
     {

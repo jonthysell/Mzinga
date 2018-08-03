@@ -28,10 +28,20 @@ using System;
 using System.IO;
 using System.Xml;
 
-namespace Mzinga.Viewer.ViewModel
+using Mzinga.SharedUX.ViewModel;
+
+namespace Mzinga.SharedUX
 {
     public class ViewerConfig
     {
+        public AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+        }
+
         public EngineType EngineType
         {
             get
@@ -199,7 +209,7 @@ namespace Mzinga.Viewer.ViewModel
             {
                 writer.WriteStartElement("Mzinga.Viewer");
 
-                writer.WriteAttributeString("version", AppViewModel.FullVersion);
+                writer.WriteAttributeString("version", AppVM.FullVersion);
                 writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
                 writer.WriteElementString("EngineType", EngineType.ToString());

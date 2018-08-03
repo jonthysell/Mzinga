@@ -28,7 +28,7 @@ using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
 
-using Mzinga.Viewer.ViewModel;
+using Mzinga.SharedUX.ViewModel;
 
 namespace Mzinga.Viewer
 {

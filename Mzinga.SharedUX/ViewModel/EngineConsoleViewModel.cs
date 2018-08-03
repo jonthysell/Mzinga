@@ -29,9 +29,7 @@ using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-using Mzinga.Viewer.Resources;
-
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class EngineConsoleViewModel : ViewModelBase
     {
@@ -47,7 +45,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return Strings.EngineConsoleTitle;
+                return "Engine Console";
             }
         }
 

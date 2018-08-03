@@ -1,5 +1,5 @@
 ﻿// 
-// InternalEngineWrapper.cs
+// BoolToVisibilityConverter.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,52 +25,53 @@
 // THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 
-using Mzinga.Engine;
+#if WINDOWS_UWP
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
+#elif WINDOWS_WPF
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+#endif
 
-namespace Mzinga.Viewer.ViewModel
+#if WINDOWS_UWP || WINDOWS_WPF
+namespace Mzinga.SharedUX
 {
-    public class InternalEngineWrapper : EngineWrapper
+    public class BoolToVisibilityConverter : IValueConverter
     {
-        private string _id;
-        private GameEngine _gameEngine;
-        private GameEngineConfig _gameEngineConfig;
-
-        public InternalEngineWrapper(string id) : base()
+#if WINDOWS_UWP
+        public object Convert(object value, Type targetType, object parameter, string language)
+#else
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
         {
-            _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException("id");
-            _gameEngineConfig = GameEngineConfig.GetDefaultConfig();
-        }
-
-        public override void StartEngine()
-        {
-            IsIdle = false;
-
-            _gameEngine = new GameEngine(_id, GameEngineConfig.GetDefaultConfig(), (format, args) =>
+            if (null != value as bool?)
             {
-                OnEngineOutput(string.Format(format, args));
-            });
-
-            _gameEngine.ParseCommand("info");
-        }
-
-        public override void StopEngine()
-        {
-            _gameEngine.TryCancelAsyncCommand();
-            _gameEngine.ParseCommand("exit");
-            _gameEngine = null;
-        }
-
-        protected override void OnEngineInput(string command)
-        {
-            Task.Run(() =>
-            {
-                lock (_gameEngine)
+                if (!(bool)value)
                 {
-                    _gameEngine.ParseCommand(command);
+                    return Visibility.Collapsed;
                 }
-            });
+            }
+
+            return Visibility.Visible;
+        }
+
+#if WINDOWS_UWP
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+#else
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
+        {
+            Visibility visibility = (Visibility)value;
+
+            if (visibility == Visibility.Visible)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
+#endif

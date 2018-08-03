@@ -217,7 +217,9 @@ namespace Mzinga.Core
         public const char MoveStringSeparator = ';';
     }
 
+#if !WINDOWS_UWP
     [Serializable]
+#endif
     public class MoveSetIsLockedException : Exception
     {
         public MoveSetIsLockedException() : base("MoveSet is locked and cannot be modified.") { }

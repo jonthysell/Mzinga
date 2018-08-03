@@ -267,7 +267,7 @@ namespace Mzinga.Core.AI
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
 
-            int color = gameBoard.CurrentTurnColor == Color.White ? 1 : -1;
+            int color = gameBoard.CurrentTurnColor == PlayerColor.White ? 1 : -1;
 
             double alphaOriginal = alpha;
 
@@ -387,7 +387,7 @@ namespace Mzinga.Core.AI
             if (depth > 1 && threads > 0)
             {
                 helperThreads = new Task[threads];
-                int color = gameBoard.CurrentTurnColor == Color.White ? 1 : -1;
+                int color = gameBoard.CurrentTurnColor == PlayerColor.White ? 1 : -1;
 
                 for (int i = 0; i < helperThreads.Length; i++)
                 {
@@ -708,7 +708,7 @@ namespace Mzinga.Core.AI
             {
                 BugType bugType = EnumUtils.GetBugType(pieceName);
 
-                double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
+                double colorValue = EnumUtils.GetColor(pieceName) == PlayerColor.White ? 1.0 : -1.0;
 
                 score += colorValue * metricWeights.Get(bugType, BugTypeWeight.InPlayWeight) * boardMetrics[pieceName].InPlay;
                 score += colorValue * metricWeights.Get(bugType, BugTypeWeight.IsPinnedWeight) * boardMetrics[pieceName].IsPinned;
@@ -822,7 +822,7 @@ namespace Mzinga.Core.AI
             TranspositionTableEntry tEntry;
             if (newKey && _transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
             {
-                double colorValue = gameBoard.CurrentTurnColor == Color.White ? 1.0 : -1.0;
+                double colorValue = gameBoard.CurrentTurnColor == PlayerColor.White ? 1.0 : -1.0;
 
                 double boardScore = colorValue * TruncateBounds(CalculateBoardScore(gameBoard));
 
@@ -882,7 +882,7 @@ namespace Mzinga.Core.AI
             {
                 BugType bugType = EnumUtils.GetBugType(pieceName);
 
-                double colorValue = EnumUtils.GetColor(pieceName) == Color.White ? 1.0 : -1.0;
+                double colorValue = EnumUtils.GetColor(pieceName) == PlayerColor.White ? 1.0 : -1.0;
 
                 gradient.Set(bugType, BugTypeWeight.InPlayWeight, gradient.Get(bugType, BugTypeWeight.InPlayWeight) + colorValue * boardMetrics[pieceName].InPlay);
                 gradient.Set(bugType, BugTypeWeight.IsPinnedWeight, gradient.Get(bugType, BugTypeWeight.IsPinnedWeight) + colorValue * boardMetrics[pieceName].IsPinned);

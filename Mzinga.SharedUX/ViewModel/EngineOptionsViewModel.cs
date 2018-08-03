@@ -28,12 +28,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using Mzinga.Viewer.Resources;
-
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class EngineOptionsViewModel : ViewModelBase
     {
@@ -41,7 +39,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return Strings.EngineOptionsTitle;
+                return "Engine Options";
             }
         }
 

@@ -92,7 +92,7 @@
         <File Source="$(var.Mzinga.Viewer.TargetDir)\GalaSoft.MvvmLight.Platform.dll" />
       </Component>
       <Component>
-        <File Source="$(var.Mzinga.Viewer.TargetDir)\Microsoft.Practices.ServiceLocation.dll" />
+        <File Source="$(var.Mzinga.Viewer.TargetDir)\CommonServiceLocator.dll" />
       </Component>
       <Component>
         <File Source="$(var.Mzinga.Viewer.TargetDir)\System.Windows.Interactivity.dll" />

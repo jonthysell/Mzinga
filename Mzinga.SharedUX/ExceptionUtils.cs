@@ -1,10 +1,10 @@
 ﻿// 
-// IdleBoolToWaitCursorConverter.cs
+// ExceptionUtils.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,44 +25,29 @@
 // THE SOFTWARE.
 
 using System;
-using System.Globalization;
-using System.Windows.Input;
-using System.Windows.Data;
-using System.Windows.Markup;
 
-namespace Mzinga.Viewer
+using GalaSoft.MvvmLight.Messaging;
+
+using Mzinga.SharedUX.ViewModel;
+
+namespace Mzinga.SharedUX
 {
-    public class IdleBoolToWaitCursorConverter : MarkupExtension, IValueConverter
+    public class ExceptionUtils
     {
-        private static IdleBoolToWaitCursorConverter _converter = null;
-        public override object ProvideValue(IServiceProvider serviceProvider)
+        public static AppViewModel AppVM
         {
-            if (_converter == null)
+            get
             {
-                _converter = new IdleBoolToWaitCursorConverter();
+                return AppViewModel.Instance;
             }
-            return _converter;
         }
 
-        #region IValueConverter Members
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public static void HandleException(Exception exception)
         {
-            if (null != value as bool?)
+            AppVM.DoOnUIThread(() =>
             {
-                if (!(bool)value)
-                {
-                    return Cursors.Wait;
-                }
-            }
-            return Cursors.Arrow;
+                Messenger.Default.Send(new ExceptionMessage(exception));
+            });
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value;
-        }
-
-        #endregion
     }
 }

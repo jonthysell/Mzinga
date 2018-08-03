@@ -1,10 +1,10 @@
 ﻿// 
-// ExceptionUtils.cs
+// BoardHistoryExtensions.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,27 +25,34 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 
-using GalaSoft.MvvmLight.Messaging;
+using Mzinga.Core;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX
 {
-    public class ExceptionUtils
+    static class BoardHistoryExtensions
     {
-        public static AppViewModel AppVM
+        public static IEnumerable<Tuple<ViewerBoard, BoardHistoryItem>>EnumerateWithBoard(this BoardHistory boardHistory, ViewerBoard currentBoard)
         {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-        }
+            // Create a copy of the current board
+            ViewerBoard board = new ViewerBoard(currentBoard.ToString());
 
-        public static void HandleException(Exception exception)
-        {
-            AppVM.DoOnUIThread(() =>
+            List<BoardHistoryItem> reversedHistory = new List<BoardHistoryItem>(boardHistory);
+            reversedHistory.Reverse();
+
+            // "Undo" moves in the boardHistory
+            foreach (BoardHistoryItem item in reversedHistory)
             {
-                Messenger.Default.Send(new ExceptionMessage(exception));
-            });
+                board.SimulateUndo(item);
+            }
+
+            // "Play" forward returning the board state along the way
+            foreach (BoardHistoryItem item in boardHistory)
+            {
+                yield return new Tuple<ViewerBoard, BoardHistoryItem>(board, item);
+                board.SimulatePlay(item.Move);
+            }
         }
     }
 }

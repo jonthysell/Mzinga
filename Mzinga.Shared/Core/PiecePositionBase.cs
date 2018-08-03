@@ -52,7 +52,7 @@ namespace Mzinga.Core
 
         public Position Position { get; protected set; }
 
-        public Color Color { get; private set; }
+        public PlayerColor Color { get; private set; }
         public BugType BugType { get; private set; }
 
         protected static void Parse(string pieceString, out PieceName pieceName, out Position position)

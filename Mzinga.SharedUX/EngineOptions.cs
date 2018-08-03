@@ -28,7 +28,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX
 {
     public class EngineOptions : IEnumerable<EngineOption>
     {

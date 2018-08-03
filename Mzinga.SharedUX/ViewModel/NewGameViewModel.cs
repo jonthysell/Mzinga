@@ -27,12 +27,11 @@
 using System;
 
 using Mzinga.Core;
-using Mzinga.Viewer.Resources;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class NewGameViewModel : ViewModelBase
     {
@@ -40,7 +39,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return Strings.NewGameTitle;
+                return "New Game";
             }
         }
 

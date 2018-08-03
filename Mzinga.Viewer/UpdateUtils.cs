@@ -36,7 +36,8 @@ using System.Xml;
 
 using GalaSoft.MvvmLight.Messaging;
 
-using Mzinga.Viewer.ViewModel;
+using Mzinga.SharedUX;
+using Mzinga.SharedUX.ViewModel;
 
 namespace Mzinga.Viewer
 {
@@ -70,7 +71,7 @@ namespace Mzinga.Viewer
 
                 ReleaseChannel targetReleaseChannel = GetReleaseChannel();
 
-                ulong maxVersion = LongVersion(AppViewModel.FullVersion);
+                ulong maxVersion = LongVersion(AppVM.FullVersion);
 
                 InstallerInfo latestVersion = null;
 

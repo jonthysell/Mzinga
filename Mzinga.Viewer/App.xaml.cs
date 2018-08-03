@@ -26,10 +26,12 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
-using Mzinga.Viewer.ViewModel;
+using Mzinga.SharedUX;
+using Mzinga.SharedUX.ViewModel;
 
 namespace Mzinga.Viewer
 {
@@ -52,10 +54,20 @@ namespace Mzinga.Viewer
         {
             MessageHandlers.RegisterMessageHandlers(this);
 
-            AppViewModel.Init(LoadConfig(configFile), (action) =>
+            AppViewModelParameters parameters = new AppViewModelParameters()
             {
-                Dispatcher.Invoke(action);
-            });
+                ProgramTitle = string.Format("{0} v{1}", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version.ToString()),
+                FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                ViewerConfig = LoadConfig(configFile),
+                DoOnUIThread = (action) => { Dispatcher.Invoke(action); }
+            };
+
+            if (parameters.ViewerConfig.EngineType == EngineType.CommandLine)
+            {
+                parameters.EngineWrapper = new CLIEngineWrapper(parameters.ViewerConfig.EngineCommandLine);
+            }
+
+            AppViewModel.Init(parameters);
 
             Exit += App_Exit;
         }

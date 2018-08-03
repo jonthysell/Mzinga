@@ -48,7 +48,7 @@ namespace Mzinga.Core
                 {
                     throw new ArgumentOutOfRangeException();
                 }
-                Color oldColor = CurrentTurnColor;
+                PlayerColor oldColor = CurrentTurnColor;
 
                 _currentTurn = value;
 
@@ -63,11 +63,11 @@ namespace Mzinga.Core
         }
         private int _currentTurn = 0;
 
-        public Color CurrentTurnColor
+        public PlayerColor CurrentTurnColor
         {
             get
             {
-                return (Color)(CurrentTurn % 2);
+                return (PlayerColor)(CurrentTurn % 2);
             }
         }
 
@@ -141,7 +141,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return CurrentTurnColor == Color.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
+                return CurrentTurnColor == PlayerColor.White ? EnumUtils.WhitePieceNames : EnumUtils.BlackPieceNames;
             }
         }
 
@@ -215,7 +215,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return ((CurrentTurnColor == Color.White && WhiteQueenInPlay) || (CurrentTurnColor == Color.Black && BlackQueenInPlay));
+                return ((CurrentTurnColor == PlayerColor.White && WhiteQueenInPlay) || (CurrentTurnColor == PlayerColor.Black && BlackQueenInPlay));
             }
         }
 
@@ -223,7 +223,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return ((CurrentTurnColor == Color.White && BlackQueenInPlay) || (CurrentTurnColor == Color.Black && WhiteQueenInPlay));
+                return ((CurrentTurnColor == PlayerColor.White && BlackQueenInPlay) || (CurrentTurnColor == PlayerColor.Black && WhiteQueenInPlay));
             }
         }
 
@@ -304,7 +304,7 @@ namespace Mzinga.Core
 
             string currentTurnColorString = currentTurnSplit[0];
 
-            Color currentTurnColor;
+            PlayerColor currentTurnColor;
             if (!Enum.TryParse(currentTurnColorString, out currentTurnColor))
             {
                 throw new ArgumentException("Couldn't parse current turn color.", "boardString");
@@ -602,8 +602,8 @@ namespace Mzinga.Core
         {
             bool pullbugEnabled = EnumUtils.IsEnabled(BugType.Pillbug, ExpansionPieces);
 
-            MoveSet pillbugMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
-            MoveSet mosquitoMoves = CurrentTurnColor == Color.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
+            MoveSet pillbugMoves = CurrentTurnColor == PlayerColor.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
+            MoveSet mosquitoMoves = CurrentTurnColor == PlayerColor.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
 
             foreach (PieceName pieceName in CurrentTurnPieces)
             {
@@ -725,7 +725,7 @@ namespace Mzinga.Core
             {
                 _cachedEnemyQueenNeighbors = new HashSet<Position>();
 
-                Position enemyQueenPosition = GetPiecePosition(CurrentTurnColor == Color.White ? PieceName.BlackQueenBee : PieceName.WhiteQueenBee);
+                Position enemyQueenPosition = GetPiecePosition(CurrentTurnColor == PlayerColor.White ? PieceName.BlackQueenBee : PieceName.WhiteQueenBee);
 
                 if (null != enemyQueenPosition)
                 {
@@ -803,14 +803,14 @@ namespace Mzinga.Core
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
                 {
-                    if (CurrentTurn == 0 && targetPiece.Color == Color.White && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
+                    if (CurrentTurn == 0 && targetPiece.Color == PlayerColor.White && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
                     {
                         // First move must be at the origin and not the White Queen Bee
                         MoveSet validMoves = new MoveSet();
                         validMoves.Add(new Move(targetPiece.PieceName, Position.Origin));
                         return validMoves;
                     }
-                    else if (CurrentTurn == 1 && targetPiece.Color == Color.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
+                    else if (CurrentTurn == 1 && targetPiece.Color == PlayerColor.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
                     {
                         MoveSet validMoves = new MoveSet();
                         // Second move must be around the origin and not the Black Queen Bee
@@ -892,7 +892,7 @@ namespace Mzinga.Core
         {
             MoveSet validMoves = new MoveSet();
 
-            Color targetColor = CurrentTurnColor;
+            PlayerColor targetColor = CurrentTurnColor;
 
             if (targetPiece.Color != targetColor)
             {

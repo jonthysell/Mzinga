@@ -139,7 +139,7 @@ namespace Mzinga.Engine
             int intValue;
             if (int.TryParse(rawValue, out intValue))
             {
-                TranspositionTableSizeMB = Math.Max(MinTranspositionTableSizeMB, Math.Min(intValue, Environment.Is64BitProcess ? MaxTranspositionTableSizeMB64Bit : MaxTranspositionTableSizeMB32Bit));
+                TranspositionTableSizeMB = Math.Max(MinTranspositionTableSizeMB, Math.Min(intValue, MaxTranspositionTableSizeMB));
             }
         }
 
@@ -147,7 +147,7 @@ namespace Mzinga.Engine
         {
             type = "int";
             value = (TranspositionTableSizeMB.HasValue ? TranspositionTableSizeMB.Value : TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
-            values = string.Format("{0};{1}", MinTranspositionTableSizeMB, Environment.Is64BitProcess ? MaxTranspositionTableSizeMB64Bit : MaxTranspositionTableSizeMB32Bit);
+            values = string.Format("{0};{1}", MinTranspositionTableSizeMB, MaxTranspositionTableSizeMB);
         }
 
         public void ParseMaxHelperThreadsValue(string rawValue)
@@ -268,8 +268,7 @@ namespace Mzinga.Engine
         }
 
         private const int MinTranspositionTableSizeMB = 1;
-        private const int MaxTranspositionTableSizeMB32Bit = 1024;
-        private const int MaxTranspositionTableSizeMB64Bit = 2048;
+        private const int MaxTranspositionTableSizeMB = 1024;
 
         private const int MinMaxHelperThreads = 0;
         private static int MaxMaxHelperThreads { get { return (Environment.ProcessorCount / 2) - 1; } }

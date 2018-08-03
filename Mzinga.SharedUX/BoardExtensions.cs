@@ -28,7 +28,7 @@ using System;
 
 using Mzinga.Core;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX
 {
     static class BoardExtensions
     {

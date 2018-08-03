@@ -1,10 +1,10 @@
 ﻿// 
-// ExceptionViewModel.cs
+// InformationViewModel.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,37 +29,43 @@ using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
-    public class ExceptionViewModel : ViewModelBase
+    public class InformationViewModel : ViewModelBase
     {
         public string Title
         {
             get
             {
-                if (Exception is InvalidMoveException)
+                return _title;
+            }
+            private set
+            {
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "Invalid Move";
+                    throw new ArgumentNullException();
                 }
-                return "Error";
+                _title = value;
             }
         }
+        private string _title;
 
         public string Message
         {
             get
             {
-                return Exception.Message;
+                return _message;
             }
-        }
-
-        public string Details
-        {
-            get
+            private set
             {
-                return string.Format(Resources.Strings.ExceptionViewModelDetailsFormat, Exception.ToString());
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentNullException();
+                }
+                _message = value;
             }
         }
+        private string _message;
 
         public RelayCommand Accept
         {
@@ -80,28 +86,20 @@ namespace Mzinga.Viewer.ViewModel
         }
         private RelayCommand _accept = null;
 
-        public Exception Exception
-        {
-            get
-            {
-                return _exception;
-            }
-            private set
-            {
-                if (null == value)
-                {
-                    throw new ArgumentNullException();
-                }
-                _exception = value;
-            }
-        }
-        private Exception _exception;
-
         public event EventHandler RequestClose;
 
-        public ExceptionViewModel(Exception exception)
+        public Action Callback { get; private set; }
+
+        public InformationViewModel(string message, string title, Action callback = null)
         {
-            Exception = exception;
+            Title = title;
+            Message = message;
+            Callback = callback;
+        }
+
+        public void ProcessClose()
+        {
+            Callback?.Invoke();
         }
     }
 }

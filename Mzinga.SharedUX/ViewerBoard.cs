@@ -26,7 +26,7 @@
 
 using Mzinga.Core;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX
 {
     public class ViewerBoard : Board
     {

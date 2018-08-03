@@ -378,7 +378,7 @@ namespace Mzinga.Trainer
                         break;
                     }
 
-                    Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == Color.White ? whiteAI : blackAI);
+                    Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == PlayerColor.White ? whiteAI : blackAI);
                     gameBoard.Play(move);
                 }
             }

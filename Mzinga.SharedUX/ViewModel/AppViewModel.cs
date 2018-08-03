@@ -25,35 +25,18 @@
 // THE SOFTWARE.
 
 using System;
-using System.Reflection;
 
 using GalaSoft.MvvmLight;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
-    public delegate void DoOnUIThread(Action action);
-
     public class AppViewModel : ViewModelBase
     {
         public static AppViewModel Instance { get; private set; }
 
-        public static string ProgramTitle
-        {
-            get
-            {
-                AssemblyName name = Assembly.GetEntryAssembly().GetName();
-                return string.Format("{0} v{1}", name.Name, name.Version.ToString());
-            }
-        }
+        public string ProgramTitle { get; private set;  }
 
-        public static string FullVersion
-        {
-            get
-            {
-                AssemblyName name = Assembly.GetEntryAssembly().GetName();
-                return name.Version.ToString();
-            }
-        }
+        public string FullVersion { get; private set;  }
 
         public ViewerConfig ViewerConfig { get; private set; }
 
@@ -63,42 +46,32 @@ namespace Mzinga.Viewer.ViewModel
 
         public Exception EngineExceptionOnStart { get; private set; } = null;
 
-        public static void Init(ViewerConfig viewerConfig, DoOnUIThread doOnUIThread)
+        public static void Init(AppViewModelParameters parameters)
         {
             if (null != Instance)
             {
                 throw new NotSupportedException();
             }
 
-            Instance = new AppViewModel(viewerConfig, doOnUIThread);
+            Instance = new AppViewModel(parameters);
         }
 
-        private AppViewModel(ViewerConfig viewerConfig, DoOnUIThread doOnUIThread)
+        private AppViewModel(AppViewModelParameters parameters)
         {
-            if (null == viewerConfig)
+            if (null == parameters)
             {
-                throw new ArgumentNullException("viewerConfig");
+                throw new ArgumentNullException("parameters");
             }
 
-            if (null == doOnUIThread)
-            {
-                throw new ArgumentNullException("doOnUIThread");
-            }
-
-            ViewerConfig = viewerConfig;
-
-            DoOnUIThread = doOnUIThread;
+            ProgramTitle = parameters.ProgramTitle;
+            FullVersion = parameters.FullVersion;
+            ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException("viewerConfig");
+            DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException("doOnUIThread");
+            EngineWrapper = parameters.EngineWrapper;
 
             try
             {
-                // Try starting external engine
-                switch (ViewerConfig.EngineType)
-                {
-                    case EngineType.CommandLine:
-                        EngineWrapper = new CLIEngineWrapper(ViewerConfig.EngineCommandLine);
-                        EngineWrapper.StartEngine();
-                        break;
-                }
+                EngineWrapper?.StartEngine();
             }
             catch (Exception ex)
             {
@@ -114,5 +87,16 @@ namespace Mzinga.Viewer.ViewModel
                 EngineWrapper.StartEngine();
             }
         }
+    }
+
+    public delegate void DoOnUIThread(Action action);
+
+    public class AppViewModelParameters
+    {
+        public string ProgramTitle;
+        public string FullVersion;
+        public ViewerConfig ViewerConfig;
+        public DoOnUIThread DoOnUIThread;
+        public EngineWrapper EngineWrapper;
     }
 }

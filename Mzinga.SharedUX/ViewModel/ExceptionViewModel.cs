@@ -1,10 +1,10 @@
 ﻿// 
-// InformationViewModel.cs
+// ExceptionViewModel.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,43 +29,37 @@ using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
-    public class InformationViewModel : ViewModelBase
+    public class ExceptionViewModel : ViewModelBase
     {
         public string Title
         {
             get
             {
-                return _title;
-            }
-            private set
-            {
-                if (string.IsNullOrWhiteSpace(value))
+                if (Exception is InvalidMoveException)
                 {
-                    throw new ArgumentNullException();
+                    return "Invalid Move";
                 }
-                _title = value;
+                return "Error";
             }
         }
-        private string _title;
 
         public string Message
         {
             get
             {
-                return _message;
-            }
-            private set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentNullException();
-                }
-                _message = value;
+                return Exception.Message;
             }
         }
-        private string _message;
+
+        public string Details
+        {
+            get
+            {
+                return string.Format("Exception details: {0}", Exception.ToString());
+            }
+        }
 
         public RelayCommand Accept
         {
@@ -86,20 +80,28 @@ namespace Mzinga.Viewer.ViewModel
         }
         private RelayCommand _accept = null;
 
+        public Exception Exception
+        {
+            get
+            {
+                return _exception;
+            }
+            private set
+            {
+                if (null == value)
+                {
+                    throw new ArgumentNullException();
+                }
+                _exception = value;
+            }
+        }
+        private Exception _exception;
+
         public event EventHandler RequestClose;
 
-        public Action Callback { get; private set; }
-
-        public InformationViewModel(string message, string title, Action callback = null)
+        public ExceptionViewModel(Exception exception)
         {
-            Title = title;
-            Message = message;
-            Callback = callback;
-        }
-
-        public void ProcessClose()
-        {
-            Callback?.Invoke();
+            Exception = exception;
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿// 
-// EnumMatchToBooleanConverter.cs
+// IdleBoolToWaitCursorConverter.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,43 +25,52 @@
 // THE SOFTWARE.
 
 using System;
+
+#if WINDOWS_UWP
+using Windows.UI.Core;
+using Windows.UI.Xaml.Data;
+#elif WINDOWS_WPF
 using System.Globalization;
+using System.Windows.Input;
 using System.Windows.Data;
+#endif
 
-// Class adapted from http://wpftutorial.net/RadioButton.html
-
-namespace Mzinga.Viewer
+namespace Mzinga.SharedUX
 {
-    public class EnumMatchToBooleanConverter : IValueConverter
+    public class IdleBoolToWaitCursorConverter : IValueConverter
     {
+#if WINDOWS_UWP
+        public object Convert(object value, Type targetType, object parameter, string language)
+#else
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
         {
-            if (null == value || null == parameter)
+            if (null != value as bool?)
             {
-                return false;
+                if (!(bool)value)
+                {
+#if WINDOWS_UWP
+                    return new CoreCursor(CoreCursorType.Wait, 0);
+#elif WINDOWS_WPF
+                    return Cursors.Wait;
+#endif
+                }
             }
 
-            string checkValue = value.ToString();
-            string targetValue = parameter.ToString();
-
-            return checkValue.Equals(targetValue, StringComparison.InvariantCultureIgnoreCase);
+#if WINDOWS_UWP
+            return new CoreCursor(CoreCursorType.Arrow, 0);
+#elif WINDOWS_WPF
+            return Cursors.Arrow;
+#endif
         }
 
+#if WINDOWS_UWP
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+#else
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+#endif
         {
-            if (null == value || null == parameter)
-            {
-                return null;
-            }
-
-            bool? useValue = value as bool?;
-
-            if (useValue.HasValue && useValue.Value)
-            {
-                return Enum.Parse(targetType, parameter.ToString());
-            }
-
-            return null;
+            return value;
         }
-    } 
+    }
 }

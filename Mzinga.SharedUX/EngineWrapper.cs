@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 
 using Mzinga.Core;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX
 {
     public abstract class EngineWrapper
     {
@@ -116,8 +116,8 @@ namespace Mzinga.Viewer.ViewModel
             get
             {
                 return (null != Board &&
-                        ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
-                         (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
+                        ((Board.CurrentTurnColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
+                         (Board.CurrentTurnColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
             }
         }
 
@@ -126,8 +126,8 @@ namespace Mzinga.Viewer.ViewModel
             get
             {
                 return (GameInProgress &&
-                        ((Board.CurrentTurnColor == Color.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
-                         (Board.CurrentTurnColor == Color.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)));
+                        ((Board.CurrentTurnColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
+                         (Board.CurrentTurnColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)));
             }
         }
 
@@ -767,13 +767,13 @@ namespace Mzinga.Viewer.ViewModel
             _timedCommandCTS = new CancellationTokenSource();
             CancellationToken token = _timedCommandCTS.Token;
 
-            _timedCommandTask = Task.Run(() =>
+            _timedCommandTask = Task.Run(async () =>
             {
                 Stopwatch sw = Stopwatch.StartNew();
                 while (sw.Elapsed <= duration && !token.IsCancellationRequested)
                 {
                     OnTimedCommandProgressUpdated(true, sw.Elapsed.TotalMilliseconds / duration.TotalMilliseconds);
-                    Thread.Sleep(100);
+                    await Task.Yield();
                 }
                 OnTimedCommandProgressUpdated(true, 1.0);
             }, token);

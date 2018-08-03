@@ -30,7 +30,7 @@ using System.Text;
 
 using GalaSoft.MvvmLight;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public abstract class ObservableEngineOption : ObservableObject
     {

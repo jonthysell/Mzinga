@@ -26,12 +26,10 @@
 
 using System;
 
-using Mzinga.Viewer.Resources;
-
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
-namespace Mzinga.Viewer.ViewModel
+namespace Mzinga.SharedUX.ViewModel
 {
     public class ViewerConfigViewModel : ViewModelBase
     {
@@ -39,7 +37,7 @@ namespace Mzinga.Viewer.ViewModel
         {
             get
             {
-                return Strings.ViewerConfigTitle;
+                return "Viewer Options";
             }
         }
 

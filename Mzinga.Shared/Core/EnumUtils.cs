@@ -161,7 +161,7 @@ namespace Mzinga.Core
 
         #region Colors
 
-        public static Color GetColor(PieceName pieceName)
+        public static PlayerColor GetColor(PieceName pieceName)
         {
             switch (pieceName)
             {
@@ -179,7 +179,7 @@ namespace Mzinga.Core
                 case PieceName.WhiteMosquito:
                 case PieceName.WhiteLadybug:
                 case PieceName.WhitePillbug:
-                    return Color.White;
+                    return PlayerColor.White;
                 case PieceName.BlackQueenBee:
                 case PieceName.BlackSpider1:
                 case PieceName.BlackSpider2:
@@ -194,7 +194,7 @@ namespace Mzinga.Core
                 case PieceName.BlackMosquito:
                 case PieceName.BlackLadybug:
                 case PieceName.BlackPillbug:
-                    return Color.Black;
+                    return PlayerColor.Black;
             }
 
             throw new ArgumentOutOfRangeException("pieceName");
@@ -389,7 +389,7 @@ namespace Mzinga.Core
         UpLeft
     }
 
-    public enum Color
+    public enum PlayerColor
     {
         White = 0,
         Black
