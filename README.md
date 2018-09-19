@@ -8,7 +8,7 @@ For more information, please checkout the [Mzinga Wiki](https://github.com/jonth
 
 ## Projects ##
 
-Mzinga is developed in C# for .NET 4.5.
+Mzinga is developed in C# for .NET 4.6.1.
 
 ### Mzinga.Engine ###
 
