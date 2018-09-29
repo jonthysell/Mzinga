@@ -18,158 +18,132 @@
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    Grid.Row="0"
-                    Grid.RowSpan="3">
-            <GroupBox FontWeight="Bold"
-                      Header="Game"
-                      Margin="5">
-                <StackPanel>
-                    <Button Command="{Binding NewGame}"
-                            Content="New Game"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                </StackPanel>
-            </GroupBox>
-            <GroupBox FontWeight="Bold"
-                      Header="Play"
-                      Margin="5">
-                <StackPanel>
-                    <Button Command="{Binding PlayTarget}"
-                            Content="Play"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding Pass}"
-                            Content="Pass"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding UndoLastMove}"
-                            Content="Undo Move"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                </StackPanel>
-            </GroupBox>
-            <GroupBox FontWeight="Bold"
-                      Header="AI"
-                      Margin="5">
-                <StackPanel>
-                    <Button Command="{Binding FindBestMove}"
-                            Content="Find Best Move"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                </StackPanel>
-            </GroupBox>
-            <GroupBox FontWeight="Bold"
-                      Header="Options"
-                      Margin="5">
-                <StackPanel>
-                    <Button Command="{Binding ShowViewerConfig}"
-                            Content="Viewer"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding ShowEngineOptions}"
-                            Content="Engine"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                </StackPanel>
-            </GroupBox>
-            <GroupBox FontWeight="Bold"
-                      Header="Other"
-                      Margin="5">
-                <StackPanel>
-                    <Button Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
-                            Content="Update Check"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                    <Button Command="{Binding ShowEngineConsole}"
-                            Content="Console"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}" />
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-        <StackPanel Background="White"
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    IsEnabled="{Binding IsIdle}"
-                    Name="BlackHandStackPanel"
-                    Orientation="Horizontal" />
-        <Canvas Background="White"
-                ClipToBounds="True"
-                Grid.Column="1"
-                Grid.Row="1"
-                IsEnabled="{Binding IsIdle}"
-                Name="BoardCanvas" />
-        <StackPanel Background="White"
-                    Grid.Column="1"
-                    Grid.Row="2"
-                    IsEnabled="{Binding IsIdle}"
-                    Name="WhiteHandStackPanel"
-                    Orientation="Horizontal" />
-        <Grid Grid.Column="2"
-              Grid.Row="0"
-              Grid.RowSpan="3">
-            <GroupBox FontWeight="Bold"
-                      Header="History"
-                      Margin="5">
-                <local:ScrollingTextBox BorderBrush="Transparent"
-                                        FontFamily="Lucida Console"
-                                        FontWeight="Normal"
-                                        IsReadOnly="True"
-                                        MinWidth="120"
-                                        Padding="5"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                        Text="{Binding BoardHistory, Mode=OneWay}"
-                                        TextWrapping="NoWrap" />
-            </GroupBox>
-        </Grid>
-        <Grid Grid.Column="0"
-              Grid.ColumnSpan="2"
-              Grid.Row="3"
-              Margin="5">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding NewGame}"
+                    Key="N"
+                    Modifiers="Ctrl" />
+    </Window.InputBindings>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top"
+              Style="{DynamicResource CleanMenu}">
+            <MenuItem Header="_Game">
+                <MenuItem Command="{Binding NewGame}"
+                          Header="_New Game"
+                          InputGestureText="Ctrl+N" />
+                <Separator />
+                <MenuItem Click="Exit_Click"
+                          Header="E_xit"
+                          InputGestureText="Alt+F4" />
+            </MenuItem>
+            <MenuItem Header="_Engine">
+                <MenuItem Command="{Binding PlayTarget}"
+                          Header="_Play" />
+                <MenuItem Command="{Binding Pass}"
+                          Header="P_ass" />
+                <MenuItem Command="{Binding UndoLastMove}"
+                          Header="_Undo Mode" />
+                <Separator />
+                <MenuItem Command="{Binding FindBestMove}"
+                          Header="_Find Best Move" />
+                <Separator />
+                <MenuItem Command="{Binding ShowEngineConsole}"
+                          Header="_Console" />
+            </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Command="{Binding ShowEngineOptions}"
+                          Header="_Engine Options" />
+                <Separator />
+                <MenuItem Command="{Binding ShowViewerConfig}"
+                          Header="_Viewer Options" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
+                          Header="_Check for Updates" />
+                <Separator />
+                <MenuItem Header="_About Mzinga" />
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition MinWidth="120"
-                                  Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0"
+            <StackPanel Background="White"
+                        Grid.Column="0"
                         Grid.Row="0"
-                        HorizontalAlignment="Stretch"
-                        Orientation="Horizontal">
-                <Label Content="State:"
-                       FontWeight="Bold" />
-                <Label Content="{Binding GameState}" />
-            </StackPanel>
-            <StackPanel Grid.Column="1"
-                        Grid.Row="0"
-                        HorizontalAlignment="Stretch"
-                        Orientation="Horizontal">
-                <Label Content="Target:"
-                       FontWeight="Bold" />
-                <Label Content="{Binding TargetMove}" />
-            </StackPanel>
+                        IsEnabled="{Binding IsIdle}"
+                        Name="BlackHandStackPanel"
+                        Orientation="Horizontal" />
+            <Canvas Background="White"
+                    ClipToBounds="True"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    IsEnabled="{Binding IsIdle}"
+                    Name="BoardCanvas" />
+            <StackPanel Background="White"
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        IsEnabled="{Binding IsIdle}"
+                        Name="WhiteHandStackPanel"
+                        Orientation="Horizontal" />
+            <Grid Grid.Column="1"
+                  Grid.Row="0"
+                  Grid.RowSpan="3">
+                <GroupBox FontWeight="Bold"
+                          Header="History"
+                          Margin="5">
+                    <local:ScrollingTextBox BorderBrush="Transparent"
+                                            FontFamily="Lucida Console"
+                                            FontWeight="Normal"
+                                            IsReadOnly="True"
+                                            MinWidth="120"
+                                            Padding="5"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                            Text="{Binding BoardHistory, Mode=OneWay}"
+                                            TextWrapping="NoWrap" />
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Column="0"
+                  Grid.Row="3"
+                  Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition MinWidth="120"
+                                      Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"
+                            Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            Orientation="Horizontal">
+                    <Label Content="State:"
+                           FontWeight="Bold" />
+                    <Label Content="{Binding GameState}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1"
+                            Grid.Row="0"
+                            HorizontalAlignment="Stretch"
+                            Orientation="Horizontal">
+                    <Label Content="Target:"
+                           FontWeight="Bold" />
+                    <Label Content="{Binding TargetMove}" />
+                </StackPanel>
+            </Grid>
+            <ProgressBar Grid.Column="2"
+                         Grid.Row="3"
+                         HorizontalAlignment="Stretch"
+                         IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
+                         Margin="5"
+                         Maximum="1.0"
+                         Minimum="0.0"
+                         Value="{Binding TimedCommandProgress, Mode=OneWay}"
+                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" />
         </Grid>
-        <ProgressBar Grid.Column="2"
-                     Grid.Row="3"
-                     HorizontalAlignment="Stretch"
-                     IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
-                     Margin="5"
-                     Maximum="1.0"
-                     Minimum="0.0"
-                     Value="{Binding TimedCommandProgress, Mode=OneWay}"
-                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" />
-    </Grid>
+    </DockPanel>
 </Window>

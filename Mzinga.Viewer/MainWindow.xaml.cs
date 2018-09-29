@@ -90,5 +90,10 @@ namespace Mzinga.Viewer
                 e.Handled = true;
             }
         }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

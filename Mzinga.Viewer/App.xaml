@@ -92,6 +92,12 @@
             <Setter Property="VerticalAlignment"
                     Value="Stretch" />
         </Style>
+        <Style BasedOn="{x:Null}"
+               TargetType="{x:Type Menu}"
+               x:Key="CleanMenu">
+            <Setter Property="Background"
+                    Value="{DynamicResource NormalBrush}" />
+        </Style>
         <SolidColorBrush Color="White"
                          x:Key="NormalBrush" />
         <SolidColorBrush Color="#BEE6FD"
