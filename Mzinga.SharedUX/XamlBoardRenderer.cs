@@ -281,27 +281,51 @@ namespace Mzinga.SharedUX
                     }
                 }
 
+                Dictionary<BugType, Stack<Canvas>> pieceCanvasesByBugType = new Dictionary<BugType, Stack<Canvas>>();
+
                 // Draw the pieces in white's hand
                 foreach (PieceName pieceName in board.WhiteHand)
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
+                        BugType bugType = EnumUtils.GetBugType(pieceName);
+
                         bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
-                        WhiteHandStackPanel.Children.Add(pieceCanvas);
+                        
+                        if (!pieceCanvasesByBugType.ContainsKey(bugType))
+                        {
+                            pieceCanvasesByBugType[bugType] = new Stack<Canvas>();
+                        }
+
+                        pieceCanvasesByBugType[bugType].Push(pieceCanvas);
                     }
                 }
+
+                DrawHand(WhiteHandStackPanel, pieceCanvasesByBugType);
+
+                pieceCanvasesByBugType.Clear();
 
                 // Draw the pieces in black's hand
                 foreach (PieceName pieceName in board.BlackHand)
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
+                        BugType bugType = EnumUtils.GetBugType(pieceName);
+
                         bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
-                        BlackHandStackPanel.Children.Add(pieceCanvas);
+
+                        if (!pieceCanvasesByBugType.ContainsKey(bugType))
+                        {
+                            pieceCanvasesByBugType[bugType] = new Stack<Canvas>();
+                        }
+
+                        pieceCanvasesByBugType[bugType].Push(pieceCanvas);
                     }
                 }
+
+                DrawHand(BlackHandStackPanel, pieceCanvasesByBugType);
 
                 // Highlight last move played
                 if (VM.AppVM.ViewerConfig.HighlightLastMovePlayed)
@@ -715,6 +739,35 @@ namespace Mzinga.SharedUX
             SelectedPiece,
             SelectedMove,
             LastMove,
+        }
+
+        private void DrawHand(StackPanel handPanel, Dictionary<BugType, Stack<Canvas>> pieceCanvases)
+        {
+            foreach (BugType bugType in EnumUtils.BugTypes)
+            {
+                if (pieceCanvases.ContainsKey(bugType))
+                {
+                    int startingCount = pieceCanvases[bugType].Count;
+
+                    Canvas bugStack = new Canvas()
+                    {
+                        Height = pieceCanvases[bugType].Peek().Height * (1 + startingCount * StackShiftRatio),
+                        Width = pieceCanvases[bugType].Peek().Width * (1 + startingCount * StackShiftRatio),
+                        Margin = new Thickness(PieceCanvasMargin),
+                        Background = new SolidColorBrush(Colors.Transparent),
+                    };
+
+                    while (pieceCanvases[bugType].Count > 0)
+                    {
+                        Canvas pieceCanvas = pieceCanvases[bugType].Pop();
+                        Canvas.SetTop(pieceCanvas, pieceCanvas.Height * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
+                        Canvas.SetLeft(pieceCanvas, pieceCanvas.Width * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
+                        bugStack.Children.Add(pieceCanvas);
+                    }
+
+                    handPanel.Children.Add(bugStack);
+                }
+            }
         }
 
         private Canvas GetPieceInHandCanvas(Piece piece, double size, HexOrientation hexOrientation, bool disabled)
