@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 using Mzinga.Core;
@@ -72,7 +71,7 @@ namespace Mzinga.SharedUX.ViewModel
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
 #if WINDOWS_WPF
-            CheckForUpdatesAsync.RaiseCanExecuteChanged();
+                CheckForUpdatesAsync.RaiseCanExecuteChanged();
 #endif
             }
         }
@@ -502,6 +501,41 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _showViewerConfig = null;
 
+        public RelayCommand ShowAbout
+        {
+            get
+            {
+                return _showAbout ?? (_showAbout = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        StringBuilder sb = new StringBuilder();
+
+                        sb.AppendLine(Title);
+                        sb.AppendLine();
+
+                        sb.AppendLine("Mzinga Copyright (c) 2015-2018 Jon Thysell");
+                        sb.AppendLine("MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion");
+
+                        sb.AppendLine();
+
+                        sb.AppendLine(string.Join(Environment.NewLine + Environment.NewLine, _license));
+
+                        sb.AppendLine();
+
+                        sb.Append("Hive Copyright (c) 2010 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see http://www.hivegame.com.");
+
+                        Messenger.Default.Send(new InformationMessage(sb.ToString(), "About Mzinga"));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _showAbout = null;
+
 #if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync
         {
@@ -700,5 +734,11 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
             }
         }
+
+        private static string[] _license = {
+            @"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+            @"The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+            @"THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+        };
     }
 }

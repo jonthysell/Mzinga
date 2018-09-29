@@ -60,7 +60,8 @@
                 <MenuItem Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
                           Header="_Check for Updates" />
                 <Separator />
-                <MenuItem Header="_About Mzinga" />
+                <MenuItem Command="{Binding ShowAbout}"
+                          Header="_About Mzinga" />
             </MenuItem>
         </Menu>
         <Grid>
