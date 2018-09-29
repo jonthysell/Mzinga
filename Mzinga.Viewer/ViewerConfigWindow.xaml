@@ -103,6 +103,9 @@
                                          VerticalContentAlignment="Center" />
                         </StackPanel>
                         <Separator Margin="5" />
+                        <CheckBox Content="Stack pieces in hand"
+                                  IsChecked="{Binding StackPiecesInHand}"
+                                  Margin="5" />
                         <CheckBox Content="Highlight target move"
                                   IsChecked="{Binding HighlightTargetMove}"
                                   Margin="5" />

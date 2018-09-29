@@ -120,6 +120,8 @@ namespace Mzinga.SharedUX
 
         public bool RequireMoveConfirmation { get; set; } = true;
 
+        public bool StackPiecesInHand { get; set; } = false;
+
         public ViewerConfig() { }
 
         public void LoadConfig(Stream inputStream)
@@ -169,6 +171,9 @@ namespace Mzinga.SharedUX
                                 break;
                             case "RequireMoveConfirmation":
                                 RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
+                                break;
+                            case "StackPiecesInHand":
+                                StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
                                 break;
                         }
                     }
@@ -223,6 +228,7 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
                 writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
                 writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
+                writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
 
                 writer.WriteEndElement();
             }
@@ -246,7 +252,9 @@ namespace Mzinga.SharedUX
                 HighlightLastMovePlayed = HighlightLastMovePlayed,
 
                 BlockInvalidMoves = BlockInvalidMoves,
-                RequireMoveConfirmation = RequireMoveConfirmation
+                RequireMoveConfirmation = RequireMoveConfirmation,
+
+                StackPiecesInHand = StackPiecesInHand,
             };
 
             return clone;
@@ -274,6 +282,8 @@ namespace Mzinga.SharedUX
 
             BlockInvalidMoves = config.BlockInvalidMoves;
             RequireMoveConfirmation = config.RequireMoveConfirmation;
+
+            StackPiecesInHand = config.StackPiecesInHand;
         }
 
         private const string MzingaEngineCommandLine = "Mzinga.Engine.exe";

@@ -187,6 +187,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool StackPiecesInHand
+        {
+            get
+            {
+                return Config.StackPiecesInHand;
+            }
+            set
+            {
+                Config.StackPiecesInHand = value;
+                RaisePropertyChanged("StackPiecesInHand");
+            }
+        }
+
         public RelayCommand Accept
         {
             get

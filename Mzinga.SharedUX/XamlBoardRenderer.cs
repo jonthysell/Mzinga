@@ -747,25 +747,35 @@ namespace Mzinga.SharedUX
             {
                 if (pieceCanvases.ContainsKey(bugType))
                 {
-                    int startingCount = pieceCanvases[bugType].Count;
-
-                    Canvas bugStack = new Canvas()
+                    if (VM.ViewerConfig.StackPiecesInHand)
                     {
-                        Height = pieceCanvases[bugType].Peek().Height * (1 + startingCount * StackShiftRatio),
-                        Width = pieceCanvases[bugType].Peek().Width * (1 + startingCount * StackShiftRatio),
-                        Margin = new Thickness(PieceCanvasMargin),
-                        Background = new SolidColorBrush(Colors.Transparent),
-                    };
+                        int startingCount = pieceCanvases[bugType].Count;
 
-                    while (pieceCanvases[bugType].Count > 0)
-                    {
-                        Canvas pieceCanvas = pieceCanvases[bugType].Pop();
-                        Canvas.SetTop(pieceCanvas, pieceCanvas.Height * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
-                        Canvas.SetLeft(pieceCanvas, pieceCanvas.Width * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
-                        bugStack.Children.Add(pieceCanvas);
+                        Canvas bugStack = new Canvas()
+                        {
+                            Height = pieceCanvases[bugType].Peek().Height * (1 + startingCount * StackShiftRatio),
+                            Width = pieceCanvases[bugType].Peek().Width * (1 + startingCount * StackShiftRatio),
+                            Margin = new Thickness(PieceCanvasMargin),
+                            Background = new SolidColorBrush(Colors.Transparent),
+                        };
+
+                        while (pieceCanvases[bugType].Count > 0)
+                        {
+                            Canvas pieceCanvas = pieceCanvases[bugType].Pop();
+                            Canvas.SetTop(pieceCanvas, pieceCanvas.Height * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
+                            Canvas.SetLeft(pieceCanvas, pieceCanvas.Width * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
+                            bugStack.Children.Add(pieceCanvas);
+                        }
+
+                        handPanel.Children.Add(bugStack);
                     }
-
-                    handPanel.Children.Add(bugStack);
+                    else
+                    {
+                        foreach (Canvas pieceCanvas in pieceCanvases[bugType].Reverse())
+                        {
+                            handPanel.Children.Add(pieceCanvas);
+                        }
+                    }
                 }
             }
         }
