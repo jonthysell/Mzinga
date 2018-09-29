@@ -230,13 +230,13 @@ namespace Mzinga.SharedUX
                 int whiteHandCount = board.WhiteHand.Count();
                 int blackHandCount = board.BlackHand.Count();
 
-                int horizontalPiecesMin = 3 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
-                int verticalPiecesMin = 2 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
+                int verticalPiecesMin = 3 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
+                int horizontalPiecesMin = 2 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
 
                 double size = 0.5 * Math.Min(boardCanvasHeight / verticalPiecesMin, boardCanvasWidth / horizontalPiecesMin);
 
-                WhiteHandStackPanel.MinHeight = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
-                BlackHandStackPanel.MinHeight = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
                 Position lastMoveStart = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.OriginalPosition;
                 Position lastMoveEnd = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.Move?.Position;

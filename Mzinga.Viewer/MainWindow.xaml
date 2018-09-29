@@ -66,36 +66,35 @@
         </Menu>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Background="White"
                         Grid.Column="0"
                         Grid.Row="0"
                         IsEnabled="{Binding IsIdle}"
-                        Name="BlackHandStackPanel"
-                        Orientation="Horizontal" />
+                        Name="WhiteHandStackPanel"
+                        Orientation="Vertical" />
             <Canvas Background="White"
                     ClipToBounds="True"
-                    Grid.Column="0"
-                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.Row="0"
                     IsEnabled="{Binding IsIdle}"
                     Name="BoardCanvas" />
             <StackPanel Background="White"
-                        Grid.Column="0"
-                        Grid.Row="2"
+                        Grid.Column="2"
+                        Grid.Row="0"
                         IsEnabled="{Binding IsIdle}"
-                        Name="WhiteHandStackPanel"
-                        Orientation="Horizontal" />
-            <Grid Grid.Column="1"
-                  Grid.Row="0"
-                  Grid.RowSpan="3">
+                        Name="BlackHandStackPanel"
+                        Orientation="Vertical" />
+            <Grid Grid.Column="3"
+                  Grid.Row="0">
                 <GroupBox FontWeight="Bold"
                           Header="History"
                           Margin="5">
@@ -112,7 +111,8 @@
                 </GroupBox>
             </Grid>
             <Grid Grid.Column="0"
-                  Grid.Row="3"
+                  Grid.ColumnSpan="3"
+                  Grid.Row="1"
                   Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -136,8 +136,8 @@
                     <Label Content="{Binding TargetMove}" />
                 </StackPanel>
             </Grid>
-            <ProgressBar Grid.Column="2"
-                         Grid.Row="3"
+            <ProgressBar Grid.Column="4"
+                         Grid.Row="1"
                          HorizontalAlignment="Stretch"
                          IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
                          Margin="5"
