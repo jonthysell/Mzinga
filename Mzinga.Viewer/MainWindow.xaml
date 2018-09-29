@@ -64,7 +64,7 @@
                           Header="_About Mzinga" />
             </MenuItem>
         </Menu>
-        <Grid>
+        <Grid Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -75,20 +75,17 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel Background="White"
-                        Grid.Column="0"
+            <StackPanel Grid.Column="0"
                         Grid.Row="0"
                         IsEnabled="{Binding IsIdle}"
                         Name="WhiteHandStackPanel"
                         Orientation="Vertical" />
-            <Canvas Background="White"
-                    ClipToBounds="True"
+            <Canvas ClipToBounds="True"
                     Grid.Column="1"
                     Grid.Row="0"
                     IsEnabled="{Binding IsIdle}"
                     Name="BoardCanvas" />
-            <StackPanel Background="White"
-                        Grid.Column="2"
+            <StackPanel Grid.Column="2"
                         Grid.Row="0"
                         IsEnabled="{Binding IsIdle}"
                         Name="BlackHandStackPanel"

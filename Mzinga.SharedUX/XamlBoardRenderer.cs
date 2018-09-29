@@ -731,7 +731,7 @@ namespace Mzinga.SharedUX
                 Height = size * 2,
                 Width = size * 2,
                 Margin = new Thickness(PieceCanvasMargin),
-                Background = (piece.Color == PlayerColor.White) ? WhiteHandStackPanel.Background : BlackHandStackPanel.Background,
+                Background = new SolidColorBrush(Colors.Transparent),
                 Name = EnumUtils.GetShortName(piece.PieceName)
             };
 
