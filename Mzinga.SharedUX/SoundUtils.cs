@@ -1,10 +1,10 @@
 ﻿// 
-// ExceptionWindow.xaml.cs
+// SoundUtils.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,29 +24,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if WINDOWS_WPF
+using System;
 using System.Media;
 using System.Windows;
+using System.Windows.Resources;
+#endif
 
-using Mzinga.SharedUX.ViewModel;
-
-namespace Mzinga.Viewer
+namespace Mzinga.SharedUX
 {
-    /// <summary>
-    /// Interaction logic for ExceptionWindow.xaml
-    /// </summary>
-    public partial class ExceptionWindow : Window
+    public class SoundUtils
     {
-        public ExceptionWindow()
+        public static void PlaySound(GameSound sound)
         {
-            InitializeComponent();
-        }
+#if WINDOWS_WPF
+            string resPath = "pack://application:,,,/Resources/";
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (AppViewModel.Instance.ViewerConfig.PlaySoundEffects)
+            switch (sound)
             {
-                SystemSounds.Exclamation.Play();
+                case GameSound.Move:
+                    resPath += "movesfx.wav";
+                    break;
             }
+
+            StreamResourceInfo sri = Application.GetResourceStream(new Uri(resPath));
+
+            if (null != sri)
+            {
+                using (sri.Stream)
+                {
+                    SoundPlayer player = new SoundPlayer(sri.Stream);
+                    player.Load();
+                    player.Play();
+                }
+            }
+#endif
         }
+    }
+
+    public enum GameSound
+    {
+        Move = 0,
     }
 }

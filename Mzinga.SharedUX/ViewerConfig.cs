@@ -122,6 +122,8 @@ namespace Mzinga.SharedUX
 
         public bool StackPiecesInHand { get; set; } = false;
 
+        public bool PlaySoundEffects { get; set; } = true;
+        
         public ViewerConfig() { }
 
         public void LoadConfig(Stream inputStream)
@@ -170,10 +172,13 @@ namespace Mzinga.SharedUX
                                 BlockInvalidMoves = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
                                 break;
                             case "RequireMoveConfirmation":
-                                RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
+                                RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), RequireMoveConfirmation);
                                 break;
                             case "StackPiecesInHand":
-                                StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
+                                StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), StackPiecesInHand);
+                                break;
+                            case "PlaySoundEffects":
+                                PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
                                 break;
                         }
                     }
@@ -229,6 +234,7 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
                 writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
                 writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
+                writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
 
                 writer.WriteEndElement();
             }
@@ -255,6 +261,8 @@ namespace Mzinga.SharedUX
                 RequireMoveConfirmation = RequireMoveConfirmation,
 
                 StackPiecesInHand = StackPiecesInHand,
+
+                PlaySoundEffects = PlaySoundEffects,
             };
 
             return clone;
@@ -284,6 +292,8 @@ namespace Mzinga.SharedUX
             RequireMoveConfirmation = config.RequireMoveConfirmation;
 
             StackPiecesInHand = config.StackPiecesInHand;
+
+            PlaySoundEffects = config.PlaySoundEffects;
         }
 
         private const string MzingaEngineCommandLine = "Mzinga.Engine.exe";

@@ -194,7 +194,9 @@
     <Resource Include="Resources\information32.png" />
     <Resource Include="Resources\mzinga.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\movesfx.wav" />
+  </ItemGroup>
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

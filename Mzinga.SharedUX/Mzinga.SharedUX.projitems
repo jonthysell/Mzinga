@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoolToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumMatchToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IdleBoolToWaitCursorConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardHistoryExtensions.cs" />

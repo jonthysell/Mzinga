@@ -200,6 +200,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool PlaySoundEffects
+        {
+            get
+            {
+                return Config.PlaySoundEffects;
+            }
+            set
+            {
+                Config.PlaySoundEffects = value;
+                RaisePropertyChanged("PlaySoundEffects");
+            }
+        }
+
         public RelayCommand Accept
         {
             get
@@ -260,6 +273,9 @@ namespace Mzinga.SharedUX.ViewModel
                         RaisePropertyChanged("HighlightLastMovePlayed");
                         RaisePropertyChanged("BlockInvalidMoves");
                         RaisePropertyChanged("RequireMoveConfirmation");
+                        RaisePropertyChanged("StackPiecesInHand");
+                        RaisePropertyChanged("PlaySoundEffects");
+
                     }
                     catch (Exception ex)
                     {

@@ -39,10 +39,12 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 #elif WINDOWS_WPF
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 #endif
 
@@ -292,7 +294,7 @@ namespace Mzinga.SharedUX
 
                         bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
-                        
+
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
                         {
                             pieceCanvasesByBugType[bugType] = new Stack<Canvas>();

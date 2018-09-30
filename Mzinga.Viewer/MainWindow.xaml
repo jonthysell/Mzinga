@@ -22,6 +22,9 @@
         <KeyBinding Command="{Binding NewGame}"
                     Key="N"
                     Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding ShowEngineConsole}"
+                    Key="C"
+                    Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top"
@@ -47,7 +50,8 @@
                           Header="_Find Best Move" />
                 <Separator />
                 <MenuItem Command="{Binding ShowEngineConsole}"
-                          Header="_Console" />
+                          Header="_Console"
+                          InputGestureText="Ctrl+Shift+C" />
             </MenuItem>
             <MenuItem Header="_Options">
                 <MenuItem Command="{Binding ShowEngineOptions}"

@@ -657,6 +657,14 @@ namespace Mzinga.SharedUX.ViewModel
                     TimedCommandProgress = args.Progress;
                 });
             };
+
+            AppVM.EngineWrapper.MovePlaying += (sender, args) =>
+            {
+                if (ViewerConfig.PlaySoundEffects)
+                {
+                    SoundUtils.PlaySound(GameSound.Move);
+                }
+            };
         }
 
         internal void CanvasClick(double cursorX, double cursorY)

@@ -106,6 +106,7 @@
                         <CheckBox Content="Stack pieces in hand"
                                   IsChecked="{Binding StackPiecesInHand}"
                                   Margin="5" />
+                        <Separator Margin="5" />
                         <CheckBox Content="Highlight target move"
                                   IsChecked="{Binding HighlightTargetMove}"
                                   Margin="5" />
@@ -121,6 +122,14 @@
                                   Margin="5" />
                         <CheckBox Content="Disable pieces in hand with no moves"
                                   IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
+                                  Margin="5" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Other"
+                          Margin="5">
+                    <StackPanel Orientation="Vertical">
+                        <CheckBox Content="Play sound effects"
+                                  IsChecked="{Binding PlaySoundEffects}"
                                   Margin="5" />
                     </StackPanel>
                 </GroupBox>
