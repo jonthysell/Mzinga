@@ -1,4 +1,5 @@
 <Window Icon="{DynamicResource MzingaIcon}"
+        Loaded="Window_Loaded"
         MinHeight="100"
         ResizeMode="NoResize"
         SizeToContent="Height"
