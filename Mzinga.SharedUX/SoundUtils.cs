@@ -48,6 +48,9 @@ namespace Mzinga.SharedUX
                 case GameSound.Undo:
                     resPath += "undosfx.wav";
                     break;
+                case GameSound.GameOver:
+                    resPath += "gameoversfx.wav";
+                    break;
             }
 
             StreamResourceInfo sri = Application.GetResourceStream(new Uri(resPath));

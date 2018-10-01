@@ -578,17 +578,25 @@ namespace Mzinga.SharedUX.ViewModel
                     UndoLastMove.RaiseCanExecuteChanged();
                     RaisePropertyChanged("GameState");
 
-                    switch (Board.BoardState)
+                    if (AppVM.EngineWrapper.GameIsOver)
                     {
-                        case BoardState.WhiteWins:
-                            Messenger.Default.Send(new InformationMessage("White has won the game.", "Game Over"));
-                            break;
-                        case BoardState.BlackWins:
-                            Messenger.Default.Send(new InformationMessage("Black has won the game.", "Game Over"));
-                            break;
-                        case BoardState.Draw:
-                            Messenger.Default.Send(new InformationMessage("The game is a draw.", "Game Over"));
-                            break;
+                        if (ViewerConfig.PlaySoundEffects)
+                        {
+                            SoundUtils.PlaySound(GameSound.GameOver);
+                        }
+
+                        switch (Board.BoardState)
+                        {
+                            case BoardState.WhiteWins:
+                                Messenger.Default.Send(new InformationMessage("White has won the game.", "Game Over"));
+                                break;
+                            case BoardState.BlackWins:
+                                Messenger.Default.Send(new InformationMessage("Black has won the game.", "Game Over"));
+                                break;
+                            case BoardState.Draw:
+                                Messenger.Default.Send(new InformationMessage("The game is a draw.", "Game Over"));
+                                break;
+                        }
                     }
                 });
             };

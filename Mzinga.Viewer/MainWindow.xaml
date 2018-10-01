@@ -25,6 +25,12 @@
         <KeyBinding Command="{Binding ShowEngineConsole}"
                     Key="C"
                     Modifiers="Ctrl+Shift" />
+        <KeyBinding Command="{Binding ShowEngineOptions}"
+                    Key="E"
+                    Modifiers="Ctrl+Shift" />
+        <KeyBinding Command="{Binding ShowViewerConfig}"
+                    Key="V"
+                    Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top"
@@ -40,11 +46,11 @@
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding PlayTarget}"
-                          Header="_Play" />
+                          Header="_Play Move" />
                 <MenuItem Command="{Binding Pass}"
                           Header="P_ass" />
                 <MenuItem Command="{Binding UndoLastMove}"
-                          Header="_Undo Mode" />
+                          Header="_Undo Move" />
                 <Separator />
                 <MenuItem Command="{Binding FindBestMove}"
                           Header="_Find Best Move" />
@@ -55,10 +61,12 @@
             </MenuItem>
             <MenuItem Header="_Options">
                 <MenuItem Command="{Binding ShowEngineOptions}"
-                          Header="_Engine Options" />
+                          Header="_Engine Options"
+                          InputGestureText="Ctrl+Shift+E" />
                 <Separator />
                 <MenuItem Command="{Binding ShowViewerConfig}"
-                          Header="_Viewer Options" />
+                          Header="_Viewer Options"
+                          InputGestureText="Ctrl+Shift+V" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
