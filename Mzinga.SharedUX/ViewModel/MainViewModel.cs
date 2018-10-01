@@ -665,6 +665,14 @@ namespace Mzinga.SharedUX.ViewModel
                     SoundUtils.PlaySound(GameSound.Move);
                 }
             };
+
+            AppVM.EngineWrapper.MoveUndoing += (sender, args) =>
+            {
+                if (ViewerConfig.PlaySoundEffects)
+                {
+                    SoundUtils.PlaySound(GameSound.Undo);
+                }
+            };
         }
 
         internal void CanvasClick(double cursorX, double cursorY)

@@ -197,6 +197,9 @@
   <ItemGroup>
     <Resource Include="Resources\movesfx.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\undosfx.wav" />
+  </ItemGroup>
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

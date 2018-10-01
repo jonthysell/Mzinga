@@ -277,6 +277,7 @@ namespace Mzinga.SharedUX
         public event EventHandler TargetPositionUpdated;
 
         public event EventHandler MovePlaying;
+        public event EventHandler MoveUndoing;
 
         public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
 
@@ -353,8 +354,6 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please select a valid piece and destination first.");
             }
 
-            MovePlaying?.Invoke(this, null);
-
             if (TargetMove.IsPass)
             {
                 Pass();
@@ -367,8 +366,6 @@ namespace Mzinga.SharedUX
 
         public void Pass()
         {
-            MovePlaying?.Invoke(this, null);
-
             SendCommand("pass");
         }
 
@@ -493,6 +490,7 @@ namespace Mzinga.SharedUX
                 string command = _inputToProcess.Peek();
                 EngineTextAppendLine(command);
                 _currentlyRunningCommand = IdentifyCommand(command);
+                OnSendingCommand(_currentlyRunningCommand);
                 OnEngineInput(command);
             }
             else
@@ -637,8 +635,6 @@ namespace Mzinga.SharedUX
 
             if (tryToPlay && CurrentTurnIsEngineAI && null != TargetMove)
             {
-                MovePlaying?.Invoke(this, null);
-
                 if (TargetMove.IsPass)
                 {
                     SendCommandInternal("pass");
@@ -743,6 +739,20 @@ namespace Mzinga.SharedUX
             }
 
             TargetPositionUpdated?.Invoke(this, null);
+        }
+
+        private void OnSendingCommand(EngineCommand? command)
+        {
+            switch (command)
+            {
+                case EngineCommand.Play:
+                case EngineCommand.Pass:
+                    MovePlaying?.Invoke(this, null);
+                    break;
+                case EngineCommand.Undo:
+                    MoveUndoing?.Invoke(this, null);
+                    break;
+            }
         }
 
         private void OnTimedCommandProgressUpdated(bool isRunning, double progress = 1.0)
