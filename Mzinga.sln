@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Viewer", "Mzinga.Viewer\Mzinga.Viewer.csproj", "{AB491FF7-2645-4DF0-AF16-EE5AD7222A35}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433} = {6273E30D-EAAA-42F3-BCDC-3AD28AEED433}
+	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Mzinga.Setup", "Mzinga.Setup\Mzinga.Setup.wixproj", "{EB905695-D35D-4B73-AE9C-DDFF734604F8}"
 EndProject
@@ -20,9 +23,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Mzinga.SharedUX", "Mzinga.SharedUX\Mzinga.SharedUX.shproj", "{766F35B9-DCFC-4358-8A3A-68E61C6D3BAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Engine", "Mzinga.Engine\Mzinga.Engine.csproj", "{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Mzinga.Shared\Mzinga.Shared.projitems*{3a664979-a4db-4c05-bd8f-c6a1799624df}*SharedItemsImports = 13
+		Mzinga.Shared\Mzinga.Shared.projitems*{6273e30d-eaaa-42f3-bcdc-3ad28aeed433}*SharedItemsImports = 4
 		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{766f35b9-dcfc-4358-8a3a-68e61c6d3baa}*SharedItemsImports = 13
 		Mzinga.Shared\Mzinga.Shared.projitems*{9824e8fd-6155-4c02-a3a4-5d39355f01fe}*SharedItemsImports = 4
 		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{ab491ff7-2645-4df0-af16-ee5ad7222a35}*SharedItemsImports = 4
@@ -67,6 +73,16 @@ Global
 		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9824E8FD-6155-4C02-A3A4-5D39355F01FE}.Release|x86.ActiveCfg = Release|x86
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Debug|x86.ActiveCfg = Debug|x86
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6273E30D-EAAA-42F3-BCDC-3AD28AEED433}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
