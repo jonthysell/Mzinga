@@ -92,11 +92,30 @@
                         IsEnabled="{Binding IsIdle}"
                         Name="WhiteHandStackPanel"
                         Orientation="Vertical" />
-            <Canvas ClipToBounds="True"
-                    Grid.Column="1"
-                    Grid.Row="0"
-                    IsEnabled="{Binding IsIdle}"
-                    Name="BoardCanvas" />
+            <Grid Grid.Column="1"
+                  Grid.Row="0"
+                  IsEnabled="{Binding IsIdle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Canvas ClipToBounds="True"
+                        Name="BoardCanvas" />
+                <Grid Grid.Row="1">
+                    <Button Command="{Binding PlayTarget}"
+                            Content="Play Move"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Width="100" />
+                    <Button Command="{Binding Pass}"
+                            Content="Pass"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Width="100" />
+                </Grid>
+            </Grid>
             <StackPanel Grid.Column="2"
                         Grid.Row="0"
                         IsEnabled="{Binding IsIdle}"
