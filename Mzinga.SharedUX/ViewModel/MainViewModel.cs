@@ -523,7 +523,7 @@ namespace Mzinga.SharedUX.ViewModel
 
                         sb.AppendLine();
 
-                        sb.Append("Hive Copyright (c) 2010 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see http://www.hivegame.com.");
+                        sb.Append("Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see https://gen42.com/games/hive.");
 
                         Messenger.Default.Send(new InformationMessage(sb.ToString(), "About Mzinga"));
                     }
@@ -535,6 +535,38 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _showAbout = null;
+
+        public RelayCommand LaunchHiveWebsite
+        {
+            get
+            {
+                return _launchHiveWebsite ?? (_launchHiveWebsite = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("This will open the official Hive website in your browser. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    Messenger.Default.Send(new LaunchUrlMessage("https://gen42.com/games/hive"));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _launchHiveWebsite;
 
 #if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync

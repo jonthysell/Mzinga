@@ -69,8 +69,12 @@
                           InputGestureText="Ctrl+Shift+V" />
             </MenuItem>
             <MenuItem Header="_Help">
+                <MenuItem Command="{Binding LaunchHiveWebsite}"
+                          Header="_Hive Website" />
+                <Separator />
                 <MenuItem Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
                           Header="_Check for Updates" />
+                
                 <Separator />
                 <MenuItem Command="{Binding ShowAbout}"
                           Header="_About Mzinga" />

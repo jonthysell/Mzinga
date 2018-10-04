@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Diagnostics;
 using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -39,6 +40,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<ExceptionMessage>(recipient, (message) => ShowException(message));
             Messenger.Default.Register<InformationMessage>(recipient, (message) => ShowInformation(message));
             Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => ShowConfirmation(message));
+            Messenger.Default.Register<LaunchUrlMessage>(recipient, (message) => LaunchUrl(message));
             Messenger.Default.Register<NewGameMessage>(recipient, (message) => ShowNewGame(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, (message) => ShowViewerConfig(message));
             Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
@@ -50,6 +52,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<ExceptionMessage>(recipient);
             Messenger.Default.Unregister<InformationMessage>(recipient);
             Messenger.Default.Unregister<ConfirmationMessage>(recipient);
+            Messenger.Default.Unregister<LaunchUrlMessage>(recipient);
             Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<ViewerConfigMessage>(recipient);
             Messenger.Default.Unregister<EngineOptionsMessage>(recipient);
@@ -90,6 +93,11 @@ namespace Mzinga.Viewer
         {
             DialogResult dialogResult = MessageBox.Show(message.Message, "Mzinga", MessageBoxButtons.YesNo);
             message.Process(dialogResult == DialogResult.Yes);
+        }
+
+        private static void LaunchUrl(LaunchUrlMessage message)
+        {
+            Process.Start(message.Url, null);
         }
 
         private static void ShowNewGame(NewGameMessage message)

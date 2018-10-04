@@ -74,6 +74,16 @@ namespace Mzinga.SharedUX.ViewModel
         }
     }
 
+    public class LaunchUrlMessage : MessageBase
+    {
+        public string Url { get; private set; }
+
+        public LaunchUrlMessage(string url) : base()
+        {
+            Url = url;
+        }
+    }
+
     public class NewGameMessage : MessageBase
     {
         public NewGameViewModel NewGameVM { get; private set; }
