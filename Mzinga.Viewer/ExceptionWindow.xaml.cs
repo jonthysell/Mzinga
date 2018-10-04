@@ -27,8 +27,6 @@
 using System.Media;
 using System.Windows;
 
-using Mzinga.SharedUX.ViewModel;
-
 namespace Mzinga.Viewer
 {
     /// <summary>
@@ -43,10 +41,7 @@ namespace Mzinga.Viewer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (AppViewModel.Instance.ViewerConfig.PlaySoundEffects)
-            {
-                SystemSounds.Exclamation.Play();
-            }
+            SystemSounds.Exclamation.Play();
         }
     }
 }
