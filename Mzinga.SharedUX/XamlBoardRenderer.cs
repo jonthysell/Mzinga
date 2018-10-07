@@ -126,15 +126,7 @@ namespace Mzinga.SharedUX
 
         private SolidColorBrush LastMoveEdgeBrush;
 
-        private SolidColorBrush QueenBeeBrush;
-        private SolidColorBrush SpiderBrush;
-        private SolidColorBrush BeetleBrush;
-        private SolidColorBrush GrasshopperBrush;
-        private SolidColorBrush SoldierAntBrush;
-
-        private SolidColorBrush MosquitoBrush;
-        private SolidColorBrush LadybugBrush;
-        private SolidColorBrush PillbugBrush;
+        private SolidColorBrush[] BugBrushes;
 
         private SolidColorBrush DisabledPieceBrush;
 
@@ -157,15 +149,17 @@ namespace Mzinga.SharedUX
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
-            QueenBeeBrush = new SolidColorBrush(Color.FromArgb(255, 250, 167, 29));
-            SpiderBrush = new SolidColorBrush(Color.FromArgb(255, 139, 63, 27));
-            BeetleBrush = new SolidColorBrush(Color.FromArgb(255, 149, 101, 194));
-            GrasshopperBrush = new SolidColorBrush(Color.FromArgb(255, 65, 157, 70));
-            SoldierAntBrush = new SolidColorBrush(Color.FromArgb(255, 37, 141, 193));
-
-            MosquitoBrush = new SolidColorBrush(Color.FromArgb(255, 111, 111, 97));
-            LadybugBrush = new SolidColorBrush(Color.FromArgb(255, 211, 17, 69));
-            PillbugBrush = new SolidColorBrush(Color.FromArgb(255, 30, 183, 182));
+            BugBrushes = new SolidColorBrush[]
+            {
+                new SolidColorBrush(Color.FromArgb(255, 250, 167, 29)), // Queen
+                new SolidColorBrush(Color.FromArgb(255, 139, 63, 27)), // Spider
+                new SolidColorBrush(Color.FromArgb(255, 149, 101, 194)), // Beetle
+                new SolidColorBrush(Color.FromArgb(255, 65, 157, 70)), // Grasshopper
+                new SolidColorBrush(Color.FromArgb(255, 37, 141, 193)), // Ant
+                new SolidColorBrush(Color.FromArgb(255, 111, 111, 97)), // Mosquito
+                new SolidColorBrush(Color.FromArgb(255, 209, 32, 32)), // Ladybug
+                new SolidColorBrush(Color.FromArgb(255, 37, 153, 102)), // Pullbug
+            };
 
             DisabledPieceBrush = new SolidColorBrush(Colors.LightGray);
 
@@ -674,33 +668,8 @@ namespace Mzinga.SharedUX
                 FontFamily = new FontFamily("Arial Black")
             };
 
-            switch (EnumUtils.GetBugType(pieceName))
-            {
-                case BugType.QueenBee:
-                    hexText.Foreground = QueenBeeBrush;
-                    break;
-                case BugType.Spider:
-                    hexText.Foreground = SpiderBrush;
-                    break;
-                case BugType.Beetle:
-                    hexText.Foreground = BeetleBrush;
-                    break;
-                case BugType.Grasshopper:
-                    hexText.Foreground = GrasshopperBrush;
-                    break;
-                case BugType.SoldierAnt:
-                    hexText.Foreground = SoldierAntBrush;
-                    break;
-                case BugType.Mosquito:
-                    hexText.Foreground = MosquitoBrush;
-                    break;
-                case BugType.Ladybug:
-                    hexText.Foreground = LadybugBrush;
-                    break;
-                case BugType.Pillbug:
-                    hexText.Foreground = PillbugBrush;
-                    break;
-            }
+            // Add color
+            hexText.Foreground = BugBrushes[(int)EnumUtils.GetBugType(pieceName)];
 
             if (disabled)
             {
