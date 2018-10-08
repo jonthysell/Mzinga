@@ -57,17 +57,19 @@
                                    Margin="5"
                                    Padding="0"
                                    VerticalAlignment="Center"
-                                   Width="50" />
+                                   Width="60" />
                             <RadioButton Content="Mzinga"
                                          GroupName="NotationType"
                                          IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
                                          Margin="5"
+                                         MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
                             <RadioButton Content="BoardSpace"
                                          GroupName="NotationType"
                                          IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
                                          Margin="5"
+                                         MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
                         </StackPanel>
@@ -88,17 +90,40 @@
                                    Margin="5"
                                    Padding="0"
                                    VerticalAlignment="Center"
-                                   Width="50" />
+                                   Width="60" />
                             <RadioButton Content="Flat Top"
                                          GroupName="HexOrientation"
                                          IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}"
                                          Margin="5"
+                                         MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
                             <RadioButton Content="Pointy Top"
                                          GroupName="HexOrientation"
                                          IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}"
                                          Margin="5"
+                                         MinWidth="60"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Bug Style:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center"
+                                   Width="60" />
+                            <RadioButton Content="Text"
+                                         GroupName="PieceStyle"
+                                         IsChecked="{Binding Path=PieceStyle, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}"
+                                         Margin="5"
+                                         MinWidth="60"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="Graphical"
+                                         GroupName="PieceStyle"
+                                         IsChecked="{Binding Path=PieceStyle, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
+                                         Margin="5"
+                                         MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
                         </StackPanel>

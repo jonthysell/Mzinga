@@ -96,6 +96,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public PieceStyle PieceStyle
+        {
+            get
+            {
+                return Config.PieceStyle;
+            }
+            set
+            {
+                Config.PieceStyle = value;
+                RaisePropertyChanged("PieceStyle");
+            }
+        }
+
         public bool DisablePiecesInHandWithNoMoves
         {
             get

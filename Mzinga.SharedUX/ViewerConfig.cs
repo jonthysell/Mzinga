@@ -106,6 +106,8 @@ namespace Mzinga.SharedUX
         }
         private NotationType _notationType = NotationType.Mzinga;
 
+        public PieceStyle PieceStyle { get; set; } = PieceStyle.Mzinga;
+
         public bool DisablePiecesInHandWithNoMoves { get; set; } = false;
 
         public bool DisablePiecesInPlayWithNoMoves { get; set; } = false;
@@ -152,6 +154,9 @@ namespace Mzinga.SharedUX
                                 break;
                             case "NotationType":
                                 NotationType = ParseEnumValue(reader.ReadElementContentAsString(), NotationType);
+                                break;
+                            case "PieceStyle":
+                                PieceStyle = ParseEnumValue(reader.ReadElementContentAsString(), PieceStyle);
                                 break;
                             case "DisablePiecesInHandWithNoMoves":
                                 DisablePiecesInHandWithNoMoves = ParseBoolValue(reader.ReadElementContentAsString(), DisablePiecesInHandWithNoMoves);
@@ -226,6 +231,7 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("EngineCommandLine", EngineCommandLine);
                 writer.WriteElementString("HexOrientation", HexOrientation.ToString());
                 writer.WriteElementString("NotationType", NotationType.ToString());
+                writer.WriteElementString("PieceStyle", PieceStyle.ToString());
                 writer.WriteElementString("DisablePiecesInHandWithNoMoves", DisablePiecesInHandWithNoMoves.ToString());
                 writer.WriteElementString("DisablePiecesInPlayWithNoMoves", DisablePiecesInPlayWithNoMoves.ToString());
                 writer.WriteElementString("HighlightTargetMove", HighlightTargetMove.ToString());
@@ -249,6 +255,8 @@ namespace Mzinga.SharedUX
 
                 HexOrientation = HexOrientation,
                 NotationType = NotationType,
+
+                PieceStyle = PieceStyle,
 
                 DisablePiecesInHandWithNoMoves = DisablePiecesInHandWithNoMoves,
                 DisablePiecesInPlayWithNoMoves = DisablePiecesInPlayWithNoMoves,
@@ -280,6 +288,8 @@ namespace Mzinga.SharedUX
 
             HexOrientation = config.HexOrientation;
             NotationType = config.NotationType;
+
+            PieceStyle = config.PieceStyle;
 
             DisablePiecesInHandWithNoMoves = config.DisablePiecesInHandWithNoMoves;
             DisablePiecesInPlayWithNoMoves = config.DisablePiecesInPlayWithNoMoves;
@@ -315,5 +325,11 @@ namespace Mzinga.SharedUX
     {
         Internal,
         CommandLine,
+    }
+
+    public enum PieceStyle
+    {
+        Text,
+        Mzinga,
     }
 }

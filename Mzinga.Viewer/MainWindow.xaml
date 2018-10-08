@@ -74,7 +74,6 @@
                 <Separator />
                 <MenuItem Command="{Binding CheckForUpdatesAsync, IsAsync=True}"
                           Header="_Check for Updates" />
-                
                 <Separator />
                 <MenuItem Command="{Binding ShowAbout}"
                           Header="_About Mzinga" />
