@@ -26,8 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Runtime.InteropServices;
@@ -67,26 +65,26 @@ namespace Mzinga.Viewer
             {
                 IsCheckingforUpdate = true;
 
-                List<InstallerInfo> installerInfos = GetLatestInstallerInfos();
+                List<UpdateInfo> updateInfos = GetLatestUpdateInfos();
 
                 ReleaseChannel targetReleaseChannel = GetReleaseChannel();
 
                 ulong maxVersion = LongVersion(AppVM.FullVersion);
 
-                InstallerInfo latestVersion = null;
+                UpdateInfo latestVersion = null;
 
                 bool updateAvailable = false;
-                foreach (InstallerInfo installerInfo in installerInfos)
+                foreach (UpdateInfo updateInfo in updateInfos)
                 {
-                    if (installerInfo.ReleaseChannel == targetReleaseChannel)
+                    if (updateInfo.ReleaseChannel == targetReleaseChannel)
                     {
-                        ulong installerVersion = LongVersion(installerInfo.Version);
+                        ulong updateVersion = LongVersion(updateInfo.Version);
 
-                        if (installerVersion > maxVersion)
+                        if (updateVersion > maxVersion)
                         {
                             updateAvailable = true;
-                            latestVersion = installerInfo;
-                            maxVersion = installerVersion;
+                            latestVersion = updateInfo;
+                            maxVersion = updateVersion;
                         }
                     }
                 }
@@ -97,7 +95,7 @@ namespace Mzinga.Viewer
                 {
                     if (confirmUpdate)
                     {
-                        string message = string.Format("Mzinga v{0} is available. Would you like to update now?", latestVersion.Version);
+                        string message = string.Format("Mzinga v{0} is available. Would you like to go to the download page?", latestVersion.Version);
                         AppVM.DoOnUIThread(() =>
                         {
                             Messenger.Default.Send(new ConfirmationMessage(message, (confirmed) =>
@@ -106,7 +104,7 @@ namespace Mzinga.Viewer
                                 {
                                     if (confirmed)
                                     {
-                                        Update(latestVersion);
+                                        Messenger.Default.Send(new LaunchUrlMessage(latestVersion.Url));
                                     }
                                 }
                                 catch (Exception ex)
@@ -118,7 +116,10 @@ namespace Mzinga.Viewer
                     }
                     else
                     {
-                        Update(latestVersion);
+                        AppVM.DoOnUIThread(() =>
+                        {
+                            Messenger.Default.Send(new LaunchUrlMessage(latestVersion.Url));
+                        });
                     }
                 }
                 else
@@ -142,66 +143,14 @@ namespace Mzinga.Viewer
             }
         }
 
-        private static void Update(InstallerInfo installerInfo)
-        {
-            if (null == installerInfo)
-            {
-                throw new ArgumentNullException("installerInfo");
-            }
-
-            if (!IsConnectedToInternet)
-            {
-                throw new UpdateNoInternetException();
-            }
-
-            string tempPath = Path.GetTempPath();
-
-            string msiPath = Path.Combine(tempPath, "MzingaSetup.msi");
-
-            if (File.Exists(msiPath))
-            {
-                File.Delete(msiPath);
-            }
-
-            using (WebClient client = new WebClient())
-            {
-                client.Headers["User-Agent"] = _userAgent;
-                SecurityProtocolType oldType = ServicePointManager.SecurityProtocol;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // Fix since Github only supports TLS1.2
-                client.DownloadFile(installerInfo.Url, msiPath);
-                ServicePointManager.SecurityProtocol = oldType;
-            }
-
-            string cmdFile = Path.Combine(tempPath, "UpdateMzinga.cmd");
-
-            using (StreamWriter sw = new StreamWriter(new FileStream(cmdFile, FileMode.Create)))
-            {
-                sw.WriteLine("msiexec /i \"{0}\" /qb", msiPath);
-            }
-
-            AppVM.DoOnUIThread(() =>
-            {
-                Process p = new Process
-                {
-                    StartInfo = new ProcessStartInfo("cmd.exe", string.Format("/c {0}", cmdFile))
-                    {
-                        CreateNoWindow = true
-                    }
-                };
-                p.Start();
-
-                System.Windows.Application.Current.Shutdown();
-            });
-        }
-
-        public static List<InstallerInfo> GetLatestInstallerInfos()
+        public static List<UpdateInfo> GetLatestUpdateInfos()
         {
             if (!IsConnectedToInternet)
             {
                 throw new UpdateNoInternetException();
             }
 
-            List<InstallerInfo> installerInfos = new List<InstallerInfo>();
+            List<UpdateInfo> updateInfos = new List<UpdateInfo>();
 
             HttpWebRequest request = WebRequest.CreateHttp(_updateUrl);
             request.UserAgent = _userAgent;
@@ -218,13 +167,13 @@ namespace Mzinga.Viewer
                             string version = reader.GetAttribute("version");
                             string url = reader.GetAttribute("url");
                             ReleaseChannel releaseChannel = (ReleaseChannel)Enum.Parse(typeof(ReleaseChannel), reader.GetAttribute("channel"));
-                            installerInfos.Add(new InstallerInfo(version, url, releaseChannel));
+                            updateInfos.Add(new UpdateInfo(version, url, releaseChannel));
                         }
                     }
                 }
             }
 
-            return installerInfos;
+            return updateInfos;
         }
 
         public static ulong LongVersion(string version)
@@ -290,7 +239,7 @@ namespace Mzinga.Viewer
         private const string _userAgent = "Mozilla/5.0";
     }
 
-    public class InstallerInfo
+    public class UpdateInfo
     {
         public string Version { get; private set; }
 
@@ -298,7 +247,7 @@ namespace Mzinga.Viewer
 
         public ReleaseChannel ReleaseChannel { get; private set; }
 
-        public InstallerInfo(string version, string url, ReleaseChannel releaseChannel)
+        public UpdateInfo(string version, string url, ReleaseChannel releaseChannel)
         {
             if (string.IsNullOrWhiteSpace(version))
             {
