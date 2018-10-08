@@ -69,6 +69,8 @@
                           InputGestureText="Ctrl+Shift+V" />
             </MenuItem>
             <MenuItem Header="_Help">
+                <MenuItem Command="{Binding LaunchMzingaWebsite}"
+                          Header="_Mzinga Website" />
                 <MenuItem Command="{Binding LaunchHiveWebsite}"
                           Header="_Hive Website" />
                 <Separator />
@@ -76,7 +78,7 @@
                           Header="_Check for Updates" />
                 <Separator />
                 <MenuItem Command="{Binding ShowAbout}"
-                          Header="_About Mzinga" />
+                          Header="_About Mzinga.Viewer" />
             </MenuItem>
         </Menu>
         <Grid Background="White">

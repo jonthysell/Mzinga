@@ -568,6 +568,38 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _launchHiveWebsite;
 
+        public RelayCommand LaunchMzingaWebsite
+        {
+            get
+            {
+                return _launchMzingaWebsite ?? (_launchMzingaWebsite = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("This will open the Mzinga website in your browser. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    Messenger.Default.Send(new LaunchUrlMessage("http://mzinga.jonthysell.com"));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _launchMzingaWebsite;
+
 #if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync
         {
