@@ -39,13 +39,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 #elif WINDOWS_WPF
-using System.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Resources;
 using System.Windows.Shapes;
 #endif
 
@@ -676,9 +673,10 @@ namespace Mzinga.SharedUX
             }
 
             // Create text
+            string text = EnumUtils.GetShortName(pieceName).Substring(1);
             TextBlock bugText = new TextBlock
             {
-                Text = EnumUtils.GetShortName(pieceName).Substring(1),
+                Text = VM.ViewerConfig.DisambiguatePieces ? text : text.TrimEnd('1', '2', '3'),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
@@ -724,22 +722,25 @@ namespace Mzinga.SharedUX
             // Bug number indicators / rotation
             double rotateAngle = VM.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
 
-            int bugNum;
-            if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
+            if (VM.ViewerConfig.DisambiguatePieces)
             {
-                rotateAngle += (bugNum - 1) * 60.0;
-
-                // Add bug number
-                TextBlock bugText = new TextBlock
+                int bugNum;
+                if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
                 {
-                    Text = bugNum.ToString(),
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    FontFamily = new FontFamily("Arial Black"),
-                    FontSize = size * 0.5,
-                    Foreground = bugPath.Fill,
-                };
-                bugGrid.Children.Add(bugText);
+                    rotateAngle += (bugNum - 1) * 60.0;
+
+                    // Add bug number
+                    TextBlock bugText = new TextBlock
+                    {
+                        Text = bugNum.ToString(),
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        FontFamily = new FontFamily("Arial Black"),
+                        FontSize = size * 0.5,
+                        Foreground = bugPath.Fill,
+                    };
+                    bugGrid.Children.Add(bugText);
+                }
             }
 
             bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);

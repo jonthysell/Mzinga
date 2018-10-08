@@ -17,38 +17,6 @@
                    Width="32" />
             <StackPanel Margin="5"
                         Orientation="Vertical">
-                <GroupBox Header="Engine"
-                          Margin="5">
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Type:"
-                                   Margin="5"
-                                   Padding="0"
-                                   VerticalAlignment="Center"
-                                   Width="50" />
-                            <RadioButton Content="Internal"
-                                         GroupName="EngineType"
-                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Internal}"
-                                         Margin="5"
-                                         VerticalAlignment="Center"
-                                         VerticalContentAlignment="Center" />
-                            <RadioButton Content="External"
-                                         GroupName="EngineType"
-                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
-                                         Margin="5"
-                                         VerticalAlignment="Center"
-                                         VerticalContentAlignment="Center" />
-                        </StackPanel>
-                        <TextBox IsEnabled="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
-                                 Margin="5"
-                                 Text="{Binding EngineCommandLine}" />
-                        <Label Content="Note: Restart viewer to take effect."
-                               HorizontalAlignment="Center"
-                               Margin="5"
-                               Padding="0"
-                               VerticalAlignment="Center" />
-                    </StackPanel>
-                </GroupBox>
                 <GroupBox Header="Play"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
@@ -82,6 +50,49 @@
                                   Margin="5" />
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="Engine"
+                          Margin="5">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Type:"
+                                   Margin="5"
+                                   Padding="0"
+                                   VerticalAlignment="Center"
+                                   Width="50" />
+                            <RadioButton Content="Internal"
+                                         GroupName="EngineType"
+                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Internal}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="External"
+                                         GroupName="EngineType"
+                                         IsChecked="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                         Margin="5"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
+                        </StackPanel>
+                        <TextBox IsEnabled="{Binding Path=EngineType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                 Margin="5"
+                                 Text="{Binding EngineCommandLine}" />
+                        <Label Content="Note: Restart viewer to take effect."
+                               HorizontalAlignment="Center"
+                               Margin="5"
+                               Padding="0"
+                               VerticalAlignment="Center" />
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Other"
+                          Margin="5">
+                    <StackPanel Orientation="Vertical">
+                        <CheckBox Content="Play sound effects"
+                                  IsChecked="{Binding PlaySoundEffects}"
+                                  Margin="5" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+            <StackPanel Margin="5"
+                        Orientation="Vertical">
                 <GroupBox Header="Visuals"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
@@ -128,7 +139,10 @@
                                          VerticalContentAlignment="Center" />
                         </StackPanel>
                         <Separator Margin="5" />
-                        <CheckBox Content="Stack pieces in hand"
+                        <CheckBox Content="Disambiguate similar piece types"
+                                  IsChecked="{Binding DisambiguatePieces}"
+                                  Margin="5" />
+                        <CheckBox Content="Stack similar piece types in hand"
                                   IsChecked="{Binding StackPiecesInHand}"
                                   Margin="5" />
                         <Separator Margin="5" />
@@ -147,14 +161,6 @@
                                   Margin="5" />
                         <CheckBox Content="Disable pieces in hand with no moves"
                                   IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
-                                  Margin="5" />
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox Header="Other"
-                          Margin="5">
-                    <StackPanel Orientation="Vertical">
-                        <CheckBox Content="Play sound effects"
-                                  IsChecked="{Binding PlaySoundEffects}"
                                   Margin="5" />
                     </StackPanel>
                 </GroupBox>

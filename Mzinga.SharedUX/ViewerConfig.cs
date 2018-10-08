@@ -122,6 +122,8 @@ namespace Mzinga.SharedUX
 
         public bool RequireMoveConfirmation { get; set; } = true;
 
+        public bool DisambiguatePieces { get; set; } = true;
+
         public bool StackPiecesInHand { get; set; } = false;
 
         public bool PlaySoundEffects { get; set; } = true;
@@ -182,6 +184,9 @@ namespace Mzinga.SharedUX
                             case "StackPiecesInHand":
                                 StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), StackPiecesInHand);
                                 break;
+                            case "DisambiguatePieces":
+                                DisambiguatePieces = ParseBoolValue(reader.ReadElementContentAsString(), DisambiguatePieces);
+                                break;
                             case "PlaySoundEffects":
                                 PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
                                 break;
@@ -239,6 +244,7 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
                 writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
                 writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
+                writer.WriteElementString("DisambiguatePieces", DisambiguatePieces.ToString());
                 writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
                 writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
 
@@ -268,6 +274,7 @@ namespace Mzinga.SharedUX
                 BlockInvalidMoves = BlockInvalidMoves,
                 RequireMoveConfirmation = RequireMoveConfirmation,
 
+                DisambiguatePieces = DisambiguatePieces,
                 StackPiecesInHand = StackPiecesInHand,
 
                 PlaySoundEffects = PlaySoundEffects,
@@ -301,6 +308,7 @@ namespace Mzinga.SharedUX
             BlockInvalidMoves = config.BlockInvalidMoves;
             RequireMoveConfirmation = config.RequireMoveConfirmation;
 
+            DisambiguatePieces = config.DisambiguatePieces;
             StackPiecesInHand = config.StackPiecesInHand;
 
             PlaySoundEffects = config.PlaySoundEffects;
