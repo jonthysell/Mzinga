@@ -281,7 +281,7 @@ namespace Mzinga.SharedUX
 
                             bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
-                            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetHexText(center, size, piece.PieceName, disabled) : GetHexBug(center, size, piece.PieceName, disabled);
+                            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
                             BoardCanvas.Children.Add(hexText);
 
@@ -662,7 +662,7 @@ namespace Mzinga.SharedUX
             return hex;
         }
 
-        private Border GetHexText(Point center, double size, PieceName pieceName, bool disabled)
+        private Border GetPieceText(Point center, double size, PieceName pieceName, bool disabled)
         {
             if (null == center)
             {
@@ -674,29 +674,22 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException("size");
             }
 
-            TextBlock hexText = new TextBlock
+            // Create text
+            TextBlock bugText = new TextBlock
             {
                 Text = EnumUtils.GetShortName(pieceName).Substring(1),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                FontFamily = new FontFamily("Arial Black")
+                FontFamily = new FontFamily("Arial Black"),
+                FontSize = size * 0.75,
+                Foreground = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
             };
 
-            // Add color
-            hexText.Foreground = BugBrushes[(int)EnumUtils.GetBugType(pieceName)];
-
-            if (disabled)
-            {
-                hexText.Foreground = MixSolidColorBrushes((SolidColorBrush)hexText.Foreground, DisabledPieceBrush);
-            }
-
-            hexText.FontSize = size * 0.75;
-
-            Canvas.SetLeft(hexText, center.X - (hexText.Text.Length * (hexText.FontSize / 3.0)));
-            Canvas.SetTop(hexText, center.Y - (hexText.FontSize / 2.0));
+            Canvas.SetLeft(bugText, center.X - (bugText.Text.Length * (bugText.FontSize / 3.0)));
+            Canvas.SetTop(bugText, center.Y - (bugText.FontSize / 2.0));
 
             Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
-            b.Child = hexText;
+            b.Child = bugText;
 
             Canvas.SetLeft(b, center.X - (b.Width / 2.0));
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
@@ -704,7 +697,7 @@ namespace Mzinga.SharedUX
             return b;
         }
 
-        private Border GetHexBug(Point center, double size, PieceName pieceName, bool disabled)
+        private Border GetPieceGraphics(Point center, double size, PieceName pieceName, bool disabled)
         {
             if (null == center)
             {
@@ -716,21 +709,30 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException("size");
             }
 
-            Path hexBug = new Path();
-
-            hexBug.Fill = BugBrushes[(int)EnumUtils.GetBugType(pieceName)];
-
-            if (disabled)
+            // Create bug
+            Path bugPath = new Path()
             {
-                hexBug.Fill = MixSolidColorBrushes((SolidColorBrush)hexBug.Fill, DisabledPieceBrush);
+                Data = Geometry.Parse(BugPathGeometries[(int)EnumUtils.GetBugType(pieceName)]),
+                Stretch = Stretch.Uniform,
+                Fill = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
+            };
+
+            Grid bugGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
+            bugGrid.Children.Add(bugPath);
+
+            // Bug number indicators / rotation
+            double rotateAngle = VM.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
+
+            int bugNum;
+            if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
+            {
+                rotateAngle += (bugNum - 1) * 60.0;
             }
 
-            hexBug.Data = Geometry.Parse(BugPathGeometries[(int)EnumUtils.GetBugType(pieceName)]);
+            bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);
 
-            hexBug.Stretch = Stretch.Uniform;
-
-            Border b = new Border() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
-            b.Child = hexBug;
+            Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
+            b.Child = bugGrid;
 
             Canvas.SetLeft(b, center.X - (b.Width / 2.0));
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
@@ -806,7 +808,7 @@ namespace Mzinga.SharedUX
             HexType hexType = (piece.Color == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Shape hex = GetHex(center, size, hexType, hexOrientation);
-            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetHexText(center, size, piece.PieceName, disabled) : GetHexBug(center, size, piece.PieceName, disabled);
+            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
             {
