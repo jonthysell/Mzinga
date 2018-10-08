@@ -44,6 +44,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Resources;
 using System.Windows.Shapes;
 #endif
@@ -727,6 +728,18 @@ namespace Mzinga.SharedUX
             if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
             {
                 rotateAngle += (bugNum - 1) * 60.0;
+
+                // Add bug number
+                TextBlock bugText = new TextBlock
+                {
+                    Text = bugNum.ToString(),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    FontFamily = new FontFamily("Arial Black"),
+                    FontSize = size * 0.5,
+                    Foreground = bugPath.Fill,
+                };
+                bugGrid.Children.Add(bugText);
             }
 
             bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);
