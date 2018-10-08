@@ -120,11 +120,11 @@ namespace Mzinga.SharedUX
 
         public bool BlockInvalidMoves { get; set; } = true;
 
-        public bool RequireMoveConfirmation { get; set; } = true;
+        public bool RequireMoveConfirmation { get; set; } = false;
 
-        public bool DisambiguatePieces { get; set; } = true;
+        public bool DisambiguatePieces { get; set; } = false;
 
-        public bool StackPiecesInHand { get; set; } = false;
+        public bool StackPiecesInHand { get; set; } = true;
 
         public bool PlaySoundEffects { get; set; } = true;
         
