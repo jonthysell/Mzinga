@@ -35,6 +35,14 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class NewGameViewModel : ViewModelBase
     {
+        public AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+        }
+
         public string Title
         {
             get
@@ -83,6 +91,14 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool EnableMosquito
+        {
+            get
+            {
+                return EnumUtils.IsEnabled(BugType.Mosquito, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+            }
+        }
+
         public bool IncludeMosquito
         {
             get
@@ -93,7 +109,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 try
                 {
-                    if (value)
+                    if (EnableMosquito && value)
                     {
                         Settings.ExpansionPieces |= ExpansionPieces.Mosquito;
                     }
@@ -110,6 +126,14 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool EnableLadybug
+        {
+            get
+            {
+                return EnumUtils.IsEnabled(BugType.Ladybug, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+            }
+        }
+
         public bool IncludeLadybug
         {
             get
@@ -120,7 +144,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 try
                 {
-                    if (value)
+                    if (EnableLadybug && value)
                     {
                         Settings.ExpansionPieces |= ExpansionPieces.Ladybug;
                     }
@@ -137,6 +161,14 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool EnablePillbug
+        {
+            get
+            {
+                return EnumUtils.IsEnabled(BugType.Pillbug, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+            }
+        }
+
         public bool IncludePillbug
         {
             get
@@ -147,7 +179,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 try
                 {
-                    if (value)
+                    if (EnablePillbug && value)
                     {
                         Settings.ExpansionPieces |= ExpansionPieces.Pillbug;
                     }

@@ -278,6 +278,7 @@ namespace Mzinga.Engine
         private void Info()
         {
             ConsoleOut("id {0}", ID);
+            ConsoleOut("Base+MLP");
         }
 
         private void Help()

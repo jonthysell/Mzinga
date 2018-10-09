@@ -81,6 +81,8 @@ namespace Mzinga.SharedUX
 
         public EngineOptions EngineOptions { get; private set; }
 
+        public EngineCapabilities EngineCapabilities { get; private set; }
+
         public bool IsIdle
         {
             get
@@ -606,6 +608,8 @@ namespace Mzinga.SharedUX
                     EngineOptions.ParseEngineOptionLines(optionLines);
                     break;
                 case EngineCommand.Info:
+                    EngineCapabilities = new EngineCapabilities(lastLine);
+                    break;
                 case EngineCommand.Help:
                 default:
                     break;

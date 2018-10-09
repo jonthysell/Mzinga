@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BoolToVisibilityConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EngineCapabilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumMatchToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IdleBoolToWaitCursorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
