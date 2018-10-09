@@ -249,12 +249,20 @@
       <Name>Mzinga.Engine</Name>
       <Aliases>MEDONTUSE</Aliases>
     </ProjectReference>
+    <ProjectReference Include="..\Mzinga.Trainer\Mzinga.Trainer.csproj">
+      <Project>{9824e8fd-6155-4c02-a3a4-5d39355f01fe}</Project>
+      <Name>Mzinga.Trainer</Name>
+      <Aliases>MTDONTUSE</Aliases>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy /y "$(SolutionDir)README.md" "$(TargetDir)Readme.txt" &amp;&amp; copy /y "$(SolutionDir)LICENSE.md" "$(TargetDir)License.txt" &amp;&amp; copy /y "$(SolutionDir)External\MVVMLight\LICENSE.md" "$(TargetDir)MVVM Light License.txt"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug (Portable)' Or '$(Configuration)' == 'Release (Portable)'">
+    <PostBuildEvent>cd "$(TargetDir)" &amp;&amp; rd /s /q "MzingaPortable" &amp; md "MzingaPortable" &amp;&amp; copy /y "*.exe" "MzingaPortable\" &amp;&amp; copy /y "*.txt" "MzingaPortable\" &amp;&amp; powershell -Command "&amp; {&amp;'Compress-Archive' -Path "MzingaPortable" -DestinationPath "MzingaPortable.zip" -Force}"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="AfterResolveReferences">
     <ItemGroup Condition="'$(Configuration)' == 'Debug (Portable)' Or '$(Configuration)' == 'Release (Portable)'">

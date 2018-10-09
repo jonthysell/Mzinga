@@ -88,11 +88,9 @@
                         WorkingDirectory="INSTALLFOLDER" />
             </File>
             <File Id="MzingaReadme"
-                  Name="Readme.txt"
-                  Source="$(var.SolutionDir)\README.md" />
+                  Source="$(var.Mzinga.Viewer.TargetDir)\Readme.txt" />
             <File Id="MzingaLicense"
-                  Name="License.txt"
-                  Source="$(var.SolutionDir)\LICENSE.md" />
+                  Source="$(var.Mzinga.Viewer.TargetDir)\License.txt" />
             <RemoveFolder Id="ApplicationProgramsFolder"
                           On="uninstall" />
           </Component>
