@@ -48,17 +48,23 @@ namespace Mzinga.Viewer
             }
         }
 
-        private string _configFile;
+        public string ViewerConfigPath { get; private set; }
 
         public App(string configFile)
         {
             MessageHandlers.RegisterMessageHandlers(this);
 
+#if PORTABLE
+            ViewerConfigPath = !string.IsNullOrWhiteSpace(configFile) ? configFile : DefaultViewerConfigFileName;
+#else
+            ViewerConfigPath = !string.IsNullOrWhiteSpace(configFile) ? configFile : GetAppDataViewerConfigPath();
+#endif
+
             AppViewModelParameters parameters = new AppViewModelParameters()
             {
                 ProgramTitle = string.Format("{0} v{1}", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version.ToString()),
                 FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
-                ViewerConfig = LoadConfig(configFile),
+                ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Dispatcher.Invoke(action); }
             };
 
@@ -89,21 +95,9 @@ namespace Mzinga.Viewer
             }
         }
 
-        private ViewerConfig LoadConfig(string configFile)
+        private ViewerConfig LoadConfig()
         {
-            if (string.IsNullOrWhiteSpace(configFile) || !File.Exists(configFile))
-            {
-                string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                userFolder = Path.Combine(userFolder, "Mzinga");
-                if (!Directory.Exists(userFolder))
-                {
-                    Directory.CreateDirectory(userFolder);
-                }
-
-                configFile = Path.Combine(userFolder, "Mzinga.Viewer.xml");
-            }
-
-            using (FileStream inputStream = new FileStream(configFile, FileMode.OpenOrCreate))
+            using (FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate))
             {
                 ViewerConfig viewerConfig = new ViewerConfig();
 
@@ -113,17 +107,30 @@ namespace Mzinga.Viewer
                 }
                 catch (Exception) { }
 
-                _configFile = configFile;
                 return viewerConfig;
             }
         }
 
+        private string GetAppDataViewerConfigPath()
+        {
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            userFolder = Path.Combine(userFolder, "Mzinga");
+            if (!Directory.Exists(userFolder))
+            {
+                Directory.CreateDirectory(userFolder);
+            }
+
+            return Path.Combine(userFolder, DefaultViewerConfigFileName);
+        }
+
         private void SaveConfig()
         {
-            using (FileStream outputStream = new FileStream(_configFile, FileMode.Create))
+            using (FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create))
             {
                 AppVM.ViewerConfig.SaveConfig(outputStream);
             }
         }
+
+        private const string DefaultViewerConfigFileName = "Mzinga.Viewer.xml";
     }
 }
