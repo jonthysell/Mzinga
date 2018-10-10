@@ -104,10 +104,7 @@
           </Component>
           <Component Id="MvvmLib">
             <File Id="MvvmLib"
-                  KeyPath="yes"
                   Source="$(var.Mzinga.Viewer.TargetDir)\GalaSoft.MvvmLight.dll" />
-            <File Id="MvvmLightLicense"
-                  Source="$(var.Mzinga.Viewer.TargetDir)\MVVM Light License.txt" />
           </Component>
           <Component Id="MvvmExtrasLib">
             <File Id="MvvmExtrasLib"
