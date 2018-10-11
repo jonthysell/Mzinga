@@ -278,7 +278,7 @@ namespace Mzinga.Engine
         private void Info()
         {
             ConsoleOut("id {0}", ID);
-            ConsoleOut("Base+MLP");
+            ConsoleOut("Mosquito;Ladybug;Pillbug");
         }
 
         private void Help()

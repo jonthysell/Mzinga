@@ -95,7 +95,7 @@ namespace Mzinga.Viewer
                 {
                     if (confirmUpdate)
                     {
-                        string message = string.Format("Mzinga v{0} is available. Would you like to go to the download page?", latestVersion.Version);
+                        string message = string.Format("Mzinga v{0} is available. Would you like to update now?", latestVersion.Version);
                         AppVM.DoOnUIThread(() =>
                         {
                             Messenger.Default.Send(new ConfirmationMessage(message, (confirmed) =>

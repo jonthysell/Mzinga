@@ -42,8 +42,18 @@ namespace Mzinga.SharedUX
                 {
                     try
                     {
-                        // TODO: Put at end in else
-                        ExpansionPieces |= EnumUtils.ParseExpansionPieces(capabilitiesString);
+                        switch (capabilityString.ToLower())
+                        {
+                            case "mosquito":
+                                ExpansionPieces |= ExpansionPieces.Mosquito;
+                                break;
+                            case "ladybug":
+                                ExpansionPieces |= ExpansionPieces.Ladybug;
+                                break;
+                            case "pillbug":
+                                ExpansionPieces |= ExpansionPieces.Pillbug;
+                                break;
+                        }                       
                     }
                     catch (Exception) { }
                 }
