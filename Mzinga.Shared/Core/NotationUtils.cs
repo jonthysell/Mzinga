@@ -250,7 +250,7 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("moveStringList");
             }
 
-            string[] split = moveStringList.Split(MoveSet.MoveStringSeparator);
+            string[] split = moveStringList.Split(new char[] { MoveSet.MoveStringSeparator }, StringSplitOptions.RemoveEmptyEntries);
 
             MoveSet moves = new MoveSet();
             for (int i = 0; i < split.Length; i++)
