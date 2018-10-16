@@ -362,7 +362,7 @@ namespace Mzinga.Core
 
         protected bool HasPieceAt(Position position)
         {
-            return (null != GetPiece(position));
+            return (null != GetPieceInternal(position));
         }
 
         public Position GetPiecePosition(PieceName pieceName)
@@ -380,7 +380,19 @@ namespace Mzinga.Core
             return _pieces[(int)pieceName];
         }
 
-        protected Piece GetPiece(Position position)
+        public PieceName GetPiece(Position position)
+        {
+            Piece piece = GetPieceInternal(position);
+
+            if (null != piece)
+            {
+                return piece.PieceName;
+            }
+
+            return PieceName.INVALID;
+        }
+
+        protected Piece GetPieceInternal(Position position)
         {
             Piece piece;
             if (_piecesByPosition.TryGetValue(position, out piece))
@@ -409,7 +421,7 @@ namespace Mzinga.Core
                 position = position.GetBelow();
             }
 
-            Piece topPiece = GetPiece(position);
+            Piece topPiece = GetPieceInternal(position);
 
             if (null != topPiece)
             {
@@ -470,7 +482,7 @@ namespace Mzinga.Core
                 if (newPosition.Stack > 0)
                 {
                     Position posBelow = newPosition.GetBelow();
-                    Piece pieceBelow = GetPiece(posBelow);
+                    Piece pieceBelow = GetPieceInternal(posBelow);
                     pieceBelow.PieceAbove = piece;
                     piece.PieceBelow = pieceBelow;
                 }
@@ -536,7 +548,7 @@ namespace Mzinga.Core
                     for (int i = 0; i < EnumUtils.NumDirections; i++)
                     {
                         Position neighbor = currentPiece.Position.NeighborAt(i);
-                        Piece neighborPiece = GetPiece(neighbor);
+                        Piece neighborPiece = GetPieceInternal(neighbor);
                         if (null != neighborPiece && !partOfHive[(int)neighborPiece.PieceName])
                         {
                             piecesToLookAt.Enqueue(neighborPiece);
@@ -669,7 +681,7 @@ namespace Mzinga.Core
             {
                 for (int i = 0; i < EnumUtils.NumDirections; i++)
                 {
-                    Piece neighbor = GetPiece(piece.Position.NeighborAt(i));
+                    Piece neighbor = GetPieceInternal(piece.Position.NeighborAt(i));
                     if (null != neighbor)
                     {
                         if (neighbor.Color == piece.Color)
@@ -1182,7 +1194,7 @@ namespace Mzinga.Core
             for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
             {
                 Position neighbor = targetPiece.Position.NeighborAt(dir);
-                Piece piece = GetPiece(neighbor);
+                Piece piece = GetPieceInternal(neighbor);
                 if (null != piece && piece.PieceName != LastPieceMoved && null == piece.PieceAbove && CanMoveWithoutBreakingHive(piece))
                 {
                     // Piece can be moved

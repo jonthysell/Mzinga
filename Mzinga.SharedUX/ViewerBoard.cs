@@ -32,18 +32,6 @@ namespace Mzinga.SharedUX
     {
         public ViewerBoard(string boardString) : base(boardString) { }
 
-        public new PieceName GetPiece(Position position)
-        {
-            Piece piece = base.GetPiece(position);
-
-            if (null != piece)
-            {
-                return piece.PieceName;
-            }
-
-            return PieceName.INVALID;
-        }
-
         public void SimulatePlay(Move move)
         {
             Position originalPosition = null;

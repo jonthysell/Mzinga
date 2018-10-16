@@ -30,7 +30,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)NotationUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewerBoard.cs" />

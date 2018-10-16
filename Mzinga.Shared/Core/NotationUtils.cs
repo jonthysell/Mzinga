@@ -46,6 +46,7 @@ namespace Mzinga.Core
 
             try
             {
+                // Attempt to parse as an algebraic move
                 return new Move(moveString);
             }
             catch (Exception) { }
@@ -104,7 +105,97 @@ namespace Mzinga.Core
 
             return null;
         }
-        
+
+        public static string ToBoardSpaceMoveString(Board board, Move move)
+        {
+            if (null == board)
+            {
+                throw new ArgumentNullException("board");
+            }
+
+            if (null == move)
+            {
+                throw new ArgumentNullException("move");
+            }
+
+            if (move.IsPass)
+            {
+                return "pass";
+            }
+
+
+            if (move.Color != board.CurrentTurnColor)
+            {
+                return null;
+            }
+
+            string startPiece = ToBoardSpacePieceName(move.PieceName);
+
+            if (board.CurrentTurn == 0)
+            {
+                return startPiece;
+            }
+            else
+            {
+                string endPiece = "";
+
+                if (move.Position.Stack > 0)
+                {
+                    // On top of board
+                    PieceName pieceBelow = board.GetPiece(move.Position.GetBelow());
+                    endPiece = ToBoardSpacePieceName(pieceBelow);
+                }
+                else
+                {
+                    // Find neighbor to move.Position
+                    foreach (Direction dir in EnumUtils.Directions)
+                    {
+                        // Found a neighbor!
+
+                        Position pos = move.Position.NeighborAt(dir);
+                        PieceName neighbor = board.GetPieceOnTop(pos);
+
+                        if (neighbor == move.PieceName)
+                        {
+                            Position posBelow = board.GetPiecePosition(neighbor).GetBelow();
+                            neighbor = null != posBelow ? board.GetPiece(posBelow) : PieceName.INVALID;
+                        }
+
+                        if (neighbor != PieceName.INVALID)
+                        {
+                            endPiece = ToBoardSpacePieceName(neighbor);
+
+                            switch (dir)
+                            {
+                                case Direction.Up:
+                                    endPiece = endPiece + @"\";
+                                    break;
+                                case Direction.UpRight:
+                                    endPiece = @"/" + endPiece;
+                                    break;
+                                case Direction.DownRight:
+                                    endPiece = @"-" + endPiece;
+                                    break;
+                                case Direction.Down:
+                                    endPiece = @"\" + endPiece;
+                                    break;
+                                case Direction.DownLeft:
+                                    endPiece = endPiece + @"/";
+                                    break;
+                                case Direction.UpLeft:
+                                    endPiece = endPiece + @"-";
+                                    break;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+                return string.IsNullOrWhiteSpace(endPiece) ? startPiece : string.Format("{0} {1}", startPiece, endPiece);
+            }
+        }
+
         public static string ToBoardSpacePieceName(PieceName pieceName)
         {
             string name = EnumUtils.GetShortName(pieceName);
