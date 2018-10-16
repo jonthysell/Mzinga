@@ -120,7 +120,7 @@ namespace Mzinga.Core
 
             if (move.IsPass)
             {
-                return "pass";
+                return BoardSpacePass;
             }
 
 
@@ -196,6 +196,47 @@ namespace Mzinga.Core
             }
         }
 
+        public static string NormalizeBoardSpaceMoveString(string moveString)
+        {
+            if (string.IsNullOrWhiteSpace(moveString))
+            {
+                throw new ArgumentNullException("moveString");
+            }
+
+            string[] moveStringParts = moveString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            PieceName movingPiece = EnumUtils.ParseShortName(moveStringParts[0]);
+
+            if (moveStringParts.Length == 1)
+            {
+                return ToBoardSpacePieceName(movingPiece);
+            }
+
+            string targetString = moveStringParts[1].Trim('-', '/', '\\');
+            int seperatorIndex = moveStringParts[1].IndexOfAny(new char[] { '-', '/', '\\' });
+
+            PieceName targetPiece = EnumUtils.ParseShortName(targetString);
+
+            if (seperatorIndex < 0)
+            {
+                return string.Format("{0} {1}", ToBoardSpacePieceName(movingPiece), ToBoardSpacePieceName(targetPiece));
+            }
+
+            char seperator = moveStringParts[1][seperatorIndex];
+            if (seperatorIndex == 0)
+            {
+                // Moving piece on the left-hand side of the target piece
+                return string.Format("{0} {1}{2}", ToBoardSpacePieceName(movingPiece), seperator, ToBoardSpacePieceName(targetPiece));
+            }
+            else if (seperatorIndex == targetString.Length)
+            {
+                // Moving piece on the right-hand side of the target piece
+                return string.Format("{0} {1}{2}", ToBoardSpacePieceName(movingPiece), ToBoardSpacePieceName(targetPiece), seperator);
+            }
+
+            return null;
+        }
+
         public static string ToBoardSpacePieceName(PieceName pieceName)
         {
             string name = EnumUtils.GetShortName(pieceName);
@@ -207,5 +248,7 @@ namespace Mzinga.Core
 
             return name;
         }
+
+        public const string BoardSpacePass = "pass";
     }
 }

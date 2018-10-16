@@ -82,9 +82,9 @@ namespace Mzinga.Core
             }
         }
 
-        public void Add(Move move, Position originalPosition)
+        public void Add(Move move, Position originalPosition, string moveString)
         {
-            BoardHistoryItem item = new BoardHistoryItem(move, originalPosition);
+            BoardHistoryItem item = new BoardHistoryItem(move, originalPosition, moveString);
             _items.Add(item);
         }
 
@@ -133,7 +133,9 @@ namespace Mzinga.Core
         public Move Move { get; private set; }
         public Position OriginalPosition { get; private set; }
 
-        public BoardHistoryItem(Move move, Position originalPosition)
+        public string MoveString { get; private set; }
+
+        public BoardHistoryItem(Move move, Position originalPosition, string moveString)
         {
             if (null == move)
             {
@@ -142,6 +144,7 @@ namespace Mzinga.Core
 
             Move = move;
             OriginalPosition = originalPosition;
+            MoveString = moveString;
         }
 
         public BoardHistoryItem(string boardHistoryItemString)

@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,12 +66,12 @@ namespace Mzinga.Core
             GameBoard clone = new GameBoard(ExpansionPieces);
             foreach (BoardHistoryItem item in BoardHistory)
             {
-                clone.Play(item.Move);
+                clone.TrustedPlay(item.Move, item.MoveString);
             }
             return clone;
         }
 
-        public void Play(Move move)
+        public void Play(Move move, string moveString = null)
         {
             if (null == move)
             {
@@ -153,7 +154,7 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move);
             }
 
-            TrustedPlay(move);
+            TrustedPlay(move, null != moveString ? NotationUtils.NormalizeBoardSpaceMoveString(moveString) : NotationUtils.ToBoardSpaceMoveString(this, move));
         }
 
         public void Pass()
@@ -170,10 +171,10 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(pass, "You can't pass when you have valid moves.");
             }
 
-            TrustedPlay(pass);
+            TrustedPlay(pass, NotationUtils.BoardSpacePass);
         }
 
-        internal void TrustedPlay(Move move)
+        internal void TrustedPlay(Move move, string moveString = null)
         {
             Position originalPosition = null;
 
@@ -186,7 +187,7 @@ namespace Mzinga.Core
                 MovePiece(targetPiece, move.Position);
             }
 
-            _boardHistory.Add(move, originalPosition);
+            _boardHistory.Add(move, originalPosition, moveString);
 
             CurrentTurn++;
             LastPieceMoved = move.PieceName;
@@ -343,6 +344,55 @@ namespace Mzinga.Core
             }
 
             BoardChanged?.Invoke(this, null);
+        }
+
+        public string ToGameString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("{0}{1}", EnumUtils.GetExpansionPiecesString(ExpansionPieces), BoardStringSeparator);
+
+            foreach (BoardHistoryItem item in BoardHistory)
+            {
+                sb.AppendFormat("{0}{1}", NotationUtils.ToBoardSpaceMoveString(this, item.Move), BoardStringSeparator);
+            }
+
+            return sb.ToString().TrimEnd(BoardStringSeparator);
+        }
+
+        public static GameBoard ParseGameString(string gameString, bool trusted = false)
+        {
+            if (string.IsNullOrWhiteSpace(gameString))
+            {
+                throw new ArgumentNullException("gameString");
+            }
+
+            string[] split = gameString.Split(BoardStringSeparator);
+
+            ExpansionPieces expansionPieces;
+            if (!EnumUtils.TryParseExpansionPieces(split[0], out expansionPieces))
+            {
+                throw new ArgumentException("Couldn't parse expansion pieces.", "gameString");
+            }
+
+            GameBoard gb = new GameBoard(expansionPieces);
+
+            for (int i = 1; i < split.Length; i++)
+            {
+                string moveString = split[i];
+                Move move = NotationUtils.ParseMoveString(gb, moveString);
+
+                if (trusted)
+                {
+                    gb.TrustedPlay(move, NotationUtils.NormalizeBoardSpaceMoveString(moveString));
+                }
+                else
+                {
+                    gb.Play(move, moveString);
+                }
+            }
+
+            return gb;
         }
     }
 }
