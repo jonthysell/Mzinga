@@ -291,6 +291,20 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private double _canvasCursorY;
 
+        public bool CanRaiseStackedPieces
+        {
+            get
+            {
+                return _canRaiseStackedPieces;
+            }
+            internal set
+            {
+                _canRaiseStackedPieces = value;
+                RaisePropertyChanged("CanRaiseStackedPieces");
+            }
+        }
+        private bool _canRaiseStackedPieces = false;
+
         #endregion
 
         public RelayCommand NewGame

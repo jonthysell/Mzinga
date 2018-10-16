@@ -84,16 +84,34 @@ namespace Mzinga.Viewer
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.X)
+            if (VM.CanRaiseStackedPieces)
             {
-                BoardRenderer.RaiseStackedPieces = true;
-                e.Handled = true;
+                if (e.Key == Key.X)
+                {
+                    BoardRenderer.RaiseStackedPieces = true;
+                    e.Handled = true;
+                }
             }
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void LiftButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            BoardRenderer.RaiseStackedPieces = false;
+            e.Handled = true;
+        }
+
+        private void LiftButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (VM.CanRaiseStackedPieces)
+            {
+                BoardRenderer.RaiseStackedPieces = true;
+                e.Handled = true;
+            }
         }
     }
 }

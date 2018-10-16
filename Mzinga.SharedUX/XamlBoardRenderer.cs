@@ -110,9 +110,12 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return RaiseStackedPieces ? 0.5 : 0.1;
+                return RaiseStackedPieces ? RaisedStackShiftLevel : BaseStackShiftLevel;
             }
         }
+
+        private const double BaseStackShiftLevel = 0.1;
+        private const double RaisedStackShiftLevel = 0.5;
 
         private Board LastBoard;
 
@@ -457,24 +460,9 @@ namespace Mzinga.SharedUX
                     CanvasOffsetY = offsetY;
 
                     VM.CanvasHexRadius = size;
-
-                    // Add HUD elements
-
-                    // Add lift text
-                    if (maxStack > 0)
-                    {
-                        Border liftBorder = new Border() { Width = boardCanvasWidth, Height = boardCanvasHeight };
-
-                        TextBlock liftText = new TextBlock();
-                        liftText.HorizontalAlignment = HorizontalAlignment.Center;
-                        liftText.VerticalAlignment = VerticalAlignment.Bottom;
-                        liftText.Text = "Press 'x' to show covered tiles.";
-
-                        liftBorder.Child = liftText;
-
-                        BoardCanvas.Children.Add(liftBorder);
-                    }
                 }
+
+                VM.CanRaiseStackedPieces = maxStack > 0;
             }
 
             LastBoard = board;
@@ -788,8 +776,8 @@ namespace Mzinga.SharedUX
 
                         Canvas bugStack = new Canvas()
                         {
-                            Height = pieceCanvases[bugType].Peek().Height * (1 + startingCount * StackShiftRatio),
-                            Width = pieceCanvases[bugType].Peek().Width * (1 + startingCount * StackShiftRatio),
+                            Height = pieceCanvases[bugType].Peek().Height * (1 + startingCount * BaseStackShiftLevel),
+                            Width = pieceCanvases[bugType].Peek().Width * (1 + startingCount * BaseStackShiftLevel),
                             Margin = new Thickness(PieceCanvasMargin),
                             Background = new SolidColorBrush(Colors.Transparent),
                         };
@@ -797,8 +785,8 @@ namespace Mzinga.SharedUX
                         while (pieceCanvases[bugType].Count > 0)
                         {
                             Canvas pieceCanvas = pieceCanvases[bugType].Pop();
-                            Canvas.SetTop(pieceCanvas, pieceCanvas.Height * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
-                            Canvas.SetLeft(pieceCanvas, pieceCanvas.Width * ((startingCount - pieceCanvases[bugType].Count - 1) * StackShiftRatio));
+                            Canvas.SetTop(pieceCanvas, pieceCanvas.Height * ((startingCount - pieceCanvases[bugType].Count - 1) * BaseStackShiftLevel));
+                            Canvas.SetLeft(pieceCanvas, pieceCanvas.Width * ((startingCount - pieceCanvases[bugType].Count - 1) * BaseStackShiftLevel));
                             bugStack.Children.Add(pieceCanvas);
                         }
 
