@@ -53,6 +53,14 @@ namespace Mzinga.Core
         }
         private BoardHistory _boardHistory = new BoardHistory();
 
+        public BoardHistoryItem LastMove
+        {
+            get
+            {
+                return _boardHistory.LastMove;
+            }
+        }
+
         public event EventHandler BoardChanged;
 
         #endregion
@@ -352,9 +360,13 @@ namespace Mzinga.Core
 
             sb.AppendFormat("{0}{1}", EnumUtils.GetExpansionPiecesString(ExpansionPieces), BoardStringSeparator);
 
+            sb.AppendFormat("{0}{1}", BoardState.ToString(), BoardStringSeparator);
+
+            sb.AppendFormat("{0}[{1}]{2}", CurrentTurnColor.ToString(), CurrentPlayerTurn, BoardStringSeparator);
+
             foreach (BoardHistoryItem item in BoardHistory)
             {
-                sb.AppendFormat("{0}{1}", NotationUtils.ToBoardSpaceMoveString(this, item.Move), BoardStringSeparator);
+                sb.AppendFormat("{0}{1}", item.MoveString ?? NotationUtils.ToBoardSpaceMoveString(this, item.Move), BoardStringSeparator);
             }
 
             return sb.ToString().TrimEnd(BoardStringSeparator);
@@ -377,19 +389,11 @@ namespace Mzinga.Core
 
             GameBoard gb = new GameBoard(expansionPieces);
 
-            for (int i = 1; i < split.Length; i++)
+            for (int i = 3; i < split.Length; i++)
             {
                 string moveString = split[i];
                 Move move = NotationUtils.ParseMoveString(gb, moveString);
-
-                if (trusted)
-                {
-                    gb.TrustedPlay(move, NotationUtils.NormalizeBoardSpaceMoveString(moveString));
-                }
-                else
-                {
-                    gb.Play(move, moveString);
-                }
+                gb.Play(move, moveString);
             }
 
             return gb;

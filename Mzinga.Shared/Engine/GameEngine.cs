@@ -26,6 +26,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -202,9 +203,6 @@ namespace Mzinga.Engine
                             Undo(int.Parse(split[1]));
                         }
                         break;
-                    case "history":
-                        History();
-                        break;
                     case "options":
                         if (paramCount == 0)
                         {
@@ -293,7 +291,6 @@ namespace Mzinga.Engine
             ConsoleOut("validmoves");
             ConsoleOut("bestmove");
             ConsoleOut("undo");
-            ConsoleOut("history");
             ConsoleOut("options");
             ConsoleOut("perft");
             ConsoleOut("exit");
@@ -313,7 +310,7 @@ namespace Mzinga.Engine
                 throw new NoBoardException();
             }
 
-            ConsoleOut(_gameBoard.ToString());
+            ConsoleOut(_gameBoard.ToGameString());
         }
 
         private void NewGame(ExpansionPieces expansionPieces)
@@ -322,7 +319,7 @@ namespace Mzinga.Engine
 
             _gameAI.ResetCaches();
 
-            ConsoleOut(_gameBoard.ToString());
+            ConsoleOut(_gameBoard.ToGameString());
         }
 
         private void Play(string moveString)
@@ -339,7 +336,7 @@ namespace Mzinga.Engine
 
             _gameBoard.Play(NotationUtils.ParseMoveString(_gameBoard, moveString));
 
-            ConsoleOut(_gameBoard.ToString());
+            ConsoleOut(_gameBoard.ToGameString());
         }
 
         private void Pass()
@@ -356,7 +353,7 @@ namespace Mzinga.Engine
 
             _gameBoard.Pass();
 
-            ConsoleOut(_gameBoard.ToString());
+            ConsoleOut(_gameBoard.ToGameString());
         }
 
         private void ValidMoves()
@@ -373,7 +370,7 @@ namespace Mzinga.Engine
 
             MoveSet validMoves = _gameBoard.GetValidMoves();
 
-            ConsoleOut(validMoves.ToString());
+            ConsoleOut(NotationUtils.ToBoardSpaceMoveStringList(_gameBoard, validMoves));
         }
 
         private void BestMove()
@@ -398,7 +395,7 @@ namespace Mzinga.Engine
                 throw new Exception("Null move returned!");
             }
 
-            ConsoleOut(task.Result.ToString());
+            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
 
             OnEndAsyncCommand();
         }
@@ -425,7 +422,7 @@ namespace Mzinga.Engine
                 throw new Exception("Null move returned!");
             }
 
-            ConsoleOut(task.Result.ToString());
+            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
 
             OnEndAsyncCommand();
         }
@@ -457,7 +454,7 @@ namespace Mzinga.Engine
                 throw new Exception("Null move returned!");
             }
 
-            ConsoleOut(task.Result.ToString());
+            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
 
             OnEndAsyncCommand();
         }
@@ -479,19 +476,7 @@ namespace Mzinga.Engine
                 _gameBoard.UndoLastMove();
             }
 
-            ConsoleOut(_gameBoard.ToString());
-        }
-
-        private void History()
-        {
-            if (null == _gameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            BoardHistory history = new BoardHistory(_gameBoard.BoardHistory);
-
-            ConsoleOut(history.ToString());
+            ConsoleOut(_gameBoard.ToGameString());
         }
 
         private void OptionsList()

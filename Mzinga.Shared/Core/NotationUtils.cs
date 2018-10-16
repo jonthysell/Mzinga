@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Text;
 
 namespace Mzinga.Core
 {
@@ -235,6 +236,51 @@ namespace Mzinga.Core
             }
 
             return null;
+        }
+
+        public static MoveSet ParseMoveStringList(Board board, string moveStringList)
+        {
+            if (null == board)
+            {
+                throw new ArgumentNullException("board");
+            }
+
+            if (string.IsNullOrWhiteSpace(moveStringList))
+            {
+                throw new ArgumentNullException("moveStringList");
+            }
+
+            string[] split = moveStringList.Split(MoveSet.MoveStringSeparator);
+
+            MoveSet moves = new MoveSet();
+            for (int i = 0; i < split.Length; i++)
+            {
+                Move parseMove = ParseMoveString(board, split[i]);
+                moves.Add(parseMove);
+            }
+            return moves;
+        }
+
+        public static string ToBoardSpaceMoveStringList(Board board, MoveSet moves)
+        {
+            if (null == board)
+            {
+                throw new ArgumentNullException("board");
+            }
+
+            if (null == moves)
+            {
+                throw new ArgumentNullException("moves");
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Move move in moves)
+            {
+                sb.AppendFormat("{0}{1}", ToBoardSpaceMoveString(board, move), MoveSet.MoveStringSeparator);
+            }
+
+            return sb.ToString().TrimEnd(MoveSet.MoveStringSeparator);
         }
 
         public static string ToBoardSpacePieceName(PieceName pieceName)

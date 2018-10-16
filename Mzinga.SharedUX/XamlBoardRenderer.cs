@@ -246,8 +246,8 @@ namespace Mzinga.SharedUX
                 WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
                 BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
-                Position lastMoveStart = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.OriginalPosition;
-                Position lastMoveEnd = VM.AppVM.EngineWrapper.BoardHistory?.LastMove?.Move?.Position;
+                Position lastMoveStart = VM.AppVM.EngineWrapper.Board?.LastMove?.OriginalPosition;
+                Position lastMoveEnd = VM.AppVM.EngineWrapper.Board?.LastMove?.Move?.Position;
 
                 PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
                 Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;

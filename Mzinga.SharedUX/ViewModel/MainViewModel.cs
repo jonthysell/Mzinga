@@ -130,7 +130,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public ViewerBoard Board
+        public GameBoard Board
         {
             get
             {
@@ -144,16 +144,16 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 StringBuilder sb = new StringBuilder();
 
-                if (null != AppVM.EngineWrapper.BoardHistory)
+                if (null != Board)
                 {
                     int count = 1;
                     bool isWhite = true;
-                    foreach (Tuple<ViewerBoard, BoardHistoryItem> item in AppVM.EngineWrapper.BoardHistory.EnumerateWithBoard(Board))
+                    foreach (BoardHistoryItem item in Board.BoardHistory)
                     {
                         string countString = count.ToString() + ". ";
                         if (isWhite)
                         {
-                            sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
+                            sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
                         }
                         else
                         {
@@ -164,7 +164,7 @@ namespace Mzinga.SharedUX.ViewModel
                                 spacing += " ";
                             }
 
-                            sb.AppendFormat("{0}{1}", spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(item.Item1, item.Item2.Move) : item.Item2.Move.ToString());
+                            sb.AppendFormat("{0}{1}", spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
                             count++;
                         }
 
@@ -636,6 +636,7 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged("Board");
+                    RaisePropertyChanged("BoardHistory");
                     PlayTarget.RaiseCanExecuteChanged();
                     Pass.RaiseCanExecuteChanged();
                     FindBestMove.RaiseCanExecuteChanged();
@@ -670,14 +671,6 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged("ValidMoves");
-                });
-            };
-
-            AppVM.EngineWrapper.BoardHistoryUpdated += (sender, args) =>
-            {
-                AppVM.DoOnUIThread(() =>
-                {
-                    RaisePropertyChanged("BoardHistory");
                 });
             };
 

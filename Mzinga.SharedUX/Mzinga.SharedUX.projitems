@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BoardHistoryExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineConsoleViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EngineOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineOptionsViewModel.cs" />
@@ -32,7 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewerBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewerConfig.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewerConfigViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XamlBoardRenderer.cs" />

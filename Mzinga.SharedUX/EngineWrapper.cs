@@ -36,7 +36,7 @@ namespace Mzinga.SharedUX
 {
     public abstract class EngineWrapper
     {
-        public ViewerBoard Board
+        public GameBoard Board
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Mzinga.SharedUX
                 OnBoardUpdate();
             }
         }
-        private ViewerBoard _board = null;
+        private GameBoard _board = null;
 
         public MoveSet ValidMoves
         {
@@ -64,20 +64,6 @@ namespace Mzinga.SharedUX
             }
         }
         private MoveSet _validMoves;
-
-        public BoardHistory BoardHistory
-        {
-            get
-            {
-                return _boardHistory;
-            }
-            private set
-            {
-                _boardHistory = value;
-                OnBoardHistoryUpdate();
-            }
-        }
-        private BoardHistory _boardHistory;
 
         public EngineOptions EngineOptions { get; private set; }
 
@@ -205,7 +191,7 @@ namespace Mzinga.SharedUX
             {
                 int moves = 0;
 
-                int historyCount = null != BoardHistory ? BoardHistory.Count : 0;
+                int historyCount = null != _board ? _board.BoardHistoryCount : 0;
 
                 if (null != Board && historyCount > 0)
                 {
@@ -272,7 +258,6 @@ namespace Mzinga.SharedUX
 
         public event EventHandler BoardUpdated;
         public event EventHandler ValidMovesUpdated;
-        public event EventHandler BoardHistoryUpdated;
         public event EventHandler EngineTextUpdated;
 
         public event EventHandler TargetPieceUpdated;
@@ -362,7 +347,7 @@ namespace Mzinga.SharedUX
             }
             else
             {
-                SendCommand("play {0}", TargetMove);
+                SendCommand("play {0}", NotationUtils.ToBoardSpaceMoveString(Board, TargetMove));
             }
         }
 
@@ -534,8 +519,6 @@ namespace Mzinga.SharedUX
                     return EngineCommand.BestMove;
                 case "undo":
                     return EngineCommand.Undo;
-                case "history":
-                    return EngineCommand.History;
                 case "options":
                     return EngineCommand.Options;
                 case "exit":
@@ -589,18 +572,15 @@ namespace Mzinga.SharedUX
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !string.IsNullOrWhiteSpace(firstLine) ? new ViewerBoard(firstLine) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? GameBoard.ParseGameString(firstLine) : null;
                     break;
                 case EngineCommand.ValidMoves:
-                    ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? new MoveSet(firstLine) : null;
+                    ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? NotationUtils.ParseMoveStringList(Board, firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
                     // Update the target move (and potentially auto-play it)
                     ProcessBestMove(lastLine, true);
                     TryStopTimedCommand();
-                    break;
-                case EngineCommand.History:
-                    BoardHistory = !string.IsNullOrWhiteSpace(firstLine) ? new BoardHistory(firstLine) : null;
                     break;
                 case EngineCommand.Options:
                     string[] optionLines = new string[outputLines.Length - 1];
@@ -626,7 +606,7 @@ namespace Mzinga.SharedUX
         {
             try
             {
-                Move bestMove = new Move(line.Split(';')[0]);
+                Move bestMove = NotationUtils.ParseMoveString(Board, line.Split(';')[0]);
 
                 TargetPiece = bestMove.PieceName;
                 TargetPosition = bestMove.Position;
@@ -645,7 +625,7 @@ namespace Mzinga.SharedUX
                 }
                 else
                 {
-                    SendCommandInternal("play {0}", TargetMove);
+                    SendCommandInternal("play {0}", NotationUtils.ToBoardSpaceMoveString(Board, TargetMove));
                 }
             }
         }
@@ -690,8 +670,6 @@ namespace Mzinga.SharedUX
             TargetPiece = PieceName.INVALID;
             ValidMoves = null;
 
-            SendCommandInternal("history");
-
             if (GameInProgress)
             {
                 SendCommandInternal("validmoves");
@@ -715,11 +693,6 @@ namespace Mzinga.SharedUX
         private void OnValidMovesUpdate()
         {
             ValidMovesUpdated?.Invoke(this, null);
-        }
-
-        private void OnBoardHistoryUpdate()
-        {
-            BoardHistoryUpdated?.Invoke(this, null);
         }
 
         private void OnEngineTextUpdate()
@@ -837,7 +810,6 @@ namespace Mzinga.SharedUX
             ValidMoves,
             BestMove,
             Undo,
-            History,
             Options,
             Exit
         }
