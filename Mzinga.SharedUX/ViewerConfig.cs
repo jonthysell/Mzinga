@@ -87,7 +87,7 @@ namespace Mzinga.SharedUX
                 }
             }
         }
-        private HexOrientation _hexOrientation = HexOrientation.FlatTop;
+        private HexOrientation _hexOrientation = HexOrientation.PointyTop;
 
         public NotationType NotationType
         {
@@ -104,7 +104,7 @@ namespace Mzinga.SharedUX
                 }
             }
         }
-        private NotationType _notationType = NotationType.Mzinga;
+        private NotationType _notationType = NotationType.BoardSpace;
 
         public PieceStyle PieceStyle { get; set; } = PieceStyle.Mzinga;
 
@@ -122,7 +122,7 @@ namespace Mzinga.SharedUX
 
         public bool RequireMoveConfirmation { get; set; } = false;
 
-        public bool DisambiguatePieces { get; set; } = false;
+        public bool DisambiguatePieces { get; set; } = true;
 
         public bool StackPiecesInHand { get; set; } = true;
 
