@@ -159,13 +159,13 @@ namespace Mzinga.Engine
                         }
                         break;
                     case "play":
-                        if (paramCount < 1)
+                        if (paramCount == 0)
                         {
                             throw new CommandException();
                         }
                         else
                         {
-                            Play(split[1]);
+                            Play(string.Join(" ", split, 1, paramCount));
                         }
                         break;
                     case "pass":
@@ -337,7 +337,7 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            _gameBoard.Play(new Move(moveString));
+            _gameBoard.Play(NotationUtils.ParseMoveString(_gameBoard, moveString));
 
             ConsoleOut(_gameBoard.ToString());
         }

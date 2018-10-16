@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\GameBoard.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Move.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\MoveSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\NotationUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Piece.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PieceMetrics.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\PiecePositionBase.cs" />
