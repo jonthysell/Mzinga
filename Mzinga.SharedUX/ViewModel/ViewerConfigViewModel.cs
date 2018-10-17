@@ -78,7 +78,6 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 Config.HexOrientation = value;
                 RaisePropertyChanged("HexOrientation");
-                RaisePropertyChanged("NotationType");
             }
         }
 
@@ -92,7 +91,6 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 Config.NotationType = value;
                 RaisePropertyChanged("NotationType");
-                RaisePropertyChanged("HexOrientation");
             }
         }
 
@@ -200,16 +198,16 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool DisambiguatePieces
+        public bool AddPieceNumbers
         {
             get
             {
-                return Config.DisambiguatePieces;
+                return Config.AddPieceNumbers;
             }
             set
             {
-                Config.DisambiguatePieces = value;
-                RaisePropertyChanged("DisambiguatePieces");
+                Config.AddPieceNumbers = value;
+                RaisePropertyChanged("AddPieceNumbers");
             }
         }
 
@@ -300,7 +298,7 @@ namespace Mzinga.SharedUX.ViewModel
                         RaisePropertyChanged("HighlightLastMovePlayed");
                         RaisePropertyChanged("BlockInvalidMoves");
                         RaisePropertyChanged("RequireMoveConfirmation");
-                        RaisePropertyChanged("DisambiguatePieces");
+                        RaisePropertyChanged("AddPieceNumbers");
                         RaisePropertyChanged("StackPiecesInHand");
                         RaisePropertyChanged("PlaySoundEffects");
 

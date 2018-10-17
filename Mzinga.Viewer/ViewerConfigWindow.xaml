@@ -26,16 +26,16 @@
                                    Padding="0"
                                    VerticalAlignment="Center"
                                    Width="60" />
-                            <RadioButton Content="Mzinga"
+                            <RadioButton Content="BoardSpace"
                                          GroupName="NotationType"
-                                         IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
+                                         IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
                                          Margin="5"
                                          MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
-                            <RadioButton Content="BoardSpace"
+                            <RadioButton Content="Mzinga"
                                          GroupName="NotationType"
-                                         IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
+                                         IsChecked="{Binding Path=NotationType, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
                                          Margin="5"
                                          MinWidth="60"
                                          VerticalAlignment="Center"
@@ -102,16 +102,16 @@
                                    Padding="0"
                                    VerticalAlignment="Center"
                                    Width="60" />
-                            <RadioButton Content="Flat Top"
+                            <RadioButton Content="Pointy Top"
                                          GroupName="HexOrientation"
-                                         IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}"
+                                         IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}"
                                          Margin="5"
                                          MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
-                            <RadioButton Content="Pointy Top"
+                            <RadioButton Content="Flat Top"
                                          GroupName="HexOrientation"
-                                         IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}"
+                                         IsChecked="{Binding Path=HexOrientation, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}"
                                          Margin="5"
                                          MinWidth="60"
                                          VerticalAlignment="Center"
@@ -123,6 +123,13 @@
                                    Padding="0"
                                    VerticalAlignment="Center"
                                    Width="60" />
+                            <RadioButton Content="Graphical"
+                                         GroupName="PieceStyle"
+                                         IsChecked="{Binding Path=PieceStyle, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Graphical}"
+                                         Margin="5"
+                                         MinWidth="60"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center" />
                             <RadioButton Content="Text"
                                          GroupName="PieceStyle"
                                          IsChecked="{Binding Path=PieceStyle, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}"
@@ -130,19 +137,12 @@
                                          MinWidth="60"
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center" />
-                            <RadioButton Content="Graphical"
-                                         GroupName="PieceStyle"
-                                         IsChecked="{Binding Path=PieceStyle, Mode=TwoWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
-                                         Margin="5"
-                                         MinWidth="60"
-                                         VerticalAlignment="Center"
-                                         VerticalContentAlignment="Center" />
                         </StackPanel>
                         <Separator Margin="5" />
-                        <CheckBox Content="Disambiguate similar piece types"
-                                  IsChecked="{Binding DisambiguatePieces}"
+                        <CheckBox Content="Add numbers to piece of similar type"
+                                  IsChecked="{Binding AddPieceNumbers}"
                                   Margin="5" />
-                        <CheckBox Content="Stack similar piece types in hand"
+                        <CheckBox Content="Stack pieces of similar type in hand"
                                   IsChecked="{Binding StackPiecesInHand}"
                                   Margin="5" />
                         <Separator Margin="5" />

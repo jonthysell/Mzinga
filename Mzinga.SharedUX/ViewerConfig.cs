@@ -72,41 +72,11 @@ namespace Mzinga.SharedUX
         }
         private string _engineCommandLine = MzingaEngineCommandLine;
 
-        public HexOrientation HexOrientation
-        {
-            get
-            {
-                return _hexOrientation;
-            }
-            set
-            {
-                _hexOrientation = value;
-                if (_hexOrientation == HexOrientation.FlatTop)
-                {
-                    NotationType = NotationType.Mzinga;
-                }
-            }
-        }
-        private HexOrientation _hexOrientation = HexOrientation.PointyTop;
+        public HexOrientation HexOrientation { get; set; } = HexOrientation.PointyTop;
 
-        public NotationType NotationType
-        {
-            get
-            {
-                return _notationType;
-            }
-            set
-            {
-                _notationType = value;
-                if (_notationType == NotationType.BoardSpace)
-                {
-                    HexOrientation = HexOrientation.PointyTop;
-                }
-            }
-        }
-        private NotationType _notationType = NotationType.BoardSpace;
+        public NotationType NotationType { get; set; } = NotationType.BoardSpace;
 
-        public PieceStyle PieceStyle { get; set; } = PieceStyle.Mzinga;
+        public PieceStyle PieceStyle { get; set; } = PieceStyle.Graphical;
 
         public bool DisablePiecesInHandWithNoMoves { get; set; } = false;
 
@@ -122,7 +92,7 @@ namespace Mzinga.SharedUX
 
         public bool RequireMoveConfirmation { get; set; } = false;
 
-        public bool DisambiguatePieces { get; set; } = true;
+        public bool AddPieceNumbers { get; set; } = false;
 
         public bool StackPiecesInHand { get; set; } = true;
 
@@ -184,8 +154,8 @@ namespace Mzinga.SharedUX
                             case "StackPiecesInHand":
                                 StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), StackPiecesInHand);
                                 break;
-                            case "DisambiguatePieces":
-                                DisambiguatePieces = ParseBoolValue(reader.ReadElementContentAsString(), DisambiguatePieces);
+                            case "AddPieceNumbers":
+                                AddPieceNumbers = ParseBoolValue(reader.ReadElementContentAsString(), AddPieceNumbers);
                                 break;
                             case "PlaySoundEffects":
                                 PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
@@ -244,7 +214,7 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
                 writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
                 writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
-                writer.WriteElementString("DisambiguatePieces", DisambiguatePieces.ToString());
+                writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
                 writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
                 writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
 
@@ -274,7 +244,7 @@ namespace Mzinga.SharedUX
                 BlockInvalidMoves = BlockInvalidMoves,
                 RequireMoveConfirmation = RequireMoveConfirmation,
 
-                DisambiguatePieces = DisambiguatePieces,
+                AddPieceNumbers = AddPieceNumbers,
                 StackPiecesInHand = StackPiecesInHand,
 
                 PlaySoundEffects = PlaySoundEffects,
@@ -308,7 +278,7 @@ namespace Mzinga.SharedUX
             BlockInvalidMoves = config.BlockInvalidMoves;
             RequireMoveConfirmation = config.RequireMoveConfirmation;
 
-            DisambiguatePieces = config.DisambiguatePieces;
+            AddPieceNumbers = config.AddPieceNumbers;
             StackPiecesInHand = config.StackPiecesInHand;
 
             PlaySoundEffects = config.PlaySoundEffects;
@@ -319,14 +289,14 @@ namespace Mzinga.SharedUX
 
     public enum HexOrientation
     {
+        PointyTop,
         FlatTop,
-        PointyTop
     }
 
     public enum NotationType
     {
+        BoardSpace,
         Mzinga,
-        BoardSpace
     }
 
     public enum EngineType
@@ -337,7 +307,7 @@ namespace Mzinga.SharedUX
 
     public enum PieceStyle
     {
+        Graphical,
         Text,
-        Mzinga,
     }
 }

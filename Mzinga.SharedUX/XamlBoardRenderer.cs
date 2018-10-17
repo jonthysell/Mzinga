@@ -664,7 +664,7 @@ namespace Mzinga.SharedUX
             string text = EnumUtils.GetShortName(pieceName).Substring(1);
             TextBlock bugText = new TextBlock
             {
-                Text = VM.ViewerConfig.DisambiguatePieces ? text : text.TrimEnd('1', '2', '3'),
+                Text = VM.ViewerConfig.AddPieceNumbers ? text : text.TrimEnd('1', '2', '3'),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
@@ -704,37 +704,53 @@ namespace Mzinga.SharedUX
                 Fill = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
             };
 
+            Grid safeGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
+
             Grid bugGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
             bugGrid.Children.Add(bugPath);
 
-            // Bug number indicators / rotation
+            safeGrid.Children.Add(bugGrid);
+
+            // Bug rotation
             double rotateAngle = VM.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
 
-            if (VM.ViewerConfig.DisambiguatePieces)
+            int bugNum;
+            if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
             {
-                int bugNum;
-                if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
-                {
-                    rotateAngle += (bugNum - 1) * 60.0;
+                rotateAngle += (bugNum - 1) * 60.0;
 
+                if (VM.ViewerConfig.AddPieceNumbers)
+                {
                     // Add bug number
                     TextBlock bugText = new TextBlock
                     {
                         Text = bugNum.ToString(),
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Top,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        VerticalAlignment = VerticalAlignment.Center,
                         FontFamily = new FontFamily("Arial Black"),
                         FontSize = size * 0.5,
-                        Foreground = bugPath.Fill,
+                        Foreground = EnumUtils.GetColor(pieceName) == PlayerColor.White ? WhiteBrush : BlackBrush,
                     };
-                    bugGrid.Children.Add(bugText);
+
+                    Ellipse bugTextEllipse = new Ellipse()
+                    {
+                        HorizontalAlignment = bugText.HorizontalAlignment,
+                        VerticalAlignment = bugText.VerticalAlignment,
+                        Width = bugText.FontSize,
+                        Height = bugText.FontSize,
+                        Fill = bugPath.Fill,
+                    };
+
+                    safeGrid.Children.Add(bugTextEllipse);
+                    safeGrid.Children.Add(bugText);
+
                 }
             }
 
             bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);
 
             Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
-            b.Child = bugGrid;
+            b.Child = safeGrid;
 
             Canvas.SetLeft(b, center.X - (b.Width / 2.0));
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
