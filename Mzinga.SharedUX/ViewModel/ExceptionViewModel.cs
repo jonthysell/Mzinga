@@ -57,7 +57,11 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return string.Format("Exception details: {0}", Exception.ToString());
+                if (Exception is EngineException ee)
+                {
+                    return string.Format(string.Join(Environment.NewLine, ee.OutputLines));
+                }
+                return string.Format(Exception.ToString());
             }
         }
 

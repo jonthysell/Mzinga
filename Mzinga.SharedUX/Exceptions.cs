@@ -33,7 +33,12 @@ namespace Mzinga.SharedUX
 #endif
     public class EngineException : Exception
     {
-        public EngineException(string message) : base(message) { }
+        public string[] OutputLines { get; private set; }
+
+        public EngineException(string message, string[] outputLines) : base(message)
+        {
+            OutputLines = outputLines;
+        }
     }
 
 #if !WINDOWS_UWP
@@ -41,6 +46,6 @@ namespace Mzinga.SharedUX
 #endif
     public class InvalidMoveException : EngineException
     {
-        public InvalidMoveException(string message) : base(message) { }
+        public InvalidMoveException(string message, string[] outputLines) : base(message, outputLines) { }
     }
 }

@@ -264,7 +264,7 @@ namespace Mzinga.Engine
         {
             ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
 #if DEBUG
-            ConsoleOut(ex.StackTrace.Replace("\r\n", " "));
+            ConsoleOut(ex.StackTrace);
 #endif
 
             if (null != ex.InnerException)
@@ -334,7 +334,17 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
-            _gameBoard.Play(NotationUtils.ParseMoveString(_gameBoard, moveString));
+            Move move = null;
+            try
+            {
+                move = NotationUtils.ParseMoveString(_gameBoard, moveString);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
+            }
+
+            _gameBoard.Play(move);
 
             ConsoleOut(_gameBoard.ToGameString());
         }

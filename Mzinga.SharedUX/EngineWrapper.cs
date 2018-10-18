@@ -533,26 +533,26 @@ namespace Mzinga.SharedUX
             string errorMessage = "";
             string invalidMoveMessage = "";
 
-            foreach (string line in outputLines)
+            for (int i = 0; i < outputLines.Length; i++)
             {
-                if (line.StartsWith("err"))
+                if (outputLines[i].StartsWith("err"))
                 {
-                    errorMessage = line.Substring(line.IndexOf(' ') + 1);
+                    errorMessage += outputLines[i].Substring(outputLines[i].IndexOf(' ') + 1) + Environment.NewLine;
                 }
-                else if (line.StartsWith("invalidmove"))
+                else if (outputLines[i].StartsWith("invalidmove"))
                 {
-                    invalidMoveMessage = line.Substring(line.IndexOf(' ') + 1);
+                    invalidMoveMessage += outputLines[i].Substring(outputLines[i].IndexOf(' ') + 1) + Environment.NewLine;
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                throw new EngineException(errorMessage);
+                throw new EngineException(errorMessage.Trim(), outputLines);
             }
 
             if (!string.IsNullOrWhiteSpace(invalidMoveMessage))
             {
-                throw new InvalidMoveException(invalidMoveMessage);
+                throw new InvalidMoveException(invalidMoveMessage.Trim(), outputLines);
             }
 
             string firstLine = "";

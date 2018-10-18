@@ -56,10 +56,15 @@ namespace Mzinga.Core
 
             PieceName movingPiece = EnumUtils.ParseShortName(moveStringParts[0]);
 
-            if (board.BoardState == BoardState.NotStarted)
+            if (moveStringParts.Length == 1)
             {
-                // First move is on the origin
-                return new Move(movingPiece, Position.Origin);
+                if (board.BoardState == BoardState.NotStarted)
+                {
+                    // First move is on the origin
+                    return new Move(movingPiece, Position.Origin);
+                }
+
+                throw new ArgumentException("You must specify a target piece.", "moveString");
             }
 
             string targetString = moveStringParts[1].Trim('-', '/', '\\');
