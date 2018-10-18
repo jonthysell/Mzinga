@@ -24,11 +24,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
 
+using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
 namespace Mzinga.Viewer
@@ -74,83 +76,137 @@ namespace Mzinga.Viewer
 
         private static void ShowInformation(InformationMessage message)
         {
-            InformationWindow window = new InformationWindow
+            try
             {
-                DataContext = message.InformationVM
-            };
-            message.InformationVM.RequestClose += (sender, e) =>
+                InformationWindow window = new InformationWindow
+                {
+                    DataContext = message.InformationVM
+                };
+                message.InformationVM.RequestClose += (sender, e) =>
+                {
+                    window.Close();
+                };
+                window.Closed += (sender, args) =>
+                {
+                    message.Process();
+                };
+                window.Show();
+            }
+            catch (Exception ex)
             {
-                window.Close();
-            };
-            window.Closed += (sender, args) =>
-            {
-                message.Process();
-            };
-            window.Show();
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private static void ShowConfirmation(ConfirmationMessage message)
         {
-            DialogResult dialogResult = MessageBox.Show(message.Message, "Mzinga", MessageBoxButtons.YesNo);
-            message.Process(dialogResult == DialogResult.Yes);
-        }
+            try
+            {
+                DialogResult dialogResult = MessageBox.Show(message.Message, "Mzinga", MessageBoxButtons.YesNo);
+                message.Process(dialogResult == DialogResult.Yes);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
+}
 
         private static void LaunchUrl(LaunchUrlMessage message)
         {
-            Process.Start(message.Url, null);
+            try
+            {
+                Process.Start(message.Url, null);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private static void ShowNewGame(NewGameMessage message)
         {
-            NewGameWindow window = new NewGameWindow
+            try
             {
-                DataContext = message.NewGameVM
-            };
-            message.NewGameVM.RequestClose += (sender, e) =>
+                NewGameWindow window = new NewGameWindow
+                {
+                    DataContext = message.NewGameVM
+                };
+                message.NewGameVM.RequestClose += (sender, e) =>
+                {
+                    window.Close();
+                };
+                window.ShowDialog();
+                message.Process();
+            }
+            catch (Exception ex)
             {
-                window.Close();
-            };
-            window.ShowDialog();
-            message.Process();
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private static void ShowViewerConfig(ViewerConfigMessage message)
         {
-            ViewerConfigWindow window = new ViewerConfigWindow
+            try
             {
-                DataContext = message.ViewerConfigVM
-            };
-            message.ViewerConfigVM.RequestClose += (sender, e) =>
+                ViewerConfigWindow window = new ViewerConfigWindow
+                {
+                    DataContext = message.ViewerConfigVM
+                };
+                message.ViewerConfigVM.RequestClose += (sender, e) =>
+                {
+                    window.Close();
+                };
+                window.ShowDialog();
+                message.Process();
+            }
+            catch (Exception ex)
             {
-                window.Close();
-            };
-            window.ShowDialog();
-            message.Process();
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private static void ShowEngineOptions(EngineOptionsMessage message)
         {
-            EngineOptionsWindow window = new EngineOptionsWindow
+            try
             {
-                DataContext = message.EngineOptionsVM
-            };
-            message.EngineOptionsVM.RequestClose += (sender, e) =>
+                if (message.EngineOptionsVM.Options.Count == 0)
+                {
+                    throw new Exception("This engine exposes no options to set.");
+                }
+
+                EngineOptionsWindow window = new EngineOptionsWindow
+                {
+                    DataContext = message.EngineOptionsVM
+                };
+                message.EngineOptionsVM.RequestClose += (sender, e) =>
+                {
+                    window.Close();
+                };
+                window.ShowDialog();
+                message.Process();
+            }
+            catch (Exception ex)
             {
-                window.Close();
-            };
-            window.ShowDialog();
-            message.Process();
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private static void ShowEngineConsole(EngineConsoleMessage message)
         {
-            EngineConsoleWindow window = EngineConsoleWindow.Instance;
-
-            window.Show();
-
-            if (!window.IsActive)
+            try
             {
-                window.Activate();
+                EngineConsoleWindow window = EngineConsoleWindow.Instance;
+
+                window.Show();
+
+                if (!window.IsActive)
+                {
+                    window.Activate();
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
             }
         }
     }

@@ -268,6 +268,8 @@ namespace Mzinga.SharedUX
 
         public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
 
+        private Action _commandCallback = null;
+
         private List<string> _outputLines;
 
         private Queue<string> _inputToProcess;
@@ -301,7 +303,8 @@ namespace Mzinga.SharedUX
             {
                 try
                 {
-                    string[] outputLines = _outputLines.ToArray();
+                    string[] outputLines = new string[_outputLines.Count - 1];
+                    _outputLines.CopyTo(0, outputLines, 0, outputLines.Length);
                     ProcessEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
                 }
                 catch (Exception ex)
@@ -378,9 +381,9 @@ namespace Mzinga.SharedUX
             }
         }
 
-        public void OptionsList()
+        public void OptionsList(Action callback = null)
         {
-            SendCommand("options");
+            SendCommand("options", callback);
         }
 
         public void OptionsSet(string key, string value)
@@ -428,12 +431,17 @@ namespace Mzinga.SharedUX
 
         public void SendCommand(string command, params object[] args)
         {
+            SendCommand(command, null, args);
+        }
+
+        public void SendCommand(string command, Action callback, params object[] args)
+        {
             if (IsIdle)
             {
                 IsIdle = false;
                 try
                 {
-                    SendCommandInternal(command, args);
+                    SendCommandInternal(command, callback, args);
                 }
                 catch (Exception)
                 {
@@ -444,6 +452,11 @@ namespace Mzinga.SharedUX
         }
 
         private void SendCommandInternal(string command, params object[] args)
+        {
+            SendCommandInternal(command, null, args);
+        }
+
+        private void SendCommandInternal(string command, Action callback, params object[] args)
         {
             if (string.IsNullOrWhiteSpace(command))
             {
@@ -465,6 +478,8 @@ namespace Mzinga.SharedUX
 
             if (_inputToProcess.Count == 1)
             {
+
+                _commandCallback = callback;
                 RunNextCommand();
             }
         }
@@ -484,6 +499,8 @@ namespace Mzinga.SharedUX
             {
                 _currentlyRunningCommand = null;
                 IsIdle = true;
+                _commandCallback?.Invoke();
+                _commandCallback = null;
             }
         }
 
@@ -561,7 +578,7 @@ namespace Mzinga.SharedUX
             if (null != outputLines && outputLines.Length > 0)
             {
                 firstLine = outputLines[0];
-                lastLine = outputLines[outputLines.Length - 2]; // ignore the ok line
+                lastLine = outputLines[outputLines.Length - 1];
             }
 
             // Update other properties
@@ -583,7 +600,7 @@ namespace Mzinga.SharedUX
                     TryStopTimedCommand();
                     break;
                 case EngineCommand.Options:
-                    string[] optionLines = new string[outputLines.Length - 1];
+                    string[] optionLines = new string[outputLines.Length];
                     Array.Copy(outputLines, optionLines, optionLines.Length);
                     EngineOptions.ParseEngineOptionLines(optionLines);
                     break;

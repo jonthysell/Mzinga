@@ -454,17 +454,23 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send(new EngineOptionsMessage(AppVM.EngineWrapper.EngineOptions, (changedOptions) =>
+                        AppVM.EngineWrapper.OptionsList(() =>
                         {
-                            try
+                            AppVM.DoOnUIThread(() =>
                             {
-                                AppVM.EngineWrapper.OptionsSet(changedOptions);
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
+                                Messenger.Default.Send(new EngineOptionsMessage(AppVM.EngineWrapper.EngineOptions, (changedOptions) =>
+                                {
+                                    try
+                                    {
+                                        AppVM.EngineWrapper.OptionsSet(changedOptions);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ExceptionUtils.HandleException(ex);
+                                    }
+                                }));
+                            });
+                        });
                     }
                     catch (Exception ex)
                     {
