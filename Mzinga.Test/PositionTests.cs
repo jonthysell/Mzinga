@@ -252,8 +252,7 @@ namespace Mzinga.Test
                 Position position = new Position(coordinates[i][0], coordinates[i][1], coordinates[i][2], coordinates[i][3]);
                 Assert.IsNotNull(position);
 
-                Position parsedPosition = null;
-                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out Position parsedPosition));
                 Assert.IsNotNull(parsedPosition);
 
                 AssertPositionsAreEqual(position, parsedPosition);
@@ -271,8 +270,7 @@ namespace Mzinga.Test
                 Position position = new Position(coordinates[i][0], coordinates[i][1], 0);
                 Assert.IsNotNull(position);
 
-                Position parsedPosition = null;
-                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out Position parsedPosition));
                 Assert.IsNotNull(parsedPosition);
 
                 AssertPositionsAreEqual(position, parsedPosition);

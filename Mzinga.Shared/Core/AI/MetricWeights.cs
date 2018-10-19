@@ -143,10 +143,7 @@ namespace Mzinga.Core.AI
                     string key = xmlReader.Name;
                     double value = xmlReader.ReadElementContentAsDouble();
 
-                    BugType bugType;
-                    BugTypeWeight bugTypeWeight;
-
-                    if (TryParseKeyName(key, out bugType, out bugTypeWeight))
+                    if (TryParseKeyName(key, out BugType bugType, out BugTypeWeight bugTypeWeight))
                     {
                         mw.Set(bugType, bugTypeWeight, value + mw.Get(bugType, bugTypeWeight));
                     }

@@ -67,10 +67,8 @@ namespace Mzinga.Core
 
             if (!moveString.Equals(PassString, StringComparison.CurrentCultureIgnoreCase))
             {
-                PieceName pieceName;
-                Position position;
 
-                Parse(moveString, out pieceName, out position);
+                Parse(moveString, out PieceName pieceName, out Position position);
 
                 Init(pieceName, position);
             }
@@ -83,13 +81,8 @@ namespace Mzinga.Core
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
-            if (null == position)
-            {
-                throw new ArgumentNullException("position");
-            }
-
             PieceName = pieceName;
-            Position = position;
+            Position = position ?? throw new ArgumentNullException("position");
         }
 
         public bool Equals(Move move)

@@ -137,12 +137,7 @@ namespace Mzinga.Core
 
         public BoardHistoryItem(Move move, Position originalPosition, string moveString)
         {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            Move = move;
+            Move = move ?? throw new ArgumentNullException("move");
             OriginalPosition = originalPosition;
             MoveString = moveString;
         }

@@ -56,9 +56,9 @@ namespace Mzinga.Core
         private Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
         private LinkedList<TKey> _list;
 
-        private FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
+        private readonly FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
 
-        private object _storeLock = new object();
+        private readonly object _storeLock = new object();
 
         public FixedCache(int capacity = DefaultCapacity, FixedCacheReplaceEntryPredicate<TEntry> replaceEntryPredicate = null)
         {
@@ -79,8 +79,7 @@ namespace Mzinga.Core
         {
             lock (_storeLock)
             {
-                FixedCacheEntry<TKey, TEntry> existingEntry;
-                if (!_dict.TryGetValue(key, out existingEntry))
+                if (!_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry> existingEntry))
                 {
                     // New entry
                     if (Count == Capacity)
@@ -127,8 +126,7 @@ namespace Mzinga.Core
 
         public bool TryLookup(TKey key, out TEntry entry)
         {
-            FixedCacheEntry<TKey, TEntry> wrappedEntry;
-            if (_dict.TryGetValue(key, out wrappedEntry))
+            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry> wrappedEntry))
             {
                 entry = wrappedEntry.Entry;
                 Metrics.Hit();

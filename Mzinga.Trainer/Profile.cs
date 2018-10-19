@@ -91,22 +91,12 @@ namespace Mzinga.Trainer
 
         private Profile(Guid id, string name, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
-            if (null == startMetricWeights)
-            {
-                throw new ArgumentNullException("startMetricWeights");
-            }
-
-            if (null == endMetricWeights)
-            {
-                throw new ArgumentNullException("endMetricWeights");
-            }
-
             Id = id;
 
             Name = name;
 
-            StartMetricWeights = startMetricWeights;
-            EndMetricWeights = endMetricWeights;
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
@@ -134,16 +124,6 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("eloRating");
             }
 
-            if (null == startMetricWeights)
-            {
-                throw new ArgumentNullException("startMetricWeights");
-            }
-
-            if (null == endMetricWeights)
-            {
-                throw new ArgumentNullException("endMetricWeights");
-            }
-
             Id = id;
 
             Name = name;
@@ -155,8 +135,8 @@ namespace Mzinga.Trainer
 
             EloRating = eloRating;
 
-            StartMetricWeights = startMetricWeights;
-            EndMetricWeights = endMetricWeights;
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
@@ -189,16 +169,6 @@ namespace Mzinga.Trainer
                 throw new ArgumentOutOfRangeException("draws");
             }
 
-            if (null == startMetricWeights)
-            {
-                throw new ArgumentNullException("startMetricWeights");
-            }
-
-            if (null == endMetricWeights)
-            {
-                throw new ArgumentNullException("endMetricWeights");
-            }
-
             Id = id;
             Name = name;
 
@@ -213,8 +183,8 @@ namespace Mzinga.Trainer
             Losses = losses;
             Draws = draws;
 
-            StartMetricWeights = startMetricWeights;
-            EndMetricWeights = endMetricWeights;
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
 
             CreationTimestamp = creationTimestamp;
             LastUpdatedTimestamp = lastUpdatedTimestamp;
@@ -247,18 +217,8 @@ namespace Mzinga.Trainer
 
         public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
-            if (null == startMetricWeights)
-            {
-                throw new ArgumentNullException("startMetricWeights");
-            }
-
-            if (null == endMetricWeights)
-            {
-                throw new ArgumentNullException("endMetricWeights");
-            }
-
-            StartMetricWeights = startMetricWeights;
-            EndMetricWeights = endMetricWeights;
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
 
             Update();
         }

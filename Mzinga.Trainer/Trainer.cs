@@ -63,11 +63,7 @@ namespace Mzinga.Trainer
             }
             set
             {
-                if (null == value)
-                {
-                    throw new ArgumentNullException();
-                }
-                _settings = value;
+                _settings = value ?? throw new ArgumentNullException();
             }
         }
         private TrainerSettings _settings;
@@ -298,7 +294,7 @@ namespace Mzinga.Trainer
 
         }
 
-        private object _eloLock = new object();
+        private readonly object _eloLock = new object();
 
         private BoardState Battle(Profile whiteProfile, Profile blackProfile)
         {
@@ -672,8 +668,6 @@ namespace Mzinga.Trainer
             DateTime lifecycleStart = DateTime.Now;
             Log("Lifecycle start.");
 
-            TimeSpan timeRemaining;
-            double progress;
 
             int gen = 1;
             while (generations == TrainerSettings.InfiniteLifeCycleGenerations || gen <= generations)
@@ -712,7 +706,7 @@ namespace Mzinga.Trainer
 
                 if (generations > 0)
                 {
-                    GetProgress(lifecycleStart, gen, generations - gen, out progress, out timeRemaining);
+                    GetProgress(lifecycleStart, gen, generations - gen, out double progress, out TimeSpan timeRemaining);
                     Log("Lifecycle progress: {0:P2} ETA {1}.", progress, ToString(timeRemaining));
                 }
 
@@ -1223,7 +1217,7 @@ namespace Mzinga.Trainer
             return profile.TotalGames < TrainerSettings.ProvisionalGameCount;
         }
 
-        private object _progressLock = new object();
+        private readonly object _progressLock = new object();
     }
 
     public enum GameResult

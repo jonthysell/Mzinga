@@ -83,7 +83,7 @@ namespace Mzinga.SharedUX
             }
         }
 
-        private double PieceCanvasMargin = 3.0;
+        private readonly double PieceCanvasMargin = 3.0;
 
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
@@ -119,19 +119,19 @@ namespace Mzinga.SharedUX
 
         private Board LastBoard;
 
-        private SolidColorBrush WhiteBrush;
-        private SolidColorBrush BlackBrush;
+        private readonly SolidColorBrush WhiteBrush;
+        private readonly SolidColorBrush BlackBrush;
 
-        private SolidColorBrush SelectedMoveEdgeBrush;
-        private SolidColorBrush SelectedMoveBodyBrush;
+        private readonly SolidColorBrush SelectedMoveEdgeBrush;
+        private readonly SolidColorBrush SelectedMoveBodyBrush;
 
-        private SolidColorBrush LastMoveEdgeBrush;
+        private readonly SolidColorBrush LastMoveEdgeBrush;
 
-        private SolidColorBrush DisabledPieceBrush;
+        private readonly SolidColorBrush DisabledPieceBrush;
 
-        private SolidColorBrush[] BugBrushes;
+        private readonly SolidColorBrush[] BugBrushes;
 
-        private string[] BugPathGeometries;
+        private readonly string[] BugPathGeometries;
 
         public XamlBoardRenderer(MainViewModel vm, Canvas boardCanvas, StackPanel whiteHandStackPanel, StackPanel blackHandStackPanel)
         {
@@ -233,10 +233,7 @@ namespace Mzinga.SharedUX
 
                 double boardCanvasWidth = BoardCanvas.ActualWidth;
                 double boardCanvasHeight = BoardCanvas.ActualHeight;
-
-                int maxStack;
-                int numPieces;
-                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out numPieces, out maxStack);
+                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out int numPieces, out int maxStack);
 
                 int whiteHandCount = board.WhiteHand.Count();
                 int blackHandCount = board.BlackHand.Count();
@@ -714,8 +711,7 @@ namespace Mzinga.SharedUX
             // Bug rotation
             double rotateAngle = VM.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
 
-            int bugNum;
-            if (int.TryParse(pieceName.ToString().Last().ToString(), out bugNum))
+            if (int.TryParse(pieceName.ToString().Last().ToString(), out int bugNum))
             {
                 rotateAngle += (bugNum - 1) * 60.0;
 

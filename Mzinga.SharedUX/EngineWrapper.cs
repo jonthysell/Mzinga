@@ -249,7 +249,7 @@ namespace Mzinga.SharedUX
             }
             private set
             {
-                _currentGameSettings = (null != value) ? value.Clone() : null;
+                _currentGameSettings = value?.Clone();
             }
         }
         private GameSettings _currentGameSettings;
@@ -327,12 +327,7 @@ namespace Mzinga.SharedUX
 
         public void NewGame(GameSettings settings)
         {
-            if (null == settings)
-            {
-                throw new ArgumentNullException("settings");
-            }
-
-            CurrentGameSettings = settings;
+            CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
 
             SendCommand("newgame {0}", EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
@@ -763,8 +758,7 @@ namespace Mzinga.SharedUX
                 string[] split = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (split.Length > 2 && split[1] == "time")
                 {
-                    TimeSpan ts;
-                    if (TimeSpan.TryParse(split[2], out ts))
+                    if (TimeSpan.TryParse(split[2], out TimeSpan ts))
                     {
                         StartTimedCommand(ts);
                     }

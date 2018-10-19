@@ -187,7 +187,7 @@ namespace Mzinga.Core
             }
         }
 
-        private Piece[] _pieces = new Piece[EnumUtils.NumPieceNames];
+        private readonly Piece[] _pieces = new Piece[EnumUtils.NumPieceNames];
 
         private Dictionary<Position, Piece> _piecesByPosition = new Dictionary<Position, Piece>();
 
@@ -283,8 +283,7 @@ namespace Mzinga.Core
 
             string[] split = boardString.Split(BoardStringSeparator);
 
-            ExpansionPieces expansionPieces;
-            if (!EnumUtils.TryParseExpansionPieces(split[0], out expansionPieces))
+            if (!EnumUtils.TryParseExpansionPieces(split[0], out ExpansionPieces expansionPieces))
             {
                 throw new ArgumentException("Couldn't parse expansion pieces.", "boardString");
             }
@@ -293,8 +292,7 @@ namespace Mzinga.Core
 
             string boardStateString = split[1];
 
-            BoardState boardState;
-            if (!Enum.TryParse(boardStateString, out boardState))
+            if (!Enum.TryParse(boardStateString, out BoardState boardState))
             {
                 throw new ArgumentException("Couldn't parse board state.", "boardString");
             }
@@ -304,16 +302,14 @@ namespace Mzinga.Core
 
             string currentTurnColorString = currentTurnSplit[0];
 
-            PlayerColor currentTurnColor;
-            if (!Enum.TryParse(currentTurnColorString, out currentTurnColor))
+            if (!Enum.TryParse(currentTurnColorString, out PlayerColor currentTurnColor))
             {
                 throw new ArgumentException("Couldn't parse current turn color.", "boardString");
             }
 
             string currentPlayerTurnString = currentTurnSplit[1];
 
-            int currentPlayerTurn;
-            if (!int.TryParse(currentPlayerTurnString, out currentPlayerTurn))
+            if (!int.TryParse(currentPlayerTurnString, out int currentPlayerTurn))
             {
                 throw new ArgumentException("Couldn't parse current player turn.", "boardString");
             }
@@ -394,8 +390,7 @@ namespace Mzinga.Core
 
         protected Piece GetPieceInternal(Position position)
         {
-            Piece piece;
-            if (_piecesByPosition.TryGetValue(position, out piece))
+            if (_piecesByPosition.TryGetValue(position, out Piece piece))
             {
                 return piece;
             }
@@ -667,9 +662,7 @@ namespace Mzinga.Core
 
         protected int CountNeighbors(PieceName pieceName)
         {
-            int friendlyCount;
-            int enemyCount;
-            return CountNeighbors(GetPiece(pieceName), out friendlyCount, out enemyCount);
+            return CountNeighbors(GetPiece(pieceName), out int friendlyCount, out int enemyCount);
         }
 
         private int CountNeighbors(Piece piece, out int friendlyCount, out int enemyCount)
@@ -1389,6 +1382,9 @@ namespace Mzinga.Core
         Pillbug = 0x4,
     }
 
+#if !WINDOWS_UWP
+    [Serializable]
+#endif
     public class InvalidMoveException : Exception
     {
         public Move Move { get; private set; }

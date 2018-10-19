@@ -60,7 +60,7 @@ namespace Mzinga.SharedUX.ViewModel
     {
         public string Message { get; private set; }
 
-        private Action<bool> Callback;
+        private readonly Action<bool> Callback;
 
         public ConfirmationMessage(string message, Action<bool> callback) : base()
         {

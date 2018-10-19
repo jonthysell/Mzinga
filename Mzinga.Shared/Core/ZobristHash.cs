@@ -33,7 +33,7 @@ namespace Mzinga.Core
         public ulong Value { get; private set; }
 
         private static ulong _next = 1;
-        private static ulong _hashPartByTurnColor = 0;
+        private static readonly ulong _hashPartByTurnColor = 0;
         private static ulong[] _hashPartByLastMovedPiece = new ulong[EnumUtils.NumPieceNames];
         private static Dictionary<Position, ulong>[] _hashPartByPosition = new Dictionary<Position, ulong>[EnumUtils.NumPieceNames];
 

@@ -141,8 +141,7 @@ namespace Mzinga.Core
 
         private Position CacheLookup(int index)
         {
-            bool createdNew;
-            return CacheLookup(index, out createdNew);
+            return CacheLookup(index, out bool createdNew);
         }
 
         private Position CacheLookup(int index, out bool createdNew)
@@ -213,8 +212,7 @@ namespace Mzinga.Core
 
         public static Position Parse(string positionString)
         {
-            Position position;
-            if (TryParse(positionString, out position))
+            if (TryParse(positionString, out Position position))
             {
                 return position;
             }

@@ -25,9 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.IO;
-using System.Globalization;
-using System.Reflection;
 using System.Windows;
 
 namespace Mzinga.Viewer

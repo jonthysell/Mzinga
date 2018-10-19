@@ -33,9 +33,9 @@ namespace Mzinga.SharedUX
 {
     public class InternalEngineWrapper : EngineWrapper
     {
-        private string _id;
+        private readonly string _id;
         private GameEngine _gameEngine;
-        private GameEngineConfig _gameEngineConfig;
+        private readonly GameEngineConfig _gameEngineConfig;
 
         public InternalEngineWrapper(string id) : base()
         {

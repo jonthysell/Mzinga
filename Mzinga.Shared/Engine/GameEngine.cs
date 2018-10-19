@@ -26,7 +26,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,19 +62,9 @@ namespace Mzinga.Engine
                 throw new ArgumentNullException("id");
             }
 
-            if (null == config)
-            {
-                throw new ArgumentNullException("config");
-            }
-
-            if (null == consoleOut)
-            {
-                throw new ArgumentNullException("consoleOut");
-            }
-
             ID = id;
-            Config = config;
-            ConsoleOut = consoleOut;
+            Config = config ?? throw new ArgumentNullException("config");
+            ConsoleOut = consoleOut ?? throw new ArgumentNullException("consoleOut");
 
             InitAI();
 

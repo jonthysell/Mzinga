@@ -381,8 +381,7 @@ namespace Mzinga.Core
 
             string[] split = gameString.Split(BoardStringSeparator);
 
-            ExpansionPieces expansionPieces;
-            if (!EnumUtils.TryParseExpansionPieces(split[0], out expansionPieces))
+            if (!EnumUtils.TryParseExpansionPieces(split[0], out ExpansionPieces expansionPieces))
             {
                 throw new ArgumentException("Couldn't parse expansion pieces.", "gameString");
             }

@@ -118,7 +118,7 @@ namespace Mzinga.SharedUX
             return clone;
         }
 
-        private static int DefaultMaxDepth= 2;
+        private static readonly int DefaultMaxDepth= 2;
         private static TimeSpan DefaultMaxTime = TimeSpan.FromSeconds(5.0);
     }
 

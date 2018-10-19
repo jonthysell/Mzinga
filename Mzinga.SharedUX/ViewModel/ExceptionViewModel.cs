@@ -92,11 +92,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
             private set
             {
-                if (null == value)
-                {
-                    throw new ArgumentNullException();
-                }
-                _exception = value;
+                _exception = value ?? throw new ArgumentNullException();
             }
         }
         private Exception _exception;

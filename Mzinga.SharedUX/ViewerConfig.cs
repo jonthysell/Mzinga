@@ -173,14 +173,12 @@ namespace Mzinga.SharedUX
 
         private static TEnum ParseEnumValue<TEnum>(string rawValue, TEnum defaultValue) where TEnum : struct, IConvertible
         {
-            TEnum result;
-            return Enum.TryParse(rawValue, out result) ? result : defaultValue;
+            return Enum.TryParse(rawValue, out TEnum result) ? result : defaultValue;
         }
 
         private static bool ParseBoolValue(string rawValue, bool defaultValue)
         {
-            bool result;
-            return bool.TryParse(rawValue, out result) ? result : defaultValue;
+            return bool.TryParse(rawValue, out bool result) ? result : defaultValue;
         }
 
         public void SaveConfig(Stream outputStream)

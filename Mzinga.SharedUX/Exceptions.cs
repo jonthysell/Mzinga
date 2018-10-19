@@ -28,9 +28,6 @@ using System;
 
 namespace Mzinga.SharedUX
 {
-#if !WINDOWS_UWP
-    [Serializable]
-#endif
     public class EngineException : Exception
     {
         public string[] OutputLines { get; private set; }

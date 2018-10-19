@@ -374,7 +374,7 @@ namespace Mzinga.Core
             return s;
         }
 
-        private static string NoExpansionsString = "Base";
+        private static readonly string NoExpansionsString = "Base";
 
         #endregion
     }

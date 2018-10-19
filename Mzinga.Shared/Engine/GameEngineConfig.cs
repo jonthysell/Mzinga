@@ -136,8 +136,7 @@ namespace Mzinga.Engine
 
         public void ParseTranspositionTableSizeMBValue(string rawValue)
         {
-            int intValue;
-            if (int.TryParse(rawValue, out intValue))
+            if (int.TryParse(rawValue, out int intValue))
             {
                 TranspositionTableSizeMB = Math.Max(MinTranspositionTableSizeMB, Math.Min(intValue, MaxTranspositionTableSizeMB));
             }
@@ -152,14 +151,12 @@ namespace Mzinga.Engine
 
         public void ParseMaxHelperThreadsValue(string rawValue)
         {
-            int intValue;
-            MaxHelperThreadsType enumValue;
 
-            if (int.TryParse(rawValue, out intValue))
+            if (int.TryParse(rawValue, out int intValue))
             {
                 _maxHelperThreads = Math.Max(MinMaxHelperThreads, Math.Min(intValue, MaxMaxHelperThreads));
             }
-            else if (Enum.TryParse(rawValue, out enumValue))
+            else if (Enum.TryParse(rawValue, out MaxHelperThreadsType enumValue))
             {
                 switch (enumValue)
                 {
@@ -200,8 +197,7 @@ namespace Mzinga.Engine
 
         public void ParsePonderDuringIdleValue(string rawValue)
         {
-            PonderDuringIdleType enumValue;
-            if (Enum.TryParse(rawValue, out enumValue))
+            if (Enum.TryParse(rawValue, out PonderDuringIdleType enumValue))
             {
                 PonderDuringIdle = enumValue;
             }
@@ -216,8 +212,7 @@ namespace Mzinga.Engine
 
         public void ParseMaxBranchingFactorValue(string rawValue)
         {
-            int intValue;
-            if (int.TryParse(rawValue, out intValue))
+            if (int.TryParse(rawValue, out int intValue))
             {
                 MaxBranchingFactor = Math.Max(MinMaxBranchingFactor, Math.Min(intValue, GameAI.MaxMaxBranchingFactor));
             }
@@ -232,8 +227,7 @@ namespace Mzinga.Engine
 
         public void ParseReportIntermediateBestMovesValue(string rawValue)
         {
-            bool boolValue;
-            if (bool.TryParse(rawValue, out boolValue))
+            if (bool.TryParse(rawValue, out bool boolValue))
             {
                 ReportIntermediateBestMoves = boolValue;
             }

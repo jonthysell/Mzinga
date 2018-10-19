@@ -100,7 +100,8 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        LoadOptions(true);
+                        LoadOptions();
+                        RaisePropertyChanged("Options");
                     }
                     catch (Exception ex)
                     {
@@ -111,9 +112,9 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _reset = null;
 
-        private EngineOptions _originalOptions;
+        private readonly EngineOptions _originalOptions;
 
-        public bool Accepted { get; private set; }
+        public bool Accepted { get; private set; } = false;
 
         public event EventHandler RequestClose;
 
@@ -123,13 +124,12 @@ namespace Mzinga.SharedUX.ViewModel
         {
             _originalOptions =  null != options ? options.Clone() : new EngineOptions();
 
-            LoadOptions(false);
+            LoadOptions();
 
-            Accepted = false;
             Callback = callback;
         }
 
-        private void LoadOptions(bool notify)
+        private void LoadOptions()
         {
             _options = new ObservableCollection<ObservableEngineOption>();
 
@@ -151,11 +151,6 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     _options.Add(new ObservableEnumEngineOption((EnumEngineOption)eo));
                 }
-            }
-
-            if (notify)
-            {
-                RaisePropertyChanged("Options");
             }
         }
 

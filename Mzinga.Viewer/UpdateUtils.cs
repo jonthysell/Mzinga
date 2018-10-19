@@ -230,8 +230,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                int Description;
-                return NativeMethods.InternetGetConnectedState(out Description, 0);
+                return NativeMethods.InternetGetConnectedState(out int Description, 0);
             }
         }
 

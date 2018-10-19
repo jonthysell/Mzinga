@@ -38,7 +38,7 @@ namespace Mzinga.Core.AI
         public MetricWeights StartMetricWeights { get; private set; }
         public MetricWeights EndMetricWeights { get; private set; }
 
-        private int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
+        private readonly int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
 
         public const int MaxMaxBranchingFactor = 500;
 
@@ -195,8 +195,7 @@ namespace Mzinga.Core.AI
 
             // Try to get cached best move if available
             ulong key = gameBoard.ZobristKey;
-            TranspositionTableEntry tEntry;
-            if (_transpositionTable.TryLookup(key, out tEntry) && null != tEntry.BestMove)
+            if (_transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && null != tEntry.BestMove)
             {
                 bestMove = new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth);
                 OnBestMoveFound(bestMoveParams, bestMove);
@@ -421,8 +420,7 @@ namespace Mzinga.Core.AI
 
             ulong key = gameBoard.ZobristKey;
 
-            TranspositionTableEntry tEntry;
-            if (_transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth >= depth)
+            if (_transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth >= depth)
             {
                 if (tEntry.Type == TranspositionTableEntryType.Exact)
                 {
@@ -664,8 +662,7 @@ namespace Mzinga.Core.AI
 
             ulong key = gameBoard.ZobristKey;
 
-            double score;
-            if (_cachedBoardScores.TryLookup(key, out score))
+            if (_cachedBoardScores.TryLookup(key, out double score))
             {
                 return score;
             }
@@ -794,12 +791,8 @@ namespace Mzinga.Core.AI
                 // Get best move
                 Move bestMove = await GetBestMoveAsync(gameBoard, maxDepth, maxTime, maxHelperThreads, searchCancelationToken.Token);
 
-                // Get delta metric weights
-                MetricWeights deltaStart;
-                MetricWeights deltaEnd;
-
                 HashSet<ulong> visitedKeys = new HashSet<ulong>();
-                DeltaFromTransTable(gameBoard, visitedKeys, token, out deltaStart, out deltaEnd);
+                DeltaFromTransTable(gameBoard, visitedKeys, token, out MetricWeights deltaStart, out MetricWeights deltaEnd);
 
                 // Update metric weights with delta
                 StartMetricWeights.Add(deltaStart);
@@ -819,8 +812,7 @@ namespace Mzinga.Core.AI
             ulong key = gameBoard.ZobristKey;
             bool newKey = visitedKeys.Add(key);
 
-            TranspositionTableEntry tEntry;
-            if (newKey && _transpositionTable.TryLookup(key, out tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
+            if (newKey && _transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
             {
                 double colorValue = gameBoard.CurrentTurnColor == PlayerColor.White ? 1.0 : -1.0;
 
@@ -861,9 +853,7 @@ namespace Mzinga.Core.AI
                     }
 
                     gameBoard.TrustedPlay(move);
-                    MetricWeights ds1;
-                    MetricWeights de1;
-                    DeltaFromTransTable(gameBoard, visitedKeys, token, out ds1, out de1);
+                    DeltaFromTransTable(gameBoard, visitedKeys, token, out MetricWeights ds1, out MetricWeights de1);
                     ds.Add(ds1);
                     de.Add(de1);
                     gameBoard.UndoLastMove();
