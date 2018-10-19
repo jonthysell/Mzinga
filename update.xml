@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
-  <update version="0.9.18290.1817" url="https://github.com/jonthysell/Mzinga/releases/tag/v0.9.18290.1817" channel="Official" />
-  <update version="0.9.18290.1817" url="https://github.com/jonthysell/Mzinga/releases/tag/v0.9.18290.1817" channel="Preview" />
+  <update version="0.9.18292.2357" url="https://github.com/jonthysell/Mzinga/releases/latest" channel="Official" />
+  <update version="0.9.18292.2357" url="https://github.com/jonthysell/Mzinga/releases/latest" channel="Preview" />
 </updates>
