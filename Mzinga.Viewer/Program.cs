@@ -27,6 +27,12 @@
 using System;
 using System.Windows;
 
+#if PORTABLE
+using System.IO;
+using System.Globalization;
+using System.Reflection;
+#endif
+
 namespace Mzinga.Viewer
 {
     public class Program
