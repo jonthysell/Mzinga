@@ -85,6 +85,9 @@ namespace Mzinga.Trainer
                         case Command.AutoTrain:
                             t.AutoTrain();
                             break;
+                        case Command.Top:
+                            t.Top();
+                            break;
                         default:
                             ShowHelp();
                             break;
@@ -144,6 +147,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("mate                   Mate every profile with each other");
             Console.WriteLine("tournament             Fight an single elimination tournament");
             Console.WriteLine("autotrain              Train a single profile against itself");
+            Console.WriteLine("top                    List the top profiles for each GameType");
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -233,6 +237,9 @@ namespace Mzinga.Trainer
                 case "at":
                 case "autotrain":
                     cmd = Command.AutoTrain;
+                    break;
+                case "top":
+                    cmd = Command.Top;
                     break;
             }
 
@@ -378,6 +385,7 @@ namespace Mzinga.Trainer
         Lifecycle,
         Mate,
         Tournament,
-        AutoTrain
+        AutoTrain,
+        Top
     }
 }

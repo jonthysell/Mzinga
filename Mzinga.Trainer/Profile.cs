@@ -29,6 +29,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
+using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.Trainer
@@ -56,7 +57,7 @@ namespace Mzinga.Trainer
 
         public Guid? ParentB { get; private set; } = null;
 
-        public int EloRating { get; private set; } = EloUtils.DefaultRating;
+        public ProfileRecord[] Records { get; private set; }
 
         public MetricWeights StartMetricWeights { get; private set; }
 
@@ -65,20 +66,6 @@ namespace Mzinga.Trainer
         public DateTime CreationTimestamp { get; private set; }
 
         public DateTime LastUpdatedTimestamp { get; private set; }
-
-        public int TotalGames
-        {
-            get
-            {
-                return Wins + Losses + Draws;
-            }
-        }
-
-        public int Wins { get; private set; } = 0;
-
-        public int Losses { get; private set; } = 0;
-
-        public int Draws { get; private set; } = 0;
 
         public static Random Random
         {
@@ -95,6 +82,8 @@ namespace Mzinga.Trainer
 
             Name = name;
 
+            Records = ProfileRecord.CreateRecords();
+
             StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
             EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
 
@@ -102,7 +91,7 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
             if (generation < 0)
             {
@@ -119,11 +108,6 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("parentB");
             }
 
-            if (eloRating < EloUtils.MinRating)
-            {
-                throw new ArgumentOutOfRangeException("eloRating");
-            }
-
             Id = id;
 
             Name = name;
@@ -133,7 +117,7 @@ namespace Mzinga.Trainer
             ParentA = parentA;
             ParentB = parentB;
 
-            EloRating = eloRating;
+            Records = ProfileRecord.CreateRecords();
 
             StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
             EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
@@ -142,31 +126,11 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = DateTime.Now;
         }
 
-        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, int eloRating, int wins, int losses, int draws, MetricWeights startMetricWeights, MetricWeights endMetricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
+        private Profile(Guid id, string name, int generation, Guid? parentA, Guid? parentB, ProfileRecord[] records, MetricWeights startMetricWeights, MetricWeights endMetricWeights, DateTime creationTimestamp, DateTime lastUpdatedTimestamp)
         {
             if (generation < 0)
             {
                 throw new ArgumentOutOfRangeException("generation");
-            }
-
-            if (eloRating < EloUtils.MinRating)
-            {
-                throw new ArgumentOutOfRangeException("eloRating");
-            }
-
-            if (wins < 0)
-            {
-                throw new ArgumentOutOfRangeException("wins");
-            }
-
-            if (losses < 0)
-            {
-                throw new ArgumentOutOfRangeException("losses");
-            }
-
-            if (draws < 0)
-            {
-                throw new ArgumentOutOfRangeException("draws");
             }
 
             Id = id;
@@ -177,11 +141,7 @@ namespace Mzinga.Trainer
             ParentA = parentA;
             ParentB = parentB;
 
-            EloRating = eloRating;
-
-            Wins = wins;
-            Losses = losses;
-            Draws = draws;
+            Records = records;
 
             StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
             EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
@@ -190,25 +150,25 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = lastUpdatedTimestamp;
         }
 
-        public void UpdateRecord(int rating, GameResult result)
+        public void UpdateRecord(int rating, GameResult result, ExpansionPieces expansionPieces)
         {
             if (rating < EloUtils.MinRating)
             {
                 throw new ArgumentOutOfRangeException("rating");
             }
 
-            EloRating = rating;
+            Records[(int)expansionPieces].EloRating = rating;
 
             switch (result)
             {
                 case GameResult.Loss:
-                    Losses++;
+                    Records[(int)expansionPieces].Losses++;
                     break;
                 case GameResult.Draw:
-                    Draws++;
+                    Records[(int)expansionPieces].Draws++;
                     break;
                 case GameResult.Win:
-                    Wins++;
+                    Records[(int)expansionPieces].Wins++;
                     break;
             }
 
@@ -273,21 +233,17 @@ namespace Mzinga.Trainer
                     writer.WriteEndElement();
                 }
 
-
-                writer.WriteStartElement("EloRating");
-                writer.WriteValue(EloRating);
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("Wins");
-                writer.WriteValue(Wins);
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("Losses");
-                writer.WriteValue(Losses);
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("Draws");
-                writer.WriteValue(Draws);
+                writer.WriteStartElement("Records");
+                for (int i = 0; i < Records.Length; i++)
+                {
+                    writer.WriteStartElement("Record");
+                    writer.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i));
+                    writer.WriteAttributeString("EloRating", Records[i].EloRating.ToString());
+                    writer.WriteAttributeString("Wins", Records[i].Wins.ToString());
+                    writer.WriteAttributeString("Losses", Records[i].Losses.ToString());
+                    writer.WriteAttributeString("Draws", Records[i].Draws.ToString());
+                    writer.WriteEndElement();
+                }
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("Creation");
@@ -344,11 +300,7 @@ namespace Mzinga.Trainer
             Guid? parentA = null;
             Guid? parentB = null;
 
-            int eloRating = EloUtils.DefaultRating;
-
-            int wins = 0;
-            int losses = 0;
-            int draws = 0;
+            ProfileRecord[] records = ProfileRecord.CreateRecords();
 
             MetricWeights startMetricWeights = null;
             MetricWeights endMetricWeights = null;
@@ -379,17 +331,14 @@ namespace Mzinga.Trainer
                             case "ParentB":
                                 parentB = Guid.Parse(reader.ReadElementContentAsString());
                                 break;
-                            case "EloRating":
-                                eloRating = reader.ReadElementContentAsInt();
-                                break;
-                            case "Wins":
-                                wins = reader.ReadElementContentAsInt();
-                                break;
-                            case "Losses":
-                                losses = reader.ReadElementContentAsInt();
-                                break;
-                            case "Draws":
-                                draws = reader.ReadElementContentAsInt();
+                            case "Record":
+                                {
+                                    int gt = (int)EnumUtils.ParseExpansionPieces(reader["GameType"]);
+                                    records[gt].EloRating = int.Parse(reader["EloRating"]);
+                                    records[gt].Wins = int.Parse(reader["Wins"]);
+                                    records[gt].Losses = int.Parse(reader["Losses"]);
+                                    records[gt].Draws = int.Parse(reader["Draws"]);
+                                }
                                 break;
                             case "Creation":
                                 creationTimestamp = reader.ReadElementContentAsDateTime();
@@ -409,7 +358,7 @@ namespace Mzinga.Trainer
                 }
             }
 
-            return new Profile(id, name ?? GenerateName(id), generation, parentA, parentB, eloRating, wins, losses, draws, startMetricWeights, endMetricWeights ?? startMetricWeights, creationTimestamp, lastUpdateTimestamp);
+            return new Profile(id, name ?? GenerateName(id), generation, parentA, parentB, records, startMetricWeights, endMetricWeights ?? startMetricWeights, creationTimestamp, lastUpdateTimestamp);
         }
 
         public static Profile Generate(double minWeight, double maxWeight)
@@ -445,7 +394,6 @@ namespace Mzinga.Trainer
 
             string name = GenerateName(id);
 
-            int eloRating = EloUtils.DefaultRating;
             int generation = Math.Max(parentA.Generation, parentB.Generation) + 1;
 
             MetricWeights startMetricWeights = MixMetricWeights(parentA.StartMetricWeights.GetNormalized(), parentB.StartMetricWeights.GetNormalized(), minMix, maxMix);
@@ -453,7 +401,7 @@ namespace Mzinga.Trainer
 
             DateTime creationTimestamp = DateTime.Now;
 
-            return new Profile(id, name, generation, parentA.Id, parentB.Id, eloRating, startMetricWeights, endMetricWeights);
+            return new Profile(id, name, generation, parentA.Id, parentB.Id, startMetricWeights, endMetricWeights);
         }
 
         private static MetricWeights GenerateMetricWeights(double minWeight, double maxWeight)
@@ -509,5 +457,31 @@ namespace Mzinga.Trainer
             new string[] { "", "kwa", "mba", "sha", },
             new string[] { "ba", "go", "ji", "ita", "la", "mi", "ne", "ni", "nyi", "ra", "ri", "si", "tu", "we", "ye", "za" },
         };
+    }
+
+    public class ProfileRecord
+    {
+        public int EloRating = EloUtils.DefaultRating;
+        public int Wins = 0;
+        public int Losses = 0;
+        public int Draws = 0;
+
+        public int TotalGames
+        {
+            get
+            {
+                return Wins + Losses + Draws;
+            }
+        }
+
+        public static ProfileRecord[] CreateRecords()
+        {
+            ProfileRecord[] records = new ProfileRecord[EnumUtils.NumGameTypes];
+            for (int i = 0; i < records.Length; i++)
+            {
+                records[i] = new ProfileRecord();
+            }
+            return records;
+        }
     }
 }

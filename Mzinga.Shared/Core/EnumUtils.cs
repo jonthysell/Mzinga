@@ -376,6 +376,8 @@ namespace Mzinga.Core
 
         private static readonly string NoExpansionsString = "Base";
 
+        public const int NumGameTypes = 8;
+
         #endregion
     }
 

@@ -181,8 +181,8 @@ namespace Mzinga.Trainer
 
             Log("Battle Royale start, ETA: {0}.", timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
-            List<Profile> whiteProfiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
-            List<Profile> blackProfiles = new List<Profile>(profiles.OrderBy(profile => profile.EloRating));
+            List<Profile> whiteProfiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
+            List<Profile> blackProfiles = new List<Profile>(profiles.OrderBy(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
 
             List<Tuple<Profile, Profile>> matches = new List<Tuple<Profile, Profile>>(combinations);
 
@@ -288,7 +288,7 @@ namespace Mzinga.Trainer
 
             Log("Battle Royale end, elapsed time: {0}.", ToString(DateTime.Now - brStart));
 
-            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
+            Profile best = (profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating)).First();
 
             Log("Battle Royale Highest Elo: {0}", ToString(best));
 
@@ -417,7 +417,7 @@ namespace Mzinga.Trainer
 
             lock (whiteProfile)
             {
-                whiteRating = whiteProfile.EloRating;
+                whiteRating = whiteProfile.Records[(int)gameBoard.ExpansionPieces].EloRating;
                 whiteK = IsProvisional(whiteProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
             }
 
@@ -426,7 +426,7 @@ namespace Mzinga.Trainer
 
             lock (blackProfile)
             {
-                blackRating = blackProfile.EloRating;
+                blackRating = blackProfile.Records[(int)gameBoard.ExpansionPieces].EloRating;
                 blackK = IsProvisional(blackProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
             }
 
@@ -440,12 +440,12 @@ namespace Mzinga.Trainer
 
             lock (whiteProfile)
             {
-                whiteProfile.UpdateRecord(whiteEndRating, whiteResult);
+                whiteProfile.UpdateRecord(whiteEndRating, whiteResult, gameBoard.ExpansionPieces);
             }
 
             lock (blackProfile)
             {
-                blackProfile.UpdateRecord(blackEndRating, blackResult);
+                blackProfile.UpdateRecord(blackEndRating, blackResult, gameBoard.ExpansionPieces);
             }
 
             // Output Results
@@ -491,7 +491,7 @@ namespace Mzinga.Trainer
                 profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
             }
 
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
 
             if (keepCount == TrainerSettings.CullKeepMax)
             {
@@ -540,7 +540,7 @@ namespace Mzinga.Trainer
             Log("Enumerate start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
 
             foreach (Profile p in profiles)
             {
@@ -567,7 +567,7 @@ namespace Mzinga.Trainer
             Log("Analyze start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
 
             string resultFile = Path.Combine(path, "analyze.csv");
 
@@ -590,7 +590,7 @@ namespace Mzinga.Trainer
                 {
                     StringBuilder profileSB = new StringBuilder();
 
-                    profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}", p.Id, p.Name, p.EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Wins, p.Losses, p.Draws);
+                    profileSB.AppendFormat("{0},{1},{2},{3},{4},{5},{6},{7},{8}", p.Id, p.Name, p.Records[(int)TrainerSettings.GameType].EloRating, p.Generation, p.ParentA.HasValue ? p.ParentA.ToString() : "", p.ParentB.HasValue ? p.ParentB.ToString() : "", p.Records[(int)TrainerSettings.GameType].Wins, p.Records[(int)TrainerSettings.GameType].Losses, p.Records[(int)TrainerSettings.GameType].Draws);
 
                     MetricWeights startNormalized = p.StartMetricWeights.GetNormalized();
                     MetricWeights endNormalized = p.EndMetricWeights.GetNormalized();
@@ -863,7 +863,7 @@ namespace Mzinga.Trainer
 
                         BoardState roundResult = BoardState.Draw;
 
-                        Profile drawWinnerProfile = whiteProfile.EloRating < blackProfile.EloRating ? whiteProfile : blackProfile;
+                        Profile drawWinnerProfile = whiteProfile.Records[(int)TrainerSettings.GameType].EloRating < blackProfile.Records[(int)TrainerSettings.GameType].EloRating ? whiteProfile : blackProfile;
 
                         Log("Tournament match start {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
 
@@ -968,7 +968,7 @@ namespace Mzinga.Trainer
                 Log("Tournament Winner: {0}", ToString(winner));
             }
 
-            Profile best = (profiles.OrderByDescending(profile => profile.EloRating)).First();
+            Profile best = (profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating)).First();
             Log("Tournament Highest Elo: {0}", ToString(best));
         }
 
@@ -1057,6 +1057,32 @@ namespace Mzinga.Trainer
             Log("AutoTrain end.");
         }
 
+        public void Top()
+        {
+            Top(TrainerSettings.ProfilesPath);
+        }
+
+        private void Top(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("Top start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+
+            for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+            {
+                Profile topProfile = profiles.OrderByDescending(profile => profile.Records[i].EloRating).First();
+                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i), ToString(topProfile, (ExpansionPieces)i));
+            }
+
+            Log("Top end.");
+        }
+
         private List<Profile> LoadProfiles(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -1111,7 +1137,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("profiles");
             }
 
-            LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.EloRating));
+            LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
             List<Profile> seeded = new List<Profile>(sortedProfiles.Count);
 
             bool first = true;
@@ -1199,12 +1225,17 @@ namespace Mzinga.Trainer
 
         private string ToString(Profile profile)
         {
+            return ToString(profile, TrainerSettings.GameType);
+        }
+
+        private string ToString(Profile profile, ExpansionPieces gameType)
+        {
             if (null == profile)
             {
                 throw new ArgumentNullException("profile");
             }
 
-            return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Name, profile.EloRating, IsProvisional(profile) ? "?" : " ", profile.Wins, profile.Losses, profile.Draws);
+            return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Name, profile.Records[(int)gameType].EloRating, IsProvisional(profile) ? "?" : " ", profile.Records[(int)gameType].Wins, profile.Records[(int)gameType].Losses, profile.Records[(int)gameType].Draws);
         }
 
         private bool IsProvisional(Profile profile)
@@ -1214,7 +1245,7 @@ namespace Mzinga.Trainer
                 throw new ArgumentNullException("profile");
             }
 
-            return profile.TotalGames < TrainerSettings.ProvisionalGameCount;
+            return profile.Records[(int)TrainerSettings.GameType].TotalGames < TrainerSettings.ProvisionalGameCount;
         }
 
         private readonly object _progressLock = new object();
