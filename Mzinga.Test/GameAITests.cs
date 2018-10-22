@@ -54,7 +54,7 @@ namespace Mzinga.Test
             for (int i = 0; i < iterations; i++)
             {
                 GameBoard gb = new GameBoard();
-                GameAI ai = GetTestGameAI();
+                GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
                 Move m = ai.GetBestMove(gb, 2, 0);
@@ -78,7 +78,7 @@ namespace Mzinga.Test
             for (int i = 0; i < iterations; i++)
             {
                 GameBoard gb = original.Clone();
-                GameAI ai = GetTestGameAI();
+                GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
                 Move m = ai.GetBestMove(gb, 2, 0);
@@ -95,7 +95,7 @@ namespace Mzinga.Test
         public void GameAI_FirstTurnBestMoveByTimePerfTest()
         {
             GameBoard gb = new GameBoard();
-            GameAI ai = GetTestGameAI();
+            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
             int maxDepth = 0;
 
@@ -114,8 +114,7 @@ namespace Mzinga.Test
         public void GameAI_FifthTurnBestMoveByTimePerfTest()
         {
             GameBoard gb = GetBoardOnFifthTurn();
-
-            GameAI ai = GetTestGameAI();
+            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
             int maxDepth = 0;
 
@@ -144,7 +143,7 @@ namespace Mzinga.Test
         private GameBoard GetBoardOnFifthTurn()
         {
             GameBoard gb = new GameBoard();
-            GameAI ai = GetTestGameAI();
+            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
             while (gb.CurrentPlayerTurn < 5)
             {
@@ -154,9 +153,9 @@ namespace Mzinga.Test
             return gb;
         }
 
-        public static GameAI GetTestGameAI()
+        public static GameAI GetTestGameAI(ExpansionPieces expansionPieces)
         {
-            return TestUtils.DefaultGameEngineConfig.GetGameAI();
+            return TestUtils.DefaultGameEngineConfig.GetGameAI(expansionPieces);
         }
 
         private class GameAIBestMoveTestCase : ITestCase
@@ -169,7 +168,7 @@ namespace Mzinga.Test
 
             public void Execute()
             {
-                GameAI ai = GetTestGameAI();
+                GameAI ai = GetTestGameAI(gameBoard.ExpansionPieces);
                 ActualBestMove = ai.GetBestMove(gameBoard, maxDepth, 0);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove);
             }

@@ -25,10 +25,12 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 
+using Mzinga.Core;
 using Mzinga.Core.AI;
 
 namespace Mzinga.Engine
@@ -39,9 +41,7 @@ namespace Mzinga.Engine
 
         public int? TranspositionTableSizeMB { get; private set; } = null;
 
-        public MetricWeights StartMetricWeights { get; private set; } = null;
-
-        public MetricWeights EndMetricWeights { get; private set; } = null;
+        public Dictionary<ExpansionPieces, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<ExpansionPieces, MetricWeights[]>();
 
         public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
 
@@ -112,10 +112,10 @@ namespace Mzinga.Engine
                             break;
                         case "MetricWeights":
                         case "StartMetricWeights":
-                            StartMetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
+                            SetStartMetricWeights(ExpansionPieces.None, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "EndMetricWeights":
-                            EndMetricWeights = MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree());
+                            SetEndMetricWeights(ExpansionPieces.None, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "MaxHelperThreads":
                             ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
@@ -240,12 +240,14 @@ namespace Mzinga.Engine
             values = "";
         }
 
-        public GameAI GetGameAI()
+        public GameAI GetGameAI(ExpansionPieces expansionPieces)
         {
+            MetricWeights[] mw = GetMetricWeights(expansionPieces);
+
             return new GameAI(new GameAIConfig()
             {
-                StartMetricWeights = StartMetricWeights,
-                EndMetricWeights = EndMetricWeights ?? StartMetricWeights,
+                StartMetricWeights = mw[0],
+                EndMetricWeights = mw[0] ?? mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
                 TranspositionTableSizeMB = TranspositionTableSizeMB,
             });
@@ -259,6 +261,50 @@ namespace Mzinga.Engine
             {
                 return new GameEngineConfig(ms);
             }
+        }
+
+        private void SetStartMetricWeights(ExpansionPieces expansionPieces, MetricWeights metricWeights)
+        {
+            if (!MetricWeightSet.ContainsKey(expansionPieces))
+            {
+                MetricWeightSet.Add(expansionPieces, new MetricWeights[2]);
+            }
+
+            MetricWeightSet[expansionPieces][0] = metricWeights;
+        }
+
+        private void SetEndMetricWeights(ExpansionPieces expansionPieces, MetricWeights metricWeights)
+        {
+            if (!MetricWeightSet.ContainsKey(expansionPieces))
+            {
+                MetricWeightSet.Add(expansionPieces, new MetricWeights[2]);
+            }
+
+            MetricWeightSet[expansionPieces][1] = metricWeights;
+        }
+
+        private MetricWeights[] GetMetricWeights(ExpansionPieces expansionPieces)
+        {
+            MetricWeights[] result;
+
+            // Start with the weights for the base game type
+            if (!MetricWeightSet.TryGetValue(ExpansionPieces.None, out result))
+            {
+                // No base game type, start with nulls
+                result = new MetricWeights[2];
+            }
+
+            if (expansionPieces != ExpansionPieces.None)
+            {
+                // Try to get weights specific to this game type
+                if (MetricWeightSet.TryGetValue(expansionPieces, out MetricWeights[] mw))
+                {
+                    result[0] = mw[0] ?? result[0];
+                    result[1] = mw[1] ?? result[1];
+                }
+            }
+
+            return result;
         }
 
         private const int MinTranspositionTableSizeMB = 1;

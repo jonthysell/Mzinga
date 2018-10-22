@@ -37,7 +37,7 @@ namespace Mzinga.Engine
         {
             get
             {
-                return string.Format("Mzinga.Engine {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                return string.Format("Mzinga.Engine v{0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
             }
         }
 

@@ -66,18 +66,35 @@ namespace Mzinga.Engine
             Config = config ?? throw new ArgumentNullException("config");
             ConsoleOut = consoleOut ?? throw new ArgumentNullException("consoleOut");
 
-            InitAI();
-
             ExitRequested = false;
         }
 
         private void InitAI()
         {
-            _gameAI = Config.GetGameAI();
-
-            if (Config.ReportIntermediateBestMoves)
+            if (null == _gameBoard)
             {
-                _gameAI.BestMoveFound += OnBestMoveFound;
+                throw new NoBoardException();
+            }
+
+            _gameAI = Config.GetGameAI(_gameBoard.ExpansionPieces);
+
+            ResetAI(false);
+        }
+
+        private void ResetAI(bool resetCaches)
+        {
+            if (null != _gameAI)
+            {
+                if (resetCaches)
+                {
+                    _gameAI.ResetCaches();
+                }
+
+                _gameAI.BestMoveFound -= OnBestMoveFound;
+                if (Config.ReportIntermediateBestMoves)
+                {
+                    _gameAI.BestMoveFound += OnBestMoveFound;
+                }
             }
         }
 
@@ -291,7 +308,7 @@ namespace Mzinga.Engine
             if (!string.IsNullOrWhiteSpace(boardString))
             {
                 _gameBoard = new GameBoard(boardString);
-                _gameAI.ResetCaches();
+                InitAI();
             }
 #endif
             if (null == _gameBoard)
@@ -306,7 +323,7 @@ namespace Mzinga.Engine
         {
             _gameBoard = new GameBoard(expansionPieces);
 
-            _gameAI.ResetCaches();
+            InitAI();
 
             ConsoleOut(_gameBoard.ToGameString());
         }
@@ -541,12 +558,14 @@ namespace Mzinga.Engine
             key = key.Trim();
 
             bool refreshAI = false;
+            bool resetCaches = false;
 
             switch (key)
             {
                 case "MaxBranchingFactor":
                     Config.ParseMaxBranchingFactorValue(value);
                     refreshAI = true;
+                    resetCaches = true;
                     break;
                 case "MaxHelperThreads":
                     Config.ParseMaxHelperThreadsValue(value);
@@ -557,6 +576,7 @@ namespace Mzinga.Engine
                 case "TranspositionTableSizeMB":
                     Config.ParseTranspositionTableSizeMBValue(value);
                     refreshAI = true;
+                    resetCaches = true;
                     break;
                 case "ReportIntermediateBestMoves":
                     Config.ParseReportIntermediateBestMovesValue(value);
@@ -570,7 +590,7 @@ namespace Mzinga.Engine
 
             if (refreshAI)
             {
-                InitAI();
+                ResetAI(resetCaches);
             }
         }
 
