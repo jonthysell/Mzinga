@@ -294,5 +294,9 @@ namespace Mzinga.Trainer
         public bool FindPuzzleCandidates { get; set; } = false;
 
         public int MaxHelperThreads { get; set; } = 0;
+
+        public int TopCount { get; set; } = 1;
+
+        public bool AllGameTypes { get; set; } = false;
     }
 }

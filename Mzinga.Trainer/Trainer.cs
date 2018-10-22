@@ -84,7 +84,7 @@ namespace Mzinga.Trainer
 
         public void Battle()
         {
-            Battle(TrainerSettings.WhiteProfilePath, TrainerSettings.BlackProfilePath);
+            RunCommandInAllGameTypes(() => { Battle(TrainerSettings.WhiteProfilePath, TrainerSettings.BlackProfilePath); });
         }
 
         private void Battle(string whiteProfilePath, string blackProfilePath)
@@ -130,7 +130,7 @@ namespace Mzinga.Trainer
 
         public void BattleRoyale()
         {
-            BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles);
+            RunCommandInAllGameTypes(() => { BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles); });
         }
 
         private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit, bool shuffleProfiles, int maxConcurrentBattles)
@@ -558,7 +558,7 @@ namespace Mzinga.Trainer
 
         public void Analyze()
         {
-            Analyze(TrainerSettings.ProfilesPath);
+            RunCommandInAllGameTypes(() => { Analyze(TrainerSettings.ProfilesPath); });
         }
 
         public void Analyze(string path)
@@ -569,7 +569,7 @@ namespace Mzinga.Trainer
             List<Profile> profiles = LoadProfiles(path);
             profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
 
-            string resultFile = Path.Combine(path, "analyze.csv");
+            string resultFile = Path.Combine(path, string.Format("analyze{0}.csv", EnumUtils.GetExpansionPiecesString(TrainerSettings.GameType)));
 
             using (StreamWriter sw = new StreamWriter(resultFile))
             {
@@ -792,7 +792,7 @@ namespace Mzinga.Trainer
 
         public void Tournament()
         {
-            Tournament(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles);
+            RunCommandInAllGameTypes(() => { Tournament(TrainerSettings.ProfilesPath, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles); });
         }
 
         private void Tournament(string path, int maxDraws, TimeSpan timeLimit,  bool shuffleProfiles, int maxConcurrentBattles)
@@ -974,7 +974,7 @@ namespace Mzinga.Trainer
 
         public void AutoTrain()
         {
-            AutoTrain(TrainerSettings.TargetProfilePath);
+            RunCommandInAllGameTypes(() => { AutoTrain(TrainerSettings.TargetProfilePath); });
         }
 
         private void AutoTrain(string path)
@@ -1059,7 +1059,7 @@ namespace Mzinga.Trainer
 
         public void Top()
         {
-            Top(TrainerSettings.ProfilesPath);
+            RunCommandInAllGameTypes(() => { Top(TrainerSettings.ProfilesPath); });
         }
 
         private void Top(string path)
@@ -1074,10 +1074,9 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+            foreach (Profile profile in profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).Take(TrainerSettings.TopCount))
             {
-                Profile topProfile = profiles.OrderByDescending(profile => profile.Records[i].EloRating).First();
-                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i), ToString(topProfile, (ExpansionPieces)i));
+                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString(TrainerSettings.GameType), ToString(profile, TrainerSettings.GameType));
             }
 
             Log("Top end.");
@@ -1158,6 +1157,22 @@ namespace Mzinga.Trainer
             }
 
             return seeded;
+        }
+
+        private void RunCommandInAllGameTypes(Action action)
+        {
+            if (!TrainerSettings.AllGameTypes)
+            {
+                action();
+            }
+            else
+            {
+                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+                {
+                    TrainerSettings.GameType = (ExpansionPieces)i;
+                    action();
+                }
+            }
         }
 
         private void Log(string format, params object[] args)
