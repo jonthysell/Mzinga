@@ -105,17 +105,22 @@ namespace Mzinga.Engine
             {
                 if (reader.IsStartElement())
                 {
+                    ExpansionPieces expansionPieces = EnumUtils.ParseExpansionPieces(reader["GameType"]);
+                    
                     switch (reader.Name)
                     {
                         case "TranspositionTableSizeMB":
                             ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
                             break;
                         case "MetricWeights":
+                            SetStartMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            break;
                         case "StartMetricWeights":
-                            SetStartMetricWeights(ExpansionPieces.None, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetStartMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "EndMetricWeights":
-                            SetEndMetricWeights(ExpansionPieces.None, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "MaxHelperThreads":
                             ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
