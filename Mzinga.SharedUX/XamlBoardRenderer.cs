@@ -117,6 +117,8 @@ namespace Mzinga.SharedUX
         private const double BaseStackShiftLevel = 0.1;
         private const double RaisedStackShiftLevel = 0.5;
 
+        private const double GraphicalBugSizeRatio = 1.25;
+
         private Board LastBoard;
 
         private readonly SolidColorBrush WhiteBrush;
@@ -701,9 +703,9 @@ namespace Mzinga.SharedUX
                 Fill = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
             };
 
-            Grid safeGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
+            Grid safeGrid = new Grid() { Height = size * 2.0, Width = size * 2.0 };
 
-            Grid bugGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6), Width = size * 2.0 * Math.Sin(Math.PI / 6) };
+            Grid bugGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio, Width = size * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio };
             bugGrid.Children.Add(bugPath);
 
             safeGrid.Children.Add(bugGrid);
