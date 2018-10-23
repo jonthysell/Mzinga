@@ -336,12 +336,14 @@ namespace Mzinga.Trainer
                                 break;
                             case "Record":
                                 {
-                                    int gt = (int)EnumUtils.ParseExpansionPieces(reader["GameType"]);
-                                    records[gt].EloRating = int.Parse(reader["EloRating"]);
-                                    records[gt].Wins = int.Parse(reader["Wins"]);
-                                    records[gt].Losses = int.Parse(reader["Losses"]);
-                                    records[gt].Draws = int.Parse(reader["Draws"]);
-                                    records[gt].AutoTrains = int.Parse(reader["AutoTrains"]);
+                                    if (EnumUtils.TryParseExpansionPieces(reader["GameType"], out ExpansionPieces ep))
+                                    {
+                                        int.TryParse(reader["EloRating"], out records[(int)ep].EloRating);
+                                        int.TryParse(reader["Wins"], out records[(int)ep].Wins);
+                                        int.TryParse(reader["Losses"], out records[(int)ep].Losses);
+                                        int.TryParse(reader["Draws"], out records[(int)ep].Draws);
+                                        int.TryParse(reader["AutoTrains"], out records[(int)ep].AutoTrains);
+                                    }
                                 }
                                 break;
                             case "Creation":
