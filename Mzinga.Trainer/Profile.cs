@@ -175,10 +175,12 @@ namespace Mzinga.Trainer
             Update();
         }
 
-        public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights, ExpansionPieces expansionPieces)
         {
             StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
             EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
+
+            Records[(int)expansionPieces].AutoTrains++;
 
             Update();
         }
@@ -242,6 +244,7 @@ namespace Mzinga.Trainer
                     writer.WriteAttributeString("Wins", Records[i].Wins.ToString());
                     writer.WriteAttributeString("Losses", Records[i].Losses.ToString());
                     writer.WriteAttributeString("Draws", Records[i].Draws.ToString());
+                    writer.WriteAttributeString("AutoTrains", Records[i].AutoTrains.ToString());
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -338,6 +341,7 @@ namespace Mzinga.Trainer
                                     records[gt].Wins = int.Parse(reader["Wins"]);
                                     records[gt].Losses = int.Parse(reader["Losses"]);
                                     records[gt].Draws = int.Parse(reader["Draws"]);
+                                    records[gt].AutoTrains = int.Parse(reader["AutoTrains"]);
                                 }
                                 break;
                             case "Creation":
@@ -462,9 +466,12 @@ namespace Mzinga.Trainer
     public class ProfileRecord
     {
         public int EloRating = EloUtils.DefaultRating;
+
         public int Wins = 0;
         public int Losses = 0;
         public int Draws = 0;
+
+        public int AutoTrains = 0;
 
         public int TotalGames
         {

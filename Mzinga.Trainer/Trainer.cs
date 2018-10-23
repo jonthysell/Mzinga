@@ -1029,7 +1029,7 @@ namespace Mzinga.Trainer
                     treeStrapTask.Wait();
 
                     // Update profile with final MetricWeights
-                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights);
+                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights, gameBoard.ExpansionPieces);
 
                     // Write profile
                     using (FileStream fs = new FileStream(path, FileMode.Create))
