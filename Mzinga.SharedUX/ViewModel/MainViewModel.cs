@@ -531,7 +531,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         StringBuilder sb = new StringBuilder();
 
-                        sb.AppendLine(Title);
+                        sb.AppendLine("Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.");
                         sb.AppendLine();
 
                         sb.AppendLine("Mzinga Copyright (c) 2015-2018 Jon Thysell");
@@ -539,13 +539,9 @@ namespace Mzinga.SharedUX.ViewModel
 
                         sb.AppendLine();
 
-                        sb.AppendLine(string.Join(Environment.NewLine + Environment.NewLine, _license));
+                        sb.Append(string.Join(Environment.NewLine + Environment.NewLine, _license));
 
-                        sb.AppendLine();
-
-                        sb.Append("Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see https://gen42.com/games/hive.");
-
-                        Messenger.Default.Send(new InformationMessage(sb.ToString(), "About Mzinga"));
+                        Messenger.Default.Send(new InformationMessage(sb.ToString(), "About Mzinga.Viewer"));
                     }
                     catch (Exception ex)
                     {

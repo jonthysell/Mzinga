@@ -1,10 +1,10 @@
 # Mzinga #
 
-Mzinga is an open-source software project to play the board game [Hive](Hive), with the primary goal of building a community of developers who create Hive-playing AIs.
+Mzinga is an open-source software project to play the board game [Hive](https://gen42.com/games/hive), with the primary goal of building a community of developers who create Hive-playing AIs.
 
 To that end, Mzinga proposes a [Universal Hive Protocol](https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol) to support interoperability for Hive-playing software.
 
-For more information, please checkout the [Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki).
+For more information, please check out the [Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki).
 
 ## Projects ##
 
@@ -32,7 +32,8 @@ Mzinga.Trainer.exe is a command-line utility with the goal to improve Mzinga's A
 
 ## Copyright ##
 
-Mzinga Copyright (c) 2015-2018 Jon Thysell.
-MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
+Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
 
-Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games. To learn more about Hive, see https://gen42.com/games/hive.
+Mzinga Copyright (c) 2015-2018 Jon Thysell.
+
+MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
