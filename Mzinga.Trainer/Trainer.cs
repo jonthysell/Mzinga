@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
@@ -1080,6 +1081,49 @@ namespace Mzinga.Trainer
             }
 
             Log("Top end.");
+        }
+
+        public void MergeTop()
+        {
+            MergeTop(TrainerSettings.ProfilesPath);
+        }
+
+        private void MergeTop(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("MergeTop start.");
+
+            List<Profile> profiles = LoadProfiles(path);
+
+            string resultFile = Path.Combine(path, "mergetop.txt");
+
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true,
+                ConformanceLevel = ConformanceLevel.Fragment,
+            };
+
+            using (XmlWriter xw = XmlWriter.Create(resultFile, settings))
+            {
+                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+                {
+                    ExpansionPieces gameType = (ExpansionPieces)i;
+
+                    Profile topProfile = profiles.OrderByDescending(profile => profile.Records[i].EloRating).First();
+
+                    Log("Adding {0} for {1}", ToString(topProfile, gameType), EnumUtils.GetExpansionPiecesString(gameType));
+
+                    topProfile.StartMetricWeights.WriteMetricWeightsXml(xw, "StartMetricWeights", gameType);
+                    topProfile.EndMetricWeights.WriteMetricWeightsXml(xw, "EndMetricWeights", gameType);
+                }
+            }
+
+            Log("MergeTop end.");
         }
 
         private List<Profile> LoadProfiles(string path)

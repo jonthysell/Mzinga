@@ -257,33 +257,9 @@ namespace Mzinga.Trainer
                 writer.WriteValue(LastUpdatedTimestamp);
                 writer.WriteEndElement();
 
-                writer.WriteStartElement("StartMetricWeights");
+                StartMetricWeights.WriteMetricWeightsXml(writer, "StartMetricWeights");
 
-                MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
-                {
-                    string key = MetricWeights.GetKeyName(bugType, bugTypeWeight);
-                    double value = StartMetricWeights.Get(bugType, bugTypeWeight);
-
-                    writer.WriteStartElement(key);
-                    writer.WriteValue(value);
-                    writer.WriteEndElement();
-                });
-
-                writer.WriteEndElement(); // </StartMetricWeights>
-
-                writer.WriteStartElement("EndMetricWeights");
-
-                MetricWeights.IterateOverWeights((bugType, bugTypeWeight) =>
-                {
-                    string key = MetricWeights.GetKeyName(bugType, bugTypeWeight);
-                    double value = EndMetricWeights.Get(bugType, bugTypeWeight);
-
-                    writer.WriteStartElement(key);
-                    writer.WriteValue(value);
-                    writer.WriteEndElement();
-                });
-
-                writer.WriteEndElement(); // </EndMetricWeights>
+                EndMetricWeights.WriteMetricWeightsXml(writer, "EndMetricWeights");
 
                 writer.WriteEndElement(); // </Profile>
             }

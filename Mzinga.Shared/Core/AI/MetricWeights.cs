@@ -153,6 +153,33 @@ namespace Mzinga.Core.AI
             return mw;
         }
 
+        public void WriteMetricWeightsXml(XmlWriter xmlWriter, string name = "MetricWeights", ExpansionPieces? gameType = null)
+        {
+            if (null == xmlWriter)
+            {
+                throw new ArgumentNullException("xmlWriter");
+            }
+
+            xmlWriter.WriteStartElement(name);
+
+            if (gameType.HasValue)
+            {
+                xmlWriter.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString(gameType.Value));
+            }
+
+            IterateOverWeights((bugType, bugTypeWeight) =>
+            {
+                string key = GetKeyName(bugType, bugTypeWeight);
+                double value = Get(bugType, bugTypeWeight);
+
+                xmlWriter.WriteStartElement(key);
+                xmlWriter.WriteValue(value);
+                xmlWriter.WriteEndElement();
+            });
+
+            xmlWriter.WriteEndElement();
+        }
+
         public static bool TryParseKeyName(string key, out BugType bugType, out BugTypeWeight bugTypeWeight)
         {
             if (!string.IsNullOrWhiteSpace(key))

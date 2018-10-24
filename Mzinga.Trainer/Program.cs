@@ -88,6 +88,9 @@ namespace Mzinga.Trainer
                         case Command.Top:
                             t.Top();
                             break;
+                        case Command.MergeTop:
+                            t.MergeTop();
+                            break;
                         default:
                             ShowHelp();
                             break;
@@ -148,6 +151,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("tournament             Fight an single elimination tournament");
             Console.WriteLine("autotrain              Train a single profile against itself");
             Console.WriteLine("top                    List the top profiles for each GameType");
+            Console.WriteLine("mergetop               Merge the top profiles from each GameType");
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -242,6 +246,10 @@ namespace Mzinga.Trainer
                     break;
                 case "top":
                     cmd = Command.Top;
+                    break;
+                case "mt":
+                case "mergetop":
+                    cmd = Command.MergeTop;
                     break;
             }
 
@@ -396,6 +404,7 @@ namespace Mzinga.Trainer
         Mate,
         Tournament,
         AutoTrain,
-        Top
+        Top,
+        MergeTop,
     }
 }
