@@ -725,13 +725,6 @@ namespace Mzinga.Engine
 <Ladybug.QuietMoveWeight>-7005.3249242179245</Ladybug.QuietMoveWeight>
 <Ladybug.FriendlyNeighborWeight>-23694.150138705412</Ladybug.FriendlyNeighborWeight>
 <Ladybug.EnemyNeighborWeight>3066.3970440977914</Ladybug.EnemyNeighborWeight>
-<Pillbug.InPlayWeight>0</Pillbug.InPlayWeight>
-<Pillbug.IsPinnedWeight>0</Pillbug.IsPinnedWeight>
-<Pillbug.IsCoveredWeight>0</Pillbug.IsCoveredWeight>
-<Pillbug.NoisyMoveWeight>0</Pillbug.NoisyMoveWeight>
-<Pillbug.QuietMoveWeight>0</Pillbug.QuietMoveWeight>
-<Pillbug.FriendlyNeighborWeight>0</Pillbug.FriendlyNeighborWeight>
-<Pillbug.EnemyNeighborWeight>0</Pillbug.EnemyNeighborWeight>
 </StartMetricWeights>
 <EndMetricWeights GameType=""Base+ML"">
 <QueenBee.InPlayWeight>17899.772953318541</QueenBee.InPlayWeight>
@@ -783,13 +776,6 @@ namespace Mzinga.Engine
 <Ladybug.QuietMoveWeight>4680.455279954178</Ladybug.QuietMoveWeight>
 <Ladybug.FriendlyNeighborWeight>34366.864034470178</Ladybug.FriendlyNeighborWeight>
 <Ladybug.EnemyNeighborWeight>58754.453143467625</Ladybug.EnemyNeighborWeight>
-<Pillbug.InPlayWeight>0</Pillbug.InPlayWeight>
-<Pillbug.IsPinnedWeight>0</Pillbug.IsPinnedWeight>
-<Pillbug.IsCoveredWeight>0</Pillbug.IsCoveredWeight>
-<Pillbug.NoisyMoveWeight>0</Pillbug.NoisyMoveWeight>
-<Pillbug.QuietMoveWeight>0</Pillbug.QuietMoveWeight>
-<Pillbug.FriendlyNeighborWeight>0</Pillbug.FriendlyNeighborWeight>
-<Pillbug.EnemyNeighborWeight>0</Pillbug.EnemyNeighborWeight>
 </EndMetricWeights>
 <StartMetricWeights GameType=""Base+P"">
 <QueenBee.InPlayWeight>-1957.0779689889287</QueenBee.InPlayWeight>

@@ -172,9 +172,12 @@ namespace Mzinga.Core.AI
                 string key = GetKeyName(bugType, bugTypeWeight);
                 double value = Get(bugType, bugTypeWeight);
 
-                xmlWriter.WriteStartElement(key);
-                xmlWriter.WriteValue(value);
-                xmlWriter.WriteEndElement();
+                if (value != 0.0)
+                {
+                    xmlWriter.WriteStartElement(key);
+                    xmlWriter.WriteValue(value);
+                    xmlWriter.WriteEndElement();
+                }
             });
 
             xmlWriter.WriteEndElement();
