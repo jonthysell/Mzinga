@@ -298,5 +298,7 @@ namespace Mzinga.Trainer
         public int TopCount { get; set; } = 1;
 
         public bool AllGameTypes { get; set; } = false;
+
+        public bool ProvisionalFirst { get; set; } = true;
     }
 }

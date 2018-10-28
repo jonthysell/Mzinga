@@ -131,10 +131,10 @@ namespace Mzinga.Trainer
 
         public void BattleRoyale()
         {
-            RunCommandInAllGameTypes(() => { BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles); });
+            RunCommandInAllGameTypes(() => { BattleRoyale(TrainerSettings.ProfilesPath, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.ProvisionalFirst, TrainerSettings.MaxConcurrentBattles); });
         }
 
-        private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit, bool shuffleProfiles, int maxConcurrentBattles)
+        private void BattleRoyale(string path, int maxBattles, int maxDraws, TimeSpan timeLimit, bool shuffleProfiles, bool provisionalFirst, int maxConcurrentBattles)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -201,6 +201,11 @@ namespace Mzinga.Trainer
             if (shuffleProfiles)
             {
                 matches = Shuffle(matches);
+            }
+
+            if (provisionalFirst)
+            {
+                matches = new List<Tuple<Profile, Profile>>(matches.OrderByDescending(match => IsProvisional(match.Item1) || IsProvisional(match.Item2) ? 1 : 0));
             }
 
             matches = new List<Tuple<Profile, Profile>>(matches.Take(remaining));
@@ -689,7 +694,7 @@ namespace Mzinga.Trainer
                         }
                         else if (battles > 0)
                         {
-                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.MaxConcurrentBattles);
+                            BattleRoyale(path, TrainerSettings.MaxBattles, TrainerSettings.MaxDraws, TrainerSettings.BulkBattleTimeLimit, TrainerSettings.BattleShuffleProfiles, TrainerSettings.ProvisionalFirst, TrainerSettings.MaxConcurrentBattles);
                         }
                     }
                 }

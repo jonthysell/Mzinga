@@ -186,6 +186,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-MaxHelperThreads      The maximum helper threads for each AI to use");
             Console.WriteLine("-TopCount              The number of profiles to return when calling top");
             Console.WriteLine("-AllGameTypes          Run the specifcied command through every game type");
+            Console.WriteLine("-ProvisionalFirst      Prioritize battles with at least one provisional profile");
             Console.WriteLine();
         }
 
@@ -381,6 +382,10 @@ namespace Mzinga.Trainer
                     case "agt":
                     case "allgametypes":
                         trainerSettings.AllGameTypes = bool.Parse(args[++i]);
+                        break;
+                    case "provisionalfirst":
+                    case "pf":
+                        trainerSettings.ProvisionalFirst = bool.Parse(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));
