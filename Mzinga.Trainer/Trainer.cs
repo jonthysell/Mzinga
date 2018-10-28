@@ -215,7 +215,7 @@ namespace Mzinga.Trainer
                 MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles
             };
 
-            Parallel.ForEach(matches, po, (match, loopState) =>
+            Parallel.ForEach(matches.AsParallel().AsOrdered(), po, (match, loopState) =>
             {
                 Profile whiteProfile = match.Item1;
                 Profile blackProfile = match.Item2;
