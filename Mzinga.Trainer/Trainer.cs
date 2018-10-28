@@ -182,8 +182,8 @@ namespace Mzinga.Trainer
 
             Log("Battle Royale start, ETA: {0}.", timeoutRemaining < timeRemaining ? ToString(timeoutRemaining) : ToString(timeRemaining));
 
-            List<Profile> whiteProfiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
-            List<Profile> blackProfiles = new List<Profile>(profiles.OrderBy(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
+            List<Profile> whiteProfiles = profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
+            List<Profile> blackProfiles = profiles.OrderBy(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
 
             List<Tuple<Profile, Profile>> matches = new List<Tuple<Profile, Profile>>(combinations);
 
@@ -205,10 +205,10 @@ namespace Mzinga.Trainer
 
             if (provisionalFirst)
             {
-                matches = new List<Tuple<Profile, Profile>>(matches.OrderByDescending(match => IsProvisional(match.Item1) || IsProvisional(match.Item2) ? 1 : 0));
+                matches = matches.OrderByDescending(match => IsProvisional(match.Item1) || IsProvisional(match.Item2) ? 1 : 0).ToList();
             }
 
-            matches = new List<Tuple<Profile, Profile>>(matches.Take(remaining));
+            matches = matches.Take(remaining).ToList();
 
             ParallelOptions po = new ParallelOptions
             {
@@ -494,10 +494,10 @@ namespace Mzinga.Trainer
 
             if (provisionalRules)
             {
-                profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
+                profiles = profiles.Where(profile => !IsProvisional(profile)).ToList();
             }
 
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
+            profiles = profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
 
             if (keepCount == TrainerSettings.CullKeepMax)
             {
@@ -546,7 +546,7 @@ namespace Mzinga.Trainer
             Log("Enumerate start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
+            profiles = profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
 
             foreach (Profile p in profiles)
             {
@@ -573,7 +573,7 @@ namespace Mzinga.Trainer
             Log("Analyze start.");
 
             List<Profile> profiles = LoadProfiles(path);
-            profiles = new List<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
+            profiles = profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
 
             string resultFile = Path.Combine(path, string.Format("analyze{0}.csv", EnumUtils.GetExpansionPiecesString(TrainerSettings.GameType)));
 
@@ -759,7 +759,7 @@ namespace Mzinga.Trainer
 
             if (provisionalRules)
             {
-                profiles = new List<Profile>(profiles.Where(profile => !IsProvisional(profile)));
+                profiles = profiles.Where(profile => !IsProvisional(profile)).ToList();
             }
 
             profiles = shuffleParents ? Shuffle(profiles) : Seed(profiles);

@@ -265,6 +265,11 @@ namespace Mzinga.Trainer
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public static Profile ReadXml(Stream inputStream)
         {
             if (null == inputStream)
