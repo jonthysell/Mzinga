@@ -107,6 +107,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool PieceColors
+        {
+            get
+            {
+                return Config.PieceColors;
+            }
+            set
+            {
+                Config.PieceColors = value;
+                RaisePropertyChanged("PieceColors");
+            }
+        }
+
         public bool DisablePiecesInHandWithNoMoves
         {
             get
@@ -291,6 +304,7 @@ namespace Mzinga.SharedUX.ViewModel
                         RaisePropertyChanged("HexOrientation");
                         RaisePropertyChanged("NotationType");
                         RaisePropertyChanged("PieceStyle");
+                        RaisePropertyChanged("PieceColors");
                         RaisePropertyChanged("DisablePiecesInHandWithNoMoves");
                         RaisePropertyChanged("DisablePiecesInPlayWithNoMoves");
                         RaisePropertyChanged("HighlightTargetMove");

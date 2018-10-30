@@ -139,6 +139,9 @@
                                          VerticalContentAlignment="Center" />
                         </StackPanel>
                         <Separator Margin="5" />
+                        <CheckBox Content="Colored bug pieces"
+                                  IsChecked="{Binding PieceColors}"
+                                  Margin="5" />
                         <CheckBox Content="Add numbers to piece of similar type"
                                   IsChecked="{Binding AddPieceNumbers}"
                                   Margin="5" />

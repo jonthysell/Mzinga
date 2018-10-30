@@ -659,6 +659,8 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException("size");
             }
 
+            SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+
             // Create text
             string text = EnumUtils.GetShortName(pieceName).Substring(1);
             TextBlock bugText = new TextBlock
@@ -668,7 +670,7 @@ namespace Mzinga.SharedUX
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
                 FontSize = size * 0.75,
-                Foreground = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
+                Foreground = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
             };
 
             Canvas.SetLeft(bugText, center.X - (bugText.Text.Length * (bugText.FontSize / 3.0)));
@@ -695,12 +697,14 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException("size");
             }
 
+            SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+
             // Create bug
             Path bugPath = new Path()
             {
                 Data = Geometry.Parse(BugPathGeometries[(int)EnumUtils.GetBugType(pieceName)]),
                 Stretch = Stretch.Uniform,
-                Fill = disabled ? MixSolidColorBrushes(BugBrushes[(int)EnumUtils.GetBugType(pieceName)], DisabledPieceBrush) : BugBrushes[(int)EnumUtils.GetBugType(pieceName)],
+                Fill = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
             };
 
             Grid safeGrid = new Grid() { Height = size * 2.0, Width = size * 2.0 };
