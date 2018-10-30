@@ -222,8 +222,6 @@ namespace Mzinga.Trainer
 
                 BoardState roundResult = BoardState.Draw;
 
-                Log("Battle Royale match start {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
-
                 if (maxDraws == 1)
                 {
                     roundResult = Battle(whiteProfile, blackProfile);
@@ -233,23 +231,21 @@ namespace Mzinga.Trainer
                     int rounds = 0;
                     while (roundResult == BoardState.Draw)
                     {
-                        Log("Battle Royale round {0} start.", rounds + 1);
-
                         roundResult = Battle(whiteProfile, blackProfile);
-
-                        Log("Battle Royale round {0} end.", rounds + 1);
 
                         rounds++;
 
-                        if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                        if (roundResult == BoardState.Draw)
                         {
-                            Log("Battle Royale match draw-out.");
-                            break;
+                            if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                            {
+                                Log("Battle {0} vs. {1} draw-out.", ToString(whiteProfile), ToString(blackProfile));
+                                break;
+                            }
+                            Log("Battle {0} vs. {1} draws, re-match.", ToString(whiteProfile), ToString(blackProfile));
                         }
                     }
                 }
-
-                Log("Battle Royale match end {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
 
                 Interlocked.Increment(ref completed);
                 Interlocked.Decrement(ref remaining);
@@ -349,7 +345,7 @@ namespace Mzinga.Trainer
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
-            Log("Battle start {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
+            Log("Battle start {0} {1} vs. {2}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), ToString(whiteProfile, gameBoard.ExpansionPieces), ToString(blackProfile, gameBoard.ExpansionPieces));
 
             DateTime battleStart = DateTime.Now;
             TimeSpan battleElapsed = TimeSpan.Zero;
@@ -455,7 +451,7 @@ namespace Mzinga.Trainer
             }
 
             // Output Results
-            Log("Battle end {0} {1} vs. {2}", boardState, ToString(whiteProfile), ToString(blackProfile));
+            Log("Battle end {0} {1} {2} vs. {3}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), boardState, ToString(whiteProfile, gameBoard.ExpansionPieces), ToString(blackProfile, gameBoard.ExpansionPieces));
 
             return boardState;
         }
@@ -871,8 +867,6 @@ namespace Mzinga.Trainer
 
                         Profile drawWinnerProfile = whiteProfile.Records[(int)TrainerSettings.GameType].EloRating < blackProfile.Records[(int)TrainerSettings.GameType].EloRating ? whiteProfile : blackProfile;
 
-                        Log("Tournament match start {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
-
                         if (maxDraws == 1)
                         {
                             roundResult = Battle(whiteProfile, blackProfile);
@@ -882,28 +876,27 @@ namespace Mzinga.Trainer
                             int rounds = 0;
                             while (roundResult == BoardState.Draw)
                             {
-                                Log("Tournament round {0} start.", rounds + 1);
-
                                 roundResult = Battle(whiteProfile, blackProfile);
-
-                                Log("Tournament round {0} end.", rounds + 1);
 
                                 rounds++;
 
-                                if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                                if (roundResult == BoardState.Draw)
                                 {
-                                    Log("Tournament match draw-out.");
-                                    break;
+                                    if (rounds >= maxDraws && roundResult == BoardState.Draw)
+                                    {
+                                        Log("Battle {0} vs. {1} draw-out.", ToString(whiteProfile), ToString(blackProfile));
+                                        break;
+                                    }
+                                    Log("Battle {0} vs. {1} draws, re-match.", ToString(whiteProfile), ToString(blackProfile));
                                 }
                             }
                         }
 
                         if (roundResult == BoardState.Draw)
                         {
+                            // Need someone to advance
                             roundResult = (drawWinnerProfile == whiteProfile) ? BoardState.WhiteWins : BoardState.BlackWins;
                         }
-
-                        Log("Tournament match end {0} vs. {1}.", ToString(whiteProfile), ToString(blackProfile));
 
                         Interlocked.Increment(ref completed);
                         Interlocked.Decrement(ref remaining);
@@ -1013,8 +1006,6 @@ namespace Mzinga.Trainer
 
             while (TrainerSettings.MaxBattles == TrainerSettings.MaxMaxBattles || battleCount < TrainerSettings.MaxBattles)
             {
-                Log("AutoTrain battle {0} start.", battleCount + 1);
-
                 // Create Game
                 GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
 
@@ -1025,6 +1016,8 @@ namespace Mzinga.Trainer
                     puzzleCandidateHandler = GetPuzzleCandidateHandler(gameBoard);
                     gameAI.BestMoveFound += puzzleCandidateHandler;
                 }
+
+                Log("AutoTrain battle {0} {1} start.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1);
 
                 try
                 {
@@ -1043,11 +1036,11 @@ namespace Mzinga.Trainer
                         profile.WriteXml(fs);
                     }
 
-                    Log("AutoTrain battle {0} end {1};{2}[{3}].", battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
+                    Log("AutoTrain battle {0} {1} end {2};{3}[{4}].", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
                 }
                 catch (Exception ex)
                 {
-                    Log("AutoTrain battle {0} interrupted with exception {1}.", battleCount + 1, ex.Message);
+                    Log("AutoTrain battle {0} {1} interrupted with exception {2}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1, ex.Message);
                 }
                 finally
                 {
@@ -1080,9 +1073,11 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            foreach (Profile profile in profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).Take(TrainerSettings.TopCount))
+            ExpansionPieces gameType = TrainerSettings.GameType;
+
+            foreach (Profile profile in profiles.OrderByDescending(profile => profile.Records[(int)gameType].EloRating).Take(TrainerSettings.TopCount))
             {
-                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString(TrainerSettings.GameType), ToString(profile, TrainerSettings.GameType));
+                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString(gameType), ToString(profile, gameType));
             }
 
             Log("Top end.");
