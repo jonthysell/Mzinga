@@ -295,32 +295,32 @@ namespace Mzinga.Engine
             if (string.IsNullOrWhiteSpace(command))
             {
                 ConsoleOut("Game commands:");
-                ConsoleOut("newgame");
-                ConsoleOut("play");
-                ConsoleOut("pass");
-                ConsoleOut("validmoves");
-                ConsoleOut("bestmove");
-                ConsoleOut("undo");
+                ConsoleOut("  newgame");
+                ConsoleOut("  play");
+                ConsoleOut("  pass");
+                ConsoleOut("  validmoves");
+                ConsoleOut("  bestmove");
+                ConsoleOut("  undo");
 
                 ConsoleOut("");
 
                 ConsoleOut("Engine commands:");
-                ConsoleOut("info");
-                ConsoleOut("help");
-                ConsoleOut("options");                
-                ConsoleOut("exit");
+                ConsoleOut("  info");
+                ConsoleOut("  help");
+                ConsoleOut("  options");                
+                ConsoleOut("  exit");
 
                 ConsoleOut("");
 
-                ConsoleOut("Advanced commands:");
-                ConsoleOut("board");
-                ConsoleOut("perft");
+                ConsoleOut("  Advanced commands:");
+                ConsoleOut("  board");
+                ConsoleOut("  perft");
 
 #if DEBUG
                 ConsoleOut("");
 
                 ConsoleOut("Debug commands:");
-                ConsoleOut("break");
+                ConsoleOut("  break");
 #endif
                 ConsoleOut("");
 
@@ -333,70 +333,82 @@ namespace Mzinga.Engine
                 switch (cmd)
                 {
                     case "info":
-                        ConsoleOut("info");
-                        ConsoleOut("Displays the identifier string of the engine and list of its capabilities.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#info.");
+                        ConsoleOut("  info");
+                        ConsoleOut("");
+                        ConsoleOut("  Displays the identifier string of the engine and list of its capabilities.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#info.");
                         break;
                     case "?":
                     case "help":
-                        ConsoleOut("help [Command]");
-                        ConsoleOut("Displays the list of available commands. If a Command is specified, displays the help for that Command.");
+                        ConsoleOut("  help [Command]");
+                        ConsoleOut("");
+                        ConsoleOut("  Displays the list of available commands. If a Command is specified, displays the help for that Command.");
                         break;
                     case "board":
-                        ConsoleOut("board [GameString|BoardString]");
-                        ConsoleOut("Displays the current GameString. If a GameString or BoardString is specified, load it as the current game.");
+                        ConsoleOut("  board [GameString|BoardString]");
+                        ConsoleOut("  Displays the current GameString. If a GameString or BoardString is specified, load it as the current game.");
                         break;
                     case "newgame":
-                        ConsoleOut("newgame [GameTypeString]");
-                        ConsoleOut("Starts a new Base game with no expansion pieces. If GameTypeString is specified, start a new game of that type instead.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#newgame.");
+                        ConsoleOut("  newgame [GameTypeString]");
+                        ConsoleOut("");
+                        ConsoleOut("  Starts a new Base game with no expansion pieces. If GameTypeString is specified, start a new game of that type instead.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#newgame.");
                         break;
                     case "play":
-                        ConsoleOut("play MoveString");
-                        ConsoleOut("Play the specified MoveString in the current game.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#play.");
+                        ConsoleOut("  play MoveString");
+                        ConsoleOut("");
+                        ConsoleOut("  Play the specified MoveString in the current game.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#play.");
                         break;
                     case "pass":
-                        ConsoleOut("pass");
-                        ConsoleOut("Play a passing move in the current game.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#pass.");
+                        ConsoleOut("  pass");
+                        ConsoleOut("");
+                        ConsoleOut("  Play a passing move in the current game.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#pass.");
                         break;
                     case "validmoves":
-                        ConsoleOut("validmoves");
-                        ConsoleOut("Display a list of every valid move in the current game.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#validmoves.");
+                        ConsoleOut("  validmoves");
+                        ConsoleOut("");
+                        ConsoleOut("  Display a list of every valid move in the current game.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#validmoves.");
                         break;
                     case "bestmove":
-                        ConsoleOut("bestmove time MaxTime");
-                        ConsoleOut("bestmove depth MaxTime");
-                        ConsoleOut("Search for the best move for the current game. Use 'time' to limit the search by time in hh:mm:ss or use 'depth' to limit the number of turns to look into the future.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#bestmove.");
+                        ConsoleOut("  bestmove time MaxTime");
+                        ConsoleOut("  bestmove depth MaxTime");
+                        ConsoleOut("");
+                        ConsoleOut("  Search for the best move for the current game. Use 'time' to limit the search by time in hh:mm:ss or use 'depth' to limit the number of turns to look into the future.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#bestmove.");
                         break;
                     case "undo":
-                        ConsoleOut("undo [MovesToUndo]");
-                        ConsoleOut("Undo the last move in the current game. If MovesToUndo is specified, undo that many moves.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#undo.");
+                        ConsoleOut("  undo [MovesToUndo]");
+                        ConsoleOut("");
+                        ConsoleOut("  Undo the last move in the current game. If MovesToUndo is specified, undo that many moves.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#undo.");
                         break;
                     case "options":
-                        ConsoleOut("options");
-                        ConsoleOut("options get OptionName");
-                        ConsoleOut("options set OptionName OptionValue");
-                        ConsoleOut("Display the available options for the engine. Use 'get' to get the specified OptionName or 'set' to set the specified OptionName to OptionValue.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#options.");
+                        ConsoleOut("  options");
+                        ConsoleOut("  options get OptionName");
+                        ConsoleOut("  options set OptionName OptionValue");
+                        ConsoleOut("");
+                        ConsoleOut("  Display the available options for the engine. Use 'get' to get the specified OptionName or 'set' to set the specified OptionName to OptionValue.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#options.");
                         break;
                     case "perft":
-                        ConsoleOut("perft [MaxDepth]");
-                        ConsoleOut("Calculates the perft result for each depth starting with the current game. If MaxDepth is specified, stop after that reaching that depth.");
-                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/Perft.");
+                        ConsoleOut("  perft [MaxDepth]");
+                        ConsoleOut("");
+                        ConsoleOut("  Calculates the perft result for each depth starting with the current game. If MaxDepth is specified, stop after that reaching that depth.");
+                        ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/Perft.");
                         break;
                     case "exit":
-                        ConsoleOut("exit");
-                        ConsoleOut("Exit the engine.");
+                        ConsoleOut("  exit");
+                        ConsoleOut("");
+                        ConsoleOut("  Exit the engine.");
                         break;
 #if DEBUG
                     case "break":
-                        ConsoleOut("break");
-                        ConsoleOut("Break into the debugger if it's attached.");
+                        ConsoleOut("  break");
+                        ConsoleOut("");
+                        ConsoleOut("  Break into the debugger if it's attached.");
                         break;
 #endif
                     default:
