@@ -116,7 +116,8 @@
                 </GroupBox>
             </StackPanel>
         </StackPanel>
-        <WrapPanel FlowDirection="RightToLeft">
+        <StackPanel HorizontalAlignment="Right"
+                    Orientation="Horizontal">
             <Button Command="{Binding Accept}"
                     Content="OK"
                     IsDefault="True"
@@ -128,6 +129,6 @@
                     Margin="5"
                     Style="{DynamicResource CleanButton}"
                     Width="75" />
-        </WrapPanel>
+        </StackPanel>
     </StackPanel>
 </Window>

@@ -169,23 +169,36 @@
                 </GroupBox>
             </StackPanel>
         </StackPanel>
-        <WrapPanel FlowDirection="RightToLeft">
-            <Button Command="{Binding Accept}"
-                    Content="OK"
-                    IsDefault="True"
-                    Margin="5"
-                    Style="{DynamicResource CleanButton}"
-                    Width="75" />
-            <Button Command="{Binding Reject}"
-                    Content="Cancel"
-                    Margin="5"
-                    Style="{DynamicResource CleanButton}"
-                    Width="75" />
-            <Button Command="{Binding Reset}"
-                    Content="Defaults"
-                    Margin="5"
-                    Style="{DynamicResource CleanButton}"
-                    Width="75" />
-        </WrapPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                <Button Command="{Binding Reset}"
+                        Content="Defaults"
+                        Margin="5"
+                        Style="{DynamicResource CleanButton}"
+                        Width="75" />
+            </StackPanel>
+            <StackPanel Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Button Command="{Binding Accept}"
+                        Content="OK"
+                        IsDefault="True"
+                        Margin="5"
+                        Style="{DynamicResource CleanButton}"
+                        Width="75" />
+                <Button Command="{Binding Reject}"
+                        Content="Cancel"
+                        Margin="5"
+                        Style="{DynamicResource CleanButton}"
+                        Width="75" />
+            </StackPanel>
+        </Grid>
     </StackPanel>
 </Window>
