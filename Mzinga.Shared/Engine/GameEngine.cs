@@ -71,12 +71,7 @@ namespace Mzinga.Engine
 
         private void InitAI()
         {
-            if (null == _gameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            _gameAI = Config.GetGameAI(_gameBoard.ExpansionPieces);
+            _gameAI = null != _gameBoard ? Config.GetGameAI(_gameBoard.ExpansionPieces) : null;
 
             ResetAI(false);
         }
@@ -87,6 +82,7 @@ namespace Mzinga.Engine
             {
                 if (resetCaches)
                 {
+                    StopPonder();
                     _gameAI.ResetCaches();
                 }
 
@@ -132,9 +128,6 @@ namespace Mzinga.Engine
                 string cmd = split[0].ToLower();
 
                 int paramCount = split.Length - 1;
-#if !DEBUG
-                StopPonder();
-#endif
 
                 switch (cmd)
                 {
@@ -240,6 +233,11 @@ namespace Mzinga.Engine
                     case "exit":
                         Exit();
                         break;
+#if DEBUG
+                    case "break":
+                        Break();
+                        break;
+#endif
                     default:
                         throw new CommandException();
                 }
@@ -260,10 +258,10 @@ namespace Mzinga.Engine
             {
                 ErrorOut(ex);
             }
+
             ConsoleOut("ok");
-#if !DEBUG
+
             StartPonder();
-#endif
         }
 
         private void ErrorOut(Exception ex)
@@ -299,18 +297,28 @@ namespace Mzinga.Engine
             ConsoleOut("undo");
             ConsoleOut("options");
             ConsoleOut("perft");
+#if DEBUG
+            ConsoleOut("break");
+#endif
             ConsoleOut("exit");
         }
 
-        private void Board(string boardString = null)
+        private void Board(string gameString = null)
         {
-#if DEBUG
-            if (!string.IsNullOrWhiteSpace(boardString))
+            if (!string.IsNullOrWhiteSpace(gameString))
             {
-                _gameBoard = new GameBoard(boardString);
+                if (!GameBoard.TryParseGameString(gameString, out GameBoard parsed))
+                {
+                    parsed = new GameBoard(gameString);
+                }
+
+                StopPonder();
+
+                _gameBoard = parsed;
+
                 InitAI();
             }
-#endif
+
             if (null == _gameBoard)
             {
                 throw new NoBoardException();
@@ -321,6 +329,8 @@ namespace Mzinga.Engine
 
         private void NewGame(ExpansionPieces expansionPieces)
         {
+            StopPonder();
+
             _gameBoard = new GameBoard(expansionPieces);
 
             InitAI();
@@ -352,6 +362,8 @@ namespace Mzinga.Engine
 
             _gameBoard.Play(move);
 
+            StopPonder();
+
             ConsoleOut(_gameBoard.ToGameString());
         }
 
@@ -368,6 +380,8 @@ namespace Mzinga.Engine
             }
 
             _gameBoard.Pass();
+
+            StopPonder();
 
             ConsoleOut(_gameBoard.ToGameString());
         }
@@ -401,6 +415,8 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
+            StopPonder();
+
             CancellationToken token = OnStartAsyncCommand();
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Config.MaxHelperThreads, token);
@@ -428,6 +444,8 @@ namespace Mzinga.Engine
                 throw new GameIsOverException();
             }
 
+            StopPonder();
+
             CancellationToken token = OnStartAsyncCommand();
 
             Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Config.MaxHelperThreads, token);
@@ -454,6 +472,8 @@ namespace Mzinga.Engine
             {
                 throw new GameIsOverException();
             }
+
+            StopPonder();
 
             CancellationToken token = OnStartAsyncCommand();
 
@@ -486,6 +506,8 @@ namespace Mzinga.Engine
             {
                 throw new UndoInvalidNumberOfMovesException(moves);
             }
+
+            StopPonder();
 
             for (int i = 0; i < moves; i++)
             {
@@ -606,6 +628,8 @@ namespace Mzinga.Engine
                 throw new PerftInvalidDepthException(maxDepth);
             }
 
+            StopPonder();
+
             CancellationToken token = OnStartAsyncCommand();
 
             for (int depth = 0; depth <= maxDepth; depth++)
@@ -663,9 +687,23 @@ namespace Mzinga.Engine
 
         private void Exit()
         {
+            StopPonder();
+
             _gameBoard = null;
             ExitRequested = true;
         }
+
+#if DEBUG
+        private void Break()
+        {
+            if (!Debugger.IsAttached)
+            {
+                throw new Exception("Please attach a debugger before using the 'break' command.");
+            }
+
+            Debugger.Break();
+        }
+#endif
 
         private CancellationToken OnStartAsyncCommand()
         {

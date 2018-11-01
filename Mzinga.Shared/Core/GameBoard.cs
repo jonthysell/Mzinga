@@ -372,7 +372,21 @@ namespace Mzinga.Core
             return sb.ToString().TrimEnd(BoardStringSeparator);
         }
 
-        public static GameBoard ParseGameString(string gameString, bool trusted = false)
+        public static bool TryParseGameString(string gameString, out GameBoard gameBoard)
+        {
+            try
+            {
+                gameBoard = ParseGameString(gameString);
+                return true;
+            }
+            catch (Exception)
+            {
+                gameBoard = null;
+                return false;
+            }
+        }
+
+        public static GameBoard ParseGameString(string gameString)
         {
             if (string.IsNullOrWhiteSpace(gameString))
             {
