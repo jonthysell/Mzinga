@@ -136,7 +136,14 @@ namespace Mzinga.Engine
                         break;
                     case "?":
                     case "help":
-                        Help();
+                        if (paramCount == 0)
+                        {
+                            Help();
+                        }
+                        else
+                        {
+                            Help(split[1]);
+                        }
                         break;
                     case "board":
                         if (paramCount == 0)
@@ -283,24 +290,119 @@ namespace Mzinga.Engine
             ConsoleOut("Mosquito;Ladybug;Pillbug");
         }
 
-        private void Help()
+        private void Help(string command = null)
         {
-            ConsoleOut("Available commands: ");
-            ConsoleOut("info");
-            ConsoleOut("help");
-            ConsoleOut("board");
-            ConsoleOut("newgame");
-            ConsoleOut("play");
-            ConsoleOut("pass");
-            ConsoleOut("validmoves");
-            ConsoleOut("bestmove");
-            ConsoleOut("undo");
-            ConsoleOut("options");
-            ConsoleOut("perft");
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                ConsoleOut("Game commands:");
+                ConsoleOut("newgame");
+                ConsoleOut("play");
+                ConsoleOut("pass");
+                ConsoleOut("validmoves");
+                ConsoleOut("bestmove");
+                ConsoleOut("undo");
+
+                ConsoleOut("");
+
+                ConsoleOut("Engine commands:");
+                ConsoleOut("info");
+                ConsoleOut("help");
+                ConsoleOut("options");                
+                ConsoleOut("exit");
+
+                ConsoleOut("");
+
+                ConsoleOut("Advanced commands:");
+                ConsoleOut("board");
+                ConsoleOut("perft");
+
 #if DEBUG
-            ConsoleOut("break");
+                ConsoleOut("");
+
+                ConsoleOut("Debug commands:");
+                ConsoleOut("break");
 #endif
-            ConsoleOut("exit");
+                ConsoleOut("");
+
+                ConsoleOut("Try 'help Command' to see help for a particular Command.");
+            }
+            else
+            {
+                string cmd = command.Trim().ToLower();
+
+                switch (cmd)
+                {
+                    case "info":
+                        ConsoleOut("info");
+                        ConsoleOut("Displays the identifier string of the engine and list of its capabilities.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#info.");
+                        break;
+                    case "?":
+                    case "help":
+                        ConsoleOut("help [Command]");
+                        ConsoleOut("Displays the list of available commands. If a Command is specified, displays the help for that Command.");
+                        break;
+                    case "board":
+                        ConsoleOut("board [GameString|BoardString]");
+                        ConsoleOut("Displays the current GameString. If a GameString or BoardString is specified, load it as the current game.");
+                        break;
+                    case "newgame":
+                        ConsoleOut("newgame [GameTypeString]");
+                        ConsoleOut("Starts a new Base game with no expansion pieces. If GameTypeString is specified, start a new game of that type instead.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#newgame.");
+                        break;
+                    case "play":
+                        ConsoleOut("play MoveString");
+                        ConsoleOut("Play the specified MoveString in the current game.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#play.");
+                        break;
+                    case "pass":
+                        ConsoleOut("pass");
+                        ConsoleOut("Play a passing move in the current game.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#pass.");
+                        break;
+                    case "validmoves":
+                        ConsoleOut("validmoves");
+                        ConsoleOut("Display a list of every valid move in the current game.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#validmoves.");
+                        break;
+                    case "bestmove":
+                        ConsoleOut("bestmove time MaxTime");
+                        ConsoleOut("bestmove depth MaxTime");
+                        ConsoleOut("Search for the best move for the current game. Use 'time' to limit the search by time in hh:mm:ss or use 'depth' to limit the number of turns to look into the future.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#bestmove.");
+                        break;
+                    case "undo":
+                        ConsoleOut("undo [MovesToUndo]");
+                        ConsoleOut("Undo the last move in the current game. If MovesToUndo is specified, undo that many moves.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#undo.");
+                        break;
+                    case "options":
+                        ConsoleOut("options");
+                        ConsoleOut("options get OptionName");
+                        ConsoleOut("options set OptionName OptionValue");
+                        ConsoleOut("Display the available options for the engine. Use 'get' to get the specified OptionName or 'set' to set the specified OptionName to OptionValue.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#options.");
+                        break;
+                    case "perft":
+                        ConsoleOut("perft [MaxDepth]");
+                        ConsoleOut("Calculates the perft result for each depth starting with the current game. If MaxDepth is specified, stop after that reaching that depth.");
+                        ConsoleOut("See https://github.com/jonthysell/Mzinga/wiki/Perft.");
+                        break;
+                    case "exit":
+                        ConsoleOut("exit");
+                        ConsoleOut("Exit the engine.");
+                        break;
+#if DEBUG
+                    case "break":
+                        ConsoleOut("break");
+                        ConsoleOut("Break into the debugger if it's attached.");
+                        break;
+#endif
+                    default:
+                        throw new CommandException();
+                }
+            }
         }
 
         private void Board(string gameString = null)
