@@ -324,7 +324,7 @@ namespace Mzinga.Engine
 #endif
                 ConsoleOut("");
 
-                ConsoleOut("Try 'help Command' to see help for a particular Command.");
+                ConsoleOut("  Try 'help Command' to see help for a particular Command.");
             }
             else
             {
