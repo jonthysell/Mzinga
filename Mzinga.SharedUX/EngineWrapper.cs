@@ -36,6 +36,8 @@ namespace Mzinga.SharedUX
 {
     public abstract class EngineWrapper
     {
+        public string ID { get; private set; }
+
         public GameBoard Board
         {
             get
@@ -584,7 +586,7 @@ namespace Mzinga.SharedUX
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !string.IsNullOrWhiteSpace(firstLine) ? GameBoard.ParseGameString(firstLine) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? GameBoard.ParseGameString(firstLine, true) : null;
                     break;
                 case EngineCommand.ValidMoves:
                     ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? NotationUtils.ParseMoveStringList(Board, firstLine) : null;
@@ -600,6 +602,7 @@ namespace Mzinga.SharedUX
                     EngineOptions.ParseEngineOptionLines(optionLines);
                     break;
                 case EngineCommand.Info:
+                    ID = firstLine.StartsWith("id ") ? firstLine.Substring(3).Trim() : "Unknown";
                     EngineCapabilities = new EngineCapabilities(lastLine);
                     break;
                 case EngineCommand.Help:

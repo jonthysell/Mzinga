@@ -65,6 +65,7 @@ namespace Mzinga.SharedUX.ViewModel
                 RaisePropertyChanged("IsIdle");
                 RaisePropertyChanged("IsBusy");
                 NewGame.RaiseCanExecuteChanged();
+                SaveGame.RaiseCanExecuteChanged();
                 PlayTarget.RaiseCanExecuteChanged();
                 Pass.RaiseCanExecuteChanged();
                 UndoLastMove.RaiseCanExecuteChanged();
@@ -147,29 +148,12 @@ namespace Mzinga.SharedUX.ViewModel
                 if (null != Board)
                 {
                     int count = 1;
-                    bool isWhite = true;
                     foreach (BoardHistoryItem item in Board.BoardHistory)
                     {
                         string countString = count.ToString() + ". ";
-                        if (isWhite)
-                        {
-                            sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
-                        }
-                        else
-                        {
-                            string spacing = "";
-
-                            for (int i = 0; i < countString.Length; i++)
-                            {
-                                spacing += " ";
-                            }
-
-                            sb.AppendFormat("{0}{1}", spacing, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
-                            count++;
-                        }
-
+                        sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
                         sb.AppendLine();
-                        isWhite = !isWhite;
+                        count++;
                     }
                 }
 
@@ -338,6 +322,35 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _newGame = null;
+
+        public RelayCommand SaveGame
+        {
+            get
+            {
+                return _saveGame ?? (_saveGame = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        // TODO: build this game recording in a proper VM
+                        GameRecording gr = new GameRecording(Board);
+
+                        gr.SetTag("White", AppVM.EngineWrapper.CurrentGameSettings.WhitePlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
+                        gr.SetTag("Black", AppVM.EngineWrapper.CurrentGameSettings.BlackPlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
+                        gr.SetTag("Date", DateTime.Today.ToString("yyyy.MM.dd"));
+
+                        Messenger.Default.Send(new SaveGameMessage(gr));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
+                }));
+            }
+        }
+        private RelayCommand _saveGame = null;
 
         public RelayCommand PlayTarget
         {
@@ -653,6 +666,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     RaisePropertyChanged("Board");
                     RaisePropertyChanged("BoardHistory");
+                    SaveGame.RaiseCanExecuteChanged();
                     PlayTarget.RaiseCanExecuteChanged();
                     Pass.RaiseCanExecuteChanged();
                     FindBestMove.RaiseCanExecuteChanged();

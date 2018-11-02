@@ -22,6 +22,9 @@
         <KeyBinding Command="{Binding NewGame}"
                     Key="N"
                     Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding SaveGame}"
+                    Key="S"
+                    Modifiers="Ctrl" />
         <KeyBinding Command="{Binding ShowEngineConsole}"
                     Key="C"
                     Modifiers="Ctrl+Shift" />
@@ -39,6 +42,10 @@
                 <MenuItem Command="{Binding NewGame}"
                           Header="_New Game"
                           InputGestureText="Ctrl+N" />
+                <Separator />
+                <MenuItem Command="{Binding SaveGame}"
+                          Header="_Save Game As..."
+                          InputGestureText="Ctrl+S" />
                 <Separator />
                 <MenuItem Command="{Binding ShowViewerConfig}"
                           Header="_Viewer Options"

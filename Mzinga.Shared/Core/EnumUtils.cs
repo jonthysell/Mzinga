@@ -379,6 +379,15 @@ namespace Mzinga.Core
         public const int NumGameTypes = 8;
 
         #endregion
+
+        #region BoardStates
+
+        public static bool GameIsOver(BoardState boardState)
+        {
+            return boardState == BoardState.WhiteWins || boardState == BoardState.BlackWins || boardState == BoardState.Draw;
+        }
+
+        #endregion
     }
 
     public enum Direction

@@ -386,7 +386,7 @@ namespace Mzinga.Core
             }
         }
 
-        public static GameBoard ParseGameString(string gameString)
+        public static GameBoard ParseGameString(string gameString, bool trusted = false)
         {
             if (string.IsNullOrWhiteSpace(gameString))
             {
@@ -406,7 +406,15 @@ namespace Mzinga.Core
             {
                 string moveString = split[i];
                 Move move = NotationUtils.ParseMoveString(gb, moveString);
-                gb.Play(move, moveString);
+
+                if (trusted)
+                {
+                    gb.TrustedPlay(move, moveString);
+                }
+                else
+                {
+                    gb.Play(move, moveString);
+                }
             }
 
             return gb;

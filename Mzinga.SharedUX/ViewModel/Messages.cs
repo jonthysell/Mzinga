@@ -99,6 +99,16 @@ namespace Mzinga.SharedUX.ViewModel
         }
     }
 
+    public class SaveGameMessage : MessageBase
+    {
+        public GameRecording GameRecording { get; private set; }
+
+        public SaveGameMessage(GameRecording gameRecording) : base()
+        {
+            GameRecording = gameRecording;
+        }
+    }
+
     public class ViewerConfigMessage : MessageBase
     {
         public ViewerConfigViewModel ViewerConfigVM { get; private set; }
