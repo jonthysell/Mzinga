@@ -148,9 +148,10 @@ namespace Mzinga.SharedUX.ViewModel
                 if (null != Board)
                 {
                     int count = 1;
+                    int countWidth = Board.BoardHistoryCount.ToString().Length;
                     foreach (BoardHistoryItem item in Board.BoardHistory)
                     {
-                        string countString = count.ToString() + ". ";
+                        string countString = count.ToString().PadLeft(countWidth) + ". ";
                         sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
                         sb.AppendLine();
                         count++;
