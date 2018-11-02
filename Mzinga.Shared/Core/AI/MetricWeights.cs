@@ -169,14 +169,17 @@ namespace Mzinga.Core.AI
 
             IterateOverWeights((bugType, bugTypeWeight) =>
             {
-                string key = GetKeyName(bugType, bugTypeWeight);
-                double value = Get(bugType, bugTypeWeight);
-
-                if (value != 0.0)
+                if (!gameType.HasValue || EnumUtils.IsEnabled(bugType, gameType.Value))
                 {
-                    xmlWriter.WriteStartElement(key);
-                    xmlWriter.WriteValue(value);
-                    xmlWriter.WriteEndElement();
+                    string key = GetKeyName(bugType, bugTypeWeight);
+                    double value = Get(bugType, bugTypeWeight);
+
+                    if (value != 0.0)
+                    {
+                        xmlWriter.WriteStartElement(key);
+                        xmlWriter.WriteValue(value);
+                        xmlWriter.WriteEndElement();
+                    }
                 }
             });
 
