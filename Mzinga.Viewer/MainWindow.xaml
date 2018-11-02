@@ -29,7 +29,7 @@
                     Key="E"
                     Modifiers="Ctrl+Shift" />
         <KeyBinding Command="{Binding ShowViewerConfig}"
-                    Key="V"
+                    Key="O"
                     Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
     <DockPanel>
@@ -40,33 +40,32 @@
                           Header="_New Game"
                           InputGestureText="Ctrl+N" />
                 <Separator />
+                <MenuItem Command="{Binding ShowViewerConfig}"
+                          Header="_Viewer Options"
+                          InputGestureText="Ctrl+Shift+O" />
+                <Separator />
                 <MenuItem Click="Exit_Click"
                           Header="E_xit"
                           InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="_Engine">
+            <MenuItem Header="_Play">
                 <MenuItem Command="{Binding PlayTarget}"
                           Header="_Play Move" />
                 <MenuItem Command="{Binding Pass}"
                           Header="P_ass" />
                 <MenuItem Command="{Binding UndoLastMove}"
                           Header="_Undo Move" />
-                <Separator />
+            </MenuItem>
+            <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"
                           Header="_Find Best Move" />
                 <Separator />
-                <MenuItem Command="{Binding ShowEngineConsole}"
-                          Header="_Console"
-                          InputGestureText="Ctrl+Shift+C" />
-            </MenuItem>
-            <MenuItem Header="_Options">
                 <MenuItem Command="{Binding ShowEngineOptions}"
-                          Header="_Engine Options"
+                          Header="Engine _Options"
                           InputGestureText="Ctrl+Shift+E" />
-                <Separator />
-                <MenuItem Command="{Binding ShowViewerConfig}"
-                          Header="_Viewer Options"
-                          InputGestureText="Ctrl+Shift+V" />
+                <MenuItem Command="{Binding ShowEngineConsole}"
+                          Header="Engine _Console"
+                          InputGestureText="Ctrl+Shift+C" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Command="{Binding LaunchMzingaWebsite}"
