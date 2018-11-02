@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 using Mzinga.Core;
@@ -301,16 +302,16 @@ namespace Mzinga.SharedUX.ViewModel
                     try
                     {
                         Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, (settings) =>
+                        {
+                            try
                             {
-                                try
-                                {
-                                    AppVM.EngineWrapper.NewGame(settings);
-                                }
-                                catch (Exception ex)
-                                {
-                                    ExceptionUtils.HandleException(ex);
-                                }
-                            }));
+                                AppVM.EngineWrapper.NewGame(settings);
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
                     }
                     catch (Exception ex)
                     {
@@ -324,6 +325,64 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _newGame = null;
 
+        public RelayCommand LoadGame
+        {
+            get
+            {
+                return _loadGame ?? (_loadGame = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new LoadGameMessage((gameRecording) =>
+                        {
+                            try
+                            {
+                                // TODO: change this to load into "review" mode and not literally just play through the game
+
+                                GameSettings gs = new GameSettings()
+                                {
+                                    WhitePlayerType = PlayerType.Human,
+                                    BlackPlayerType = PlayerType.Human,
+                                    ExpansionPieces = gameRecording.GameType,
+                                };
+
+                                Queue<Action> nextActions = new Queue<Action>();
+
+                                foreach (BoardHistoryItem item in gameRecording.GameBoard.BoardHistory)
+                                {
+                                    nextActions.Enqueue(() =>
+                                    {
+                                        if (nextActions.Count > 0)
+                                        {
+                                            AppVM.EngineWrapper.SendCommand("play {0}", nextActions.Dequeue(), item.MoveString);
+                                        }
+                                        else
+                                        {
+                                            AppVM.EngineWrapper.SendCommand("play {0}", item.MoveString);
+                                        }
+                                    });
+                                }
+
+                                AppVM.EngineWrapper.NewGame(gs, nextActions.Count > 0 ? nextActions.Dequeue() : null);
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle;
+                }));
+            }
+        }
+        private RelayCommand _loadGame = null;
+
         public RelayCommand SaveGame
         {
             get
@@ -332,7 +391,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        // TODO: build this game recording in a proper VM
+                        // TODO: build this game recording in a proper VM that lets you edit the metadata
                         GameRecording gr = new GameRecording(Board);
 
                         gr.SetTag("White", AppVM.EngineWrapper.CurrentGameSettings.WhitePlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);

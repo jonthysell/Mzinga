@@ -45,6 +45,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => ShowConfirmation(message));
             Messenger.Default.Register<LaunchUrlMessage>(recipient, (message) => LaunchUrl(message));
             Messenger.Default.Register<NewGameMessage>(recipient, (message) => ShowNewGame(message));
+            Messenger.Default.Register<LoadGameMessage>(recipient, (message) => ShowLoadGame(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, (message) => ShowSaveGame(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, (message) => ShowViewerConfig(message));
             Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
@@ -58,6 +59,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<ConfirmationMessage>(recipient);
             Messenger.Default.Unregister<LaunchUrlMessage>(recipient);
             Messenger.Default.Unregister<NewGameMessage>(recipient);
+            Messenger.Default.Unregister<LoadGameMessage>(recipient);
             Messenger.Default.Unregister<SaveGameMessage>(recipient);
             Messenger.Default.Unregister<ViewerConfigMessage>(recipient);
             Messenger.Default.Unregister<EngineOptionsMessage>(recipient);
@@ -147,12 +149,38 @@ namespace Mzinga.Viewer
             }
         }
 
+        private static void ShowLoadGame(LoadGameMessage message)
+        {
+            try
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+
+                dialog.Title = "Open Game";
+                dialog.DefaultExt = ".pgn";
+                dialog.Filter = "Portable Game Notation (.pgn)|*.pgn";
+                dialog.AddExtension = true;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    using (Stream inputStream = dialog.OpenFile())
+                    {
+                        message.Process(GameRecording.LoadPGN(inputStream));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
+        }
+
         private static void ShowSaveGame(SaveGameMessage message)
         {
             try
             {
                 SaveFileDialog dialog = new SaveFileDialog();
 
+                dialog.Title = "Save Game";
                 dialog.DefaultExt = ".pgn";
                 dialog.Filter = "Portable Game Notation (.pgn)|*.pgn";
                 dialog.AddExtension = true;

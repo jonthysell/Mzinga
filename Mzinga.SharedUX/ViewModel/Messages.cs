@@ -99,6 +99,21 @@ namespace Mzinga.SharedUX.ViewModel
         }
     }
 
+    public class LoadGameMessage : MessageBase
+    {
+        private readonly Action<GameRecording> Callback;
+
+        public LoadGameMessage(Action<GameRecording> callback = null) : base()
+        {
+            Callback = callback;
+        }
+
+        public void Process(GameRecording gameRecording)
+        {
+            Callback?.Invoke(gameRecording);
+        }
+    }
+
     public class SaveGameMessage : MessageBase
     {
         public GameRecording GameRecording { get; private set; }

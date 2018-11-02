@@ -270,7 +270,7 @@ namespace Mzinga.SharedUX
 
         public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
 
-        private Action _commandCallback = null;
+        private Queue<Action> _commandCallbacks;
 
         private List<string> _outputLines;
 
@@ -282,6 +282,8 @@ namespace Mzinga.SharedUX
 
         public EngineWrapper()
         {
+            _commandCallbacks = new Queue<Action>();
+
             _outputLines = new List<string>();
             _inputToProcess = new Queue<string>();
             EngineOptions = new EngineOptions();
@@ -327,11 +329,11 @@ namespace Mzinga.SharedUX
             }
         }
 
-        public void NewGame(GameSettings settings)
+        public void NewGame(GameSettings settings, Action callback = null)
         {
             CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
 
-            SendCommand("newgame {0}", EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
+            SendCommand("newgame {0}", callback, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
         public void PlayTargetMove()
@@ -473,10 +475,13 @@ namespace Mzinga.SharedUX
 
             _inputToProcess.Enqueue(command);
 
+            if (null != callback)
+            {
+                _commandCallbacks.Enqueue(callback);
+            }
+
             if (_inputToProcess.Count == 1)
             {
-
-                _commandCallback = callback;
                 RunNextCommand();
             }
         }
@@ -496,8 +501,10 @@ namespace Mzinga.SharedUX
             {
                 _currentlyRunningCommand = null;
                 IsIdle = true;
-                _commandCallback?.Invoke();
-                _commandCallback = null;
+                if (_commandCallbacks.Count > 0)
+                {
+                    _commandCallbacks.Dequeue().Invoke();
+                }
             }
         }
 

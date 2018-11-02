@@ -22,6 +22,9 @@
         <KeyBinding Command="{Binding NewGame}"
                     Key="N"
                     Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding LoadGame}"
+                    Key="O"
+                    Modifiers="Ctrl" />
         <KeyBinding Command="{Binding SaveGame}"
                     Key="S"
                     Modifiers="Ctrl" />
@@ -40,11 +43,14 @@
               Style="{DynamicResource CleanMenu}">
             <MenuItem Header="_Game">
                 <MenuItem Command="{Binding NewGame}"
-                          Header="_New Game"
+                          Header="_New"
                           InputGestureText="Ctrl+N" />
                 <Separator />
+                <MenuItem Command="{Binding LoadGame}"
+                          Header="_Open"
+                          InputGestureText="Ctrl+O" />
                 <MenuItem Command="{Binding SaveGame}"
-                          Header="_Save Game As..."
+                          Header="_Save As..."
                           InputGestureText="Ctrl+S" />
                 <Separator />
                 <MenuItem Command="{Binding ShowViewerConfig}"
