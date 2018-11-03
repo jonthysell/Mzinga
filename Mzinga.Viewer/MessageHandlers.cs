@@ -157,14 +157,14 @@ namespace Mzinga.Viewer
 
                 dialog.Title = "Open Game";
                 dialog.DefaultExt = ".pgn";
-                dialog.Filter = "Portable Game Notation (.pgn)|*.pgn";
+                dialog.Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|Smart Game Format|*.sgf";
                 dialog.AddExtension = true;
 
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     using (Stream inputStream = dialog.OpenFile())
                     {
-                        message.Process(GameRecording.LoadPGN(inputStream));
+                        message.Process(Path.GetExtension(dialog.SafeFileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream) : GameRecording.LoadPGN(inputStream));
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace Mzinga.Viewer
 
                 dialog.Title = "Save Game";
                 dialog.DefaultExt = ".pgn";
-                dialog.Filter = "Portable Game Notation (.pgn)|*.pgn";
+                dialog.Filter = "Portable Game Notation|*.pgn";
                 dialog.AddExtension = true;
 
                 if (dialog.ShowDialog() == DialogResult.OK)

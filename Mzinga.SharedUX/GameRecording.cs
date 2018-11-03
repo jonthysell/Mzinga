@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Mzinga.Core;
 
@@ -39,7 +40,7 @@ namespace Mzinga.SharedUX
 
         public string Event { get; private set; } = ""; // Event name
         public string Site { get; private set; } = ""; // City, Region COUNTRY
-        public string Date { get; private set; } = ""; // Date played in YYYY.MM.DD
+        public string Date { get; private set; } = ""; // Date played in yyyy.MM.dd
         public string Round { get; private set; } = ""; // Round number
         public string White { get; private set; } = ""; // White player Lastname, Firstname
         public string Black { get; private set; } = ""; // Black player Lastname, Firstname
@@ -169,6 +170,11 @@ namespace Mzinga.SharedUX
             }
         }
 
+        private static string GetPGNTag(string key, string value)
+        {
+            return string.Format("[{0} \"{1}\"]", key.Trim(), null != value ? value.Trim() : "");
+        }
+
         public static GameRecording LoadPGN(Stream inputStream)
         {
             if (null == inputStream)
@@ -179,6 +185,8 @@ namespace Mzinga.SharedUX
             GameRecording gr = new GameRecording();
 
             List<string> moveList = new List<string>();
+
+            string rawResult = "";
 
             using (StreamReader sr = new StreamReader(inputStream, Encoding.ASCII))
             {
@@ -193,12 +201,23 @@ namespace Mzinga.SharedUX
                         {
                             // Line is a tag
                             KeyValuePair<string, string> kvp = ParsePGNTag(line);
-                            gr.SetTag(kvp.Key, kvp.Value);
+                            if (kvp.Key == "Result")
+                            {
+                                rawResult = kvp.Value;
+                            }
+                            else
+                            {
+                                gr.SetTag(kvp.Key, kvp.Value);
+                            }
                         }
                         else
                         {
                             // Line is a move or result
-                            if (!Enum.TryParse(line, out BoardState result))
+                            if (Enum.TryParse(line, out BoardState lineResult))
+                            {
+                                rawResult = lineResult.ToString();
+                            }
+                            else
                             {
                                 // Not a result, add as moveString
                                 moveList.Add(line.TrimStart('.', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'));
@@ -227,6 +246,16 @@ namespace Mzinga.SharedUX
 
             gr.GameBoard = gb;
 
+            // Set result
+            if (Enum.TryParse(rawResult, out BoardState result))
+            {
+                gr.SetTag("Result", result.ToString());
+            }
+            else
+            {
+                gr.SetTag("Result", gb.BoardState.ToString());
+            }
+
             return gr;
         }
 
@@ -245,9 +274,148 @@ namespace Mzinga.SharedUX
             return new KeyValuePair<string, string>(key, value);
         }
 
-        private static string GetPGNTag(string key, string value)
+        public static GameRecording LoadSGF(Stream inputStream)
         {
-            return string.Format("[{0} \"{1}\"]", key.Trim(), null != value ? value.Trim() : "");
+            if (null == inputStream)
+            {
+                throw new ArgumentNullException("inputStream");
+            }
+
+            GameRecording gr = new GameRecording();
+
+            List<string> moveList = new List<string>();
+
+            Dictionary<string, Stack<string>> backupPositions = new Dictionary<string, Stack<string>>();
+
+            string rawResult = "";
+            bool lastMoveCompleted = true;
+            using (StreamReader sr = new StreamReader(inputStream))
+            {
+                string line = null;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    line = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        // Line has contents
+                        Match m = null;
+                        if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
+                        {
+                            gr.SetTag("GameType", m.Groups[1].Value.ToUpper().Replace("HIVE", EnumUtils.NoExpansionsString).Replace("-", "+"));
+                        }
+                        else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
+                        {
+                            gr.SetTag("White", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"P1\[id ""(.*)""\]")).Success)
+                        {
+                            gr.SetTag("Black", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"RE\[(.*)\]")).Success)
+                        {
+                            rawResult = m.Groups[1].Value;
+                        }
+                        else if ((m = Regex.Match(line, @"DT\[(.*)\]")).Success)
+                        {
+                            // TODO transform properly
+                            gr.SetTag("Date", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
+                        {
+                            string movingPiece = m.Groups[m.Groups.Count - 3].Value.Replace("M1", "M").Replace("L1", "L").Replace("P1", "P");
+                            string destination = m.Groups[m.Groups.Count - 1].Value.Replace("\\\\", "\\");
+
+                            string backupPos = m.Groups[m.Groups.Count - 2].Value;
+
+                            if (destination == ".")
+                            {
+                                if (moveList.Count == 0)
+                                {
+                                    destination = "";
+                                }
+                                else
+                                {
+                                    destination = backupPositions[backupPos].Peek();
+                                }
+                            }
+
+                            if (!lastMoveCompleted)
+                            {
+                                moveList.RemoveAt(moveList.Count - 1);
+                            }
+
+                            moveList.Add(string.Format("{0} {1}", movingPiece, destination));
+
+                            foreach (Stack<string> stack in backupPositions.Values)
+                            {
+                                if (stack.Count > 0 && stack.Peek() == movingPiece)
+                                {
+                                    stack.Pop();
+                                    break;
+                                }
+                            }
+
+                            if (!backupPositions.ContainsKey(backupPos))
+                            {
+                                backupPositions.Add(backupPos, new Stack<string>());
+                            }
+
+                            backupPositions[backupPos].Push(movingPiece);
+
+                            lastMoveCompleted = false;
+                        }
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\]")).Success)
+                        {
+                            moveList.Add(Move.PassString.ToLower());
+
+                            lastMoveCompleted = false;
+                        }
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\]")).Success)
+                        {
+                            lastMoveCompleted = true;
+                        }
+                    }
+                }
+            }
+
+            GameBoard gb = new GameBoard(gr.GameType);
+
+            foreach (string moveString in moveList)
+            {
+                Move move = null;
+                try
+                {
+                    move = NotationUtils.ParseMoveString(gb, moveString);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
+                }
+
+                gb.TrustedPlay(move, moveString);
+            }
+
+            gr.GameBoard = gb;
+
+            // Set result
+            if (rawResult == "Game won by " + gr.White)
+            {
+                gr.SetTag("Result", BoardState.WhiteWins.ToString());
+            }
+            else if (rawResult == "Game won by " + gr.Black)
+            {
+                gr.SetTag("Result", BoardState.BlackWins.ToString());
+            }
+            else if (rawResult == "The game is a draw")
+            {
+                gr.SetTag("Result", BoardState.Draw.ToString());
+            }
+            else
+            {
+                gr.SetTag("Result", gb.BoardState.ToString());
+            }
+
+            return gr;
         }
     }
 }

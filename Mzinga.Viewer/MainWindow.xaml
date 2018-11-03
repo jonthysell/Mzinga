@@ -41,7 +41,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               Style="{DynamicResource CleanMenu}">
-            <MenuItem Header="_Game">
+            <MenuItem Header="_File">
                 <MenuItem Command="{Binding NewGame}"
                           Header="_New"
                           InputGestureText="Ctrl+N" />
@@ -61,7 +61,7 @@
                           Header="E_xit"
                           InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="_Play">
+            <MenuItem Header="_Game">
                 <MenuItem Command="{Binding PlayTarget}"
                           Header="_Play Move" />
                 <MenuItem Command="{Binding Pass}"

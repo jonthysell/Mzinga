@@ -374,7 +374,7 @@ namespace Mzinga.Core
             return s;
         }
 
-        private static readonly string NoExpansionsString = "Base";
+        public const string NoExpansionsString = "Base";
 
         public const int NumGameTypes = 8;
 

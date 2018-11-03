@@ -209,6 +209,13 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("moveString");
             }
 
+            moveString = moveString.Trim();
+
+            if (moveString.Equals(Move.PassString, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Move.PassString.ToLower();
+            }
+
             string[] moveStringParts = moveString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             PieceName movingPiece = EnumUtils.ParseShortName(moveStringParts[0]);
