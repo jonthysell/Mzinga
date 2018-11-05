@@ -289,6 +289,7 @@ namespace Mzinga.SharedUX
 
             string rawResult = "";
             bool lastMoveCompleted = true;
+            bool whiteTurn = true;
             using (StreamReader sr = new StreamReader(inputStream))
             {
                 string line = null;
@@ -320,13 +321,25 @@ namespace Mzinga.SharedUX
                             // TODO transform properly
                             gr.SetTag("Date", m.Groups[1].Value);
                         }
-                        else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
+                        else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                         {
-                            string movingPiece = m.Groups[m.Groups.Count - 3].Value.Replace("M1", "M").Replace("L1", "L").Replace("P1", "P");
-                            string destination = m.Groups[m.Groups.Count - 1].Value.Replace("\\\\", "\\");
+                            // Initial parse
+                            string movingPiece = m.Groups[m.Groups.Count - 3].Value.ToLower();
+                            string destination = m.Groups[m.Groups.Count - 1].Value.ToLower().Replace("\\\\", "\\");
 
                             string backupPos = m.Groups[m.Groups.Count - 2].Value;
 
+                            // Remove unnecessary numbers
+                            movingPiece = movingPiece.Replace("m1", "m").Replace("l1", "l").Replace("p1", "p");
+                            destination = destination.Replace("m1", "m").Replace("l1", "l").Replace("p1", "p");
+
+                            // Add missing color indicator
+                            if (movingPiece == "b1" || movingPiece == "b2" || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
+                            {
+                                movingPiece = (whiteTurn ? "w" : "b") + movingPiece;
+                            }
+
+                            // Fix missing destination
                             if (destination == ".")
                             {
                                 if (moveList.Count == 0)
@@ -339,6 +352,7 @@ namespace Mzinga.SharedUX
                                 }
                             }
 
+                            // Remoe move that wasn't commited
                             if (!lastMoveCompleted)
                             {
                                 moveList.RemoveAt(moveList.Count - 1);
@@ -373,6 +387,11 @@ namespace Mzinga.SharedUX
                         else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\]")).Success)
                         {
                             lastMoveCompleted = true;
+                            whiteTurn = !whiteTurn;
+                        }
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\]")).Success)
+                        {
+                            rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
                         }
                     }
                 }
@@ -392,23 +411,27 @@ namespace Mzinga.SharedUX
                     throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
                 }
 
-                gb.TrustedPlay(move, moveString);
+                gb.TrustedPlay(move, NotationUtils.NormalizeBoardSpaceMoveString(moveString));
             }
 
             gr.GameBoard = gb;
 
             // Set result
-            if (rawResult == "Game won by " + gr.White)
+            if (rawResult.Contains(gr.White))
             {
                 gr.SetTag("Result", BoardState.WhiteWins.ToString());
             }
-            else if (rawResult == "Game won by " + gr.Black)
+            else if (rawResult.Contains(gr.Black))
             {
                 gr.SetTag("Result", BoardState.BlackWins.ToString());
             }
             else if (rawResult == "The game is a draw")
             {
                 gr.SetTag("Result", BoardState.Draw.ToString());
+            }
+            else if (Enum.TryParse(rawResult, out BoardState parsed))
+            {
+                gr.SetTag("Result", parsed.ToString());
             }
             else
             {
