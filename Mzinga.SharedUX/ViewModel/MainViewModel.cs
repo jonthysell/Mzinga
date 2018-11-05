@@ -338,13 +338,13 @@ namespace Mzinga.SharedUX.ViewModel
                             try
                             {
                                 // TODO: change this to load into "review" mode and not literally just play through the game
-
-                                GameSettings gs = new GameSettings()
+                                GameSettings gs = new GameSettings(gameRecording.Metadata)
                                 {
                                     WhitePlayerType = PlayerType.Human,
                                     BlackPlayerType = PlayerType.Human,
-                                    ExpansionPieces = gameRecording.GameType,
                                 };
+
+                                gs.Metadata.MarkAsReadOnly();
 
                                 Queue<Action> nextActions = new Queue<Action>();
 
@@ -392,11 +392,7 @@ namespace Mzinga.SharedUX.ViewModel
                     try
                     {
                         // TODO: build this game recording in a proper VM that lets you edit the metadata
-                        GameRecording gr = new GameRecording(Board);
-
-                        gr.SetTag("White", AppVM.EngineWrapper.CurrentGameSettings.WhitePlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
-                        gr.SetTag("Black", AppVM.EngineWrapper.CurrentGameSettings.BlackPlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
-                        gr.SetTag("Date", DateTime.Today.ToString("yyyy.MM.dd"));
+                        GameRecording gr = new GameRecording(Board, AppVM.EngineWrapper.CurrentGameSettings.Metadata);
 
                         Messenger.Default.Send(new SaveGameMessage(gr));
                     }

@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)EngineCapabilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EnumMatchToBooleanConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameRecording.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IdleBoolToWaitCursorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />

@@ -242,16 +242,11 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                if (null == _currentGameSettings)
-                {
-                    _currentGameSettings = new GameSettings();
-                }
-
-                return _currentGameSettings.Clone();
+                return _currentGameSettings ?? (_currentGameSettings = new GameSettings());
             }
             private set
             {
-                _currentGameSettings = value?.Clone();
+                _currentGameSettings = value;
             }
         }
         private GameSettings _currentGameSettings;
@@ -689,6 +684,12 @@ namespace Mzinga.SharedUX
 
         private void OnBoardUpdate()
         {
+            // TODO: Only update metadata if in play mode (rather than review mode), instead of this metadata locking
+            if (!CurrentGameSettings.Metadata.IsReadOnly)
+            {
+                CurrentGameSettings.Metadata.SetTag("Result", Board.BoardState.ToString());
+            }
+
             TargetPiece = PieceName.INVALID;
             ValidMoves = null;
 

@@ -36,7 +36,17 @@ namespace Mzinga.SharedUX
 
         public PlayerType BlackPlayerType { get; set; } = PlayerType.EngineAI;
 
-        public ExpansionPieces ExpansionPieces { get; set; } = ExpansionPieces.None;
+        public ExpansionPieces ExpansionPieces
+        {
+            get
+            {
+                return Metadata.GameType;
+            }
+            set
+            {
+                Metadata.SetTag("GameType", EnumUtils.GetExpansionPiecesString(value));
+            }
+        }
 
         public BestMoveType BestMoveType
         {
@@ -98,11 +108,16 @@ namespace Mzinga.SharedUX
         }
         private TimeSpan? _bestMoveMaxTime = DefaultMaxTime;
 
-        public GameSettings() { }
+        public GameMetadata Metadata { get; private set; }
+
+        public GameSettings(GameMetadata metadata = null)
+        {
+            Metadata = metadata?.Clone() ?? new GameMetadata();
+        }
 
         public GameSettings Clone()
         {
-            GameSettings clone = new GameSettings
+            GameSettings clone = new GameSettings(Metadata)
             {
                 WhitePlayerType = WhitePlayerType,
                 BlackPlayerType = BlackPlayerType,
@@ -112,7 +127,7 @@ namespace Mzinga.SharedUX
                 BestMoveType = BestMoveType,
 
                 BestMoveMaxDepth = BestMoveMaxDepth,
-                BestMoveMaxTime = BestMoveMaxTime
+                BestMoveMaxTime = BestMoveMaxTime,
             };
 
             return clone;

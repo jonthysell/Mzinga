@@ -302,15 +302,32 @@ namespace Mzinga.SharedUX.ViewModel
 
         public NewGameViewModel(GameSettings settings = null, Action<GameSettings> callback = null)
         {
-            Settings =  null != settings ? settings.Clone() : new GameSettings();
+            if (null != settings)
+            {
+                Settings = settings.Clone();
+                Settings.Metadata.Clear();
+            }
+            else
+            {
+                Settings = new GameSettings();
+            }
+
             Accepted = false;
             Callback = callback;
+        }
+
+        private void SetMetadata()
+        {
+            Settings.Metadata.SetTag("White", Settings.WhitePlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
+            Settings.Metadata.SetTag("Black", Settings.BlackPlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
+            Settings.Metadata.SetTag("Date", DateTime.Today.ToString("yyyy.MM.dd"));
         }
 
         public void ProcessClose()
         {
             if (null != Callback && Accepted)
             {
+                SetMetadata();
                 Callback(Settings);
             }
         }
