@@ -202,6 +202,19 @@ namespace Mzinga.Core
             }
         }
 
+        public static bool TryNormalizeBoardSpaceMoveString(string moveString, out string normalizedMoveString)
+        {
+            try
+            {
+                normalizedMoveString = NormalizeBoardSpaceMoveString(moveString);
+                return true;
+            }
+            catch (Exception) { }
+
+            normalizedMoveString = null;
+            return false;
+        }
+
         public static string NormalizeBoardSpaceMoveString(string moveString)
         {
             if (string.IsNullOrWhiteSpace(moveString))

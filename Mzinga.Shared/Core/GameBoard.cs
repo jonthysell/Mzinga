@@ -404,7 +404,7 @@ namespace Mzinga.Core
 
             for (int i = 3; i < split.Length; i++)
             {
-                string moveString = split[i];
+                string moveString = NotationUtils.NormalizeBoardSpaceMoveString(split[i]);
                 Move move = NotationUtils.ParseMoveString(gb, moveString);
 
                 if (trusted)

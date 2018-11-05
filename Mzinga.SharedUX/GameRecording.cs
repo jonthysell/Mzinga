@@ -312,7 +312,7 @@ namespace Mzinga.SharedUX
                         }
                         else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\]")).Success)
                         {
-                            moveList.Add(Move.PassString.ToLower());
+                            moveList.Add(NotationUtils.BoardSpacePass);
 
                             lastMoveCompleted = false;
                         }

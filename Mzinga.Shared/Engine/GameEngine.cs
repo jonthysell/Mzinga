@@ -474,7 +474,9 @@ namespace Mzinga.Engine
                 throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
             }
 
-            _gameBoard.Play(move, NotationUtils.NormalizeBoardSpaceMoveString(moveString));
+            NotationUtils.TryNormalizeBoardSpaceMoveString(moveString, out moveString);
+
+            _gameBoard.Play(move, moveString);
 
             StopPonder();
 
