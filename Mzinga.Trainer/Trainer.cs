@@ -1267,7 +1267,7 @@ namespace Mzinga.Trainer
             {
                 if (IsPuzzleCandidate(args))
                 {
-                    Log("Puzzle Candidate: {0} {1} {2}", gameBoard.BoardString, args.Depth, args.Move.ToString());
+                    Log("Puzzle Candidate: {0} {1} {2}", gameBoard.ToGameString(), args.Depth, args.Move.ToString());
                 }
             };
         }
