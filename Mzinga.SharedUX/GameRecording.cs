@@ -284,7 +284,7 @@ namespace Mzinga.SharedUX
                                 }
                             }
 
-                            // Remoe move that wasn't commited
+                            // Remove move that wasn't commited
                             if (!lastMoveCompleted)
                             {
                                 moveList.RemoveAt(moveList.Count - 1);

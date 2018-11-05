@@ -205,7 +205,7 @@ namespace Mzinga.Trainer
 
             if (provisionalFirst)
             {
-                matches = matches.OrderByDescending(match => IsProvisional(match.Item1) || IsProvisional(match.Item2) ? 1 : 0).ToList();
+                matches = matches.OrderByDescending(match => IsProvisional(match.Item1) != IsProvisional(match.Item2) ? 1 : 0).ToList();
             }
 
             matches = matches.Take(remaining).ToList();
