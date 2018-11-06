@@ -398,7 +398,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove);
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
                 }));
             }
         }
@@ -420,7 +420,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass);
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
                 }));
             }
         }
@@ -442,7 +442,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.CanUndoLastMove;
+                    return IsIdle && AppVM.EngineWrapper.CanUndoLastMove && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
                 }));
             }
         }
@@ -802,7 +802,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void CanvasClick(double cursorX, double cursorY)
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
                 CanvasCursorX = cursorX;
                 CanvasCursorY = cursorY;
@@ -857,7 +857,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void PieceClick(PieceName clickedPiece)
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
                 if (AppVM.EngineWrapper.TargetPiece == clickedPiece)
                 {
@@ -870,7 +870,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void CancelClick()
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
                 AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
             }

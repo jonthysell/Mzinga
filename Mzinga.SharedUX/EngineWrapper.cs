@@ -646,7 +646,7 @@ namespace Mzinga.SharedUX
                 TargetPiece = PieceName.INVALID;
             }
 
-            if (tryToPlay && CurrentTurnIsEngineAI && null != TargetMove)
+            if (tryToPlay && CurrentTurnIsEngineAI && CurrentGameSettings.GameMode == GameMode.Play && null != TargetMove)
             {
                 if (TargetMove.IsPass)
                 {
@@ -711,7 +711,7 @@ namespace Mzinga.SharedUX
 
             BoardUpdated?.Invoke(this, null);
 
-            if (CurrentTurnIsEngineAI)
+            if (CurrentTurnIsEngineAI && CurrentGameSettings.GameMode == GameMode.Play)
             {
                 if (CurrentGameSettings.BestMoveType == BestMoveType.MaxDepth)
                 {

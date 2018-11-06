@@ -208,7 +208,6 @@ namespace Mzinga.SharedUX
             {
                 case "Board":
                 case "ValidMoves":
-                case "BoardHistory":
                 case "TargetMove":
                 case "ViewerConfig":
                     AppViewModel.Instance.DoOnUIThread(() =>
@@ -224,6 +223,12 @@ namespace Mzinga.SharedUX
             BoardCanvas.Children.Clear();
             WhiteHandStackPanel.Children.Clear();
             BlackHandStackPanel.Children.Clear();
+
+            // Specify background so hit-test works properly
+            // TODO: Let user specify different background
+            BoardCanvas.Background = WhiteBrush;
+            WhiteHandStackPanel.Background = WhiteBrush;
+            BlackHandStackPanel.Background = WhiteBrush;
 
             CanvasOffsetX = 0.0;
             CanvasOffsetX = 0.0;
