@@ -38,19 +38,26 @@ namespace Mzinga.SharedUX
     {
         public string ID { get; private set; }
 
+        public GameSettings CurrentGameSettings { get; private set; }
+
         public GameBoard Board
         {
             get
             {
-                return _board;
+                return CurrentGameSettings?.CurrentGameBoard;
             }
             private set
             {
-                _board = value;
+                if (null == CurrentGameSettings)
+                {
+                    // Just in case
+                    CurrentGameSettings = new GameSettings() { WhitePlayerType = PlayerType.Human, BlackPlayerType = PlayerType.Human };
+                }
+
+                CurrentGameSettings.CurrentGameBoard = value;
                 OnBoardUpdate();
             }
         }
-        private GameBoard _board = null;
 
         public MoveSet ValidMoves
         {
@@ -193,7 +200,7 @@ namespace Mzinga.SharedUX
             {
                 int moves = 0;
 
-                int historyCount = null != _board ? _board.BoardHistoryCount : 0;
+                int historyCount = null != Board ? Board.BoardHistoryCount : 0;
 
                 if (null != Board && historyCount > 0)
                 {
@@ -237,19 +244,6 @@ namespace Mzinga.SharedUX
         }
 
         public string EngineText { get; private set; } = "";
-
-        public GameSettings CurrentGameSettings
-        {
-            get
-            {
-                return _currentGameSettings ?? (_currentGameSettings = new GameSettings());
-            }
-            private set
-            {
-                _currentGameSettings = value;
-            }
-        }
-        private GameSettings _currentGameSettings;
 
         public event EventHandler IsIdleUpdated;
 
@@ -338,16 +332,14 @@ namespace Mzinga.SharedUX
                 throw new ArgumentNullException("gameRecording");
             }
 
-            GameSettings gs = new GameSettings(gameRecording.Metadata)
+            CurrentGameSettings = new GameSettings(gameRecording)
             {
                 WhitePlayerType = PlayerType.Human,
                 BlackPlayerType = PlayerType.Human,
                 GameMode = GameMode.Review,
             };
 
-            CurrentGameSettings = gs;
-
-            SendCommand("newgame {0}", callback, gameRecording.GameBoard.ToGameString());
+            SendCommand("newgame {0}", callback, CurrentGameSettings.CurrentGameBoard.ToGameString());
         }
 
         public void PlayTargetMove()
@@ -696,11 +688,6 @@ namespace Mzinga.SharedUX
 
         private void OnBoardUpdate()
         {
-            if (CurrentGameSettings.GameMode == GameMode.Play)
-            {
-                CurrentGameSettings.Metadata.SetTag("Result", Board.BoardState.ToString());
-            }
-
             TargetPiece = PieceName.INVALID;
             ValidMoves = null;
 

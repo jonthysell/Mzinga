@@ -293,6 +293,8 @@ namespace Mzinga.SharedUX.ViewModel
 
         #endregion
 
+        #region File
+
         public RelayCommand NewGame
         {
             get
@@ -365,10 +367,8 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        // TODO: build this game recording in a proper VM that lets you edit the metadata
-                        GameRecording gr = new GameRecording(Board, AppVM.EngineWrapper.CurrentGameSettings.Metadata);
-
-                        Messenger.Default.Send(new SaveGameMessage(gr));
+                        // TODO: prompt to edit the metadata first
+                        Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording));
                     }
                     catch (Exception ex)
                     {
@@ -381,6 +381,10 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _saveGame = null;
+
+        #endregion
+
+        #region Play Mode
 
         public RelayCommand PlayTarget
         {
@@ -447,6 +451,100 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _undoLastMove = null;
+
+        #endregion
+
+        #region Review Mode
+
+        public RelayCommand MoveToStart
+        {
+            get
+            {
+                return _moveToStart ?? (_moveToStart = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                }));
+            }
+        }
+        private RelayCommand _moveToStart = null;
+
+        public RelayCommand MoveBack
+        {
+            get
+            {
+                return _moveBack ?? (_moveBack = new RelayCommand(() =>
+                {
+                    try
+                    {
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                }));
+            }
+        }
+        private RelayCommand _moveBack = null;
+
+        public RelayCommand MoveForward
+        {
+            get
+            {
+                return _moveForward ?? (_moveForward = new RelayCommand(() =>
+                {
+                    try
+                    {
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                }));
+            }
+        }
+        private RelayCommand _moveForward = null;
+
+        public RelayCommand MoveToEnd
+        {
+            get
+            {
+                return _moveToEnd ?? (_moveToEnd = new RelayCommand(() =>
+                {
+                    try
+                    {
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                }));
+            }
+        }
+        private RelayCommand _moveToEnd = null;
+
+        #endregion
 
         public RelayCommand FindBestMove
         {

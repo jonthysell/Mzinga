@@ -108,28 +108,88 @@ namespace Mzinga.SharedUX
         }
         private TimeSpan? _bestMoveMaxTime = DefaultMaxTime;
 
-        public GameMetadata Metadata { get; private set; }
+        public GameRecording GameRecording { get; private set; }
 
-        public GameMode GameMode { get; set; } = GameMode.Play; 
-
-        public GameSettings(GameMetadata metadata = null)
+        public GameBoard CurrentGameBoard
         {
-            Metadata = metadata?.Clone() ?? new GameMetadata();
+            get
+            {
+                return _currentGameBoard;
+            }
+            set
+            {
+                _currentGameBoard = value ?? throw new ArgumentNullException();
+
+                if (GameMode == GameMode.Play)
+                {
+                    GameRecording = new GameRecording(CurrentGameBoard, GameRecording.Metadata);
+                    Metadata.SetTag("Result", CurrentGameBoard.BoardState.ToString());
+                }
+            }
+        }
+        private GameBoard _currentGameBoard;
+
+        public GameMetadata Metadata
+        {
+            get
+            {
+                return GameRecording.Metadata;
+            }
+        }
+
+        public GameMode GameMode { get; set; } = GameMode.Play;
+
+        public GameSettings()
+        {
+            GameRecording = new GameRecording(new GameBoard());
+        }
+
+        public GameSettings(GameRecording gameRecording)
+        {
+            GameRecording = gameRecording ?? throw new ArgumentNullException("gameRecording");
+        }
+
+        public GameSettings(GameBoard gameBoard, GameMetadata metadata = null)
+        {
+            if (null == gameBoard)
+            {
+                throw new ArgumentNullException("gameBoard");
+            }
+
+            GameRecording = new GameRecording(gameBoard, metadata);
         }
 
         public GameSettings Clone()
         {
-            GameSettings clone = new GameSettings(Metadata)
+            GameSettings clone = new GameSettings(CurrentGameBoard, Metadata)
             {
                 WhitePlayerType = WhitePlayerType,
                 BlackPlayerType = BlackPlayerType,
-
-                ExpansionPieces = ExpansionPieces,
 
                 BestMoveType = BestMoveType,
 
                 BestMoveMaxDepth = BestMoveMaxDepth,
                 BestMoveMaxTime = BestMoveMaxTime,
+
+                GameMode = GameMode,
+            };
+
+            return clone;
+        }
+
+        public static GameSettings CreateNewFromExisting(GameSettings source)
+        {
+            GameSettings clone = new GameSettings(new GameBoard(source.ExpansionPieces))
+            {
+                WhitePlayerType = source.WhitePlayerType,
+                BlackPlayerType = source.BlackPlayerType,
+
+                BestMoveType = source.BestMoveType,
+
+                BestMoveMaxDepth = source.BestMoveMaxDepth,
+                BestMoveMaxTime = source.BestMoveMaxTime,
+
+                GameMode = source.GameMode,
             };
 
             return clone;

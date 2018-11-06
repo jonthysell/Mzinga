@@ -69,6 +69,16 @@
                 <MenuItem Command="{Binding UndoLastMove}"
                           Header="_Undo Move" />
             </MenuItem>
+            <MenuItem Header="_Review">
+                <MenuItem Command="{Binding MoveToStart}"
+                          Header="Move To _Start" />
+                <MenuItem Command="{Binding MoveBack}"
+                          Header="Move _Back" />
+                <MenuItem Command="{Binding MoveForward}"
+                          Header="Move _Forward" />
+                <MenuItem Command="{Binding MoveToEnd}"
+                          Header="Move To _End" />
+            </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"
                           Header="_Find Best Move" />
