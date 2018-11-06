@@ -152,7 +152,7 @@ namespace Mzinga.Engine
                         }
                         else
                         {
-                            Board(split[1]);
+                            Board(string.Join(" ", split, 1, paramCount));
                         }
                         break;
                     case "newgame":
