@@ -40,7 +40,7 @@ namespace Mzinga.Trainer
 
             try
             {
-                Console.WriteLine("Mzinga.Trainer {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                Console.WriteLine("Mzinga.Trainer v{0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
                 Console.WriteLine();
 
                 if (args.Length == 0)
@@ -90,6 +90,9 @@ namespace Mzinga.Trainer
                             break;
                         case Command.MergeTop:
                             t.MergeTop();
+                            break;
+                        case Command.ExportAI:
+                            t.ExportAI();
                             break;
                         default:
                             ShowHelp();
@@ -152,6 +155,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("autotrain              Train a single profile against itself");
             Console.WriteLine("top                    List the top profiles for each GameType");
             Console.WriteLine("mergetop               Merge the top profiles from each GameType");
+            Console.WriteLine("exportai               Export the current engine AI as profiles");
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -251,6 +255,10 @@ namespace Mzinga.Trainer
                 case "mt":
                 case "mergetop":
                     cmd = Command.MergeTop;
+                    break;
+                case "ea":
+                case "exportai":
+                    cmd = Command.ExportAI;
                     break;
             }
 
@@ -411,5 +419,6 @@ namespace Mzinga.Trainer
         AutoTrain,
         Top,
         MergeTop,
+        ExportAI,
     }
 }

@@ -76,7 +76,7 @@ namespace Mzinga.Trainer
         }
         private static Random _random;
 
-        private Profile(Guid id, string name, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
+        public Profile(Guid id, string name, MetricWeights startMetricWeights, MetricWeights endMetricWeights)
         {
             Id = id;
 

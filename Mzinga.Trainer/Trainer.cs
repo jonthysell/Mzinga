@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,7 @@ using System.Xml;
 
 using Mzinga.Core;
 using Mzinga.Core.AI;
+using Mzinga.Engine;
 
 namespace Mzinga.Trainer
 {
@@ -1124,6 +1126,45 @@ namespace Mzinga.Trainer
             }
 
             Log("MergeTop end.");
+        }
+
+        public void ExportAI()
+        {
+            ExportAI(TrainerSettings.ProfilesPath);
+        }
+
+        private void ExportAI(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("ExportAI start.");
+
+            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultConfig();
+
+            string version = Assembly.GetEntryAssembly().GetName().Version.ToString();
+
+            for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+            {
+                ExpansionPieces gameType = (ExpansionPieces)i;
+
+                Guid id = Guid.Parse(string.Format("00000000-0000-0000-0000-{0}{1}", version.Replace(".", ""), i));
+                string name = string.Format("Mzinga v{0} ({1})", version, EnumUtils.GetExpansionPiecesString(gameType));
+
+                Profile p = new Profile(id, name, config.MetricWeightSet[gameType][0], config.MetricWeightSet[gameType][1]);
+
+                string profilePath = Path.Combine(path, p.Id + ".xml");
+                using (FileStream fs = new FileStream(profilePath, FileMode.Create))
+                {
+                    Log("{0}", ToString(p, gameType));
+                    p.WriteXml(fs);
+                }
+            }
+
+            Log("ExportAI end.");
         }
 
         private List<Profile> LoadProfiles(string path)
