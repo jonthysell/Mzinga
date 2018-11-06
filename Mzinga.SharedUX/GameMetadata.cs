@@ -61,8 +61,6 @@ namespace Mzinga.SharedUX
 
         #endregion
 
-        public bool IsReadOnly { get; private set; } = false;
-
         public void Clear()
         {
             Event = "";
@@ -78,19 +76,8 @@ namespace Mzinga.SharedUX
             _optionalTags.Clear();
         }
 
-        public void MarkAsReadOnly()
-        {
-            //TODO: Remove this with review mode?
-            IsReadOnly = true;
-        }
-
         public void SetTag(string key, string value)
         {
-            if (IsReadOnly)
-            {
-                throw new InvalidOperationException("Metadata is read-only.");
-            }
-
             if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentNullException("key");

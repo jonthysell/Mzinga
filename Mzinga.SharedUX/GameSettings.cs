@@ -110,6 +110,8 @@ namespace Mzinga.SharedUX
 
         public GameMetadata Metadata { get; private set; }
 
+        public GameMode GameMode { get; set; } = GameMode.Play; 
+
         public GameSettings(GameMetadata metadata = null)
         {
             Metadata = metadata?.Clone() ?? new GameMetadata();
@@ -147,5 +149,11 @@ namespace Mzinga.SharedUX
     {
         MaxDepth = 0,
         MaxTime
+    }
+
+    public enum GameMode
+    {
+        Play,
+        Review
     }
 }

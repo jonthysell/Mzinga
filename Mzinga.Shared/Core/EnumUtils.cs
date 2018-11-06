@@ -330,20 +330,25 @@ namespace Mzinga.Core
 
                 if (split.Length == 2)
                 {
-                    if (split[1].Contains("M"))
+                    foreach (char c in split[1])
                     {
-                        expansionPieces |= ExpansionPieces.Mosquito;
-                    }
-                    if (split[1].Contains("L"))
-                    {
-                        expansionPieces |= ExpansionPieces.Ladybug;
-                    }
-                    if (split[1].Contains("P"))
-                    {
-                        expansionPieces |= ExpansionPieces.Pillbug;
+                        switch (char.ToLowerInvariant(c))
+                        {
+                            case 'm':
+                                expansionPieces |= ExpansionPieces.Mosquito;
+                                break;
+                            case 'l':
+                                expansionPieces |= ExpansionPieces.Ladybug;
+                                break;
+                            case 'p':
+                                expansionPieces |= ExpansionPieces.Pillbug;
+                                break;
+                            default:
+                                throw new ArgumentException();
+
+                        }
                     }
                 }
-
             }
 
             return expansionPieces;

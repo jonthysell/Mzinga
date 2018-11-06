@@ -331,6 +331,25 @@ namespace Mzinga.SharedUX
             SendCommand("newgame {0}", callback, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
+        public void LoadGame(GameRecording gameRecording, Action callback = null)
+        {
+            if (null == gameRecording)
+            {
+                throw new ArgumentNullException("gameRecording");
+            }
+
+            GameSettings gs = new GameSettings(gameRecording.Metadata)
+            {
+                WhitePlayerType = PlayerType.Human,
+                BlackPlayerType = PlayerType.Human,
+                GameMode = GameMode.Review,
+            };
+
+            CurrentGameSettings = gs;
+
+            SendCommand("newgame {0}", callback, gameRecording.GameBoard.ToGameString());
+        }
+
         public void PlayTargetMove()
         {
             if (null == TargetMove)
@@ -518,11 +537,6 @@ namespace Mzinga.SharedUX
             {
                 case "info":
                     return EngineCommand.Info;
-                case "?":
-                case "help":
-                    return EngineCommand.Help;
-                case "board":
-                    return EngineCommand.Board;
                 case "newgame":
                     return EngineCommand.NewGame;
                 case "play":
@@ -583,7 +597,6 @@ namespace Mzinga.SharedUX
             // Update other properties
             switch (command)
             {
-                case EngineCommand.Board:
                 case EngineCommand.NewGame:
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
@@ -607,7 +620,6 @@ namespace Mzinga.SharedUX
                     ID = firstLine.StartsWith("id ") ? firstLine.Substring(3).Trim() : "Unknown";
                     EngineCapabilities = new EngineCapabilities(lastLine);
                     break;
-                case EngineCommand.Help:
                 default:
                     break;
             }
@@ -684,8 +696,7 @@ namespace Mzinga.SharedUX
 
         private void OnBoardUpdate()
         {
-            // TODO: Only update metadata if in play mode (rather than review mode), instead of this metadata locking
-            if (!CurrentGameSettings.Metadata.IsReadOnly)
+            if (CurrentGameSettings.GameMode == GameMode.Play)
             {
                 CurrentGameSettings.Metadata.SetTag("Result", Board.BoardState.ToString());
             }
@@ -824,8 +835,6 @@ namespace Mzinga.SharedUX
         {
             Unknown = -1,
             Info = 0,
-            Help,
-            Board,
             NewGame,
             Play,
             Pass,

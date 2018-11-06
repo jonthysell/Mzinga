@@ -337,33 +337,7 @@ namespace Mzinga.SharedUX.ViewModel
                         {
                             try
                             {
-                                // TODO: change this to load into "review" mode and not literally just play through the game
-                                GameSettings gs = new GameSettings(gameRecording.Metadata)
-                                {
-                                    WhitePlayerType = PlayerType.Human,
-                                    BlackPlayerType = PlayerType.Human,
-                                };
-
-                                gs.Metadata.MarkAsReadOnly();
-
-                                Queue<Action> nextActions = new Queue<Action>();
-
-                                foreach (BoardHistoryItem item in gameRecording.GameBoard.BoardHistory)
-                                {
-                                    nextActions.Enqueue(() =>
-                                    {
-                                        if (nextActions.Count > 0)
-                                        {
-                                            AppVM.EngineWrapper.SendCommand("play {0}", nextActions.Dequeue(), item.MoveString);
-                                        }
-                                        else
-                                        {
-                                            AppVM.EngineWrapper.SendCommand("play {0}", item.MoveString);
-                                        }
-                                    });
-                                }
-
-                                AppVM.EngineWrapper.NewGame(gs, nextActions.Count > 0 ? nextActions.Dequeue() : null);
+                                AppVM.EngineWrapper.LoadGame(gameRecording);
                             }
                             catch (Exception ex)
                             {
@@ -729,7 +703,7 @@ namespace Mzinga.SharedUX.ViewModel
                     UndoLastMove.RaiseCanExecuteChanged();
                     RaisePropertyChanged("GameState");
 
-                    if (AppVM.EngineWrapper.GameIsOver)
+                    if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
                     {
                         if (ViewerConfig.PlaySoundEffects)
                         {
@@ -828,7 +802,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void CanvasClick(double cursorX, double cursorY)
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
             {
                 CanvasCursorX = cursorX;
                 CanvasCursorY = cursorY;
@@ -883,7 +857,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void PieceClick(PieceName clickedPiece)
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
             {
                 if (AppVM.EngineWrapper.TargetPiece == clickedPiece)
                 {
@@ -896,7 +870,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         internal void CancelClick()
         {
-            if (AppVM.EngineWrapper.CurrentTurnIsHuman)
+            if (AppVM.EngineWrapper.CurrentTurnIsHuman && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
             {
                 AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
             }

@@ -145,24 +145,18 @@ namespace Mzinga.Engine
                             Help(split[1]);
                         }
                         break;
-                    case "board":
-                        if (paramCount == 0)
-                        {
-                            Board();
-                        }
-                        else
-                        {
-                            Board(string.Join(" ", split, 1, paramCount));
-                        }
-                        break;
                     case "newgame":
                         if (paramCount == 0)
                         {
                             NewGame(ExpansionPieces.None);
                         }
+                        else if (EnumUtils.TryParseExpansionPieces(split[1], out ExpansionPieces expansionPieces))
+                        {
+                            NewGame(expansionPieces);
+                        }
                         else
                         {
-                            NewGame(EnumUtils.ParseExpansionPieces(split[1]));
+                            NewGame(string.Join(" ", split, 1, paramCount));
                         }
                         break;
                     case "play":
@@ -313,7 +307,6 @@ namespace Mzinga.Engine
                 ConsoleOut("");
 
                 ConsoleOut("  Advanced commands:");
-                ConsoleOut("  board");
                 ConsoleOut("  perft");
 
 #if DEBUG
@@ -344,14 +337,10 @@ namespace Mzinga.Engine
                         ConsoleOut("");
                         ConsoleOut("  Displays the list of available commands. If a Command is specified, displays the help for that Command.");
                         break;
-                    case "board":
-                        ConsoleOut("  board [GameString|BoardString]");
-                        ConsoleOut("  Displays the current GameString. If a GameString or BoardString is specified, load it as the current game.");
-                        break;
                     case "newgame":
-                        ConsoleOut("  newgame [GameTypeString]");
+                        ConsoleOut("  newgame [GameTypeString|GameString]");
                         ConsoleOut("");
-                        ConsoleOut("  Starts a new Base game with no expansion pieces. If GameTypeString is specified, start a new game of that type instead.");
+                        ConsoleOut("  Starts a new Base game with no expansion pieces. If GameTypeString is specified, start a game of that type. If a GameString is specified, load it as the current game.");
                         ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#newgame.");
                         break;
                     case "play":
@@ -417,35 +406,27 @@ namespace Mzinga.Engine
             }
         }
 
-        private void Board(string gameString = null)
-        {
-            if (!string.IsNullOrWhiteSpace(gameString))
-            {
-                if (!GameBoard.TryParseGameString(gameString, out GameBoard parsed))
-                {
-                    parsed = new GameBoard(gameString);
-                }
-
-                StopPonder();
-
-                _gameBoard = parsed;
-
-                InitAI();
-            }
-
-            if (null == _gameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            ConsoleOut(_gameBoard.ToGameString());
-        }
-
         private void NewGame(ExpansionPieces expansionPieces)
         {
             StopPonder();
 
             _gameBoard = new GameBoard(expansionPieces);
+
+            InitAI();
+
+            ConsoleOut(_gameBoard.ToGameString());
+        }
+
+        private void NewGame(string gameString)
+        {
+            if (!GameBoard.TryParseGameString(gameString, out GameBoard parsed))
+            {
+                parsed = new GameBoard(gameString);
+            }
+
+            StopPonder();
+
+            _gameBoard = parsed;
 
             InitAI();
 
