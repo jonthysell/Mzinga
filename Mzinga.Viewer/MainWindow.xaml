@@ -125,8 +125,9 @@
                 <Canvas ClipToBounds="True"
                         Name="BoardCanvas" />
                 <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Bottom">
+                            Orientation="Vertical"
+                            VerticalAlignment="Bottom"
+                            >
                     <Button Content="Lift Pieces (X)"
                             IsEnabled="{Binding CanRaiseStackedPieces}"
                             Margin="5"
@@ -135,18 +136,56 @@
                             Style="{DynamicResource CleanButton}"
                             Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                             Width="100" />
-                    <Button Command="{Binding PlayTarget}"
+                    <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Bottom"
+                            Visibility="{Binding IsPlayMode, Converter={StaticResource BoolToVisibilityConverter}}"
+                            >
+                        <Button Command="{Binding PlayTarget}"
                             Content="Play Move"
                             Margin="5"
                             Style="{DynamicResource CleanButton}"
                             Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                             Width="100" />
-                    <Button Command="{Binding Pass}"
+                        <Button Command="{Binding Pass}"
                             Content="Pass"
                             Margin="5"
                             Style="{DynamicResource CleanButton}"
                             Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                             Width="100" />
+                        <Button Command="{Binding UndoLastMove}"
+                            Content="Undo"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Width="100" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Bottom"
+                            Visibility="{Binding IsReviewMode, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}"
+                            >
+                        <Button Command="{Binding MoveToStart}"
+                            Content="|&lt;"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Width="50" />
+                        <Button Command="{Binding MoveBack}"
+                            Content="&lt;"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Width="50" />
+                        <Button Command="{Binding MoveForward}"
+                            Content="&gt;"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Width="50" />
+                        <Button Command="{Binding MoveToEnd}"
+                            Content="&gt;|"
+                            Margin="5"
+                            Style="{DynamicResource CleanButton}"
+                            Width="50" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Column="2"

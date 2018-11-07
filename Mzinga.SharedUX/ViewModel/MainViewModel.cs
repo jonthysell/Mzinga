@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 using Mzinga.Core;
@@ -65,11 +64,23 @@ namespace Mzinga.SharedUX.ViewModel
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
                 RaisePropertyChanged("IsBusy");
+
+                RaisePropertyChanged("IsReviewMode");
+                RaisePropertyChanged("IsPlayMode");
+
                 NewGame.RaiseCanExecuteChanged();
+                LoadGame.RaiseCanExecuteChanged();
                 SaveGame.RaiseCanExecuteChanged();
+
                 PlayTarget.RaiseCanExecuteChanged();
                 Pass.RaiseCanExecuteChanged();
                 UndoLastMove.RaiseCanExecuteChanged();
+
+                MoveToStart.RaiseCanExecuteChanged();
+                MoveBack.RaiseCanExecuteChanged();
+                MoveForward.RaiseCanExecuteChanged();
+                MoveToEnd.RaiseCanExecuteChanged();
+
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
 #if WINDOWS_WPF
@@ -123,6 +134,22 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private double _timedCommandProgress = 0.0;
+
+        public bool IsPlayMode
+        {
+            get
+            {
+                return null != AppVM.EngineWrapper.CurrentGameSettings && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+            }
+        }
+
+        public bool IsReviewMode
+        {
+            get
+            {
+                return null != AppVM.EngineWrapper.CurrentGameSettings && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+            }
+        }
 
         public ViewerConfig ViewerConfig
         {
@@ -446,7 +473,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.CanUndoLastMove && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+                    return IsIdle && AppVM.EngineWrapper.CanUndoLastMove;
                 }));
             }
         }
@@ -464,7 +491,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        
+                        AppVM.EngineWrapper.MoveToStart();
                     }
                     catch (Exception ex)
                     {
@@ -472,7 +499,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                    return IsIdle && AppVM.EngineWrapper.CanMoveBack;
                 }));
             }
         }
@@ -486,7 +513,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-
+                        AppVM.EngineWrapper.MoveBack();
                     }
                     catch (Exception ex)
                     {
@@ -494,7 +521,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                    return IsIdle && AppVM.EngineWrapper.CanMoveBack;
                 }));
             }
         }
@@ -508,7 +535,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-
+                        AppVM.EngineWrapper.MoveForward();
                     }
                     catch (Exception ex)
                     {
@@ -516,7 +543,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                    return IsIdle && AppVM.EngineWrapper.CanMoveForward;
                 }));
             }
         }
@@ -530,7 +557,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-
+                        AppVM.EngineWrapper.MoveToEnd();
                     }
                     catch (Exception ex)
                     {
@@ -538,7 +565,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && (null != AppVM.EngineWrapper.CurrentGameSettings) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                    return IsIdle && AppVM.EngineWrapper.CanMoveForward;
                 }));
             }
         }
@@ -795,10 +822,17 @@ namespace Mzinga.SharedUX.ViewModel
                     RaisePropertyChanged("Board");
                     RaisePropertyChanged("BoardHistory");
                     SaveGame.RaiseCanExecuteChanged();
+
                     PlayTarget.RaiseCanExecuteChanged();
                     Pass.RaiseCanExecuteChanged();
-                    FindBestMove.RaiseCanExecuteChanged();
                     UndoLastMove.RaiseCanExecuteChanged();
+
+                    MoveToStart.RaiseCanExecuteChanged();
+                    MoveBack.RaiseCanExecuteChanged();
+                    MoveForward.RaiseCanExecuteChanged();
+                    MoveToEnd.RaiseCanExecuteChanged();
+
+                    FindBestMove.RaiseCanExecuteChanged();
                     RaisePropertyChanged("GameState");
 
                     if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)

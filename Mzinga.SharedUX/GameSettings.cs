@@ -142,11 +142,13 @@ namespace Mzinga.SharedUX
         public GameSettings()
         {
             GameRecording = new GameRecording(new GameBoard());
+            _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 
         public GameSettings(GameRecording gameRecording)
         {
             GameRecording = gameRecording ?? throw new ArgumentNullException("gameRecording");
+            _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 
         public GameSettings(GameBoard gameBoard, GameMetadata metadata = null)
@@ -157,6 +159,7 @@ namespace Mzinga.SharedUX
             }
 
             GameRecording = new GameRecording(gameBoard, metadata);
+            _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 
         public GameSettings Clone()

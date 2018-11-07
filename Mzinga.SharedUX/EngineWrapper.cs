@@ -174,7 +174,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return CanPlayMove(TargetMove) && !TargetMove.IsPass;
+                return CanPlayMove(TargetMove) && !TargetMove.IsPass && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -182,7 +182,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return (GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.Pass));
+                return GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.Pass) && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -190,7 +190,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return (null != Board && CanUndoMoveCount > 0);
+                return null != Board && CanUndoMoveCount > 0 && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -232,6 +232,22 @@ namespace Mzinga.SharedUX
                 }
 
                 return 0;
+            }
+        }
+
+        public bool CanMoveBack
+        {
+            get
+            {
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistoryCount > 0;
+            }
+        }
+
+        public bool CanMoveForward
+        {
+            get
+            {
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistoryCount < CurrentGameSettings.GameRecording.GameBoard.BoardHistoryCount;
             }
         }
 
@@ -344,6 +360,11 @@ namespace Mzinga.SharedUX
 
         public void PlayTargetMove()
         {
+            if (CurrentGameSettings.GameMode != GameMode.Play)
+            {
+                throw new Exception("Please switch the current game to play mode first.");
+            }
+
             if (null == TargetMove)
             {
                 throw new Exception("Please select a valid piece and destination first.");
@@ -361,17 +382,78 @@ namespace Mzinga.SharedUX
 
         public void Pass()
         {
+            if (CurrentGameSettings.GameMode != GameMode.Play)
+            {
+                throw new Exception("Please switch the current game to play mode first.");
+            }
+
             SendCommand("pass");
         }
 
         public void UndoLastMove()
         {
+            if (CurrentGameSettings.GameMode != GameMode.Play)
+            {
+                throw new Exception("Please switch the current game to play mode first.");
+            }
+
             int moves = CanUndoMoveCount;
 
             if (moves > 0)
             {
                 SendCommand("undo {0}", moves);
             }
+        }
+
+        public void MoveToStart()
+        {
+            if (CurrentGameSettings.GameMode != GameMode.Review)
+            {
+                throw new Exception("Please switch the current game to review mode first.");
+            }
+
+            SendCommand("newgame {0}", (new GameBoard(CurrentGameSettings.ExpansionPieces)).ToGameString());
+        }
+
+        public void MoveBack()
+        {
+            if (CurrentGameSettings.GameMode != GameMode.Review)
+            {
+                throw new Exception("Please switch the current game to review mode first.");
+            }
+
+            SendCommand("undo");
+        }
+
+        public void MoveForward()
+        {
+            if (CurrentGameSettings.GameMode != GameMode.Review)
+            {
+                throw new Exception("Please switch the current game to review mode first.");
+            }
+
+            int targetMove = CurrentGameSettings.CurrentGameBoard.BoardHistoryCount;
+
+            int currentMove = 0;
+            foreach(BoardHistoryItem item in CurrentGameSettings.GameRecording.GameBoard.BoardHistory)
+            {
+                if (currentMove == targetMove)
+                {
+                    SendCommand("play {0}", item.MoveString);
+                    break;
+                }
+                currentMove++;
+            }
+        }
+
+        public void MoveToEnd()
+        {
+            if (CurrentGameSettings.GameMode != GameMode.Review)
+            {
+                throw new Exception("Please switch the current game to review mode first.");
+            }
+
+            SendCommand("newgame {0}", CurrentGameSettings.GameRecording.GameBoard.ToGameString());
         }
 
         public void FindBestMove()
