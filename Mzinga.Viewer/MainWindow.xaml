@@ -72,9 +72,8 @@
             <MenuItem Header="_Review">
                 <MenuItem Command="{Binding SwitchToReviewMode}"
                           Header="_Review Mode"
-                          IsChecked="{Binding IsReviewMode, Mode=OneWay}"
                           IsCheckable="True"
-                          />
+                          IsChecked="{Binding IsReviewMode, Mode=OneWay}" />
                 <MenuItem Command="{Binding ShowGameMetadata}"
                           Header="Edit _Metadata" />
                 <Separator />

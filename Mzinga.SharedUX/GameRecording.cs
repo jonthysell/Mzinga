@@ -68,9 +68,9 @@ namespace Mzinga.SharedUX
                 // Write Mandatory Tags
                 sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
 
+                sw.WriteLine(GetPGNTag("Date", Metadata.Date));
                 sw.WriteLine(GetPGNTag("Event", Metadata.Event));
                 sw.WriteLine(GetPGNTag("Site", Metadata.Site));
-                sw.WriteLine(GetPGNTag("Date", Metadata.Date));
                 sw.WriteLine(GetPGNTag("Round", Metadata.Round));
                 sw.WriteLine(GetPGNTag("White", Metadata.White));
                 sw.WriteLine(GetPGNTag("Black", Metadata.Black));

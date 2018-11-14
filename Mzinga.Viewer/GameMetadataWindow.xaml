@@ -20,31 +20,46 @@
                         Orientation="Vertical">
                 <ItemsControl ItemsSource="{Binding StandardTags}">
                     <ItemsControl.Resources>
-                        <DataTemplate DataType="{x:Type vm:ObservableGameMetadataTag}">
+                        <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
                                        MinWidth="100"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <TextBox Margin="5"
+                                <TextBox IsReadOnly="{Binding IsReadOnly}"
+                                         Margin="5"
                                          MinWidth="200"
-                                         IsReadOnly="{Binding IsReadOnly}"
                                          Text="{Binding Value}" />
+                            </StackPanel>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:ObservableGameMetadataEnumTag}">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="{Binding Key}"
+                                       Margin="5"
+                                       MinWidth="100"
+                                       Padding="0"
+                                       VerticalAlignment="Center" />
+                                <ComboBox IsEnabled="{Binding CanEdit}"
+                                          ItemsSource="{Binding PossibleValues}"
+                                          Margin="5"
+                                          MinWidth="200"
+                                          SelectedValue="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.Resources>
                 </ItemsControl>
                 <ItemsControl ItemsSource="{Binding OptionalTags}">
                     <ItemsControl.Resources>
-                        <DataTemplate DataType="{x:Type vm:ObservableGameMetadataTag}">
+                        <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
                                        MinWidth="100"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <TextBox Margin="5"
+                                <TextBox IsReadOnly="{Binding IsReadOnly}"
+                                         Margin="5"
                                          MinWidth="200"
                                          Text="{Binding Value}" />
                             </StackPanel>

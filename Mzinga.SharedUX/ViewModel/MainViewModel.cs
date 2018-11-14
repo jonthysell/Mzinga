@@ -363,15 +363,23 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
+                        IsIdle = false;
                         Messenger.Default.Send(new LoadGameMessage((gameRecording) =>
                         {
                             try
                             {
-                                AppVM.EngineWrapper.LoadGame(gameRecording);
+                                if (null != gameRecording)
+                                {
+                                    AppVM.EngineWrapper.LoadGame(gameRecording);
+                                }
                             }
                             catch (Exception ex)
                             {
                                 ExceptionUtils.HandleException(ex);
+                            }
+                            finally
+                            {
+                                IsIdle = true;
                             }
                         }));
                     }

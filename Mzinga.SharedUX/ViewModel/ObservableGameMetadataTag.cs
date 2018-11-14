@@ -25,12 +25,14 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using GalaSoft.MvvmLight;
 
 namespace Mzinga.SharedUX.ViewModel
 {
-    public class ObservableGameMetadataTag : ObservableObject
+    public abstract class ObservableGameMetadataTag : ObservableObject
     {
         public string Key
         {
@@ -87,6 +89,24 @@ namespace Mzinga.SharedUX.ViewModel
         {
             _key = !string.IsNullOrWhiteSpace(key) ? key : throw new ArgumentNullException("key");
             _value = value;
+        }
+    }
+
+    public class ObservableGameMetadataStringTag : ObservableGameMetadataTag
+    {
+        public ObservableGameMetadataStringTag(string key, string value) : base(key, value) { }
+    }
+
+    public class ObservableGameMetadataEnumTag : ObservableGameMetadataTag
+    {
+        public ObservableCollection<string> PossibleValues { get; private set; } = new ObservableCollection<string>();
+
+        public ObservableGameMetadataEnumTag(string key, string value, IEnumerable<string> possibleValues) : base(key, value)
+        {
+            foreach (string pv in possibleValues)
+            {
+                PossibleValues.Add(pv);
+            }
         }
     }
 }

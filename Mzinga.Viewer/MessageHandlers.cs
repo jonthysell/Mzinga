@@ -153,6 +153,7 @@ namespace Mzinga.Viewer
 
         private static void ShowLoadGame(LoadGameMessage message)
         {
+            GameRecording gr = null;
             try
             {
                 OpenFileDialog dialog = new OpenFileDialog();
@@ -166,13 +167,18 @@ namespace Mzinga.Viewer
                 {
                     using (Stream inputStream = dialog.OpenFile())
                     {
-                        message.Process(Path.GetExtension(dialog.SafeFileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream) : GameRecording.LoadPGN(inputStream));
+                        gr = Path.GetExtension(dialog.SafeFileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream) : GameRecording.LoadPGN(inputStream);
                     }
                 }
+
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process(gr);
             }
         }
 
