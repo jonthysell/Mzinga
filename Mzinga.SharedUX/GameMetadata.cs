@@ -35,6 +35,8 @@ namespace Mzinga.SharedUX
     {
         #region Mandatory Tags
 
+        public ExpansionPieces GameType { get; private set; } = ExpansionPieces.None;
+
         public string Event { get; private set; } = ""; // Event name
         public string Site { get; private set; } = ""; // City, Region COUNTRY
         public string Date { get; private set; } = ""; // Date played in yyyy.MM.dd
@@ -42,7 +44,6 @@ namespace Mzinga.SharedUX
         public string White { get; private set; } = ""; // White player Lastname, Firstname
         public string Black { get; private set; } = ""; // Black player Lastname, Firstname
 
-        public ExpansionPieces GameType { get; private set; } = ExpansionPieces.None;
         public BoardState Result { get; private set; } = BoardState.NotStarted;
 
         #endregion

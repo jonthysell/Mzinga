@@ -273,6 +273,8 @@ namespace Mzinga.SharedUX
         public event EventHandler MovePlaying;
         public event EventHandler MoveUndoing;
 
+        public event EventHandler GameModeChanged;
+
         public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
 
         private Queue<Action> _commandCallbacks;
@@ -334,14 +336,14 @@ namespace Mzinga.SharedUX
             }
         }
 
-        public void NewGame(GameSettings settings, Action callback = null)
+        public void NewGame(GameSettings settings)
         {
             CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
 
-            SendCommand("newgame {0}", callback, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
-        public void LoadGame(GameRecording gameRecording, Action callback = null)
+        public void LoadGame(GameRecording gameRecording)
         {
             if (null == gameRecording)
             {
@@ -355,7 +357,7 @@ namespace Mzinga.SharedUX
                 GameMode = GameMode.Review,
             };
 
-            SendCommand("newgame {0}", callback, CurrentGameSettings.CurrentGameBoard.ToGameString());
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, CurrentGameSettings.CurrentGameBoard.ToGameString());
         }
 
         public void PlayTargetMove()
@@ -403,6 +405,16 @@ namespace Mzinga.SharedUX
             {
                 SendCommand("undo {0}", moves);
             }
+        }
+
+        public void SwitchToReviewMode()
+        {
+            if (CurrentGameSettings.GameMode == GameMode.Review)
+            {
+                throw new Exception("The current game is already in review mode.");
+            }
+
+            CurrentGameSettings.GameMode = GameMode.Review;
         }
 
         public void MoveToStart()
@@ -819,6 +831,11 @@ namespace Mzinga.SharedUX
             }
 
             TargetPositionUpdated?.Invoke(this, null);
+        }
+
+        private void OnGameModeChanged()
+        {
+            GameModeChanged?.Invoke(this, null);
         }
 
         private void OnSendingCommand(EngineCommand? command)

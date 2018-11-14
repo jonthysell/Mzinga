@@ -66,6 +66,8 @@ namespace Mzinga.SharedUX
             using (StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII))
             {
                 // Write Mandatory Tags
+                sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
+
                 sw.WriteLine(GetPGNTag("Event", Metadata.Event));
                 sw.WriteLine(GetPGNTag("Site", Metadata.Site));
                 sw.WriteLine(GetPGNTag("Date", Metadata.Date));
@@ -73,7 +75,6 @@ namespace Mzinga.SharedUX
                 sw.WriteLine(GetPGNTag("White", Metadata.White));
                 sw.WriteLine(GetPGNTag("Black", Metadata.Black));
 
-                sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
                 sw.WriteLine(GetPGNTag("Result", Metadata.Result.ToString()));
 
                 // Write Optional Tags
@@ -236,6 +237,23 @@ namespace Mzinga.SharedUX
                         {
                             metadata.SetTag("GameType", m.Groups[1].Value.ToUpper().Replace("HIVE", EnumUtils.NoExpansionsString).Replace("-", "+"));
                         }
+                        else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
+                        {
+                            metadata.SetTag("Event", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"PC\[(.*)\]")).Success)
+                        {
+                            metadata.SetTag("Site", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"RO\[(.*)\]")).Success)
+                        {
+                            metadata.SetTag("Round", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"DT\[(.*)\]")).Success)
+                        {
+                            // TODO transform properly
+                            metadata.SetTag("Date", m.Groups[1].Value);
+                        }
                         else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
                         {
                             metadata.SetTag("White", m.Groups[1].Value);
@@ -247,11 +265,6 @@ namespace Mzinga.SharedUX
                         else if ((m = Regex.Match(line, @"RE\[(.*)\]")).Success)
                         {
                             rawResult = m.Groups[1].Value;
-                        }
-                        else if ((m = Regex.Match(line, @"DT\[(.*)\]")).Success)
-                        {
-                            // TODO transform properly
-                            metadata.SetTag("Date", m.Groups[1].Value);
                         }
                         else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                         {

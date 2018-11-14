@@ -316,6 +316,8 @@ namespace Mzinga.SharedUX.ViewModel
             gs.Metadata.SetTag("Black", gs.BlackPlayerType == PlayerType.Human ? Environment.UserName : AppVM.EngineWrapper.ID);
             gs.Metadata.SetTag("Date", DateTime.Today.ToString("yyyy.MM.dd"));
 
+            gs.GameMode = GameMode.Play;
+
             return gs;
         }
 

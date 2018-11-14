@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Text;
 
 using Mzinga.Core;
@@ -65,9 +66,6 @@ namespace Mzinga.SharedUX.ViewModel
                 RaisePropertyChanged("IsIdle");
                 RaisePropertyChanged("IsBusy");
 
-                RaisePropertyChanged("IsReviewMode");
-                RaisePropertyChanged("IsPlayMode");
-
                 NewGame.RaiseCanExecuteChanged();
                 LoadGame.RaiseCanExecuteChanged();
                 SaveGame.RaiseCanExecuteChanged();
@@ -82,6 +80,7 @@ namespace Mzinga.SharedUX.ViewModel
                 MoveToEnd.RaiseCanExecuteChanged();
 
                 ShowGameMetadata.RaiseCanExecuteChanged();
+                SwitchToReviewMode.RaiseCanExecuteChanged();
 
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
@@ -618,6 +617,43 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _showGameMetadata = null;
 
+        public RelayCommand SwitchToReviewMode
+        {
+            get
+            {
+                return _switchToReviewMode ?? (_switchToReviewMode = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("Switching to review mode will end your game. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    AppVM.EngineWrapper.SwitchToReviewMode();
+                                }
+                                RaisePropertyChanged("IsPlayMode");
+                                RaisePropertyChanged("IsReviewMode");
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && IsPlayMode;
+                }));
+            }
+        }
+        private RelayCommand _switchToReviewMode = null;
+
         #endregion
 
         public RelayCommand FindBestMove
@@ -977,6 +1013,37 @@ namespace Mzinga.SharedUX.ViewModel
                     SoundUtils.PlaySound(GameSound.Undo);
                 }
             };
+
+            AppVM.EngineWrapper.GameModeChanged += (sender, args) =>
+            {
+                RaisePropertyChanged("IsPlayMode");
+                RaisePropertyChanged("IsReviewMode");
+            };
+
+            PropertyChanged += MainViewModel_PropertyChanged;
+        }
+
+        private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "IsPlayMode":
+                case "IsReviewMode":
+                    AppVM.DoOnUIThread(() =>
+                    {
+                        PlayTarget.RaiseCanExecuteChanged();
+                        Pass.RaiseCanExecuteChanged();
+                        UndoLastMove.RaiseCanExecuteChanged();
+
+                        MoveToStart.RaiseCanExecuteChanged();
+                        MoveBack.RaiseCanExecuteChanged();
+                        MoveForward.RaiseCanExecuteChanged();
+                        MoveToEnd.RaiseCanExecuteChanged();
+
+                        SwitchToReviewMode.RaiseCanExecuteChanged();
+                    });
+                    break;
+            }
         }
 
         internal void CanvasClick(double cursorX, double cursorY)
