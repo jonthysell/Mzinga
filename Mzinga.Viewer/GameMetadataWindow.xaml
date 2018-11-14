@@ -37,13 +37,13 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
-                                       MinWidth="100"
+                                       Width="100"
                                        Padding="0"
                                        VerticalAlignment="Center" />
                                 <ComboBox IsEnabled="{Binding CanEdit}"
                                           ItemsSource="{Binding PossibleValues}"
                                           Margin="5"
-                                          MinWidth="200"
+                                          Width="200"
                                           SelectedValue="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
@@ -55,12 +55,12 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
-                                       MinWidth="100"
+                                       Width="100"
                                        Padding="0"
                                        VerticalAlignment="Center" />
                                 <TextBox IsReadOnly="{Binding IsReadOnly}"
                                          Margin="5"
-                                         MinWidth="200"
+                                         Width="200"
                                          Text="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>

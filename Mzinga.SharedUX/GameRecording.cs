@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -249,10 +250,28 @@ namespace Mzinga.SharedUX
                         {
                             metadata.SetTag("Round", m.Groups[1].Value);
                         }
-                        else if ((m = Regex.Match(line, @"DT\[(.*)\]")).Success)
+                        else if ((m = Regex.Match(line, @"DT\[(.+)\]")).Success)
                         {
-                            // TODO transform properly
-                            metadata.SetTag("Date", m.Groups[1].Value);
+                            string rawDate = m.Groups[1].Value;
+                            metadata.SetTag("SgfDate", rawDate);
+
+                            rawDate = Regex.Replace(rawDate, @"(\D{3}) (\D{3}) (\d{2}) (\d{2}):(\d{2}):(\d{2}) (.{3,}) (\d{4})", @"$1 $2 $3 $4:$5:$6 $8");
+
+                            if (DateTime.TryParseExact(rawDate, SgfDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsed))
+                            {
+                                metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
+                            }
+                            else
+                            {
+                                foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.AllCultures))
+                                {
+                                    if (DateTime.TryParseExact(rawDate, SgfDateFormats, ci, DateTimeStyles.None, out parsed))
+                                    {
+                                        metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
                         {
@@ -262,9 +281,14 @@ namespace Mzinga.SharedUX
                         {
                             metadata.SetTag("Black", m.Groups[1].Value);
                         }
-                        else if ((m = Regex.Match(line, @"RE\[(.*)\]")).Success)
+                        else if ((m = Regex.Match(line, @"RE\[(.+)\]")).Success)
                         {
                             rawResult = m.Groups[1].Value;
+                            metadata.SetTag("SgfResult", m.Groups[1].Value);
+                        }
+                        else if ((m = Regex.Match(line, @"GN\[(.+)\]")).Success)
+                        {
+                            metadata.SetTag("SgfGameName", m.Groups[1].Value);
                         }
                         else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                         {
@@ -383,5 +407,13 @@ namespace Mzinga.SharedUX
 
             return new GameRecording(gameBoard, metadata);
         }
+
+        private static string[] SgfDateFormats = new string[]
+        {
+            "d MMMM yyyy",
+            "d. MMMM yyyy",
+            "MMMM d, yyyy",
+            "ddd MMM dd HH:mm:ss yyyy",
+        };
     }
 }
