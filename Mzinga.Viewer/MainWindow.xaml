@@ -78,6 +78,9 @@
                           Header="Move _Forward" />
                 <MenuItem Command="{Binding MoveToEnd}"
                           Header="Move To _End" />
+                <Separator />
+                <MenuItem Command="{Binding ShowGameMetadata}"
+                          Header="_Game Metadata" />
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"
@@ -126,8 +129,7 @@
                         Name="BoardCanvas" />
                 <StackPanel HorizontalAlignment="Center"
                             Orientation="Vertical"
-                            VerticalAlignment="Bottom"
-                            >
+                            VerticalAlignment="Bottom">
                     <Button Content="Lift Pieces (X)"
                             IsEnabled="{Binding CanRaiseStackedPieces}"
                             Margin="5"
@@ -137,54 +139,52 @@
                             Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                             Width="100" />
                     <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Bottom"
-                            Visibility="{Binding IsPlayMode, Converter={StaticResource BoolToVisibilityConverter}}"
-                            >
+                                Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                Visibility="{Binding IsPlayMode, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Button Command="{Binding PlayTarget}"
-                            Content="Play Move"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Width="100" />
+                                Content="Play Move"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="100" />
                         <Button Command="{Binding Pass}"
-                            Content="Pass"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Width="100" />
+                                Content="Pass"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="100" />
                         <Button Command="{Binding UndoLastMove}"
-                            Content="Undo"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
-                            Width="100" />
+                                Content="Undo"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="100" />
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center"
-                            Orientation="Horizontal"
-                            VerticalAlignment="Bottom"
-                            Visibility="{Binding IsReviewMode, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}"
-                            >
+                                Orientation="Horizontal"
+                                VerticalAlignment="Bottom"
+                                Visibility="{Binding IsReviewMode, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Hidden}">
                         <Button Command="{Binding MoveToStart}"
-                            Content="|&lt;"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Width="50" />
+                                Content="|&lt;"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Width="50" />
                         <Button Command="{Binding MoveBack}"
-                            Content="&lt;"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Width="50" />
+                                Content="&lt;"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Width="50" />
                         <Button Command="{Binding MoveForward}"
-                            Content="&gt;"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Width="50" />
+                                Content="&gt;"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Width="50" />
                         <Button Command="{Binding MoveToEnd}"
-                            Content="&gt;|"
-                            Margin="5"
-                            Style="{DynamicResource CleanButton}"
-                            Width="50" />
+                                Content="&gt;|"
+                                Margin="5"
+                                Style="{DynamicResource CleanButton}"
+                                Width="50" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

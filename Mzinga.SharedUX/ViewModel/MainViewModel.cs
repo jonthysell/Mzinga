@@ -81,6 +81,8 @@ namespace Mzinga.SharedUX.ViewModel
                 MoveForward.RaiseCanExecuteChanged();
                 MoveToEnd.RaiseCanExecuteChanged();
 
+                ShowGameMetadata.RaiseCanExecuteChanged();
+
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
 #if WINDOWS_WPF
@@ -394,8 +396,20 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        // TODO: prompt to edit the metadata first
-                        Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording));
+                        Messenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
+                        {
+                            try
+                            {
+                                AppVM.EngineWrapper.CurrentGameSettings.Metadata.Clear();
+                                AppVM.EngineWrapper.CurrentGameSettings.Metadata.CopyFrom(metadata);
+
+                                Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording));
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
                     }
                     catch (Exception ex)
                     {
@@ -570,6 +584,39 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _moveToEnd = null;
+
+        public RelayCommand ShowGameMetadata
+        {
+            get
+            {
+                return _showGameMetadata ?? (_showGameMetadata = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
+                        {
+                            try
+                            {
+                                AppVM.EngineWrapper.CurrentGameSettings.Metadata.Clear();
+                                AppVM.EngineWrapper.CurrentGameSettings.Metadata.CopyFrom(metadata);
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && IsReviewMode;
+                }));
+            }
+        }
+        private RelayCommand _showGameMetadata = null;
 
         #endregion
 

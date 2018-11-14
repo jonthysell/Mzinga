@@ -124,6 +124,21 @@ namespace Mzinga.SharedUX.ViewModel
         }
     }
 
+    public class GameMetadataMessage : MessageBase
+    {
+        public GameMetadataViewModel GameMetadataVM { get; private set; }
+
+        public GameMetadataMessage(GameMetadata metadata = null, Action<GameMetadata> callback = null) : base()
+        {
+            GameMetadataVM = new GameMetadataViewModel(metadata, callback);
+        }
+
+        public void Process()
+        {
+            GameMetadataVM.ProcessClose();
+        }
+    }
+
     public class ViewerConfigMessage : MessageBase
     {
         public ViewerConfigViewModel ViewerConfigVM { get; private set; }

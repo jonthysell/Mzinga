@@ -76,6 +76,41 @@ namespace Mzinga.SharedUX
             _optionalTags.Clear();
         }
 
+        public string GetTag(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            switch (key)
+            {
+                case "Event":
+                    return Event;
+                case "Site":
+                    return Site;
+                case "Date":
+                    return Date;
+                case "Round":
+                    return Round;
+                case "White":
+                    return White;
+                case "Black":
+                    return Black;
+                case "GameType":
+                    return EnumUtils.GetExpansionPiecesString(GameType);
+                case "Result":
+                    return Result.ToString();
+            }
+
+            if (_optionalTags.TryGetValue(key, out string value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
         public void SetTag(string key, string value)
         {
             if (string.IsNullOrWhiteSpace(key))
@@ -138,6 +173,29 @@ namespace Mzinga.SharedUX
             }
 
             return clone;
+        }
+
+        public void CopyFrom(GameMetadata metadata)
+        {
+            if (null == metadata)
+            {
+                throw new ArgumentNullException("metadata");
+            }
+
+            Event = metadata.Event;
+            Site = metadata.Site;
+            Date = metadata.Date;
+            Round = metadata.Round;
+            White = metadata.White;
+            Black = metadata.Black;
+
+            GameType = metadata.GameType;
+            Result = metadata.Result;
+
+            foreach (KeyValuePair<string, string> kvp in metadata.OptionalTags)
+            {
+                _optionalTags[kvp.Key] = kvp.Value;
+            }
         }
     }
 }

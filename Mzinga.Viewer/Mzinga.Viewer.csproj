@@ -144,6 +144,9 @@
     <Compile Include="..\Mzinga.Engine\Properties\SharedInfo.cs">
       <Link>Properties\SharedInfo.cs</Link>
     </Compile>
+    <Compile Include="GameMetadataWindow.xaml.cs">
+      <DependentUpon>GameMetadataWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExceptionWindow.xaml.cs" />
     <Compile Include="EngineConsoleWindow.xaml.cs">
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
@@ -165,6 +168,10 @@
     <Compile Include="MouseUtils.cs" />
     <Compile Include="ScrollingTextBox.cs" />
     <Compile Include="UpdateUtils.cs" />
+    <Page Include="GameMetadataWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="ExceptionWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineConsoleViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EngineOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GameMetadataViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineOptionsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EngineWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions.cs" />
@@ -31,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableGameMetadataTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewerConfig.cs" />

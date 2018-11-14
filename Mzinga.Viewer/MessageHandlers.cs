@@ -47,6 +47,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<NewGameMessage>(recipient, (message) => ShowNewGame(message));
             Messenger.Default.Register<LoadGameMessage>(recipient, (message) => ShowLoadGame(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, (message) => ShowSaveGame(message));
+            Messenger.Default.Register<GameMetadataMessage>(recipient, (message) => ShowGameMetadata(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, (message) => ShowViewerConfig(message));
             Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
@@ -61,6 +62,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<LoadGameMessage>(recipient);
             Messenger.Default.Unregister<SaveGameMessage>(recipient);
+            Messenger.Default.Unregister<GameMetadataMessage>(recipient);
             Messenger.Default.Unregister<ViewerConfigMessage>(recipient);
             Messenger.Default.Unregister<EngineOptionsMessage>(recipient);
             Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
@@ -192,6 +194,27 @@ namespace Mzinga.Viewer
                         message.GameRecording.SavePGN(outputStream);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
+        }
+
+        private static void ShowGameMetadata(GameMetadataMessage message)
+        {
+            try
+            {
+                GameMetadataWindow window = new GameMetadataWindow
+                {
+                    DataContext = message.GameMetadataVM
+                };
+                message.GameMetadataVM.RequestClose += (sender, e) =>
+                {
+                    window.Close();
+                };
+                window.ShowDialog();
+                message.Process();
             }
             catch (Exception ex)
             {
