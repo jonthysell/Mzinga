@@ -3,7 +3,7 @@
         MinWidth="100"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
-        Title="{Binding Title, FallbackValue=Game Metadata}"
+        Title="{Binding Title, FallbackValue=Edit Metadata}"
         WindowStartupLocation="CenterScreen"
         x:Class="Mzinga.Viewer.GameMetadataWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -29,6 +29,7 @@
                                        VerticalAlignment="Center" />
                                 <TextBox Margin="5"
                                          MinWidth="200"
+                                         IsReadOnly="{Binding IsReadOnly}"
                                          Text="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>

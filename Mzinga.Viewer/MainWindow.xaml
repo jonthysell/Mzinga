@@ -80,7 +80,7 @@
                           Header="Move To _End" />
                 <Separator />
                 <MenuItem Command="{Binding ShowGameMetadata}"
-                          Header="_Game Metadata" />
+                          Header="Edit _Metadata" />
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"

@@ -60,6 +60,29 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private string _value = "";
 
+        public bool IsReadOnly
+        {
+            get
+            {
+                return !CanEdit;
+            }
+        }
+
+        public bool CanEdit
+        {
+            get
+            {
+                return _canEdit;
+            }
+            set
+            {
+                _canEdit = value;
+                RaisePropertyChanged("CanEdit");
+                RaisePropertyChanged("IsReadOnly");
+            }
+        }
+        private bool _canEdit = true;
+
         public ObservableGameMetadataTag(string key, string value)
         {
             _key = !string.IsNullOrWhiteSpace(key) ? key : throw new ArgumentNullException("key");

@@ -41,7 +41,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return "Game Metadata";
+                return "Edit Metadata";
             }
         }
 
@@ -151,7 +151,7 @@ namespace Mzinga.SharedUX.ViewModel
             _standardTags.Add(new ObservableGameMetadataTag("Round", _originalMetadata.Round));
             _standardTags.Add(new ObservableGameMetadataTag("White", _originalMetadata.White));
             _standardTags.Add(new ObservableGameMetadataTag("Black", _originalMetadata.Black));
-            _standardTags.Add(new ObservableGameMetadataTag("GameType", EnumUtils.GetExpansionPiecesString(_originalMetadata.GameType)));
+            _standardTags.Add(new ObservableGameMetadataTag("GameType", EnumUtils.GetExpansionPiecesString(_originalMetadata.GameType)) { CanEdit = false });
             _standardTags.Add(new ObservableGameMetadataTag("Result", _originalMetadata.Result.ToString()));
 
             _optionalTags = new ObservableCollection<ObservableGameMetadataTag>();
