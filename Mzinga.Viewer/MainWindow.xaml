@@ -70,13 +70,6 @@
                           Header="_Undo Move" />
             </MenuItem>
             <MenuItem Header="_Review">
-                <MenuItem Command="{Binding SwitchToReviewMode}"
-                          Header="_Review Mode"
-                          IsCheckable="True"
-                          IsChecked="{Binding IsReviewMode, Mode=OneWay}" />
-                <MenuItem Command="{Binding ShowGameMetadata}"
-                          Header="Edit _Metadata" />
-                <Separator />
                 <MenuItem Command="{Binding MoveToStart}"
                           Header="Move To _Start" />
                 <MenuItem Command="{Binding MoveBack}"
@@ -85,6 +78,11 @@
                           Header="Move _Forward" />
                 <MenuItem Command="{Binding MoveToEnd}"
                           Header="Move To _End" />
+                <Separator />
+                <MenuItem Command="{Binding ShowGameMetadata}"
+                          Header="Edit _Metadata" />
+                <MenuItem Command="{Binding SwitchToReviewMode}"
+                          Header="Switch to _Review Mode"/>
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"
