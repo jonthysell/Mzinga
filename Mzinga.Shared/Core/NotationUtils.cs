@@ -129,12 +129,6 @@ namespace Mzinga.Core
                 return BoardSpacePass;
             }
 
-
-            if (move.Color != board.CurrentTurnColor)
-            {
-                return null;
-            }
-
             string startPiece = ToBoardSpacePieceName(move.PieceName);
 
             if (board.CurrentTurn == 0)
