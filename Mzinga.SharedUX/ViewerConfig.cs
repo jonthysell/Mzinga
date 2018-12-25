@@ -100,6 +100,10 @@ namespace Mzinga.SharedUX
 
         public bool PlaySoundEffects { get; set; } = true;
 
+        public bool FirstRun { get; set; } = true;
+
+        public bool CheckUpdateOnStart { get; set; } = true;
+
         public ViewerConfig() { }
 
         public void LoadConfig(Stream inputStream)
@@ -165,6 +169,12 @@ namespace Mzinga.SharedUX
                             case "PlaySoundEffects":
                                 PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
                                 break;
+                            case "FirstRun":
+                                FirstRun = ParseBoolValue(reader.ReadElementContentAsString(), FirstRun);
+                                break;
+                            case "CheckUpdateOnStart":
+                                CheckUpdateOnStart = ParseBoolValue(reader.ReadElementContentAsString(), CheckUpdateOnStart);
+                                break;
                         }
                     }
                 }
@@ -221,6 +231,8 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
                 writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
                 writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
+                writer.WriteElementString("FirstRun", FirstRun.ToString());
+                writer.WriteElementString("CheckUpdateOnStart", CheckUpdateOnStart.ToString());
 
                 writer.WriteEndElement();
             }
@@ -253,6 +265,9 @@ namespace Mzinga.SharedUX
                 StackPiecesInHand = StackPiecesInHand,
 
                 PlaySoundEffects = PlaySoundEffects,
+
+                FirstRun = FirstRun,
+                CheckUpdateOnStart = CheckUpdateOnStart,
             };
 
             return clone;
@@ -288,6 +303,9 @@ namespace Mzinga.SharedUX
             StackPiecesInHand = config.StackPiecesInHand;
 
             PlaySoundEffects = config.PlaySoundEffects;
+
+            FirstRun = config.FirstRun;
+            CheckUpdateOnStart = config.CheckUpdateOnStart;
         }
 
         private const string MzingaEngineCommandLine = "Mzinga.Engine.exe";

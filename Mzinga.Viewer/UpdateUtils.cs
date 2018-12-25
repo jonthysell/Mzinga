@@ -89,8 +89,6 @@ namespace Mzinga.Viewer
                     }
                 }
 
-                SetLastUpdateCheck(DateTime.Now);
-
                 if (updateAvailable)
                 {
                     if (confirmUpdate)
@@ -200,30 +198,6 @@ namespace Mzinga.Viewer
             // TODO: Get saved value from config
 
             return ReleaseChannel.Official;
-        }
-
-        public static bool GetCheckUpdateOnStart()
-        {
-            // TODO: Get saved value from config
-
-            return false;
-        }
-
-        public static void SetCheckUpdateOnStart(bool value)
-        {
-            // TODO: Set saved value in config
-        }
-
-        public static DateTime GetLastUpdateCheck()
-        {
-            // TODO: Get saved value from config
-
-            return DateTime.MinValue;
-        }
-
-        public static void SetLastUpdateCheck(DateTime value)
-        {
-            // TODO: Set saved value in config
         }
 
         public static bool IsConnectedToInternet

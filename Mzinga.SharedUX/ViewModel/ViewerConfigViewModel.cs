@@ -250,6 +250,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool CheckUpdateOnStart
+        {
+            get
+            {
+                return Config.CheckUpdateOnStart;
+            }
+            set
+            {
+                Config.CheckUpdateOnStart = value;
+                RaisePropertyChanged("CheckUpdateOnStart");
+            }
+        }
+
         public RelayCommand Accept
         {
             get
@@ -315,6 +328,7 @@ namespace Mzinga.SharedUX.ViewModel
                         RaisePropertyChanged("AddPieceNumbers");
                         RaisePropertyChanged("StackPiecesInHand");
                         RaisePropertyChanged("PlaySoundEffects");
+                        RaisePropertyChanged("CheckUpdateOnStart");
 
                     }
                     catch (Exception ex)

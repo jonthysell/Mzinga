@@ -88,6 +88,9 @@
                         <CheckBox Content="Play sound effects"
                                   IsChecked="{Binding PlaySoundEffects}"
                                   Margin="5" />
+                        <CheckBox Content="Check for updates on start"
+                                  IsChecked="{Binding CheckUpdateOnStart}"
+                                  Margin="5" />
                     </StackPanel>
                 </GroupBox>
             </StackPanel>

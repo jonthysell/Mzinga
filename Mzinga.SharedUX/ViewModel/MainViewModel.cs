@@ -27,8 +27,13 @@
 using System;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 
 using Mzinga.Core;
+
+#if WINDOWS_WPF
+using Mzinga.Viewer;
+#endif
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -885,7 +890,7 @@ namespace Mzinga.SharedUX.ViewModel
                     try
                     {
                         IsIdle = false;
-                        await Viewer.UpdateUtils.UpdateCheckAsync(true, true);
+                        await UpdateUtils.UpdateCheckAsync(true, true);
                     }
                     catch (Exception ex)
                     {
@@ -897,7 +902,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && !Viewer.UpdateUtils.IsCheckingforUpdate;
+                    return IsIdle && !UpdateUtils.IsCheckingforUpdate;
                 }));
             }
         }
@@ -1029,6 +1034,64 @@ namespace Mzinga.SharedUX.ViewModel
             };
 
             PropertyChanged += MainViewModel_PropertyChanged;
+        }
+
+        public void OnLoaded()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    AppVM.DoOnUIThread(() =>
+                    {
+                        IsIdle = false;
+                    });
+
+                    if (ViewerConfig.FirstRun)
+                    {
+                        FirstRun();
+                    }
+
+#if WINDOWS_WPF
+                    if (ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
+                    {
+                        await UpdateUtils.UpdateCheckAsync(true, false);
+                    }
+#endif
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+                finally
+                {
+                    AppVM.DoOnUIThread(() =>
+                    {
+                        IsIdle = true;
+                    });
+                }
+            });
+        }
+
+        private void FirstRun()
+        {
+            AppVM.DoOnUIThread(() =>
+            {
+                // Turn off first-run so it doesn't run next time
+                ViewerConfig.FirstRun = false;
+
+                Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, "Welcome to Mzinga.Viewer!", "Would you like to check for updates when Mzinga.Viewer starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
+                {
+                    try
+                    {
+                        ViewerConfig.CheckUpdateOnStart = enableAutoUpdate;
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            });
         }
 
         private void MainViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)

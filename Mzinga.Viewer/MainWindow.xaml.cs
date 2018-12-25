@@ -55,20 +55,30 @@ namespace Mzinga.Viewer
 
             BoardRenderer = new XamlBoardRenderer(VM, BoardCanvas, WhiteHandStackPanel, BlackHandStackPanel);
 
+            Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (null != VM.AppVM.EngineExceptionOnStart)
+                {
+                    throw new Exception("Unable to start the external engine so used the internal one instead.", VM.AppVM.EngineExceptionOnStart);
+                }
+
+                VM.OnLoaded();
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             EngineConsoleWindow.Instance.Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (null != VM.AppVM.EngineExceptionOnStart)
-            {
-                ExceptionUtils.HandleException(new Exception("Unable to start the external engine so used the internal one instead.", VM.AppVM.EngineExceptionOnStart));
-            }
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
