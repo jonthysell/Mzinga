@@ -798,7 +798,7 @@ namespace Mzinga.SharedUX.ViewModel
                         sb.AppendLine("Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.");
                         sb.AppendLine();
 
-                        sb.AppendLine("Mzinga Copyright (c) 2015-2018 Jon Thysell");
+                        sb.AppendLine("Mzinga Copyright (c) 2015-2019 Jon Thysell");
                         sb.AppendLine("MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion");
 
                         sb.AppendLine();

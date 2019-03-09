@@ -34,6 +34,6 @@ Mzinga.Trainer.exe is a command-line utility with the goal to improve Mzinga's A
 
 Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
 
-Mzinga Copyright (c) 2015-2018 Jon Thysell.
+Mzinga Copyright (c) 2015-2019 Jon Thysell.
 
 MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
