@@ -68,6 +68,7 @@
     </InstallExecuteSequence>
     <WixVariable Id="WixUILicenseRtf"
                  Value="license.rtf" />
+    <Property Id="DISABLEADVTSHORTCUTS" Value="1" />
   </Product>
   <Fragment>
     <Directory Id="TARGETDIR"
@@ -82,7 +83,6 @@
               <Shortcut Advertise="yes"
                         Description="AI player for the board game Hive."
                         Directory="ProgramMenuFolder"
-                        Icon="icon.ico"
                         Id="MzingaViewerAppShortcut"
                         Name="Mzinga"
                         WorkingDirectory="INSTALLFOLDER" />
