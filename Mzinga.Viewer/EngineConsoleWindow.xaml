@@ -25,6 +25,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <TextBox FontWeight="Normal"
                  Grid.Column="0"
@@ -37,6 +38,9 @@
             <TextBox.InputBindings>
                 <KeyBinding Command="{Binding SendEngineCommand}"
                             Key="Enter" />
+                <KeyBinding Command="{Binding CancelEngineCommand}"
+                            Modifiers="Ctrl"
+                            Key="C" />
             </TextBox.InputBindings>
         </TextBox>
         <Button Command="{Binding SendEngineCommand}"
@@ -45,11 +49,17 @@
                 Grid.Row="0"
                 Margin="5"
                 Style="{DynamicResource CleanButton}" />
+        <Button Command="{Binding CancelEngineCommand}"
+                Content="Cancel"
+                Grid.Column="2"
+                Grid.Row="0"
+                Margin="5"
+                Style="{DynamicResource CleanButton}" />
         <local:ScrollingTextBox BorderBrush="Transparent"
                                 FontFamily="Lucida Console"
                                 FontWeight="Normal"
                                 Grid.Column="0"
-                                Grid.ColumnSpan="2"
+                                Grid.ColumnSpan="3"
                                 Grid.Row="1"
                                 IsReadOnly="True"
                                 Margin="5"

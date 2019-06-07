@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -304,6 +304,8 @@ namespace Mzinga.SharedUX
         public abstract void StopEngine();
 
         protected abstract void OnEngineInput(string command);
+
+        protected abstract void OnCancelCommand();
 
         protected void OnEngineOutput(string line)
         {
@@ -644,6 +646,15 @@ namespace Mzinga.SharedUX
             }
         }
 
+        public void CancelCommand()
+        {
+            if (!IsIdle)
+            {
+                OnCancelCommand();
+                TryStopTimedCommand();
+            }
+        }
+
         private void ProcessEngineOutput(EngineCommand command, string[] outputLines)
         {
             string errorMessage = "";
@@ -887,7 +898,7 @@ namespace Mzinga.SharedUX
                 while (sw.Elapsed <= duration && !token.IsCancellationRequested)
                 {
                     OnTimedCommandProgressUpdated(true, sw.Elapsed.TotalMilliseconds / duration.TotalMilliseconds);
-                    await Task.Yield();
+                    await Task.Delay(100);
                 }
                 OnTimedCommandProgressUpdated(true, 1.0);
             }, token);
@@ -895,18 +906,13 @@ namespace Mzinga.SharedUX
 
         private void TryStopTimedCommand()
         {
-            if (null != _timedCommandCTS && null != _timedCommandTask)
-            {
-                StopTimedCommand();
-            }
-        }
-
-        private void StopTimedCommand()
-        {
             try
             {
-                _timedCommandCTS.Cancel();
-                _timedCommandTask.Wait(_timedCommandCTS.Token);
+                if (null != _timedCommandCTS && null != _timedCommandTask)
+                {
+                    _timedCommandCTS.Cancel();
+                    _timedCommandTask.Wait(_timedCommandCTS.Token);
+                }
             }
             catch (OperationCanceledException) { }
             finally

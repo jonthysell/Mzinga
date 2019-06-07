@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using Mzinga.SharedUX;
@@ -90,6 +91,51 @@ namespace Mzinga.Viewer
             _writer.Flush();
         }
 
+        protected override void OnCancelCommand()
+        {
+            if (NativeMethods.AttachConsole((uint)_process.Id))
+            {
+                NativeMethods.SetConsoleCtrlHandler(null, true);
+                NativeMethods.GenerateConsoleCtrlEvent(NativeMethods.CtrlTypes.CTRL_C_EVENT, 0);
+
+                NativeMethods.FreeConsole();
+
+                _process.WaitForExit(WaitForCancelTimeoutMS);
+
+                NativeMethods.SetConsoleCtrlHandler(null, false);
+            }
+        }
+
         private const int WaitForExitTimeoutMS = 10 * 1000;
+        private const int WaitForCancelTimeoutMS = 500;
+    }
+
+    // Adapted from https://stackoverflow.com/questions/813086/can-i-send-a-ctrl-c-sigint-to-an-application-on-windows
+    internal static partial class NativeMethods
+    {
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern bool AttachConsole(uint dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        internal static extern bool FreeConsole();
+
+        [DllImport("kernel32.dll")]
+        internal static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate HandlerRoutine, bool Add);
+
+        internal delegate bool ConsoleCtrlDelegate(CtrlTypes CtrlType);
+
+        // Enumerated type for the control messages sent to the handler routine
+        internal enum CtrlTypes : uint
+        {
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT,
+            CTRL_CLOSE_EVENT,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT
+        }
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GenerateConsoleCtrlEvent(CtrlTypes dwCtrlEvent, uint dwProcessGroupId);
     }
 }

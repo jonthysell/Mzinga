@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,6 +60,7 @@ namespace Mzinga.SharedUX.ViewModel
                 _isIdle = value;
                 RaisePropertyChanged("IsIdle");
                 SendEngineCommand.RaiseCanExecuteChanged();
+                CancelEngineCommand.RaiseCanExecuteChanged();
             }
         }
         private bool _isIdle = true;
@@ -113,8 +114,32 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _sendEngineCommand = null;
 
+        public RelayCommand CancelEngineCommand
+        {
+            get
+            {
+                return _cancelEngineCommand ?? (_cancelEngineCommand = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.EngineWrapper.CancelCommand();
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return !IsIdle;
+                }));
+            }
+        }
+        private RelayCommand _cancelEngineCommand = null;
+
         public EngineConsoleViewModel()
         {
+            IsIdle = AppVM.EngineWrapper.IsIdle;
+
             AppVM.EngineWrapper.EngineTextUpdated += (sender, args) =>
             {
                 AppVM.DoOnUIThread(() =>
