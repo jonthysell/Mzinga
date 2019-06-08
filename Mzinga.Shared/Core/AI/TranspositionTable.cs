@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +25,72 @@
 // THE SOFTWARE.
 
 using System;
+using System.Xml;
 
 namespace Mzinga.Core.AI
 {
     public class TranspositionTable : FixedCache<ulong, TranspositionTableEntry>
     {
         public TranspositionTable(long sizeInBytes = DefaultSizeInBytes) : base(GetCapacity(sizeInBytes), TranspostionTableReplaceEntryPredicate) { }
+
+        public static TranspositionTable ReadTranspositionTableXml(XmlReader xmlReader, long sizeInBytes = DefaultSizeInBytes)
+        {
+            if (null == xmlReader)
+            {
+                throw new ArgumentNullException("xmlReader");
+            }
+
+            TranspositionTable tt = new TranspositionTable(sizeInBytes);
+
+            while (xmlReader.Read())
+            {
+                if (xmlReader.IsStartElement() && xmlReader.Name == "Entry")
+                {
+                    ulong key = ulong.Parse(xmlReader.GetAttribute("Key"));
+                    TranspositionTableEntry entry = new TranspositionTableEntry()
+                    {
+                        Type = (TranspositionTableEntryType)Enum.Parse(typeof(TranspositionTableEntryType), xmlReader.GetAttribute("Type")),
+                        Value = double.Parse(xmlReader.GetAttribute("Value")),
+                        Depth = int.Parse(xmlReader.GetAttribute("Depth")),
+                        BestMove = new Move(xmlReader.GetAttribute("BestMove")),
+                    };
+                    tt.Store(key, entry);
+                }
+            }
+
+            return tt;
+        }
+
+        public void WriteTranspositionTableXml(XmlWriter xmlWriter, string name = "TranspositionTable", ExpansionPieces? gameType = null)
+        {
+            if (null == xmlWriter)
+            {
+                throw new ArgumentNullException("xmlWriter");
+            }
+
+            xmlWriter.WriteStartElement(name);
+
+            if (gameType.HasValue)
+            {
+                xmlWriter.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString(gameType.Value));
+            }
+
+            foreach (ulong key in Keys)
+            {
+                if (TryLookup(key, out TranspositionTableEntry entry))
+                {
+                    xmlWriter.WriteStartElement("Entry");
+                    xmlWriter.WriteAttributeString("Key", key.ToString());
+                    xmlWriter.WriteAttributeString("Type", entry.Type.ToString());
+                    xmlWriter.WriteAttributeString("Value", entry.Value.ToString());
+                    xmlWriter.WriteAttributeString("Depth", entry.Depth.ToString());
+                    xmlWriter.WriteAttributeString("BestMove", entry.BestMove.ToString());
+                    xmlWriter.WriteEndElement();
+                }
+            }
+
+            xmlWriter.WriteEndElement();
+        }
 
         private static int GetCapacity(long sizeInBytes)
         {
