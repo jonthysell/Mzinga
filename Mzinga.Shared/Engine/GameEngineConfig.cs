@@ -43,6 +43,8 @@ namespace Mzinga.Engine
 
         public Dictionary<ExpansionPieces, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<ExpansionPieces, MetricWeights[]>();
 
+        public Dictionary<ExpansionPieces, TranspositionTable> InitialTranspositionTables { get; private set; } = new Dictionary<ExpansionPieces, TranspositionTable>();
+
         public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
 
         public int MaxHelperThreads
@@ -121,6 +123,9 @@ namespace Mzinga.Engine
                             break;
                         case "EndMetricWeights":
                             SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            break;
+                        case "InitialTranspositionTable":
+                            SetInitialTranspositionTable(expansionPieces, TranspositionTable.ReadTranspositionTableXml(reader.ReadSubtree()));
                             break;
                         case "MaxHelperThreads":
                             ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
@@ -255,6 +260,7 @@ namespace Mzinga.Engine
                 EndMetricWeights = mw[0] ?? mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
                 TranspositionTableSizeMB = TranspositionTableSizeMB,
+                InitialTranspositionTable = GetInitialTranspositionTable(expansionPieces),
             });
         }
 
@@ -288,7 +294,7 @@ namespace Mzinga.Engine
             MetricWeightSet[expansionPieces][1] = metricWeights;
         }
 
-        private MetricWeights[] GetMetricWeights(ExpansionPieces expansionPieces)
+        public MetricWeights[] GetMetricWeights(ExpansionPieces expansionPieces)
         {
             MetricWeights[] result;
 
@@ -307,6 +313,22 @@ namespace Mzinga.Engine
                     result[0] = mw[0] ?? result[0];
                     result[1] = mw[1] ?? result[1];
                 }
+            }
+
+            return result;
+        }
+
+        private void SetInitialTranspositionTable(ExpansionPieces expansionPieces, TranspositionTable transpositionTable)
+        {
+            InitialTranspositionTables[expansionPieces] = transpositionTable;
+        }
+
+        public TranspositionTable GetInitialTranspositionTable(ExpansionPieces expansionPieces)
+        {
+            TranspositionTable result;
+            if (!InitialTranspositionTables.TryGetValue(expansionPieces, out result))
+            {
+                result = null;
             }
 
             return result;

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -300,5 +300,26 @@ namespace Mzinga.Trainer
         public bool AllGameTypes { get; set; } = false;
 
         public bool ProvisionalFirst { get; set; } = true;
+
+        public int InitialTableDepth
+        {
+            get
+            {
+                return _initialTableDepth;
+            }
+            set
+            {
+                if (value < _initialTableDepth && value != MinInitialTableDepth)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _initialTableDepth = value;
+            }
+        }
+        private int _initialTableDepth = MinInitialTableDepth;
+
+        public const int MinInitialTableDepth = 0;
+        public const int MaxInitialTableDepth = -1;
+
     }
 }

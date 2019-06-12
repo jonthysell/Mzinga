@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -94,6 +94,9 @@ namespace Mzinga.Trainer
                         case Command.ExportAI:
                             t.ExportAI();
                             break;
+                        case Command.BuildInitialTables:
+                            t.BuildInitialTables();
+                            break;
                         default:
                             ShowHelp();
                             break;
@@ -156,6 +159,8 @@ namespace Mzinga.Trainer
             Console.WriteLine("top                    List the top profiles for each GameType");
             Console.WriteLine("mergetop               Merge the top profiles from each GameType");
             Console.WriteLine("exportai               Export the current engine AI as profiles");
+            Console.WriteLine("buildinitialtables     Build and export InitialTranspositionTable");
+
             Console.WriteLine();
 
             Console.WriteLine("Parameters:");
@@ -191,6 +196,7 @@ namespace Mzinga.Trainer
             Console.WriteLine("-TopCount              The number of profiles to return when calling top");
             Console.WriteLine("-AllGameTypes          Run the specifcied command through every game type");
             Console.WriteLine("-ProvisionalFirst      Prioritize battles with at least one provisional profile");
+            Console.WriteLine("-InitialTableDepth     The ply depth to play to build initial tables");
             Console.WriteLine();
         }
 
@@ -259,6 +265,10 @@ namespace Mzinga.Trainer
                 case "ea":
                 case "exportai":
                     cmd = Command.ExportAI;
+                    break;
+                case "bit":
+                case "buildinitialtables":
+                    cmd = Command.BuildInitialTables;
                     break;
             }
 
@@ -395,6 +405,10 @@ namespace Mzinga.Trainer
                     case "pf":
                         trainerSettings.ProvisionalFirst = bool.Parse(args[++i]);
                         break;
+                    case "itd":
+                    case "initialtabledepth":
+                        trainerSettings.InitialTableDepth = int.Parse(args[++i]);
+                        break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));
                 }
@@ -420,5 +434,6 @@ namespace Mzinga.Trainer
         Top,
         MergeTop,
         ExportAI,
+        BuildInitialTables,
     }
 }

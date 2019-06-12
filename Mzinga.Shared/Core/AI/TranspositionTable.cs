@@ -47,12 +47,15 @@ namespace Mzinga.Core.AI
                 if (xmlReader.IsStartElement() && xmlReader.Name == "Entry")
                 {
                     ulong key = ulong.Parse(xmlReader.GetAttribute("Key"));
+
+                    string moveString = xmlReader.GetAttribute("BestMove");
+
                     TranspositionTableEntry entry = new TranspositionTableEntry()
                     {
                         Type = (TranspositionTableEntryType)Enum.Parse(typeof(TranspositionTableEntryType), xmlReader.GetAttribute("Type")),
                         Value = double.Parse(xmlReader.GetAttribute("Value")),
                         Depth = int.Parse(xmlReader.GetAttribute("Depth")),
-                        BestMove = new Move(xmlReader.GetAttribute("BestMove")),
+                        BestMove = !string.IsNullOrWhiteSpace(moveString) ? new Move(moveString) : null,
                     };
                     tt.Store(key, entry);
                 }
@@ -61,7 +64,7 @@ namespace Mzinga.Core.AI
             return tt;
         }
 
-        public void WriteTranspositionTableXml(XmlWriter xmlWriter, string name = "TranspositionTable", ExpansionPieces? gameType = null)
+        public void WriteTranspositionTableXml(XmlWriter xmlWriter, string name = "TranspositionTable", ExpansionPieces? gameType = null, Predicate<TranspositionTableEntry> entryPredicate = null)
         {
             if (null == xmlWriter)
             {
@@ -79,13 +82,16 @@ namespace Mzinga.Core.AI
             {
                 if (TryLookup(key, out TranspositionTableEntry entry))
                 {
-                    xmlWriter.WriteStartElement("Entry");
-                    xmlWriter.WriteAttributeString("Key", key.ToString());
-                    xmlWriter.WriteAttributeString("Type", entry.Type.ToString());
-                    xmlWriter.WriteAttributeString("Value", entry.Value.ToString());
-                    xmlWriter.WriteAttributeString("Depth", entry.Depth.ToString());
-                    xmlWriter.WriteAttributeString("BestMove", entry.BestMove.ToString());
-                    xmlWriter.WriteEndElement();
+                    if (null == entryPredicate || entryPredicate(entry))
+                    {
+                        xmlWriter.WriteStartElement("Entry");
+                        xmlWriter.WriteAttributeString("Key", key.ToString());
+                        xmlWriter.WriteAttributeString("Type", entry.Type.ToString());
+                        xmlWriter.WriteAttributeString("Value", entry.Value.ToString());
+                        xmlWriter.WriteAttributeString("Depth", entry.Depth.ToString());
+                        xmlWriter.WriteAttributeString("BestMove", entry.BestMove?.ToString() ?? "");
+                        xmlWriter.WriteEndElement();
+                    }
                 }
             }
 

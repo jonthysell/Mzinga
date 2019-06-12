@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -1165,6 +1165,114 @@ namespace Mzinga.Trainer
             }
 
             Log("ExportAI end.");
+        }
+
+        public void BuildInitialTables()
+        {
+            BuildInitialTables(TrainerSettings.ProfilesPath);
+        }
+
+        public void BuildInitialTables(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            StartTime = DateTime.Now;
+            Log("BuildInitialTables start.");
+
+            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultConfig();
+
+            string resultFile = Path.Combine(path, "initialtables.txt");
+
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true,
+                ConformanceLevel = ConformanceLevel.Fragment,
+            };
+
+            using (XmlWriter xw = XmlWriter.Create(resultFile, settings))
+            {
+                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+                {
+                    ExpansionPieces gameType = (ExpansionPieces)i;
+
+                    Log("Building {0} initial table.", EnumUtils.GetExpansionPiecesString(gameType));
+
+                    // Creating initial table to save results
+
+                    TranspositionTable initialTable = new TranspositionTable(TrainerSettings.TransTableSize * 1024 * 1024);
+
+                    // Creating board and AI
+
+                    GameBoard gameBoard = new GameBoard(gameType);
+
+                    MetricWeights[] mw = config.GetMetricWeights(gameType);
+
+                    GameAI gameAI = new GameAI(new GameAIConfig()
+                    {
+                        StartMetricWeights = mw[0],
+                        EndMetricWeights = mw[0] ?? mw[1],
+                        MaxBranchingFactor = config.MaxBranchingFactor,
+                        TranspositionTableSizeMB = TrainerSettings.TransTableSize,
+                        InitialTranspositionTable =  null,
+                    });
+
+                    ulong currentKey = gameBoard.ZobristKey;
+
+                    gameAI.BestMoveFound += (sender, args) =>
+                    {
+                        // When best moves are found that meet the criteria, save their entries into the initial table
+                        if (args.Depth >= TrainerSettings.MaxDepth && gameAI.TranspositionTable.TryLookup(currentKey, out TranspositionTableEntry entry))
+                        {
+                            lock (initialTable)
+                            {
+                                initialTable.Store(currentKey, new TranspositionTableEntry()
+                                {
+                                    Type = entry.Type,
+                                    Value = entry.Value,
+                                    Depth = entry.Depth,
+                                    BestMove = entry.BestMove,
+                                });
+                            }
+                        }
+                    };
+
+                    // Run search from every possible board position
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    Task searchTask = Task.Factory.StartNew(async () =>
+                    {
+                        await gameBoard.ForEachBoardPosition(TrainerSettings.InitialTableDepth == TrainerSettings.MaxInitialTableDepth ? int.MaxValue : TrainerSettings.InitialTableDepth, () =>
+                        {
+                            currentKey = gameBoard.ZobristKey;
+                            GetBestMove(gameBoard, gameAI);
+                        }, cts.Token);
+                    });
+
+                    Task progressTask = Task.Factory.StartNew(async () =>
+                    {
+                        while (!cts.Token.IsCancellationRequested)
+                        {
+                            lock (initialTable)
+                            {
+                                Log("Initial {0} table has {1} entries.", EnumUtils.GetExpansionPiecesString(gameType), initialTable.Count);
+                            }
+                            await Task.Delay(TimeSpan.FromMinutes(1.0));
+                        }
+                    });
+
+                    searchTask.Wait(cts.Token);
+                    cts.Cancel();
+                    progressTask.Wait();
+
+                    Log("Saving {0} initial table ({1} entries).", EnumUtils.GetExpansionPiecesString(gameType), initialTable.Count);
+
+                    initialTable.WriteTranspositionTableXml(xw, "InitialTranspositionTable", gameType);
+                }
+            }
+
+            Log("BuildInitialTables end.");
         }
 
         private List<Profile> LoadProfiles(string path)

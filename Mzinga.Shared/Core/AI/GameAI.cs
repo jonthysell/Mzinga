@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,9 @@ namespace Mzinga.Core.AI
 
         public const int MaxMaxBranchingFactor = 500;
 
-        private TranspositionTable _transpositionTable;
+        public TranspositionTable TranspositionTable { get; private set; }
+
+        private TranspositionTable _initialTranspositionTable;
 
         private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
         private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
@@ -54,7 +56,7 @@ namespace Mzinga.Core.AI
             StartMetricWeights = new MetricWeights();
             EndMetricWeights = new MetricWeights();
 
-            _transpositionTable = new TranspositionTable();
+            TranspositionTable = new TranspositionTable();
         }
 
         public GameAI(GameAIConfig config)
@@ -74,11 +76,11 @@ namespace Mzinga.Core.AI
                     throw new ArgumentOutOfRangeException("config.TranspositionTableSizeMB");
                 }
 
-                _transpositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value * 1024 * 1024);
+                TranspositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value * 1024 * 1024);
             }
             else
             {
-                _transpositionTable = new TranspositionTable();
+                TranspositionTable = new TranspositionTable();
             }
 
             if (config.MaxBranchingFactor.HasValue)
@@ -90,12 +92,26 @@ namespace Mzinga.Core.AI
 
                 _maxBranchingFactor = config.MaxBranchingFactor.Value;
             }
+
+            _initialTranspositionTable = config.InitialTranspositionTable;
+            ResetCaches();
         }
 
         public void ResetCaches()
         {
-            _transpositionTable.Clear();
+            TranspositionTable.Clear();
             _cachedBoardScores.Clear();
+
+            if (null != _initialTranspositionTable)
+            {
+                foreach (ulong key in _initialTranspositionTable.Keys)
+                {
+                    if (_initialTranspositionTable.TryLookup(key, out TranspositionTableEntry entry))
+                    {
+                        TranspositionTable.Store(key, entry);
+                    }
+                }
+            }
         }
 
         #region Move Evaluation
@@ -195,7 +211,7 @@ namespace Mzinga.Core.AI
 
             // Try to get cached best move if available
             ulong key = gameBoard.ZobristKey;
-            if (_transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && null != tEntry.BestMove)
+            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && null != tEntry.BestMove)
             {
                 bestMove = new EvaluatedMove(tEntry.BestMove, tEntry.Value, tEntry.Depth);
                 OnBestMoveFound(bestMoveParams, bestMove);
@@ -356,7 +372,7 @@ namespace Mzinga.Core.AI
             tEntry.Value = bestValue.Value;
             tEntry.Depth = depth;
 
-            _transpositionTable.Store(key, tEntry);
+            TranspositionTable.Store(key, tEntry);
 
             return evaluatedMoves;
         }
@@ -420,7 +436,7 @@ namespace Mzinga.Core.AI
 
             ulong key = gameBoard.ZobristKey;
 
-            if (_transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth >= depth)
+            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth >= depth)
             {
                 if (tEntry.Type == TranspositionTableEntryType.Exact)
                 {
@@ -526,7 +542,7 @@ namespace Mzinga.Core.AI
                 tEntry.Value = bestValue.Value;
                 tEntry.Depth = depth;
 
-                _transpositionTable.Store(key, tEntry);
+                TranspositionTable.Store(key, tEntry);
             }
 
             return bestValue;
@@ -812,7 +828,7 @@ namespace Mzinga.Core.AI
             ulong key = gameBoard.ZobristKey;
             bool newKey = visitedKeys.Add(key);
 
-            if (newKey && _transpositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
+            if (newKey && TranspositionTable.TryLookup(key, out TranspositionTableEntry tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
             {
                 double colorValue = gameBoard.CurrentTurnColor == PlayerColor.White ? 1.0 : -1.0;
 
