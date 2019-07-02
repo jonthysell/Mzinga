@@ -35,4 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngineConfig.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Engine\DefaultEngineConfig.xml" />
+  </ItemGroup>
 </Project>

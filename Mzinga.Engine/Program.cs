@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ namespace Mzinga.Engine
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            GameEngineConfig config = null != args && args.Length > 0 ? LoadConfig(args[0]) : GameEngineConfig.GetDefaultConfig();
+            GameEngineConfig config = null != args && args.Length > 0 ? LoadConfig(args[0]) : GameEngineConfig.GetDefaultEngineConfig();
 
             _engine = new GameEngine(ID, config, PrintLine);
             _engine.ParseCommand("info");

@@ -1143,7 +1143,7 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
             Log("ExportAI start.");
 
-            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultConfig();
+            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultEngineConfig();
 
             string version = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
@@ -1182,7 +1182,7 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
             Log("BuildInitialTables start.");
 
-            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultConfig();
+            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultEngineConfig();
 
             string resultFile = Path.Combine(path, "initialtables.txt");
 
