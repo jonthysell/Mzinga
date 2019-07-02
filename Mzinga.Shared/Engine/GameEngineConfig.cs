@@ -28,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Xml;
 
 using Mzinga.Core;
@@ -41,12 +40,6 @@ namespace Mzinga.Engine
         #region GameAI
 
         public int? TranspositionTableSizeMB { get; private set; } = null;
-
-        public Dictionary<ExpansionPieces, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<ExpansionPieces, MetricWeights[]>();
-
-        public Dictionary<ExpansionPieces, TranspositionTable> InitialTranspositionTables { get; private set; } = new Dictionary<ExpansionPieces, TranspositionTable>();
-
-        public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
 
         public int MaxHelperThreads
         {
@@ -62,18 +55,31 @@ namespace Mzinga.Engine
         }
         private int? _maxHelperThreads = null;
 
+        public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
+
         public int? MaxBranchingFactor { get; private set; } = null;
 
         public bool ReportIntermediateBestMoves { get; private set; } = false;
 
+        public Dictionary<ExpansionPieces, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<ExpansionPieces, MetricWeights[]>();
+
+        public Dictionary<ExpansionPieces, TranspositionTable> InitialTranspositionTables { get; private set; } = new Dictionary<ExpansionPieces, TranspositionTable>();
+
         #endregion
 
-        public GameEngineConfig(Stream inputStream)
+        public GameEngineConfig()
+        {
+
+        }
+
+        public GameEngineConfig(Stream inputStream) : this()
         {
             LoadConfig(inputStream);
         }
 
-        private void LoadConfig(Stream inputStream)
+        #region Load
+
+        public void LoadConfig(Stream inputStream)
         {
             if (null == inputStream)
             {
@@ -97,7 +103,7 @@ namespace Mzinga.Engine
             }
         }
 
-        private void LoadGameAIConfig(XmlReader reader)
+        public void LoadGameAIConfig(XmlReader reader)
         {
             if (null == reader)
             {
@@ -115,6 +121,18 @@ namespace Mzinga.Engine
                         case "TranspositionTableSizeMB":
                             ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
                             break;
+                        case "MaxHelperThreads":
+                            ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
+                            break;
+                        case "PonderDuringIdle":
+                            ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
+                            break;
+                        case "MaxBranchingFactor":
+                            ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
+                            break;
+                        case "ReportIntermediateBestMoves":
+                            ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
+                            break;
                         case "MetricWeights":
                             SetStartMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
@@ -128,22 +146,125 @@ namespace Mzinga.Engine
                         case "InitialTranspositionTable":
                             SetInitialTranspositionTable(expansionPieces, TranspositionTable.ReadTranspositionTableXml(reader.ReadSubtree()));
                             break;
-                        case "MaxHelperThreads":
-                            ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
-                            break;
-                        case "PonderDuringIdle":
-                            ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
-                            break;
-                        case "MaxBranchingFactor":
-                            ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
-                            break;
-                        case "ReportIntermediateBestMoves":
-                            ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
-                            break;
                     }
                 }
             }
         }
+
+        #endregion
+
+        #region Save
+
+        public void SaveConfig(Stream outputStream, string rootName, ConfigSaveType configSaveType)
+        {
+            if (null == outputStream)
+            {
+                throw new ArgumentNullException("outputStream");
+            }
+
+            if (string.IsNullOrWhiteSpace(rootName))
+            {
+                throw new ArgumentNullException("rootName");
+            }
+
+            XmlWriterSettings settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
+
+            using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
+            {
+                writer.WriteStartElement(rootName);
+
+                writer.WriteAttributeString("version", GetVersion());
+                writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
+
+                SaveGameAIConfig(writer, "GameAI", configSaveType);
+
+                writer.WriteEndElement();
+            }
+        }
+
+        public void SaveGameAIConfig(XmlWriter writer, string rootName, ConfigSaveType configSaveType)
+        {
+            if (null == writer)
+            {
+                throw new ArgumentNullException("writer");
+            }
+
+            if (string.IsNullOrWhiteSpace(rootName))
+            {
+                throw new ArgumentNullException("rootName");
+            }
+
+            writer.WriteStartElement(rootName);
+
+            if (configSaveType.HasFlag(ConfigSaveType.BasicOptions))
+            {
+                if (TranspositionTableSizeMB.HasValue)
+                {
+                    writer.WriteElementString("TranspositionTableSizeMB", TranspositionTableSizeMB.Value.ToString());
+                }
+
+                if (!_maxHelperThreads.HasValue)
+                {
+                    writer.WriteElementString("MaxHelperThreads", "Auto");
+                }
+                else if (_maxHelperThreads.Value == 0)
+                {
+                    writer.WriteElementString("MaxHelperThreads", "None");
+                }
+                else
+                {
+                    writer.WriteElementString("MaxHelperThreads", _maxHelperThreads.Value.ToString());
+                }
+
+                writer.WriteElementString("PonderDuringIdle", PonderDuringIdle.ToString());
+
+                if (MaxBranchingFactor.HasValue)
+                {
+                    writer.WriteElementString("MaxBranchingFactor", MaxBranchingFactor.Value.ToString());
+                }
+
+                writer.WriteElementString("ReportIntermediateBestMoves", ReportIntermediateBestMoves.ToString());
+            }
+
+            if (configSaveType.HasFlag(ConfigSaveType.MetricWeights))
+            {
+                foreach (KeyValuePair<ExpansionPieces, MetricWeights[]> kvp in MetricWeightSet)
+                {
+                    ExpansionPieces gameType = kvp.Key;
+                    MetricWeights[] mw = kvp.Value;
+
+                    if (null != mw[0] && null != mw[1])
+                    {
+                        mw[0].WriteMetricWeightsXml(writer, "StartMetricWeights", gameType);
+                        mw[1].WriteMetricWeightsXml(writer, "EndMetricWeights", gameType);
+                    }
+                    else if (null != mw[0] && null == mw[1])
+                    {
+                        mw[0].WriteMetricWeightsXml(writer, gameType: gameType);
+                    }
+                }
+            }
+
+            if (configSaveType.HasFlag(ConfigSaveType.InitialTranspositionTable))
+            {
+                foreach (KeyValuePair<ExpansionPieces, TranspositionTable> kvp in InitialTranspositionTables)
+                {
+                    ExpansionPieces gameType = kvp.Key;
+                    TranspositionTable tt = kvp.Value;
+
+                    tt?.WriteTranspositionTableXml(writer, "InitialTranspositionTable", gameType);
+                }
+            }
+
+            writer.WriteEndElement();
+        }
+
+        #endregion
+
+        #region Engine Helpers
 
         public void ParseTranspositionTableSizeMBValue(string rawValue)
         {
@@ -251,36 +372,6 @@ namespace Mzinga.Engine
             values = "";
         }
 
-        public GameAI GetGameAI(ExpansionPieces expansionPieces)
-        {
-            MetricWeights[] mw = GetMetricWeights(expansionPieces);
-
-            return new GameAI(new GameAIConfig()
-            {
-                StartMetricWeights = mw[0],
-                EndMetricWeights = mw[0] ?? mw[1],
-                MaxBranchingFactor = MaxBranchingFactor,
-                TranspositionTableSizeMB = TranspositionTableSizeMB,
-                InitialTranspositionTable = GetInitialTranspositionTable(expansionPieces),
-            });
-        }
-
-        public static GameEngineConfig GetDefaultEngineConfig()
-        {
-            foreach (string resourceName in Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceNames())
-            {
-                if (resourceName.EndsWith("DefaultEngineConfig.xml"))
-                {
-                    using (Stream inputStream = Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceStream(resourceName))
-                    {
-                        return new GameEngineConfig(inputStream);
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private void SetStartMetricWeights(ExpansionPieces expansionPieces, MetricWeights metricWeights)
         {
             if (!MetricWeightSet.ContainsKey(expansionPieces))
@@ -341,6 +432,43 @@ namespace Mzinga.Engine
             return result;
         }
 
+        public GameAI GetGameAI(ExpansionPieces expansionPieces)
+        {
+            MetricWeights[] mw = GetMetricWeights(expansionPieces);
+
+            return new GameAI(new GameAIConfig()
+            {
+                StartMetricWeights = mw[0],
+                EndMetricWeights = mw[0] ?? mw[1],
+                MaxBranchingFactor = MaxBranchingFactor,
+                TranspositionTableSizeMB = TranspositionTableSizeMB,
+                InitialTranspositionTable = GetInitialTranspositionTable(expansionPieces),
+            });
+        }
+
+        public static GameEngineConfig GetDefaultEngineConfig()
+        {
+            foreach (string resourceName in Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceNames())
+            {
+                if (resourceName.EndsWith("DefaultEngineConfig.xml"))
+                {
+                    using (Stream inputStream = Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceStream(resourceName))
+                    {
+                        return new GameEngineConfig(inputStream);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private string GetVersion()
+        {
+            return Assembly.GetAssembly(typeof(GameEngineConfig)).GetName().Version.ToString();
+        }
+
+        #endregion
+
         private const int MinTranspositionTableSizeMB = 1;
         private const int MaxTranspositionTableSizeMB = 1024;
 
@@ -361,5 +489,14 @@ namespace Mzinga.Engine
         Disabled,
         SingleThreaded,
         MultiThreaded
+    }
+
+    [Flags]
+    public enum ConfigSaveType
+    {
+        None                      = 0x0,
+        BasicOptions              = 0x1,
+        MetricWeights             = 0x2,
+        InitialTranspositionTable = 0x4,
     }
 }
