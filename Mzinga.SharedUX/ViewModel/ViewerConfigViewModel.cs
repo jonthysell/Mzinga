@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -311,7 +311,11 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Config = new ViewerConfig();
+                        ViewerConfig newConfig = new ViewerConfig();
+                        newConfig.FirstRun = Config.FirstRun;
+                        newConfig.InternalGameEngineConfig = Config.InternalGameEngineConfig;
+                        Config = newConfig;
+
                         RaisePropertyChanged("EngineType");
                         RaisePropertyChanged("EngineCommandLine");
                         RaisePropertyChanged("HexOrientation");
@@ -348,9 +352,9 @@ namespace Mzinga.SharedUX.ViewModel
 
         public Action<ViewerConfig> Callback { get; private set; }
 
-        public ViewerConfigViewModel(ViewerConfig config = null, Action<ViewerConfig> callback = null)
+        public ViewerConfigViewModel(ViewerConfig config, Action<ViewerConfig> callback = null)
         {
-            Config =  null != config ? config.Clone() : new ViewerConfig();
+            Config =  config?.Clone() ?? throw new ArgumentNullException("config");
             Accepted = false;
             Callback = callback;
         }
