@@ -83,7 +83,7 @@
                         HorizontalAlignment="Left"
                         Orientation="Horizontal">
                 <Button Command="{Binding Reset}"
-                        Content="Reset"
+                        Content="Defaults"
                         Margin="5"
                         Style="{DynamicResource CleanButton}"
                         Width="75" />
