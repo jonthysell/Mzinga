@@ -462,6 +462,18 @@ namespace Mzinga.Engine
             return null;
         }
 
+        public GameEngineConfig GetMinimalClone()
+        {
+            GameEngineConfig clone = new GameEngineConfig();
+            clone.TranspositionTableSizeMB = TranspositionTableSizeMB;
+            clone._maxHelperThreads = _maxHelperThreads;
+            clone.PonderDuringIdle = PonderDuringIdle;
+            clone.MaxBranchingFactor = MaxBranchingFactor;
+            clone.ReportIntermediateBestMoves = ReportIntermediateBestMoves;
+
+            return clone;
+        }
+
         private string GetVersion()
         {
             return Assembly.GetAssembly(typeof(GameEngineConfig)).GetName().Version.ToString();

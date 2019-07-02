@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +66,7 @@ namespace Mzinga.SharedUX
                     {
                         Key = eo.Key,
                         Value = ((BooleanEngineOption)eo).Value,
+                        DefaultValue = ((BooleanEngineOption)eo).DefaultValue,
                     };
                 }
                 else if (eo is IntegerEngineOption)
@@ -74,6 +75,7 @@ namespace Mzinga.SharedUX
                     {
                         Key = eo.Key,
                         Value = ((IntegerEngineOption)eo).Value,
+                        DefaultValue = ((IntegerEngineOption)eo).DefaultValue,
                         MinValue = ((IntegerEngineOption)eo).MinValue,
                         MaxValue = ((IntegerEngineOption)eo).MaxValue,
                     };
@@ -84,6 +86,7 @@ namespace Mzinga.SharedUX
                     {
                         Key = eo.Key,
                         Value = ((DoubleEngineOption)eo).Value,
+                        DefaultValue = ((DoubleEngineOption)eo).DefaultValue,
                         MinValue = ((DoubleEngineOption)eo).MinValue,
                         MaxValue = ((DoubleEngineOption)eo).MaxValue,
                     };
@@ -94,6 +97,7 @@ namespace Mzinga.SharedUX
                     {
                         Key = eo.Key,
                         Value = ((EnumEngineOption)eo).Value,
+                        DefaultValue = ((EnumEngineOption)eo).DefaultValue,
                     };
                     string[] values = new string[((EnumEngineOption)eo).Values.Length];
                     Array.Copy(((EnumEngineOption)eo).Values, values, values.Length);
@@ -117,6 +121,7 @@ namespace Mzinga.SharedUX
                     string key = split[0];
                     string type = split[1];
                     string value = split[2];
+                    string defaultValue = split[3];
 
                     EngineOption eo;
                     
@@ -125,33 +130,37 @@ namespace Mzinga.SharedUX
                         case "bool":
                             BooleanEngineOption beo = new BooleanEngineOption();
                             beo.Value = bool.Parse(value);
+                            beo.DefaultValue = bool.Parse(defaultValue);
                             eo = beo;
                             break;
                         case "int":
                             IntegerEngineOption ieo = new IntegerEngineOption();
                             ieo.Value = int.Parse(value);
-                            if (split.Length >= 5)
+                            ieo.DefaultValue = int.Parse(defaultValue);
+                            if (split.Length >= 6)
                             {
-                                ieo.MinValue = int.Parse(split[3]);
-                                ieo.MaxValue = int.Parse(split[4]);
+                                ieo.MinValue = int.Parse(split[4]);
+                                ieo.MaxValue = int.Parse(split[5]);
                             }
                             eo = ieo;
                             break;
                         case "double":
                             DoubleEngineOption deo = new DoubleEngineOption();
                             deo.Value = double.Parse(value);
-                            if (split.Length >= 5)
+                            deo.DefaultValue = double.Parse(defaultValue);
+                            if (split.Length >= 6)
                             {
-                                deo.MinValue = double.Parse(split[3]);
-                                deo.MaxValue = double.Parse(split[4]);
+                                deo.MinValue = double.Parse(split[4]);
+                                deo.MaxValue = double.Parse(split[5]);
                             }
                             eo = deo;
                             break;
                         case "enum":
                             EnumEngineOption eeo = new EnumEngineOption();
                             eeo.Value = value;
-                            eeo.Values = new string[split.Length - 3];
-                            Array.Copy(split, 3, eeo.Values, 0, eeo.Values.Length);
+                            eeo.DefaultValue = defaultValue;
+                            eeo.Values = new string[split.Length - 4];
+                            Array.Copy(split, 4, eeo.Values, 0, eeo.Values.Length);
                             eo = eeo;
                             break;
                         default:
@@ -189,11 +198,13 @@ namespace Mzinga.SharedUX
     public class BooleanEngineOption : EngineOption
     {
         public bool Value;
+        public bool DefaultValue;
     }
 
     public class IntegerEngineOption : EngineOption
     {
         public int Value;
+        public int DefaultValue;
         public int MinValue = int.MinValue;
         public int MaxValue = int.MaxValue;
     }
@@ -201,6 +212,7 @@ namespace Mzinga.SharedUX
     public class DoubleEngineOption : EngineOption
     {
         public double Value;
+        public double DefaultValue;
         public double MinValue = double.MinValue;
         public double MaxValue = double.MaxValue;
     }
@@ -208,6 +220,7 @@ namespace Mzinga.SharedUX
     public class EnumEngineOption : EngineOption
     {
         public string Value;
+        public string DefaultValue;
         public string[] Values;
     }
 }

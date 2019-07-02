@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,8 @@ namespace Mzinga.Engine
         public ConsoleOut ConsoleOut { get; private set; }
         public GameEngineConfig Config { get; private set; }
 
+        public GameEngineConfig DefaultConfig { get; private set; }
+
         public bool ExitRequested { get; private set; }
 
         public event EventHandler StartAsyncCommand;
@@ -64,6 +66,7 @@ namespace Mzinga.Engine
 
             ID = id;
             Config = config ?? throw new ArgumentNullException("config");
+            DefaultConfig = config.GetMinimalClone();
             ConsoleOut = consoleOut ?? throw new ArgumentNullException("consoleOut");
 
             ExitRequested = false;
@@ -632,6 +635,7 @@ namespace Mzinga.Engine
 
             key = key.Trim();
 
+            string defaultValue = "";
             string value = "";
             string type = "";
             string values = "";
@@ -639,18 +643,23 @@ namespace Mzinga.Engine
             switch (key)
             {
                 case "MaxBranchingFactor":
+                    DefaultConfig.GetMaxBranchingFactorValue(out type, out defaultValue, out values);
                     Config.GetMaxBranchingFactorValue(out type, out value, out values);
                     break;
                 case "MaxHelperThreads":
+                    DefaultConfig.GetMaxHelperThreadsValue(out type, out defaultValue, out values);
                     Config.GetMaxHelperThreadsValue(out type, out value, out values);
                     break;
                 case "PonderDuringIdle":
+                    DefaultConfig.GetPonderDuringIdleValue(out type, out defaultValue, out values);
                     Config.GetPonderDuringIdleValue(out type, out value, out values);
                     break;
                 case "TranspositionTableSizeMB":
+                    DefaultConfig.GetTranspositionTableSizeMBValue(out type, out defaultValue, out values);
                     Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
                     break;
                 case "ReportIntermediateBestMoves":
+                    DefaultConfig.GetReportIntermediateBestMovesValue(out type, out defaultValue, out values);
                     Config.GetReportIntermediateBestMovesValue(out type, out value, out values);
                     break;
                 default:
@@ -659,11 +668,11 @@ namespace Mzinga.Engine
 
             if (string.IsNullOrWhiteSpace(values))
             {
-                ConsoleOut(string.Format("{0};{1};{2}", key, type, value));
+                ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, defaultValue));
             }
             else
             {
-                ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, values));
+                ConsoleOut(string.Format("{0};{1};{2};{3};{4}", key, type, value, defaultValue, values));
             }
         }
 

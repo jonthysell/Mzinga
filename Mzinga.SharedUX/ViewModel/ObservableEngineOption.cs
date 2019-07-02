@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,9 +83,9 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private bool _value;
 
-        public ObservableBooleanEngineOption(BooleanEngineOption option) : base(option)
+        public ObservableBooleanEngineOption(BooleanEngineOption option, bool resetToDefaults) : base(option)
         {
-            _value = option.Value;
+            _value = resetToDefaults ? option.DefaultValue : option.Value;
         }
     }
 
@@ -121,9 +121,9 @@ namespace Mzinga.SharedUX.ViewModel
 
         public int MaxValue { get; private set; }
 
-        public ObservableIntegerEngineOption(IntegerEngineOption option) : base(option)
+        public ObservableIntegerEngineOption(IntegerEngineOption option, bool resetToDefaults) : base(option)
         {
-            _value = option.Value;
+            _value = resetToDefaults ? option.DefaultValue : option.Value;
             MinValue = option.MinValue;
             MaxValue = option.MaxValue;
         }
@@ -160,9 +160,9 @@ namespace Mzinga.SharedUX.ViewModel
 
         public double MaxValue { get; private set; }
 
-        public ObservableDoubleEngineOption(DoubleEngineOption option) : base(option)
+        public ObservableDoubleEngineOption(DoubleEngineOption option, bool resetToDefaults) : base(option)
         {
-            _value = option.Value;
+            _value = resetToDefaults ? option.DefaultValue : option.Value;
             MinValue = option.MinValue;
             MaxValue = option.MaxValue;
         }
@@ -206,7 +206,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public ObservableCollection<string> FriendlyValues { get; private set; } = new ObservableCollection<string>();
 
-        public ObservableEnumEngineOption(EnumEngineOption option) : base(option)
+        public ObservableEnumEngineOption(EnumEngineOption option, bool resetToDefaults) : base(option)
         {
             foreach (string value in option.Values)
             {
@@ -214,7 +214,7 @@ namespace Mzinga.SharedUX.ViewModel
                 FriendlyValues.Add(GetFriendly(value));
             }
 
-            _selectedValueIndex = Array.IndexOf(option.Values, option.Value);
+            _selectedValueIndex = Array.IndexOf(option.Values, resetToDefaults ? option.DefaultValue : option.Value);
         }
     }
 }

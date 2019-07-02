@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -100,7 +100,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        LoadOptions();
+                        LoadOptions(true);
                         RaisePropertyChanged("Options");
                     }
                     catch (Exception ex)
@@ -124,12 +124,12 @@ namespace Mzinga.SharedUX.ViewModel
         {
             _originalOptions =  null != options ? options.Clone() : new EngineOptions();
 
-            LoadOptions();
+            LoadOptions(false);
 
             Callback = callback;
         }
 
-        private void LoadOptions()
+        private void LoadOptions(bool resetToDefaults)
         {
             _options = new ObservableCollection<ObservableEngineOption>();
 
@@ -137,19 +137,19 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 if (eo is BooleanEngineOption)
                 {
-                    _options.Add(new ObservableBooleanEngineOption((BooleanEngineOption)eo));
+                    _options.Add(new ObservableBooleanEngineOption((BooleanEngineOption)eo, resetToDefaults));
                 }
                 else if (eo is IntegerEngineOption)
                 {
-                    _options.Add(new ObservableIntegerEngineOption((IntegerEngineOption)eo));
+                    _options.Add(new ObservableIntegerEngineOption((IntegerEngineOption)eo, resetToDefaults));
                 }
                 else if (eo is DoubleEngineOption)
                 {
-                    _options.Add(new ObservableDoubleEngineOption((DoubleEngineOption)eo));
+                    _options.Add(new ObservableDoubleEngineOption((DoubleEngineOption)eo, resetToDefaults));
                 }
                 else if (eo is EnumEngineOption)
                 {
-                    _options.Add(new ObservableEnumEngineOption((EnumEngineOption)eo));
+                    _options.Add(new ObservableEnumEngineOption((EnumEngineOption)eo, resetToDefaults));
                 }
             }
         }
