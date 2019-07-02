@@ -35,19 +35,20 @@ namespace Mzinga.SharedUX
     {
         private readonly string _id;
         private GameEngine _gameEngine;
-        private readonly GameEngineConfig _gameEngineConfig;
 
-        public InternalEngineWrapper(string id) : base()
+        public GameEngineConfig GameEngineConfig { get; private set; }
+
+        public InternalEngineWrapper(string id, GameEngineConfig gameEngineConfig) : base()
         {
             _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException("id");
-            _gameEngineConfig = GameEngineConfig.GetDefaultEngineConfig();
+            GameEngineConfig = gameEngineConfig ?? throw new ArgumentNullException("gameEngineConfig");
         }
 
         public override void StartEngine()
         {
             IsIdle = false;
 
-            _gameEngine = new GameEngine(_id, _gameEngineConfig, (format, args) =>
+            _gameEngine = new GameEngine(_id, GameEngineConfig, (format, args) =>
             {
                 OnEngineOutput(string.Format(format, args));
             });

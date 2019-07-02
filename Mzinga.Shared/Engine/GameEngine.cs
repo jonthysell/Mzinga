@@ -66,7 +66,7 @@ namespace Mzinga.Engine
 
             ID = id;
             Config = config ?? throw new ArgumentNullException("config");
-            DefaultConfig = config.GetMinimalClone();
+            DefaultConfig = config.GetOptionsClone();
             ConsoleOut = consoleOut ?? throw new ArgumentNullException("consoleOut");
 
             ExitRequested = false;

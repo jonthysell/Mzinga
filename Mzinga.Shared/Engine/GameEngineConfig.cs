@@ -462,7 +462,7 @@ namespace Mzinga.Engine
             return null;
         }
 
-        public GameEngineConfig GetMinimalClone()
+        public GameEngineConfig GetOptionsClone()
         {
             GameEngineConfig clone = new GameEngineConfig();
             clone.TranspositionTableSizeMB = TranspositionTableSizeMB;
@@ -472,6 +472,15 @@ namespace Mzinga.Engine
             clone.ReportIntermediateBestMoves = ReportIntermediateBestMoves;
 
             return clone;
+        }
+
+        public void CopyOptionsFrom(GameEngineConfig other)
+        {
+            TranspositionTableSizeMB = other.TranspositionTableSizeMB;
+            _maxHelperThreads = other._maxHelperThreads;
+            PonderDuringIdle = other.PonderDuringIdle;
+            MaxBranchingFactor = other.MaxBranchingFactor;
+            ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
         }
 
         private string GetVersion()

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,8 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 
+using Mzinga.Engine;
+
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
@@ -48,6 +50,8 @@ namespace Mzinga.Viewer
             }
         }
 
+        public GameEngineConfig InternalGameEngineConfig { get; private set; } = GameEngineConfig.GetDefaultEngineConfig(); // This should be the only place we load the config in the Viewer
+
         public string ViewerConfigPath { get; private set; }
 
         public App(string configFile)
@@ -65,7 +69,8 @@ namespace Mzinga.Viewer
                 ProgramTitle = string.Format("{0} v{1}", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version.ToString()),
                 FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
                 ViewerConfig = LoadConfig(),
-                DoOnUIThread = (action) => { Dispatcher.Invoke(action); }
+                DoOnUIThread = (action) => { Dispatcher.Invoke(action); },
+                InternalGameEngineConfig = InternalGameEngineConfig, // Should be the unmodified defaults
             };
 
             if (parameters.ViewerConfig.EngineType == EngineType.CommandLine)
@@ -100,6 +105,7 @@ namespace Mzinga.Viewer
             using (FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate))
             {
                 ViewerConfig viewerConfig = new ViewerConfig();
+                viewerConfig.InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone(); // Create clone to store user values
 
                 try
                 {
@@ -127,6 +133,7 @@ namespace Mzinga.Viewer
         {
             using (FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create))
             {
+                AppVM.ViewerConfig.InternalGameEngineConfig.CopyOptionsFrom(InternalGameEngineConfig.GetOptionsClone()); // Repopulate with current engine values
                 AppVM.ViewerConfig.SaveConfig(outputStream);
             }
         }

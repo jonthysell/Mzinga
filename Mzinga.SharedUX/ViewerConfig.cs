@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using System.Xml;
 
+using Mzinga.Engine;
 using Mzinga.SharedUX.ViewModel;
 
 namespace Mzinga.SharedUX
@@ -104,6 +105,8 @@ namespace Mzinga.SharedUX
 
         public bool CheckUpdateOnStart { get; set; } = true;
 
+        public GameEngineConfig InternalGameEngineConfig { get; set; } = null;
+
         public ViewerConfig() { }
 
         public void LoadConfig(Stream inputStream)
@@ -175,6 +178,9 @@ namespace Mzinga.SharedUX
                             case "CheckUpdateOnStart":
                                 CheckUpdateOnStart = ParseBoolValue(reader.ReadElementContentAsString(), CheckUpdateOnStart);
                                 break;
+                            case "InternalGameAI":
+                                InternalGameEngineConfig?.LoadGameAIConfig(reader.ReadSubtree());
+                                break;
                         }
                     }
                 }
@@ -234,6 +240,8 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("FirstRun", FirstRun.ToString());
                 writer.WriteElementString("CheckUpdateOnStart", CheckUpdateOnStart.ToString());
 
+                InternalGameEngineConfig?.SaveGameAIConfig(writer, "InternalGameAI", ConfigSaveType.BasicOptions);
+
                 writer.WriteEndElement();
             }
         }
@@ -268,6 +276,8 @@ namespace Mzinga.SharedUX
 
                 FirstRun = FirstRun,
                 CheckUpdateOnStart = CheckUpdateOnStart,
+
+                InternalGameEngineConfig = InternalGameEngineConfig,
             };
 
             return clone;
@@ -306,6 +316,8 @@ namespace Mzinga.SharedUX
 
             FirstRun = config.FirstRun;
             CheckUpdateOnStart = config.CheckUpdateOnStart;
+
+            InternalGameEngineConfig = config.InternalGameEngineConfig;
         }
 
         private const string MzingaEngineCommandLine = "Mzinga.Engine.exe";

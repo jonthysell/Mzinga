@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,8 @@ using System;
 
 using GalaSoft.MvvmLight;
 
+using Mzinga.Engine;
+
 namespace Mzinga.SharedUX.ViewModel
 {
     public class AppViewModel : ViewModelBase
@@ -43,6 +45,8 @@ namespace Mzinga.SharedUX.ViewModel
         public DoOnUIThread DoOnUIThread { get; private set; }
 
         public EngineWrapper EngineWrapper { get; private set; }
+
+        public GameEngineConfig InternalGameEngineConfig { get; private set; }
 
         public Exception EngineExceptionOnStart { get; private set; } = null;
 
@@ -68,6 +72,7 @@ namespace Mzinga.SharedUX.ViewModel
             ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException("viewerConfig");
             DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException("doOnUIThread");
             EngineWrapper = parameters.EngineWrapper;
+            InternalGameEngineConfig = parameters.InternalGameEngineConfig;
 
             try
             {
@@ -83,9 +88,12 @@ namespace Mzinga.SharedUX.ViewModel
             if (null == EngineWrapper)
             {
                 // No engine started, use an internal one
-                EngineWrapper = new InternalEngineWrapper(ProgramTitle);
+                EngineWrapper = new InternalEngineWrapper(ProgramTitle, InternalGameEngineConfig);
                 EngineWrapper.StartEngine();
             }
+
+            // Now that the engine is started, load user options from viewer config
+            InternalGameEngineConfig.CopyOptionsFrom(ViewerConfig.InternalGameEngineConfig);
         }
     }
 
@@ -98,5 +106,6 @@ namespace Mzinga.SharedUX.ViewModel
         public ViewerConfig ViewerConfig;
         public DoOnUIThread DoOnUIThread;
         public EngineWrapper EngineWrapper;
+        public GameEngineConfig InternalGameEngineConfig;
     }
 }
