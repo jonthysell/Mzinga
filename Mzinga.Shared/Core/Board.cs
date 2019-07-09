@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -259,13 +259,14 @@ namespace Mzinga.Core
         private MoveSet[] _cachedValidMovesByPiece = null;
 
         private HashSet<Position> _cachedValidPlacementPositions = null;
-        private HashSet<Position> _visitedPlacements = new HashSet<Position>();
+        private HashSet<Position> _visitedPlacements = null;
 
         private HashSet<Position> _cachedEnemyQueenNeighbors = null;
 
+#if DEBUG
         public CacheMetricsSet ValidMoveCacheMetricsSet { get; private set; } = new CacheMetricsSet();
-
         public int ValidMoveCacheResets { get; private set; } = 0;
+#endif
 
         #endregion
 
@@ -766,8 +767,6 @@ namespace Mzinga.Core
                 }
             }
 
-            moves.Lock();
-
             return moves;
         }
 
@@ -780,24 +779,26 @@ namespace Mzinga.Core
 
             int pieceNameIndex = (int)pieceName;
 
-            if (null != _cachedValidMovesByPiece[pieceNameIndex])
+            if (null == _cachedValidMovesByPiece[pieceNameIndex])
             {
-                // MoveSet is cached in L1 cache
-                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hit();
-            }
-            else
-            {
+#if DEBUG
                 // MoveSet is not cached in L1 cache
                 ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Miss();
-
+#endif
                 // Calculate MoveSet
                 Piece targetPiece = GetPiece(pieceName);
                 MoveSet moves = GetValidMovesInternal(targetPiece);
-                moves.Lock();
 
                 // Populate cache
                 _cachedValidMovesByPiece[pieceNameIndex] = moves;
             }
+#if DEBUG
+            else
+            {
+                // MoveSet is cached in L1 cache
+                ValidMoveCacheMetricsSet["ValidMoves." + EnumUtils.GetShortName(pieceName)].Hit();
+            }
+#endif
 
             return _cachedValidMovesByPiece[pieceNameIndex];
         }
@@ -883,32 +884,28 @@ namespace Mzinga.Core
                             }
                         }
 
-                        
-
                         return validMoves;
                     }
                 }
             }
 
-            return new MoveSet();
+            return MoveSet.EmptySet;
         }
 
         private MoveSet GetValidPlacements(Piece targetPiece)
         {
-            MoveSet validMoves = new MoveSet();
-
             PlayerColor targetColor = CurrentTurnColor;
 
             if (targetPiece.Color != targetColor)
             {
-                return validMoves;
+                return MoveSet.EmptySet;
             }
 
             if (null == _cachedValidPlacementPositions)
             {
                 _cachedValidPlacementPositions = new HashSet<Position>();
 
-                _visitedPlacements.Clear();
+                _visitedPlacements = new HashSet<Position>();
 
                 for (int i = 0; i < EnumUtils.NumPieceNames; i++)
                 {
@@ -946,13 +943,17 @@ namespace Mzinga.Core
                         }
                     }
                 }
-
+#if DEBUG
                 ValidMoveCacheMetricsSet["ValidPlacements"].Miss();
+#endif
             }
+#if DEBUG
             else
             {
                 ValidMoveCacheMetricsSet["ValidPlacements"].Hit();
             }
+#endif
+            MoveSet validMoves = new MoveSet();
 
             foreach (Position validPlacement in _cachedValidPlacementPositions)
             {
@@ -1000,15 +1001,15 @@ namespace Mzinga.Core
             MoveSet validMoves = new MoveSet();
 
             // Look in all directions
-            foreach (Direction direction in EnumUtils.Directions)
+            for (int direction = 0; direction < EnumUtils.NumDirections; direction++)
             {
                 Position newPosition = targetPiece.Position.NeighborAt(direction);
 
                 Piece topNeighbor = GetPieceOnTopInternal(newPosition);
 
                 // Get positions to left and right or direction we're heading
-                Direction leftOfTarget = EnumUtils.LeftOf(direction);
-                Direction rightOfTarget = EnumUtils.RightOf(direction);
+                int leftOfTarget = EnumUtils.LeftOf(direction);
+                int rightOfTarget = EnumUtils.RightOf(direction);
                 Position leftNeighborPosition = targetPiece.Position.NeighborAt(leftOfTarget);
                 Position rightNeighborPosition = targetPiece.Position.NeighborAt(rightOfTarget);
 
@@ -1016,11 +1017,11 @@ namespace Mzinga.Core
                 Piece topRightNeighbor = GetPieceOnTopInternal(rightNeighborPosition);
 
                 // At least one neighbor is present
-                int currentHeight = targetPiece.Position.Stack + 1;
-                int destinationHeight = null != topNeighbor ? topNeighbor.Position.Stack + 1 : 0;
+                uint currentHeight = targetPiece.Position.Stack + 1;
+                uint destinationHeight = null != topNeighbor ? topNeighbor.Position.Stack + 1 : 0;
 
-                int topLeftNeighborHeight = null != topLeftNeighbor ? topLeftNeighbor.Position.Stack + 1 : 0;
-                int topRightNeighborHeight = null != topRightNeighbor ? topRightNeighbor.Position.Stack + 1 : 0;
+                uint topLeftNeighborHeight = null != topLeftNeighbor ? topLeftNeighbor.Position.Stack + 1 : 0;
+                uint topRightNeighborHeight = null != topRightNeighbor ? topRightNeighbor.Position.Stack + 1 : 0;
 
                 // "Take-off" beetle
                 currentHeight--;
@@ -1046,7 +1047,7 @@ namespace Mzinga.Core
 
             Position startingPosition = targetPiece.Position;
 
-            foreach (Direction direction in EnumUtils.Directions)
+            for (int direction = 0; direction <EnumUtils.NumDirections; direction++)
             {
                 Position landingPosition = startingPosition.NeighborAt(direction);
 
@@ -1234,7 +1235,7 @@ namespace Mzinga.Core
         {
             if (!maxRange.HasValue || currentRange < maxRange.Value)
             {
-                foreach (Direction slideDirection in EnumUtils.Directions)
+                for (int slideDirection = 0; slideDirection < EnumUtils.NumDirections; slideDirection++)
                 {
                     Position slidePosition = currentPosition.NeighborAt(slideDirection);
 
@@ -1242,8 +1243,8 @@ namespace Mzinga.Core
                     {
                         // Slide position is open
 
-                        Direction right = EnumUtils.RightOf(slideDirection);
-                        Direction left = EnumUtils.LeftOf(slideDirection);
+                        int right = EnumUtils.RightOf(slideDirection);
+                        int left = EnumUtils.LeftOf(slideDirection);
 
                         if (HasPieceAt(currentPosition.NeighborAt(right)) != HasPieceAt(currentPosition.NeighborAt(left)))
                         {
@@ -1351,7 +1352,9 @@ namespace Mzinga.Core
             _cachedValidMovesByPiece = null;
             _cachedValidPlacementPositions = null;
             _cachedEnemyQueenNeighbors = null;
+#if DEBUG
             ValidMoveCacheResets++;
+#endif
         }
 
         #endregion

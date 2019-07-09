@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -544,7 +544,7 @@ namespace Mzinga.SharedUX
                     targetPieceInPlay = true;
                 }
 
-                int stack = position.Stack;
+                int stack = (int)position.Stack;
                 maxStack = Math.Max(maxStack, stack);
 
                 if (!pieces.ContainsKey(stack))
@@ -559,7 +559,7 @@ namespace Mzinga.SharedUX
             // Add piece being placed on the board
             if (!targetPieceInPlay && null != targetPosition)
             {
-                int stack = targetPosition.Stack;
+                int stack = (int)targetPosition.Stack;
                 maxStack = Math.Max(maxStack, stack);
 
                 if (!pieces.ContainsKey(stack))

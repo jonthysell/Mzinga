@@ -59,7 +59,9 @@ namespace Mzinga.Core
             }
         }
 
+#if DEBUG
         public CacheMetrics Metrics { get; private set; } = new CacheMetrics();
+#endif
 
         private Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
         private LinkedList<TKey> _list;
@@ -100,8 +102,9 @@ namespace Mzinga.Core
 
                     // Add
                     StoreInternal(key, newEntry);
-
+#if DEBUG
                     Metrics.Store();
+#endif
                 }
                 else
                 {
@@ -112,8 +115,9 @@ namespace Mzinga.Core
                         _list.Remove(existingEntry.ListNode);
 
                         StoreInternal(key, newEntry);
-
+#if DEBUG
                         Metrics.Update();
+#endif
                     }
                 }
             }
@@ -137,11 +141,14 @@ namespace Mzinga.Core
             if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry> wrappedEntry))
             {
                 entry = wrappedEntry.Entry;
+#if DEBUG
                 Metrics.Hit();
+#endif
                 return true;
             }
-
+#if DEBUG
             Metrics.Miss();
+#endif
 
             entry = default(TEntry);
             return false;
@@ -151,12 +158,18 @@ namespace Mzinga.Core
         {
             _dict.Clear();
             _list.Clear();
+#if DEBUG
             Metrics.Reset();
+#endif
         }
 
         public override string ToString()
         {
+#if DEBUG
             return string.Format("U: {0}/{1} ({2:P2}) {3}", Count, Capacity, Usage, Metrics);
+#else
+            return string.Format("U: {0}/{1} ({2:P2})", Count, Capacity, Usage);
+#endif
         }
 
         private const int DefaultCapacity = 1024;

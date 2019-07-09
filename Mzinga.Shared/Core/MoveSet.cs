@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,30 +25,24 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Mzinga.Core
 {
-    public class MoveSet : IEnumerable<Move>
+    public class MoveSet : HashSet<Move>
     {
-        public int Count
+        public static MoveSet EmptySet
         {
             get
             {
-                return _moves.Count;
+                return _emptySet ?? (_emptySet = new MoveSet());
             }
         }
+        private static MoveSet _emptySet;
 
-        private HashSet<Move> _moves;
-
-        public bool IsLocked { get; private set; }
-
-        public MoveSet()
+        public MoveSet() : base()
         {
-            _moves = new HashSet<Move>();
-            IsLocked = false;
         }
 
         public MoveSet(string moveSetString) : this()
@@ -58,116 +52,18 @@ namespace Mzinga.Core
                 throw new ArgumentNullException("moveSetString");
             }
 
-            string[] split = moveSetString.Split(MoveSet.MoveStringSeparator);
+            string[] split = moveSetString.Split(MoveStringSeparator);
 
             for (int i = 0; i < split.Length; i++)
             {
                 Move parseMove = new Move(split[i]);
-                _moves.Add(parseMove);
+                Add(parseMove);
             }
         }
 
-        public bool Add(Move move)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
+        public void Add(IEnumerable<Move> moves) => UnionWith(moves);
 
-            if (IsLocked)
-            {
-                throw new MoveSetIsLockedException();
-            }
-
-            return _moves.Add(move);
-        }
-
-        public void Add(MoveSet moves)
-        {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
-            if (IsLocked)
-            {
-                throw new MoveSetIsLockedException();
-            }
-
-            foreach (Move move in moves)
-            {
-                _moves.Add(move);
-            }
-        }
-
-        public void Add(IEnumerable<Move> moves)
-        {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
-            foreach (Move move in moves)
-            {
-                Add(move);
-            }
-        }
-
-        public bool Remove(Move move)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            if (IsLocked)
-            {
-                throw new MoveSetIsLockedException();
-            }
-
-            return _moves.Remove(move);
-        }
-
-        public void Remove(MoveSet moves)
-        {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
-            if (IsLocked)
-            {
-                throw new MoveSetIsLockedException();
-            }
-
-            foreach (Move move in moves)
-            {
-                _moves.Remove(move);
-            }
-        }
-
-        public void Remove(IEnumerable<Move> moves)
-        {
-            if (null == moves)
-            {
-                throw new ArgumentNullException("moves");
-            }
-
-            foreach (Move move in moves)
-            {
-                Remove(move);
-            }
-        }
-
-        public bool Contains(Move move)
-        {
-            if (null == move)
-            {
-                throw new ArgumentNullException("move");
-            }
-
-            return _moves.Contains(move);
-        }
+        public void Remove(IEnumerable<Move> moves) => ExceptWith(moves);
 
         public bool Contains(PieceName pieceName)
         {
@@ -176,7 +72,7 @@ namespace Mzinga.Core
                 throw new ArgumentOutOfRangeException("pieceName");
             }
 
-            foreach (Move move in _moves)
+            foreach (Move move in this)
             {
                 if (move.PieceName == pieceName)
                 {
@@ -187,26 +83,11 @@ namespace Mzinga.Core
             return false;
         }
 
-        public void Lock()
-        {
-            IsLocked = true;
-        }
-
-        public IEnumerator<Move> GetEnumerator()
-        {
-            return _moves.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Move move in _moves)
+            foreach (Move move in this)
             {
                 sb.AppendFormat("{0}{1}", move.ToString(), MoveStringSeparator);
             }
@@ -215,13 +96,5 @@ namespace Mzinga.Core
         }
 
         public const char MoveStringSeparator = ';';
-    }
-
-#if !WINDOWS_UWP
-    [Serializable]
-#endif
-    public class MoveSetIsLockedException : Exception
-    {
-        public MoveSetIsLockedException() : base("MoveSet is locked and cannot be modified.") { }
     }
 }

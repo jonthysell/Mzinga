@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -144,18 +144,6 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void MoveSet_NullAddTest()
-        {
-            Move move = null;
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Add(move);
-        }
-
-        [TestMethod]
         public void MoveSet_AddSingleByEnumerableTest()
         {
             Move[] movesToAdd = new Move[]
@@ -250,18 +238,6 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void MoveSet_NullAddByEnumerableTest()
-        {
-            IEnumerable<Move> nullMoves = null;
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Add(nullMoves);
-        }
-
-        [TestMethod]
         public void MoveSet_RemoveSingleTest()
         {
             Move validMove = Move.Pass;
@@ -308,18 +284,6 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void MoveSet_NullRemoveTest()
-        {
-            Move nullMove = null;
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Remove(nullMove);
-        }
-
-        [TestMethod]
         public void MoveSet_RemoveSingleByEnumerableTest()
         {
             Move validMove = Move.Pass;
@@ -361,91 +325,6 @@ namespace Mzinga.Test
             {
                 Assert.IsFalse(ms.Contains(move));
             }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void MoveSet_NullRemoveByEnumerableTest()
-        {
-            IEnumerable<Move> nullMoves = null;
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Remove(nullMoves);
-        }
-
-        [TestMethod]
-        public void MoveSet_LockIsLockedTest()
-        {
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            Assert.IsFalse(ms.IsLocked);
-            ms.Lock();
-            Assert.IsTrue(ms.IsLocked);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(MoveSetIsLockedException))]
-        public void MoveSet_CantAddAfterLockedTest()
-        {
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Lock();
-
-            ms.Add(Move.Pass);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(MoveSetIsLockedException))]
-        public void MoveSet_CantAddByEnumerableAfterLockedTest()
-        {
-            Move[] movesToAdd = new Move[]
-            {
-                Move.Pass
-            };
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Lock();
-
-            ms.Add(movesToAdd);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(MoveSetIsLockedException))]
-        public void MoveSet_CantRemoveAfterLockedTest()
-        {
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Add(Move.Pass);
-
-            ms.Lock();
-
-            ms.Remove(Move.Pass);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(MoveSetIsLockedException))]
-        public void MoveSet_CantRemoveByEnumerableAfterLockedTest()
-        {
-            Move[] movesToAdd = new Move[]
-            {
-                Move.Pass
-            };
-
-            MoveSet ms = new MoveSet();
-            Assert.IsNotNull(ms);
-
-            ms.Add(movesToAdd);
-
-            ms.Lock();
-
-            ms.Remove(movesToAdd);
         }
 
         [TestMethod]

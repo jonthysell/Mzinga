@@ -46,12 +46,22 @@ namespace Mzinga.Core
 
         public static Direction LeftOf(Direction direction)
         {
-            return (Direction)(((int)direction + NumDirections - 1) % NumDirections);
+            return (Direction)LeftOf((int)direction);
+        }
+
+        public static int LeftOf(int direction)
+        {
+            return (direction + NumDirections - 1) % NumDirections;
         }
 
         public static Direction RightOf(Direction direction)
         {
-            return (Direction)(((int)direction + 1) % NumDirections);
+            return (Direction)RightOf((int)direction);
+        }
+
+        public static int RightOf(int direction)
+        {
+            return (direction + 1) % NumDirections;
         }
 
         public const int NumDirections = 6;

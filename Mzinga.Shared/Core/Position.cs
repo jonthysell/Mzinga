@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,67 +35,41 @@ namespace Mzinga.Core
         {
             get
             {
-                return _origin ?? (_origin = new Position(0, 0, 0, 0));
+                return _origin ?? (_origin = new Position(0, 0, 0));
             }
         }
         private static Position _origin;
 
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public int Z { get; private set; }
+        public readonly int Q;
+        public readonly int R;
 
-        public int Stack { get; private set; }
+        public readonly uint Stack;
 
-        public int Q
-        {
-            get
-            {
-                return X;
-            }
-        }
-
-        public int R
-        {
-            get
-            {
-                return Z;
-            }
-        }
+        public int X => Q;
+        public int Y => 0 - Q - R;
+        public int Z => R;
 
         private Position[] _localCache = null;
 
         private static Dictionary<Position, Position[]> _sharedCache = new Dictionary<Position, Position[]>();
 
-        public Position(int x, int y, int z, int stack)
+        public Position(int x, int y, int z, uint stack)
         {
             if (x + y + z != 0)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            if (stack < 0)
-            {
-                throw new ArgumentOutOfRangeException("stack");
-            }
-
-            X = x;
-            Y = y;
-            Z = z;
+            Q = x;
+            R = z;
 
             Stack = stack;
         }
 
-        public Position(int q, int r, int stack)
+        public Position(int q, int r, uint stack)
         {
-            if (stack < 0)
-            {
-                throw new ArgumentOutOfRangeException("stack");
-            }
-
-            X = q;
-            Z = r;
-            Y = 0 - q - r;
-
+            Q = q;
+            R = r;
             Stack = stack;
         }
 
@@ -124,9 +98,7 @@ namespace Mzinga.Core
 
         public Position NeighborAt(int direction)
         {
-            direction = direction % EnumUtils.NumDirections;
-
-            return CacheLookup(direction);
+            return CacheLookup(direction % EnumUtils.NumDirections);
         }
 
         public Position GetAbove()
@@ -160,17 +132,17 @@ namespace Mzinga.Core
             {
                 if (index < EnumUtils.NumDirections)
                 {
-                    _localCache[index] = new Position(X + _neighborDeltas[index][0], Y + _neighborDeltas[index][1], Z + _neighborDeltas[index][2], 0);
+                    _localCache[index] = new Position(Q + _neighborDeltas[index][0], R + _neighborDeltas[index][2], 0);
                     createdNew = true;
                 }
                 else if (index == EnumUtils.NumDirections) // Above
                 {
-                    _localCache[index] = new Position(X, Y, Z, Stack + 1);
+                    _localCache[index] = new Position(Q, R, Stack + 1);
                     createdNew = true;
                 }
                 else if (index == EnumUtils.NumDirections + 1 && Stack > 0) // Below
                 {
-                    _localCache[index] = new Position(X, Y, Z, Stack - 1);
+                    _localCache[index] = new Position(Q, R, Stack - 1);
                     createdNew = true;
                 }
             }
@@ -178,7 +150,7 @@ namespace Mzinga.Core
             return _localCache[index];
         }
 
-        public static IEnumerable<Position> GetUniquePositions(int count, int maxStack = MaxStack)
+        public static IEnumerable<Position> GetUniquePositions(int count, uint maxStack = MaxStack)
         {
             if (count < 1)
             {
@@ -247,7 +219,7 @@ namespace Mzinga.Core
                     int x = int.Parse(split[0]);
                     int y = int.Parse(split[1]);
                     int z = int.Parse(split[2]);
-                    int stack = split.Length > 3 ? int.Parse(split[3]) : 0;
+                    uint stack = split.Length > 3 ? uint.Parse(split[3]) : 0;
 
                     position = new Position(x, y, z, stack);
                     return true;
@@ -279,7 +251,7 @@ namespace Mzinga.Core
             int hash = 17;
             hash = hash * 31 + Q;
             hash = hash * 31 + R;
-            hash = hash * 31 + Stack;
+            hash = hash * 31 + (int)Stack;
             return hash;
         }
 
@@ -318,7 +290,7 @@ namespace Mzinga.Core
             new int[] { -1, 1, 0 },
         };
 
-        public const int MaxStack = 5;
+        public const uint MaxStack = 5;
 
         public const char PositionStringSeparator = ',';
     }
