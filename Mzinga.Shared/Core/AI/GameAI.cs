@@ -46,10 +46,11 @@ namespace Mzinga.Core.AI
 
         private TranspositionTable _initialTranspositionTable;
 
-        private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultBoardScoresCacheSize);
-        private const int DefaultBoardScoresCacheSize = 516240; // perft(5)
-
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
+
+        private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(DefaultCacheSize);
+        private FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>(DefaultCacheSize);
+        private const int DefaultCacheSize = 516240; // perft(5)
 
         public GameAI()
         {
@@ -101,6 +102,7 @@ namespace Mzinga.Core.AI
         {
             TranspositionTable.Clear();
             _cachedBoardScores.Clear();
+            _cachedValidMoves.Clear();
 
             if (null != _initialTranspositionTable)
             {
@@ -552,6 +554,21 @@ namespace Mzinga.Core.AI
 
         #region Pre-Sorted Moves
 
+        private MoveSet GetValidMoves(GameBoard gameBoard)
+        {
+            ulong key = gameBoard.ZobristKey;
+
+            if (_cachedValidMoves.TryLookup(key, out MoveSet moves))
+            {
+                return moves;
+            }
+
+            moves = gameBoard.GetValidMoves();
+            _cachedValidMoves.Store(key, moves);
+
+            return moves;
+        }
+
         private List<EvaluatedMove> GetPreSortedValidMoves(GameBoard gameBoard, EvaluatedMove bestMove)
         {
             List<Move> validMoves = GetPreSortedValidMoves(gameBoard, bestMove?.Move);
@@ -567,7 +584,7 @@ namespace Mzinga.Core.AI
 
         private List<Move> GetPreSortedValidMoves(GameBoard gameBoard, Move bestMove)
         {
-            List<Move> validMoves = new List<Move>(gameBoard.GetValidMoves());
+            List<Move> validMoves = new List<Move>(GetValidMoves(gameBoard));
 
             validMoves.Sort((a, b) => { return PreSortMoves(a, b, gameBoard, bestMove); });
 
@@ -623,7 +640,7 @@ namespace Mzinga.Core.AI
                 return bestValue;
             }
 
-            foreach (Move move in gameBoard.GetValidMoves())
+            foreach (Move move in GetValidMoves(gameBoard))
             {
                 if (gameBoard.IsNoisyMove(move))
                 {
@@ -861,7 +878,7 @@ namespace Mzinga.Core.AI
                     de.Add(endGradient);
                 }
 
-                foreach (Move move in gameBoard.GetValidMoves())
+                foreach (Move move in GetValidMoves(gameBoard))
                 {
                     if (token.IsCancellationRequested)
                     {

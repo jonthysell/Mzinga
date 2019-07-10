@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ namespace Mzinga.Test
                 GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2, 0);
+                Move m = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -81,7 +81,7 @@ namespace Mzinga.Test
                 GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2, 0);
+                Move m = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -104,7 +104,7 @@ namespace Mzinga.Test
                 maxDepth = Math.Max(maxDepth, e.Depth);
             };
 
-            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), PerfTestMaxHelperThreads);
 
             Trace.WriteLine(string.Format("Max Depth: {0}", maxDepth));
         }
@@ -123,7 +123,7 @@ namespace Mzinga.Test
                 maxDepth = Math.Max(maxDepth, e.Depth);
             };
 
-            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), 0);
+            Move m = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), PerfTestMaxHelperThreads);
 
             Trace.WriteLine(string.Format("Max Depth: {0}", maxDepth));
         }
@@ -147,7 +147,7 @@ namespace Mzinga.Test
 
             while (gb.CurrentPlayerTurn < 5)
             {
-                gb.Play(ai.GetBestMove(gb, 1, 0));
+                gb.Play(ai.GetBestMove(gb, 1, TestMaxHelperThreads));
             }
 
             return gb;
@@ -169,7 +169,7 @@ namespace Mzinga.Test
             public void Execute()
             {
                 GameAI ai = GetTestGameAI(gameBoard.ExpansionPieces);
-                ActualBestMove = ai.GetBestMove(gameBoard, maxDepth, 0);
+                ActualBestMove = ai.GetBestMove(gameBoard, maxDepth, TestMaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove);
             }
 
@@ -189,5 +189,8 @@ namespace Mzinga.Test
                 ExpectedBestMove = new Move(vals[2]);
             }
         }
+
+        private static int TestMaxHelperThreads = 0;
+        private static int PerfTestMaxHelperThreads = 0;
     }
 }
