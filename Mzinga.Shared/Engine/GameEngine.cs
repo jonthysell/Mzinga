@@ -74,7 +74,8 @@ namespace Mzinga.Engine
 
         private void InitAI()
         {
-            _gameAI = null != _gameBoard ? Config.GetGameAI(_gameBoard.ExpansionPieces) : null;
+            _gameAI = Config.GetGameAI(_gameBoard.ExpansionPieces);
+            _gameAI.BestMoveFound += OnBestMoveFound;
 
             ResetAI(false);
         }
@@ -88,28 +89,15 @@ namespace Mzinga.Engine
                     StopPonder();
                     _gameAI.ResetCaches();
                 }
-
-                _gameAI.BestMoveFound -= OnBestMoveFound;
-                if (Config.ReportIntermediateBestMoves)
-                {
-                    _gameAI.BestMoveFound += OnBestMoveFound;
-                }
             }
         }
 
         private void OnBestMoveFound(object sender, BestMoveFoundEventArgs args)
         {
-            if (null == args)
+            if (null != _gameBoard && !_isPondering && Config.ReportIntermediateBestMoves)
             {
-                throw new ArgumentNullException("args");
+                ConsoleOut("{0};{1};{2:0.00}", NotationUtils.ToBoardSpaceMoveString(_gameBoard, args.Move), args.Depth, args.Score);
             }
-
-            if (null == args.Move)
-            {
-                throw new Exception("Null move reported!");
-            }
-
-            ConsoleOut("{0};{1};{2:0.00}", args.Move, args.Depth, args.Score);
         }
 
         public void TryCancelAsyncCommand()
@@ -548,7 +536,7 @@ namespace Mzinga.Engine
 
             CancellationToken token = OnStartAsyncCommand();
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxDepth, Config.MaxHelperThreads, token);
+            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard.Clone(), maxDepth, Config.MaxHelperThreads, token);
             task.Wait();
 
             if (null == task.Result)
@@ -760,11 +748,6 @@ namespace Mzinga.Engine
         {
             if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard && _gameBoard.GameInProgress)
             {
-                if (Config.ReportIntermediateBestMoves)
-                {
-                    _gameAI.BestMoveFound -= OnBestMoveFound;
-                }
-
                 _ponderCTS = new CancellationTokenSource();
                 _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
@@ -781,11 +764,6 @@ namespace Mzinga.Engine
 
                 _ponderCTS = null;
                 _ponderTask = null;
-
-                if (Config.ReportIntermediateBestMoves)
-                {
-                    _gameAI.BestMoveFound += OnBestMoveFound;
-                }
 
                 _isPondering = false;
             }
