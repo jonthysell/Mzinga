@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,30 +33,9 @@ namespace Mzinga.Core
     {
         #region Directions
 
-        public static IEnumerable<Direction> Directions
-        {
-            get
-            {
-                for (int i = 0; i < NumDirections; i++)
-                {
-                    yield return (Direction)i;
-                }
-            }
-        }
-
-        public static Direction LeftOf(Direction direction)
-        {
-            return (Direction)LeftOf((int)direction);
-        }
-
         public static int LeftOf(int direction)
         {
             return (direction + NumDirections - 1) % NumDirections;
-        }
-
-        public static Direction RightOf(Direction direction)
-        {
-            return (Direction)RightOf((int)direction);
         }
 
         public static int RightOf(int direction)

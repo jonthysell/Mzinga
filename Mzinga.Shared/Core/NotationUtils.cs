@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -148,7 +148,7 @@ namespace Mzinga.Core
                 else
                 {
                     // Find neighbor to move.Position
-                    foreach (Direction dir in EnumUtils.Directions)
+                    for (int dir = 0; dir < EnumUtils.NumDirections; dir++)
                     {
                         // Found a neighbor!
 
@@ -167,22 +167,22 @@ namespace Mzinga.Core
 
                             switch (dir)
                             {
-                                case Direction.Up:
+                                case 0: // Up
                                     endPiece = endPiece + @"\";
                                     break;
-                                case Direction.UpRight:
+                                case 1:  // UpRight
                                     endPiece = @"/" + endPiece;
                                     break;
-                                case Direction.DownRight:
+                                case 2:  // DownRight
                                     endPiece = @"-" + endPiece;
                                     break;
-                                case Direction.Down:
+                                case 3: // Down
                                     endPiece = @"\" + endPiece;
                                     break;
-                                case Direction.DownLeft:
+                                case 4: // DownLeft
                                     endPiece = endPiece + @"/";
                                     break;
-                                case Direction.UpLeft:
+                                case 5: // UpLeft
                                     endPiece = endPiece + @"-";
                                     break;
                             }
