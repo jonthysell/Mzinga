@@ -813,22 +813,35 @@ namespace Mzinga.Core
             {
                 if (targetPiece.Color == CurrentTurnColor && PlacingPieceInOrder(targetPiece))
                 {
-                    if (CurrentTurn == 0 && targetPiece.Color == PlayerColor.White && targetPiece.InHand && targetPiece.PieceName != PieceName.WhiteQueenBee)
+                    if (CurrentTurn == 0 && targetPiece.Color == PlayerColor.White && targetPiece.InHand)
                     {
                         // First move must be at the origin and not the White Queen Bee
-                        MoveSet validMoves = new MoveSet();
-                        validMoves.Add(new Move(targetPiece.PieceName, Position.Origin));
-                        return validMoves;
+                        if (targetPiece.PieceName == PieceName.WhiteQueenBee)
+                        {
+                            return MoveSet.EmptySet;
+                        }
+
+                        return new MoveSet()
+                        {
+                            new Move(targetPiece.PieceName, Position.Origin)
+                        };
                     }
-                    else if (CurrentTurn == 1 && targetPiece.Color == PlayerColor.Black && targetPiece.InHand && targetPiece.PieceName != PieceName.BlackQueenBee)
+                    else if (CurrentTurn == 1 && targetPiece.Color == PlayerColor.Black && targetPiece.InHand)
                     {
-                        MoveSet validMoves = new MoveSet();
                         // Second move must be around the origin and not the Black Queen Bee
+                        if (targetPiece.PieceName == PieceName.BlackQueenBee)
+                        {
+                            return MoveSet.EmptySet;
+                        }
+
+                        MoveSet validMoves = new MoveSet();
+                        
                         for (int i = 0; i < EnumUtils.NumDirections; i++)
                         {
                             Position neighbor = Position.Origin.NeighborAt(i);
                             validMoves.Add(new Move(targetPiece.PieceName, neighbor));
                         }
+
                         return validMoves;
                     }
                     else if (targetPiece.InHand && (CurrentPlayerTurn != 4 || // Normal turn OR
@@ -975,8 +988,6 @@ namespace Mzinga.Core
 
         private MoveSet GetValidSpiderMovements(Piece targetPiece)
         {
-            MoveSet validMoves = new MoveSet();
-
             // Get all slides up to 2 spots away
             MoveSet upToTwo = GetValidSlides(targetPiece, 2);
 
@@ -990,14 +1001,11 @@ namespace Mzinga.Core
                     // Get all slides ONLY 3 spots away
                     upToThree.Remove(upToTwo);
 
-                    if (upToThree.Count > 0)
-                    {
-                        validMoves.Add(upToThree);
-                    }
+                    return upToThree;
                 }
             }
 
-            return validMoves;
+            return MoveSet.EmptySet;
         }
 
         private MoveSet GetValidBeetleMovements(Piece targetPiece)
