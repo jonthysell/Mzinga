@@ -609,9 +609,10 @@ namespace Mzinga.Core
         private void SetCurrentPlayerMetrics()
         {
             bool pullbugEnabled = EnumUtils.IsEnabled(BugType.Pillbug, ExpansionPieces);
+            bool mosquitoEnabled = EnumUtils.IsEnabled(BugType.Mosquito, ExpansionPieces);
 
-            MoveSet pillbugMoves = CurrentTurnColor == PlayerColor.White ? GetValidMoves(PieceName.WhitePillbug) : GetValidMoves(PieceName.BlackPillbug);
-            MoveSet mosquitoMoves = CurrentTurnColor == PlayerColor.White ? GetValidMoves(PieceName.WhiteMosquito) : GetValidMoves(PieceName.BlackMosquito);
+            MoveSet pillbugMoves = pullbugEnabled ? GetValidMoves(CurrentTurnColor == PlayerColor.White ? PieceName.WhitePillbug : PieceName.BlackPillbug) : null;
+            MoveSet mosquitoMoves = pullbugEnabled && mosquitoEnabled ? GetValidMoves(CurrentTurnColor == PlayerColor.White ? PieceName.WhiteMosquito : PieceName.BlackMosquito ) : null;
 
             foreach (PieceName pieceName in CurrentTurnPieces)
             {
@@ -633,23 +634,26 @@ namespace Mzinga.Core
                     // Move metrics
                     bool isPinned = IsPinned(pieceName, out _boardMetrics[pieceName].NoisyMoveCount, out _boardMetrics[pieceName].QuietMoveCount);
 
-                    if (pullbugEnabled)
+                    if (isPinned && pullbugEnabled)
                     {
+                        bool pullbugCanMove = pillbugMoves.Contains(pieceName);
+                        bool mosquitoCanMove = mosquitoEnabled && mosquitoMoves.Contains(pieceName);
+
                         if (targetPiece.BugType == BugType.Pillbug)
                         {
                             // Check if the current player's mosquito can move it
-                            isPinned = isPinned && !mosquitoMoves.Contains(pieceName);
+                            isPinned = !mosquitoCanMove;
 
                         }
                         else if (targetPiece.BugType == BugType.Mosquito)
                         {
                             // Check if the current player's pillbug can move it
-                            isPinned = isPinned && !pillbugMoves.Contains(pieceName);
+                            isPinned = !pullbugCanMove;
                         }
                         else
                         {
                             // Check if the current player's pillbug or mosquito can move it
-                            isPinned = isPinned && !mosquitoMoves.Contains(pieceName) && !pillbugMoves.Contains(pieceName);
+                            isPinned = !(mosquitoCanMove || pullbugCanMove);
                         }
                     }
 
