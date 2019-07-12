@@ -32,14 +32,7 @@ namespace Mzinga.Core
 {
     public class MoveSet : HashSet<Move>
     {
-        public static MoveSet EmptySet
-        {
-            get
-            {
-                return _emptySet ?? (_emptySet = new MoveSet());
-            }
-        }
-        private static MoveSet _emptySet;
+        public static readonly MoveSet EmptySet = new MoveSet();
 
         public MoveSet() : base()
         {
