@@ -46,8 +46,33 @@ namespace Mzinga.Viewer
                 throw new ArgumentNullException("engineCommand");
             }
 
+            string programName = "";
+            string arguments = "";
+
+            if (engineCommand.StartsWith("\""))
+            {
+                // Program is in quotes
+                int endQuoteIndex = engineCommand.IndexOf('"', 1);
+                programName = engineCommand.Substring(0, endQuoteIndex).Trim('"').Trim();
+                arguments = endQuoteIndex + 1 < engineCommand.Length ? engineCommand.Substring(endQuoteIndex + 1).Trim() : "";
+            }
+            else
+            {
+                programName = engineCommand;
+
+                int firstSpaceIndex = engineCommand.IndexOf(' ');
+                if (firstSpaceIndex > 0)
+                {
+                    programName = engineCommand.Substring(0, firstSpaceIndex).Trim();
+                    arguments = firstSpaceIndex + 1 < engineCommand.Length ? engineCommand.Substring(firstSpaceIndex + 1).Trim() : "";
+                }
+            }
+
             _process = new Process();
-            _process.StartInfo.FileName = engineCommand;
+
+            _process.StartInfo.FileName = programName;
+            _process.StartInfo.Arguments = arguments;
+
             _process.StartInfo.UseShellExecute = false;
             _process.StartInfo.CreateNoWindow = true;
             _process.StartInfo.RedirectStandardInput = true;
