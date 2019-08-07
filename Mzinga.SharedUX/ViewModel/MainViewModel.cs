@@ -174,7 +174,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string BoardHistory
+        public string BoardHistoryText
         {
             get
             {
@@ -436,6 +436,43 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _saveGame = null;
 
+        public RelayCommand ShowViewerConfig
+        {
+            get
+            {
+                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
+                        {
+                            try
+                            {
+                                AppVM.ViewerConfig.CopyFrom(config);
+                                RaisePropertyChanged("ViewerConfig");
+                                RaisePropertyChanged("BoardHistoryText");
+                                RaisePropertyChanged("TargetMove");
+                                PlayTarget.RaiseCanExecuteChanged();
+                                Pass.RaiseCanExecuteChanged();
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle;
+                }));
+            }
+        }
+        private RelayCommand _showViewerConfig = null;
+
         #endregion
 
         #region Play Mode
@@ -670,6 +707,8 @@ namespace Mzinga.SharedUX.ViewModel
 
         #endregion
 
+        #region Engine
+
         public RelayCommand FindBestMove
         {
             get
@@ -749,42 +788,9 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _showEngineOptions = null;
 
-        public RelayCommand ShowViewerConfig
-        {
-            get
-            {
-                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
-                {
-                    try
-                    {
-                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
-                        {
-                            try
-                            {
-                                AppVM.ViewerConfig.CopyFrom(config);
-                                RaisePropertyChanged("ViewerConfig");
-                                RaisePropertyChanged("BoardHistory");
-                                RaisePropertyChanged("TargetMove");
-                                PlayTarget.RaiseCanExecuteChanged();
-                                Pass.RaiseCanExecuteChanged();
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                }, () =>
-                {
-                    return IsIdle;
-                }));
-            }
-        }
-        private RelayCommand _showViewerConfig = null;
+        #endregion
+
+        #region Help
 
         public RelayCommand ShowAbout
         {
@@ -910,6 +916,8 @@ namespace Mzinga.SharedUX.ViewModel
         private RelayCommand _checkForUpdatesAsync = null;
 #endif
 
+        #endregion
+
         public MainViewModel()
         {
             AppVM.EngineWrapper.BoardUpdated += (sender, args) =>
@@ -917,7 +925,7 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged("Board");
-                    RaisePropertyChanged("BoardHistory");
+                    RaisePropertyChanged("BoardHistoryText");
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();

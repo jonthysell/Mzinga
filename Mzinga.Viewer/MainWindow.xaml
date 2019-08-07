@@ -207,7 +207,7 @@
                                             Padding="5"
                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            Text="{Binding BoardHistory, Mode=OneWay}"
+                                            Text="{Binding BoardHistoryText, Mode=OneWay}"
                                             TextWrapping="NoWrap" />
                 </GroupBox>
             </Grid>
