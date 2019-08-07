@@ -32,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableBoardHistory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableGameMetadataTag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />

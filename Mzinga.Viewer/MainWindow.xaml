@@ -37,6 +37,33 @@
                     Key="O"
                     Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
+    <Window.Resources>
+        <Style TargetType="TextBlock"
+               x:Key="BoardHistoryItem">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsActive}"
+                             Value="True">
+                    <Setter Property="Opacity"
+                            Value="1.0" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsActive}"
+                             Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.6" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsLastMove}"
+                             Value="True">
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=IsLastMove}"
+                             Value="False">
+                    <Setter Property="FontWeight"
+                            Value="Normal" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top"
               Style="{DynamicResource CleanMenu}">
@@ -81,7 +108,7 @@
                 <MenuItem Command="{Binding ShowGameMetadata}"
                           Header="Edit _Metadata" />
                 <MenuItem Command="{Binding SwitchToReviewMode}"
-                          Header="Switch to _Review Mode"/>
+                          Header="Switch to _Review Mode" />
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"
@@ -199,16 +226,23 @@
                 <GroupBox FontWeight="Bold"
                           Header="History"
                           Margin="5">
-                    <local:ScrollingTextBox BorderBrush="Transparent"
-                                            FontFamily="Lucida Console"
-                                            FontWeight="Normal"
-                                            IsReadOnly="True"
-                                            MinWidth="120"
-                                            Padding="5"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                            Text="{Binding BoardHistoryText, Mode=OneWay}"
-                                            TextWrapping="NoWrap" />
+                    <ListView HorizontalContentAlignment="Stretch"
+                              ItemsSource="{Binding BoardHistory.Items}"
+                              Margin="5"
+                              MinWidth="120"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Lucida Console"
+                                               Style="{StaticResource BoardHistoryItem}"
+                                               Text="{Binding MoveString}"
+                                               TextWrapping="NoWrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </GroupBox>
             </Grid>
             <Grid Grid.Column="0"

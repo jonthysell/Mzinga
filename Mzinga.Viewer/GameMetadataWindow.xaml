@@ -37,14 +37,14 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
-                                       Width="100"
                                        Padding="0"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       Width="100" />
                                 <ComboBox IsEnabled="{Binding CanEdit}"
                                           ItemsSource="{Binding PossibleValues}"
                                           Margin="5"
-                                          Width="200"
-                                          SelectedValue="{Binding Value}" />
+                                          SelectedValue="{Binding Value}"
+                                          Width="200" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.Resources>
@@ -55,13 +55,13 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding Key}"
                                        Margin="5"
-                                       Width="100"
                                        Padding="0"
-                                       VerticalAlignment="Center" />
+                                       VerticalAlignment="Center"
+                                       Width="100" />
                                 <TextBox IsReadOnly="{Binding IsReadOnly}"
                                          Margin="5"
-                                         Width="200"
-                                         Text="{Binding Value}" />
+                                         Text="{Binding Value}"
+                                         Width="200" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.Resources>

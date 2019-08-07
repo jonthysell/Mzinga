@@ -590,7 +590,7 @@ namespace Mzinga.Engine
                 throw new NoBoardException();
             }
 
-            if (moves < 1 || moves > _gameBoard.BoardHistoryCount)
+            if (moves < 1 || moves > _gameBoard.BoardHistory.Count)
             {
                 throw new UndoInvalidNumberOfMovesException(moves);
             }

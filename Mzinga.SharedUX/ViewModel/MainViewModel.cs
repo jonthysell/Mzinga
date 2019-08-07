@@ -174,26 +174,29 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string BoardHistoryText
+        public GameBoard ReviewBoard
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
+                return AppVM.EngineWrapper.ReviewBoard;
+            }
+        }
 
+        public ObservableBoardHistory BoardHistory
+        {
+            get
+            {
                 if (null != Board)
                 {
-                    int count = 1;
-                    int countWidth = Board.BoardHistoryCount.ToString().Length;
-                    foreach (BoardHistoryItem item in Board.BoardHistory)
+                    if (IsReviewMode)
                     {
-                        string countString = count.ToString().PadLeft(countWidth) + ". ";
-                        sb.AppendFormat("{0}{1}", countString, ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString());
-                        sb.AppendLine();
-                        count++;
+                        return new ObservableBoardHistory(ReviewBoard.BoardHistory, Board.BoardHistory);
                     }
+
+                    return new ObservableBoardHistory(Board.BoardHistory);
                 }
 
-                return sb.ToString();
+                return null;
             }
         }
 
@@ -450,7 +453,7 @@ namespace Mzinga.SharedUX.ViewModel
                             {
                                 AppVM.ViewerConfig.CopyFrom(config);
                                 RaisePropertyChanged("ViewerConfig");
-                                RaisePropertyChanged("BoardHistoryText");
+                                RaisePropertyChanged("BoardHistory");
                                 RaisePropertyChanged("TargetMove");
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
@@ -925,7 +928,7 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged("Board");
-                    RaisePropertyChanged("BoardHistoryText");
+                    RaisePropertyChanged("BoardHistory");
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();

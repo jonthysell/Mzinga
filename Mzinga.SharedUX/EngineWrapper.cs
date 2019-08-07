@@ -59,6 +59,14 @@ namespace Mzinga.SharedUX
             }
         }
 
+        public GameBoard ReviewBoard
+        {
+            get
+            {
+                return CurrentGameSettings?.GameRecording?.GameBoard;
+            }
+        }
+
         public MoveSet ValidMoves
         {
             get
@@ -200,7 +208,7 @@ namespace Mzinga.SharedUX
             {
                 int moves = 0;
 
-                int historyCount = null != Board ? Board.BoardHistoryCount : 0;
+                int historyCount = null != Board ? Board.BoardHistory.Count : 0;
 
                 if (null != Board && historyCount > 0)
                 {
@@ -239,7 +247,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistoryCount > 0;
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistory.Count > 0;
             }
         }
 
@@ -247,7 +255,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistoryCount < CurrentGameSettings.GameRecording.GameBoard.BoardHistoryCount;
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistory.Count < CurrentGameSettings.GameRecording.GameBoard.BoardHistory.Count;
             }
         }
 
@@ -446,10 +454,10 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please switch the current game to review mode first.");
             }
 
-            int targetMove = CurrentGameSettings.CurrentGameBoard.BoardHistoryCount;
+            int targetMove = CurrentGameSettings.CurrentGameBoard.BoardHistory.Count;
 
             int currentMove = 0;
-            foreach(BoardHistoryItem item in CurrentGameSettings.GameRecording.GameBoard.BoardHistory)
+            foreach (BoardHistoryItem item in CurrentGameSettings.GameRecording.GameBoard.BoardHistory)
             {
                 if (currentMove == targetMove)
                 {

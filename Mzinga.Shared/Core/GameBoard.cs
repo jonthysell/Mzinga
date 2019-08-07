@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,30 +35,7 @@ namespace Mzinga.Core
     {
         #region Properties
 
-        public int BoardHistoryCount
-        {
-            get
-            {
-                return _boardHistory.Count;
-            }
-        }
-
-        public IEnumerable<BoardHistoryItem> BoardHistory
-        {
-            get
-            {
-                return _boardHistory;
-            }
-        }
-        private BoardHistory _boardHistory = new BoardHistory();
-
-        public BoardHistoryItem LastMove
-        {
-            get
-            {
-                return _boardHistory.LastMove;
-            }
-        }
+        public BoardHistory BoardHistory { get; private set; } = new BoardHistory();
 
         public event EventHandler BoardChanged;
 
@@ -195,7 +171,7 @@ namespace Mzinga.Core
                 MovePiece(targetPiece, move.Position);
             }
 
-            _boardHistory.Add(move, originalPosition, moveString);
+            BoardHistory.Add(move, originalPosition, moveString);
 
             CurrentTurn++;
             LastPieceMoved = move.PieceName;
@@ -205,12 +181,12 @@ namespace Mzinga.Core
 
         public void UndoLastMove()
         {
-            if (_boardHistory.Count == 0)
+            if (BoardHistory.Count == 0)
             {
                 throw new InvalidOperationException("You can't undo any more moves.");
             }
 
-            BoardHistoryItem item = _boardHistory.UndoLastMove();
+            BoardHistoryItem item = BoardHistory.UndoLastMove();
 
             if (!item.Move.IsPass)
             {
@@ -218,7 +194,7 @@ namespace Mzinga.Core
                 MovePiece(targetPiece, item.OriginalPosition);
             }
 
-            Move previousMove = _boardHistory.LastMove?.Move;
+            Move previousMove = BoardHistory.LastMove?.Move;
 
             LastPieceMoved = null != previousMove ? previousMove.PieceName : PieceName.INVALID;
             CurrentTurn--;

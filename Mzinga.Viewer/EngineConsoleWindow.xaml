@@ -39,8 +39,8 @@
                 <KeyBinding Command="{Binding SendEngineCommand}"
                             Key="Enter" />
                 <KeyBinding Command="{Binding CancelEngineCommand}"
-                            Modifiers="Ctrl"
-                            Key="C" />
+                            Key="C"
+                            Modifiers="Ctrl" />
             </TextBox.InputBindings>
         </TextBox>
         <Button Command="{Binding SendEngineCommand}"
