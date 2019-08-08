@@ -61,13 +61,29 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public int CurrentMoveIndex
+        {
+            get
+            {
+                return _activeBoardHistory.Count - 1;
+            }
+            set
+            {
+                _moveNumberChangedCallback?.Invoke(value + 1);
+                RaisePropertyChanged("CurrentMoveIndex");
+            }
+        }
+
         internal BoardHistory _boardHistory;
         internal BoardHistory _activeBoardHistory;
 
-        public ObservableBoardHistory(BoardHistory boardHistory, BoardHistory activeBoardHistory = null)
+        private Action<int> _moveNumberChangedCallback;
+
+        public ObservableBoardHistory(BoardHistory boardHistory, BoardHistory activeBoardHistory = null, Action<int> moveNumberChangedCallback = null)
         {
             _boardHistory = boardHistory ?? throw new ArgumentNullException("boardHistory");
             _activeBoardHistory = activeBoardHistory ?? boardHistory;
+            _moveNumberChangedCallback = moveNumberChangedCallback;
 
             if (_activeBoardHistory.Count > _boardHistory.Count)
             {

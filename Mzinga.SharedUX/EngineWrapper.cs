@@ -247,7 +247,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistory.Count > 0;
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count > 0;
             }
         }
 
@@ -255,7 +255,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && CurrentGameSettings.CurrentGameBoard.BoardHistory.Count < CurrentGameSettings.GameRecording.GameBoard.BoardHistory.Count;
+                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count < ReviewBoard.BoardHistory.Count;
             }
         }
 
@@ -367,7 +367,7 @@ namespace Mzinga.SharedUX
                 GameMode = GameMode.Review,
             };
 
-            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, CurrentGameSettings.CurrentGameBoard.ToGameString());
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, ReviewBoard.ToGameString());
         }
 
         public void PlayTargetMove()
@@ -454,18 +454,11 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please switch the current game to review mode first.");
             }
 
-            int targetMove = CurrentGameSettings.CurrentGameBoard.BoardHistory.Count;
+            int targetMoveIndex = Board.BoardHistory.Count;
 
-            int currentMove = 0;
-            foreach (BoardHistoryItem item in CurrentGameSettings.GameRecording.GameBoard.BoardHistory)
-            {
-                if (currentMove == targetMove)
-                {
-                    SendCommand("play {0}", item.MoveString);
-                    break;
-                }
-                currentMove++;
-            }
+            BoardHistoryItem targetItem = ReviewBoard.BoardHistory[targetMoveIndex];
+
+            SendCommand("play {0}", targetItem.MoveString);
         }
 
         public void MoveToEnd()
@@ -475,7 +468,36 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please switch the current game to review mode first.");
             }
 
-            SendCommand("newgame {0}", CurrentGameSettings.GameRecording.GameBoard.ToGameString());
+            SendCommand("newgame {0}", ReviewBoard.ToGameString());
+        }
+
+        public void MoveToMoveNumber(int moveNum)
+        {
+            if (CurrentGameSettings.GameMode != GameMode.Review)
+            {
+                throw new Exception("Please switch the current game to review mode first.");
+            }
+
+            if (moveNum == 0)
+            {
+                MoveToStart();
+            }
+            else if (moveNum == ReviewBoard.BoardHistory.Count)
+            {
+                MoveToEnd();
+            }
+            else
+            {
+                GameBoard newGame = new GameBoard(ReviewBoard.ExpansionPieces);
+
+                for (int i = 0; i < moveNum; i++)
+                {
+                    BoardHistoryItem item = ReviewBoard.BoardHistory[i];
+                    newGame.TrustedPlay(item.Move, item.MoveString);
+                }
+
+                SendCommand("newgame {0}", newGame.ToGameString());
+            }
         }
 
         public void FindBestMove()

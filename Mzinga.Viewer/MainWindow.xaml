@@ -226,13 +226,15 @@
                 <GroupBox FontWeight="Bold"
                           Header="History"
                           Margin="5">
-                    <ListView HorizontalContentAlignment="Stretch"
-                              ItemsSource="{Binding BoardHistory.Items}"
-                              Margin="5"
-                              MinWidth="120"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto">
-                        <ListView.ItemTemplate>
+                    <ListBox HorizontalContentAlignment="Stretch"
+                             ItemsSource="{Binding BoardHistory.Items}"
+                             Margin="5"
+                             MinWidth="120"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
+                             SelectionMode="Single">
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock FontFamily="Lucida Console"
@@ -241,8 +243,8 @@
                                                TextWrapping="NoWrap" />
                                 </StackPanel>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </GroupBox>
             </Grid>
             <Grid Grid.Column="0"

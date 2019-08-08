@@ -186,19 +186,15 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                if (null != Board)
-                {
-                    if (IsReviewMode)
-                    {
-                        return new ObservableBoardHistory(ReviewBoard.BoardHistory, Board.BoardHistory);
-                    }
-
-                    return new ObservableBoardHistory(Board.BoardHistory);
-                }
-
-                return null;
+                return _boardHistory;
+            }
+            private set
+            {
+                _boardHistory = value;
+                RaisePropertyChanged("BoardHistory");
             }
         }
+        private ObservableBoardHistory _boardHistory = null;
 
         #region Status properties
 
@@ -452,11 +448,13 @@ namespace Mzinga.SharedUX.ViewModel
                             try
                             {
                                 AppVM.ViewerConfig.CopyFrom(config);
+
                                 RaisePropertyChanged("ViewerConfig");
-                                RaisePropertyChanged("BoardHistory");
                                 RaisePropertyChanged("TargetMove");
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
+
+                                UpdateBoardHistory();
                             }
                             catch (Exception ex)
                             {
@@ -928,7 +926,6 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged("Board");
-                    RaisePropertyChanged("BoardHistory");
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();
@@ -963,6 +960,8 @@ namespace Mzinga.SharedUX.ViewModel
                                 break;
                         }
                     }
+
+                    UpdateBoardHistory();
                 });
             };
 
@@ -1127,6 +1126,35 @@ namespace Mzinga.SharedUX.ViewModel
                     });
                     break;
             }
+        }
+
+        private void UpdateBoardHistory()
+        {
+            ObservableBoardHistory boardHistory = null;
+
+            if (null != Board)
+            {
+                if (IsPlayMode)
+                {
+                    boardHistory = new ObservableBoardHistory(Board.BoardHistory);
+                }
+                else if (IsReviewMode)
+                {
+                    boardHistory = new ObservableBoardHistory(ReviewBoard.BoardHistory, Board.BoardHistory, (moveNum) =>
+                    {
+                        try
+                        {
+                            AppVM.EngineWrapper.MoveToMoveNumber(moveNum);
+                        }
+                        catch (Exception ex)
+                        {
+                            ExceptionUtils.HandleException(ex);
+                        }
+                    });
+                }
+            }
+
+            BoardHistory = boardHistory;
         }
 
         internal void CanvasClick(double cursorX, double cursorY)
