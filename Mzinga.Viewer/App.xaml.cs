@@ -70,6 +70,7 @@ namespace Mzinga.Viewer
                 FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Dispatcher.Invoke(action); },
+                TextToClipboard = TextToClipboard,
                 InternalGameEngineConfig = InternalGameEngineConfig, // Should be the unmodified defaults
             };
 
@@ -136,6 +137,12 @@ namespace Mzinga.Viewer
                 AppVM.ViewerConfig.InternalGameEngineConfig.CopyOptionsFrom(InternalGameEngineConfig.GetOptionsClone()); // Repopulate with current engine values
                 AppVM.ViewerConfig.SaveConfig(outputStream);
             }
+        }
+
+        private static void TextToClipboard(string text)
+        {
+            Clipboard.SetText(text);
+            Clipboard.Flush();
         }
 
         private const string DefaultViewerConfigFileName = "Mzinga.Viewer.xml";

@@ -244,6 +244,12 @@
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CopyHistoryToClipboard}"
+                                          Header="Copy History to Clipboard" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
                     </ListBox>
                 </GroupBox>
             </Grid>

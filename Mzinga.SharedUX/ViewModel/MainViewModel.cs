@@ -90,6 +90,9 @@ namespace Mzinga.SharedUX.ViewModel
                 FindBestMove.RaiseCanExecuteChanged();
                 ShowEngineOptions.RaiseCanExecuteChanged();
                 ShowViewerConfig.RaiseCanExecuteChanged();
+
+                CopyHistoryToClipboard.RaiseCanExecuteChanged();
+
 #if WINDOWS_WPF
                 CheckForUpdatesAsync.RaiseCanExecuteChanged();
 #endif
@@ -192,9 +195,32 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 _boardHistory = value;
                 RaisePropertyChanged("BoardHistory");
+                CopyHistoryToClipboard.RaiseCanExecuteChanged();
             }
         }
         private ObservableBoardHistory _boardHistory = null;
+
+        public RelayCommand CopyHistoryToClipboard
+        {
+            get
+            {
+                return _copyHistoryToClipboard ?? (_copyHistoryToClipboard = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.TextToClipboard(BoardHistory.Text);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && (null != BoardHistory) && BoardHistory.CurrentMoveIndex >= 0;
+                }));
+            }
+        }
+        private RelayCommand _copyHistoryToClipboard = null;
 
         #region Status properties
 

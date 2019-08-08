@@ -44,6 +44,8 @@ namespace Mzinga.SharedUX.ViewModel
 
         public DoOnUIThread DoOnUIThread { get; private set; }
 
+        public TextToClipboard TextToClipboard { get; private set; }
+
         public EngineWrapper EngineWrapper { get; private set; }
 
         public GameEngineConfig InternalGameEngineConfig { get; private set; }
@@ -71,6 +73,7 @@ namespace Mzinga.SharedUX.ViewModel
             FullVersion = parameters.FullVersion;
             ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException("viewerConfig");
             DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException("doOnUIThread");
+            TextToClipboard = parameters.TextToClipboard ?? throw new ArgumentNullException("textToClipboard");
             EngineWrapper = parameters.EngineWrapper;
             InternalGameEngineConfig = parameters.InternalGameEngineConfig;
 
@@ -98,6 +101,7 @@ namespace Mzinga.SharedUX.ViewModel
     }
 
     public delegate void DoOnUIThread(Action action);
+    public delegate void TextToClipboard(string text);
 
     public class AppViewModelParameters
     {
@@ -105,6 +109,7 @@ namespace Mzinga.SharedUX.ViewModel
         public string FullVersion;
         public ViewerConfig ViewerConfig;
         public DoOnUIThread DoOnUIThread;
+        public TextToClipboard TextToClipboard;
         public EngineWrapper EngineWrapper;
         public GameEngineConfig InternalGameEngineConfig;
     }

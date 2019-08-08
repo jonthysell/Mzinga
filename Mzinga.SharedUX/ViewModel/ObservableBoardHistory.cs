@@ -87,7 +87,7 @@ namespace Mzinga.SharedUX.ViewModel
 
             if (_activeBoardHistory.Count > _boardHistory.Count)
             {
-                throw new ArgumentException("Active history has more moves that history.");
+                throw new ArgumentException("Active history has more moves than history.");
             }
 
             int countWidth = _boardHistory.Count.ToString().Length;
