@@ -353,6 +353,13 @@ namespace Mzinga.SharedUX
             SendCommand("newgame {0}", () => { OnGameModeChanged(); }, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
+        public void NewGame(GameSettings settings, string gameString)
+        {
+            CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
+
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, gameString);
+        }
+
         public void LoadGame(GameRecording gameRecording)
         {
             if (null == gameRecording)
@@ -425,6 +432,7 @@ namespace Mzinga.SharedUX
             }
 
             CurrentGameSettings.GameMode = GameMode.Review;
+            OnGameModeChanged();
         }
 
         public void MoveToStart()

@@ -107,8 +107,12 @@
                 <Separator />
                 <MenuItem Command="{Binding ShowGameMetadata}"
                           Header="Edit _Metadata" />
+                <MenuItem Command="{Binding SwitchToPlayMode}"
+                          Header="Switch to _Play Mode"
+                          Visibility="{Binding IsReviewMode, Converter={StaticResource BoolToVisibilityConverter}}" />
                 <MenuItem Command="{Binding SwitchToReviewMode}"
-                          Header="Switch to _Review Mode" />
+                          Header="Switch to _Review Mode"
+                          Visibility="{Binding IsPlayMode, Converter={StaticResource BoolToVisibilityConverter}}" />
             </MenuItem>
             <MenuItem Header="_Engine">
                 <MenuItem Command="{Binding FindBestMove}"

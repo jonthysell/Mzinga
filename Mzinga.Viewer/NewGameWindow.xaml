@@ -59,7 +59,8 @@
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Expansion Pieces">
+                <GroupBox Header="Expansion Pieces"
+                          IsEnabled="{Binding IsNewGame}">
                     <StackPanel HorizontalAlignment="Center"
                                 Orientation="Horizontal">
                         <CheckBox Content="Mosquito"

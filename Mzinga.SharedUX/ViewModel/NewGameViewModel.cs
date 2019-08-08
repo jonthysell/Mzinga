@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return "New Game";
+                return IsNewGame ? "New Game" : "Continue Game";
             }
         }
 
@@ -294,15 +294,19 @@ namespace Mzinga.SharedUX.ViewModel
 
         public GameSettings Settings { get; private set; }
 
+        public bool IsNewGame { get; private set; }
+
         public bool Accepted { get; private set; }
 
         public event EventHandler RequestClose;
 
         public Action<GameSettings> Callback { get; private set; }
 
-        public NewGameViewModel(GameSettings settings = null, Action<GameSettings> callback = null)
+        public NewGameViewModel(GameSettings settings, bool isNewGame, Action<GameSettings> callback)
         {
             Settings = settings?.Clone() ?? new GameSettings();
+
+            IsNewGame = isNewGame;
 
             Accepted = false;
             Callback = callback;

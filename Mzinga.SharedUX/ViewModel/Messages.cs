@@ -88,9 +88,9 @@ namespace Mzinga.SharedUX.ViewModel
     {
         public NewGameViewModel NewGameVM { get; private set; }
 
-        public NewGameMessage(GameSettings settings = null, Action<GameSettings> callback = null) : base()
+        public NewGameMessage(GameSettings settings, bool enableGameType, Action<GameSettings> callback) : base()
         {
-            NewGameVM = new NewGameViewModel(settings, callback);
+            NewGameVM = new NewGameViewModel(settings, enableGameType, callback);
         }
 
         public void Process()

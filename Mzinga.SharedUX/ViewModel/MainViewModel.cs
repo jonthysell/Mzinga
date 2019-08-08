@@ -84,6 +84,7 @@ namespace Mzinga.SharedUX.ViewModel
                 MoveForward.RaiseCanExecuteChanged();
                 MoveToEnd.RaiseCanExecuteChanged();
 
+                SwitchToPlayMode.RaiseCanExecuteChanged();
                 ShowGameMetadata.RaiseCanExecuteChanged();
                 SwitchToReviewMode.RaiseCanExecuteChanged();
 
@@ -362,7 +363,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, (settings) =>
+                        Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, true, (settings) =>
                         {
                             try
                             {
@@ -520,7 +521,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
                 }));
             }
         }
@@ -542,7 +543,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
                 }));
             }
         }
@@ -695,6 +696,53 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _showGameMetadata = null;
 
+        public RelayCommand SwitchToPlayMode
+        {
+            get
+            {
+                return _switchToPlayMode ?? (_switchToPlayMode = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("Switching to play mode will reset the game metadata. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    string activeGameString = Board.ToGameString();
+
+                                    Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, false, (settings) =>
+                                    {
+                                        try
+                                        {
+                                            AppVM.EngineWrapper.NewGame(settings, activeGameString);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            ExceptionUtils.HandleException(ex);
+                                        }
+                                    }));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && IsReviewMode;
+                }));
+            }
+        }
+        private RelayCommand _switchToPlayMode = null;
+
         public RelayCommand SwitchToReviewMode
         {
             get
@@ -711,8 +759,6 @@ namespace Mzinga.SharedUX.ViewModel
                                 {
                                     AppVM.EngineWrapper.SwitchToReviewMode();
                                 }
-                                RaisePropertyChanged("IsPlayMode");
-                                RaisePropertyChanged("IsReviewMode");
                             }
                             catch (Exception ex)
                             {
@@ -1148,6 +1194,8 @@ namespace Mzinga.SharedUX.ViewModel
                         MoveForward.RaiseCanExecuteChanged();
                         MoveToEnd.RaiseCanExecuteChanged();
 
+                        SwitchToPlayMode.RaiseCanExecuteChanged();
+                        ShowGameMetadata.RaiseCanExecuteChanged();
                         SwitchToReviewMode.RaiseCanExecuteChanged();
                     });
                     break;
