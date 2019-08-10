@@ -1197,6 +1197,8 @@ namespace Mzinga.SharedUX.ViewModel
                         SwitchToPlayMode.RaiseCanExecuteChanged();
                         ShowGameMetadata.RaiseCanExecuteChanged();
                         SwitchToReviewMode.RaiseCanExecuteChanged();
+
+                        UpdateBoardHistory();
                     });
                     break;
             }
