@@ -43,7 +43,7 @@ namespace Mzinga.Viewer
         {
             if (string.IsNullOrWhiteSpace("engineCommand"))
             {
-                throw new ArgumentNullException("engineCommand");
+                throw new ArgumentNullException(nameof(engineCommand));
             }
 
             string programName = "";

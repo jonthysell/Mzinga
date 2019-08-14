@@ -55,7 +55,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(moveString))
             {
-                throw new ArgumentNullException("moveString");
+                throw new ArgumentNullException(nameof(moveString));
             }
 
             if (!moveString.Equals(PassString, StringComparison.CurrentCultureIgnoreCase))
@@ -75,7 +75,7 @@ namespace Mzinga.Core
             }
 
             PieceName = pieceName;
-            Position = position ?? throw new ArgumentNullException("position");
+            Position = position ?? throw new ArgumentNullException(nameof(position));
         }
 
         public bool Equals(Move move)

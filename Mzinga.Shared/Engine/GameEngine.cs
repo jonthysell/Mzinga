@@ -61,13 +61,13 @@ namespace Mzinga.Engine
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             ID = id;
-            Config = config ?? throw new ArgumentNullException("config");
+            Config = config ?? throw new ArgumentNullException(nameof(config));
             DefaultConfig = config.GetOptionsClone();
-            ConsoleOut = consoleOut ?? throw new ArgumentNullException("consoleOut");
+            ConsoleOut = consoleOut ?? throw new ArgumentNullException(nameof(consoleOut));
 
             ExitRequested = false;
         }
@@ -109,7 +109,7 @@ namespace Mzinga.Engine
         {
             if (string.IsNullOrWhiteSpace(command))
             {
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
             }
 
             string[] split = command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
@@ -618,7 +618,7 @@ namespace Mzinga.Engine
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             key = key.Trim();
@@ -668,7 +668,7 @@ namespace Mzinga.Engine
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             key = key.Trim();

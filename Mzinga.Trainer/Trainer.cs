@@ -94,12 +94,12 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(whiteProfilePath))
             {
-                throw new ArgumentNullException("whiteProfilePath");
+                throw new ArgumentNullException(nameof(whiteProfilePath));
             }
 
             if (string.IsNullOrWhiteSpace(blackProfilePath))
             {
-                throw new ArgumentNullException("blackProfilePath");
+                throw new ArgumentNullException(nameof(blackProfilePath));
             }
 
             StartTime = DateTime.Now;
@@ -140,7 +140,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (maxBattles < 1 && maxBattles != TrainerSettings.MaxMaxBattles)
@@ -304,12 +304,12 @@ namespace Mzinga.Trainer
         {
             if (null == whiteProfile)
             {
-                throw new ArgumentNullException("whiteProfile");
+                throw new ArgumentNullException(nameof(whiteProfile));
             }
 
             if (null == blackProfile)
             {
-                throw new ArgumentNullException("blackProfile");
+                throw new ArgumentNullException(nameof(blackProfile));
             }
 
             if (whiteProfile.Id == blackProfile.Id)
@@ -477,7 +477,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (keepCount < TrainerSettings.CullMinKeepCount && keepCount != TrainerSettings.CullKeepMax)
@@ -537,7 +537,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -621,7 +621,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (count < 1)
@@ -659,7 +659,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (generations == 0)
@@ -737,7 +737,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (minMix > maxMix)
@@ -803,7 +803,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (maxDraws < 1)
@@ -982,7 +982,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -1067,7 +1067,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -1094,7 +1094,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -1137,7 +1137,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -1176,7 +1176,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             StartTime = DateTime.Now;
@@ -1279,7 +1279,7 @@ namespace Mzinga.Trainer
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             List<Profile> profiles = new List<Profile>();
@@ -1304,7 +1304,7 @@ namespace Mzinga.Trainer
         {
             if (null == items)
             {
-                throw new ArgumentNullException("items");
+                throw new ArgumentNullException(nameof(items));
             }
 
             List<T> unshuffled = new List<T>(items);
@@ -1326,7 +1326,7 @@ namespace Mzinga.Trainer
         {
             if (null == profiles)
             {
-                throw new ArgumentNullException("profiles");
+                throw new ArgumentNullException(nameof(profiles));
             }
 
             LinkedList<Profile> sortedProfiles = new LinkedList<Profile>(profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating));
@@ -1440,7 +1440,7 @@ namespace Mzinga.Trainer
         {
             if (null == profile)
             {
-                throw new ArgumentNullException("profile");
+                throw new ArgumentNullException(nameof(profile));
             }
 
             return string.Format("{0}({1}{2} {3}/{4}/{5})", profile.Name, profile.Records[(int)gameType].EloRating, IsProvisional(profile) ? "?" : " ", profile.Records[(int)gameType].Wins, profile.Records[(int)gameType].Losses, profile.Records[(int)gameType].Draws);
@@ -1450,7 +1450,7 @@ namespace Mzinga.Trainer
         {
             if (null == profile)
             {
-                throw new ArgumentNullException("profile");
+                throw new ArgumentNullException(nameof(profile));
             }
 
             return profile.Records[(int)TrainerSettings.GameType].TotalGames < TrainerSettings.ProvisionalGameCount;

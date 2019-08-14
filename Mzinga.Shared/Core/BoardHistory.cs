@@ -145,7 +145,7 @@ namespace Mzinga.Core
 
         public BoardHistoryItem(Move move, Position originalPosition, string moveString)
         {
-            Move = move ?? throw new ArgumentNullException("move");
+            Move = move ?? throw new ArgumentNullException(nameof(move));
             OriginalPosition = originalPosition;
             MoveString = moveString;
         }
@@ -154,7 +154,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(boardHistoryItemString))
             {
-                throw new ArgumentNullException("boardHistoryItemString");
+                throw new ArgumentNullException(nameof(boardHistoryItemString));
             }
 
             if (boardHistoryItemString.Equals(Move.PassString, StringComparison.CurrentCultureIgnoreCase))

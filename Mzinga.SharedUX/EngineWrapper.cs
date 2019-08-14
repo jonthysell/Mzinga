@@ -348,14 +348,14 @@ namespace Mzinga.SharedUX
 
         public void NewGame(GameSettings settings)
         {
-            CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
+            CurrentGameSettings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             SendCommand("newgame {0}", () => { OnGameModeChanged(); }, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
         }
 
         public void NewGame(GameSettings settings, string gameString)
         {
-            CurrentGameSettings = settings ?? throw new ArgumentNullException("settings");
+            CurrentGameSettings = settings ?? throw new ArgumentNullException(nameof(settings));
 
             SendCommand("newgame {0}", () => { OnGameModeChanged(); }, gameString);
         }
@@ -364,7 +364,7 @@ namespace Mzinga.SharedUX
         {
             if (null == gameRecording)
             {
-                throw new ArgumentNullException("gameRecording");
+                throw new ArgumentNullException(nameof(gameRecording));
             }
 
             CurrentGameSettings = new GameSettings(gameRecording)
@@ -529,12 +529,12 @@ namespace Mzinga.SharedUX
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             SendCommand("options set {0} {1}", key, value);
@@ -544,7 +544,7 @@ namespace Mzinga.SharedUX
         {
             if (null == options)
             {
-                throw new ArgumentNullException("options");
+                throw new ArgumentNullException(nameof(options));
             }
 
             if (options.Count > 0)
@@ -599,7 +599,7 @@ namespace Mzinga.SharedUX
         {
             if (string.IsNullOrWhiteSpace(command))
             {
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
             }
 
             command = string.Format(command, args);
@@ -652,7 +652,7 @@ namespace Mzinga.SharedUX
         {
             if (string.IsNullOrWhiteSpace(command))
             {
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException(nameof(command));
             }
 
             string[] split = command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);

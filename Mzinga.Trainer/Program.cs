@@ -204,12 +204,12 @@ namespace Mzinga.Trainer
         {
             if (null == args || args.Length == 0)
             {
-                throw new ArgumentNullException("args");
+                throw new ArgumentNullException(nameof(args));
             }
 
             if (null == trainerSettings)
             {
-                throw new ArgumentNullException("trainerSettings");
+                throw new ArgumentNullException(nameof(trainerSettings));
             }
 
             Command cmd = Command.Unknown;

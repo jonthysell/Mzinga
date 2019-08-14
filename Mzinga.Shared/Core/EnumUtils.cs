@@ -96,7 +96,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(nameString))
             {
-                throw new ArgumentNullException("nameString");
+                throw new ArgumentNullException(nameof(nameString));
             }
 
             nameString = nameString.Trim();

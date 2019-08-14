@@ -37,7 +37,7 @@ namespace Mzinga.Core.AI
         {
             if (null == xmlReader)
             {
-                throw new ArgumentNullException("xmlReader");
+                throw new ArgumentNullException(nameof(xmlReader));
             }
 
             TranspositionTable tt = new TranspositionTable(sizeInBytes);
@@ -68,7 +68,7 @@ namespace Mzinga.Core.AI
         {
             if (null == xmlWriter)
             {
-                throw new ArgumentNullException("xmlWriter");
+                throw new ArgumentNullException(nameof(xmlWriter));
             }
 
             xmlWriter.WriteStartElement(name);

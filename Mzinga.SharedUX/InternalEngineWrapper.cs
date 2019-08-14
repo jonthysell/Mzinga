@@ -40,8 +40,8 @@ namespace Mzinga.SharedUX
 
         public InternalEngineWrapper(string id, GameEngineConfig gameEngineConfig) : base()
         {
-            _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException("id");
-            GameEngineConfig = gameEngineConfig ?? throw new ArgumentNullException("gameEngineConfig");
+            _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException(nameof(id));
+            GameEngineConfig = gameEngineConfig ?? throw new ArgumentNullException(nameof(gameEngineConfig));
         }
 
         public override void StartEngine()

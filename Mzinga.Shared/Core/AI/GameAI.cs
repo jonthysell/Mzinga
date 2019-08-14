@@ -66,7 +66,7 @@ namespace Mzinga.Core.AI
         {
             if (null == config)
             {
-                throw new ArgumentNullException("config");
+                throw new ArgumentNullException(nameof(config));
             }
 
             StartMetricWeights = config.StartMetricWeights?.Clone() ?? new MetricWeights();
@@ -164,7 +164,7 @@ namespace Mzinga.Core.AI
         {
             if (null == gameBoard)
             {
-                throw new ArgumentNullException("gameBoard");
+                throw new ArgumentNullException(nameof(gameBoard));
             }
 
             if (maxDepth < 0)
@@ -385,7 +385,7 @@ namespace Mzinga.Core.AI
         {
             if (null == evaluatedMove)
             {
-                throw new ArgumentNullException("evaluatedMove");
+                throw new ArgumentNullException(nameof(evaluatedMove));
             }
 
             if (evaluatedMove != bestMoveParams.BestMove)
@@ -774,7 +774,7 @@ namespace Mzinga.Core.AI
         {
             if (null == gameBoard)
             {
-                throw new ArgumentNullException("gameBoard");
+                throw new ArgumentNullException(nameof(gameBoard));
             }
 
             if (maxDepth < 0)

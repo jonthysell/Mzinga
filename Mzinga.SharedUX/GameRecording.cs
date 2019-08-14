@@ -43,7 +43,7 @@ namespace Mzinga.SharedUX
 
         public GameRecording(GameBoard gameBoard, GameMetadata metadata = null)
         {
-            GameBoard = gameBoard?.Clone() ?? throw new ArgumentNullException("gameBoard");
+            GameBoard = gameBoard?.Clone() ?? throw new ArgumentNullException(nameof(gameBoard));
 
             if (null != metadata)
             {
@@ -61,7 +61,7 @@ namespace Mzinga.SharedUX
         {
             if (null == outputStream)
             {
-                throw new ArgumentNullException("outputStream");
+                throw new ArgumentNullException(nameof(outputStream));
             }
 
             using (StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII))
@@ -115,7 +115,7 @@ namespace Mzinga.SharedUX
         {
             if (null == inputStream)
             {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
             }
 
             GameMetadata metadata = new GameMetadata();
@@ -212,7 +212,7 @@ namespace Mzinga.SharedUX
         {
             if (null == inputStream)
             {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
             }
 
             GameMetadata metadata = new GameMetadata();

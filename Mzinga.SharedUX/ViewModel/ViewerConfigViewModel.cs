@@ -354,7 +354,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public ViewerConfigViewModel(ViewerConfig config, Action<ViewerConfig> callback = null)
         {
-            Config =  config?.Clone() ?? throw new ArgumentNullException("config");
+            Config =  config?.Clone() ?? throw new ArgumentNullException(nameof(config));
             Accepted = false;
             Callback = callback;
         }

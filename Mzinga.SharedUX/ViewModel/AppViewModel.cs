@@ -66,14 +66,14 @@ namespace Mzinga.SharedUX.ViewModel
         {
             if (null == parameters)
             {
-                throw new ArgumentNullException("parameters");
+                throw new ArgumentNullException(nameof(parameters));
             }
 
             ProgramTitle = parameters.ProgramTitle;
             FullVersion = parameters.FullVersion;
-            ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException("viewerConfig");
-            DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException("doOnUIThread");
-            TextToClipboard = parameters.TextToClipboard ?? throw new ArgumentNullException("textToClipboard");
+            ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException(nameof(parameters.ViewerConfig));
+            DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException(nameof(parameters.DoOnUIThread));
+            TextToClipboard = parameters.TextToClipboard ?? throw new ArgumentNullException(nameof(parameters.TextToClipboard));
             EngineWrapper = parameters.EngineWrapper;
             InternalGameEngineConfig = parameters.InternalGameEngineConfig;
 

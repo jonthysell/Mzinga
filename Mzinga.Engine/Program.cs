@@ -94,7 +94,7 @@ namespace Mzinga.Engine
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             using (FileStream fs = new FileStream(path, FileMode.Open))

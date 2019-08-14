@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -113,7 +113,7 @@ namespace Mzinga.SharedUX
         {
             if (null == inputStream)
             {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
             }
 
             using (XmlReader reader = XmlReader.Create(inputStream))
@@ -206,7 +206,7 @@ namespace Mzinga.SharedUX
         {
             if (null == outputStream)
             {
-                throw new ArgumentNullException("outputStream");
+                throw new ArgumentNullException(nameof(outputStream));
             }
 
             XmlWriterSettings settings = new XmlWriterSettings
@@ -287,7 +287,7 @@ namespace Mzinga.SharedUX
         {
             if (null == config)
             {
-                throw new ArgumentNullException("config");
+                throw new ArgumentNullException(nameof(config));
             }
 
             EngineCommandLine = config.EngineCommandLine;

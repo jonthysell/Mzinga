@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -84,8 +84,8 @@ namespace Mzinga.Trainer
 
             Records = ProfileRecord.CreateRecords();
 
-            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
-            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException(nameof(startMetricWeights));
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException(nameof(endMetricWeights));
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
@@ -100,12 +100,12 @@ namespace Mzinga.Trainer
 
             if (!parentA.HasValue)
             {
-                throw new ArgumentNullException("parentA");
+                throw new ArgumentNullException(nameof(parentA));
             }
 
             if (!parentB.HasValue)
             {
-                throw new ArgumentNullException("parentB");
+                throw new ArgumentNullException(nameof(parentB));
             }
 
             Id = id;
@@ -119,8 +119,8 @@ namespace Mzinga.Trainer
 
             Records = ProfileRecord.CreateRecords();
 
-            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
-            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException(nameof(startMetricWeights));
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException(nameof(endMetricWeights));
 
             CreationTimestamp = DateTime.Now;
             LastUpdatedTimestamp = DateTime.Now;
@@ -143,8 +143,8 @@ namespace Mzinga.Trainer
 
             Records = records;
 
-            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
-            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException(nameof(startMetricWeights));
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException(nameof(endMetricWeights));
 
             CreationTimestamp = creationTimestamp;
             LastUpdatedTimestamp = lastUpdatedTimestamp;
@@ -177,8 +177,8 @@ namespace Mzinga.Trainer
 
         public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights, ExpansionPieces expansionPieces)
         {
-            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException("startMetricWeights");
-            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException("endMetricWeights");
+            StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException(nameof(startMetricWeights));
+            EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException(nameof(endMetricWeights));
 
             Records[(int)expansionPieces].AutoTrains++;
 
@@ -194,7 +194,7 @@ namespace Mzinga.Trainer
         {
             if (null == outputStream)
             {
-                throw new ArgumentNullException("outputStream");
+                throw new ArgumentNullException(nameof(outputStream));
             }
 
             XmlWriterSettings settings = new XmlWriterSettings
@@ -274,7 +274,7 @@ namespace Mzinga.Trainer
         {
             if (null == inputStream)
             {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
             }
 
             Guid id = Guid.Empty;
@@ -364,12 +364,12 @@ namespace Mzinga.Trainer
         {
             if (null == parentA)
             {
-                throw new ArgumentNullException("parentA");
+                throw new ArgumentNullException(nameof(parentA));
             }
 
             if (null == parentB)
             {
-                throw new ArgumentNullException("parentB");
+                throw new ArgumentNullException(nameof(parentB));
             }
 
             if (minMix > maxMix)

@@ -171,7 +171,7 @@ namespace Mzinga.Test
         {
             if (length <= 0)
             {
-                throw new ArgumentNullException("length");
+                throw new ArgumentNullException(nameof(length));
             }
 
             Direction[] line = new Direction[length];
@@ -191,7 +191,7 @@ namespace Mzinga.Test
         {
             if (null == directions)
             {
-                throw new ArgumentNullException("directions");
+                throw new ArgumentNullException(nameof(directions));
             }
 
             Position neighbor = pos;

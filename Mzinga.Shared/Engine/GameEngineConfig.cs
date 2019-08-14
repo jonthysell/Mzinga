@@ -79,7 +79,7 @@ namespace Mzinga.Engine
         {
             if (null == inputStream)
             {
-                throw new ArgumentNullException("inputStream");
+                throw new ArgumentNullException(nameof(inputStream));
             }
 
             using (XmlReader reader = XmlReader.Create(inputStream))
@@ -103,7 +103,7 @@ namespace Mzinga.Engine
         {
             if (null == reader)
             {
-                throw new ArgumentNullException("reader");
+                throw new ArgumentNullException(nameof(reader));
             }
 
             while (reader.Read())
@@ -155,12 +155,12 @@ namespace Mzinga.Engine
         {
             if (null == outputStream)
             {
-                throw new ArgumentNullException("outputStream");
+                throw new ArgumentNullException(nameof(outputStream));
             }
 
             if (string.IsNullOrWhiteSpace(rootName))
             {
-                throw new ArgumentNullException("rootName");
+                throw new ArgumentNullException(nameof(rootName));
             }
 
             XmlWriterSettings settings = new XmlWriterSettings
@@ -185,12 +185,12 @@ namespace Mzinga.Engine
         {
             if (null == writer)
             {
-                throw new ArgumentNullException("writer");
+                throw new ArgumentNullException(nameof(writer));
             }
 
             if (string.IsNullOrWhiteSpace(rootName))
             {
-                throw new ArgumentNullException("rootName");
+                throw new ArgumentNullException(nameof(rootName));
             }
 
             writer.WriteStartElement(rootName);

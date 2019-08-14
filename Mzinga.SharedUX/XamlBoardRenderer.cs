@@ -137,10 +137,10 @@ namespace Mzinga.SharedUX
 
         public XamlBoardRenderer(MainViewModel vm, Canvas boardCanvas, StackPanel whiteHandStackPanel, StackPanel blackHandStackPanel)
         {
-            VM = vm ?? throw new ArgumentNullException("vm");
-            BoardCanvas = boardCanvas ?? throw new ArgumentNullException("boardCanvas");
-            WhiteHandStackPanel = whiteHandStackPanel ?? throw new ArgumentNullException("whiteHandStackPanel");
-            BlackHandStackPanel = blackHandStackPanel ?? throw new ArgumentNullException("blackHandStackPanel");
+            VM = vm ?? throw new ArgumentNullException(nameof(vm));
+            BoardCanvas = boardCanvas ?? throw new ArgumentNullException(nameof(boardCanvas));
+            WhiteHandStackPanel = whiteHandStackPanel ?? throw new ArgumentNullException(nameof(whiteHandStackPanel));
+            BlackHandStackPanel = blackHandStackPanel ?? throw new ArgumentNullException(nameof(blackHandStackPanel));
 
             // Init brushes
             WhiteBrush = new SolidColorBrush(Colors.White);
@@ -492,7 +492,7 @@ namespace Mzinga.SharedUX
         {
             if (null == position)
             {
-                throw new ArgumentNullException("position");
+                throw new ArgumentNullException(nameof(position));
             }
 
             if (size <= 0)
@@ -516,7 +516,7 @@ namespace Mzinga.SharedUX
         {
             if (null == board)
             {
-                throw new ArgumentNullException("board");
+                throw new ArgumentNullException(nameof(board));
             }
 
             numPieces = 0;
@@ -578,7 +578,7 @@ namespace Mzinga.SharedUX
         {
             if (null == center)
             {
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
             }
 
             if (size <= 0)
@@ -656,7 +656,7 @@ namespace Mzinga.SharedUX
         {
             if (null == center)
             {
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
             }
 
             if (size <= 0)
@@ -694,7 +694,7 @@ namespace Mzinga.SharedUX
         {
             if (null == center)
             {
-                throw new ArgumentNullException("center");
+                throw new ArgumentNullException(nameof(center));
             }
 
             if (size <= 0)

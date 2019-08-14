@@ -81,7 +81,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public ObservableBoardHistory(BoardHistory boardHistory, BoardHistory activeBoardHistory = null, Action<int> moveNumberChangedCallback = null)
         {
-            _boardHistory = boardHistory ?? throw new ArgumentNullException("boardHistory");
+            _boardHistory = boardHistory ?? throw new ArgumentNullException(nameof(boardHistory));
             _activeBoardHistory = activeBoardHistory ?? boardHistory;
             _moveNumberChangedCallback = moveNumberChangedCallback;
 

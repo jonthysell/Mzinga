@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -147,7 +147,7 @@ namespace Mzinga.SharedUX
 
         public GameSettings(GameRecording gameRecording)
         {
-            GameRecording = gameRecording ?? throw new ArgumentNullException("gameRecording");
+            GameRecording = gameRecording ?? throw new ArgumentNullException(nameof(gameRecording));
             _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 
@@ -155,7 +155,7 @@ namespace Mzinga.SharedUX
         {
             if (null == gameBoard)
             {
-                throw new ArgumentNullException("gameBoard");
+                throw new ArgumentNullException(nameof(gameBoard));
             }
 
             GameRecording = new GameRecording(gameBoard, metadata);

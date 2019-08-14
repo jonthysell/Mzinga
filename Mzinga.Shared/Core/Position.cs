@@ -77,7 +77,7 @@ namespace Mzinga.Core
         {
             if (null == position)
             {
-                throw new ArgumentNullException("position");
+                throw new ArgumentNullException(nameof(position));
             }
 
             for (int i = 0; i < EnumUtils.NumDirections; i++)

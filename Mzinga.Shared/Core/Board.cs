@@ -279,14 +279,14 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(boardString))
             {
-                throw new ArgumentNullException("boardString");
+                throw new ArgumentNullException(nameof(boardString));
             }
 
             string[] split = boardString.Split(BoardStringSeparator);
 
             if (!EnumUtils.TryParseExpansionPieces(split[0], out ExpansionPieces expansionPieces))
             {
-                throw new ArgumentException("Couldn't parse expansion pieces.", "boardString");
+                throw new ArgumentException("Couldn't parse expansion pieces.", nameof(boardString));
             }
 
             InitPieces(expansionPieces);
@@ -295,7 +295,7 @@ namespace Mzinga.Core
 
             if (!Enum.TryParse(boardStateString, out BoardState boardState))
             {
-                throw new ArgumentException("Couldn't parse board state.", "boardString");
+                throw new ArgumentException("Couldn't parse board state.", nameof(boardString));
             }
             BoardState = boardState;
 
@@ -305,14 +305,14 @@ namespace Mzinga.Core
 
             if (!Enum.TryParse(currentTurnColorString, out PlayerColor currentTurnColor))
             {
-                throw new ArgumentException("Couldn't parse current turn color.", "boardString");
+                throw new ArgumentException("Couldn't parse current turn color.", nameof(boardString));
             }
 
             string currentPlayerTurnString = currentTurnSplit[1];
 
             if (!int.TryParse(currentPlayerTurnString, out int currentPlayerTurn))
             {
-                throw new ArgumentException("Couldn't parse current player turn.", "boardString");
+                throw new ArgumentException("Couldn't parse current player turn.", nameof(boardString));
             }
 
             CurrentTurn = 2 * (currentPlayerTurn - 1) + (int)currentTurnColor;
@@ -343,7 +343,7 @@ namespace Mzinga.Core
 
             if (!IsOneHive())
             {
-                throw new ArgumentException("The boardString violates the one-hive rule.", "boardString");
+                throw new ArgumentException("The boardString violates the one-hive rule.", nameof(boardString));
             }
         }
 
@@ -403,7 +403,7 @@ namespace Mzinga.Core
         {
             if (null == position)
             {
-                throw new ArgumentNullException("position");
+                throw new ArgumentNullException(nameof(position));
             }
 
             Piece piece = GetPieceOnTopInternal(position);

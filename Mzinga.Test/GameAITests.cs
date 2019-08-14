@@ -177,7 +177,7 @@ namespace Mzinga.Test
             {
                 if (string.IsNullOrWhiteSpace(s))
                 {
-                    throw new ArgumentNullException("s");
+                    throw new ArgumentNullException(nameof(s));
                 }
 
                 s = s.Trim();

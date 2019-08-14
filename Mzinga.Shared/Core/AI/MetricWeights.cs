@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ namespace Mzinga.Core.AI
         {
             if (null == source)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             Array.Copy(source._bugTypeWeights, _bugTypeWeights, source._bugTypeWeights.Length);
@@ -110,7 +110,7 @@ namespace Mzinga.Core.AI
         {
             if (null == a)
             {
-                throw new ArgumentNullException("a");
+                throw new ArgumentNullException(nameof(a));
             }
 
             for (int i = 0; i < _bugTypeWeights.Length; i++)
@@ -131,7 +131,7 @@ namespace Mzinga.Core.AI
         {
             if (null == xmlReader)
             {
-                throw new ArgumentNullException("xmlReader");
+                throw new ArgumentNullException(nameof(xmlReader));
             }
 
             MetricWeights mw = new MetricWeights();
@@ -157,7 +157,7 @@ namespace Mzinga.Core.AI
         {
             if (null == xmlWriter)
             {
-                throw new ArgumentNullException("xmlWriter");
+                throw new ArgumentNullException(nameof(xmlWriter));
             }
 
             xmlWriter.WriteStartElement(name);
@@ -219,7 +219,7 @@ namespace Mzinga.Core.AI
         {
             if (null == action)
             {
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
             }
 
             for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)

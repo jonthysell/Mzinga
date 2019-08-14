@@ -35,12 +35,12 @@ namespace Mzinga.Core
         {
             if (null == board)
             {
-                throw new ArgumentNullException("board");
+                throw new ArgumentNullException(nameof(board));
             }
 
             if (string.IsNullOrWhiteSpace(moveString))
             {
-                throw new ArgumentNullException("moveString");
+                throw new ArgumentNullException(nameof(moveString));
             }
 
             moveString = moveString.Trim();
@@ -64,7 +64,7 @@ namespace Mzinga.Core
                     return new Move(movingPiece, Position.Origin);
                 }
 
-                throw new ArgumentException("You must specify a target piece.", "moveString");
+                throw new ArgumentException("You must specify a target piece.", nameof(moveString));
             }
 
             string targetString = moveStringParts[1].Trim('-', '/', '\\');
@@ -116,12 +116,12 @@ namespace Mzinga.Core
         {
             if (null == board)
             {
-                throw new ArgumentNullException("board");
+                throw new ArgumentNullException(nameof(board));
             }
 
             if (null == move)
             {
-                throw new ArgumentNullException("move");
+                throw new ArgumentNullException(nameof(move));
             }
 
             if (move.IsPass)
@@ -213,7 +213,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(moveString))
             {
-                throw new ArgumentNullException("moveString");
+                throw new ArgumentNullException(nameof(moveString));
             }
 
             moveString = moveString.Trim();
@@ -261,12 +261,12 @@ namespace Mzinga.Core
         {
             if (null == board)
             {
-                throw new ArgumentNullException("board");
+                throw new ArgumentNullException(nameof(board));
             }
 
             if (string.IsNullOrWhiteSpace(moveStringList))
             {
-                throw new ArgumentNullException("moveStringList");
+                throw new ArgumentNullException(nameof(moveStringList));
             }
 
             string[] split = moveStringList.Split(new char[] { MoveSet.MoveStringSeparator }, StringSplitOptions.RemoveEmptyEntries);
@@ -284,12 +284,12 @@ namespace Mzinga.Core
         {
             if (null == board)
             {
-                throw new ArgumentNullException("board");
+                throw new ArgumentNullException(nameof(board));
             }
 
             if (null == moves)
             {
-                throw new ArgumentNullException("moves");
+                throw new ArgumentNullException(nameof(moves));
             }
 
             StringBuilder sb = new StringBuilder();

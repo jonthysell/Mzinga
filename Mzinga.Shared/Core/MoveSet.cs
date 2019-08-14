@@ -42,7 +42,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(moveSetString))
             {
-                throw new ArgumentNullException("moveSetString");
+                throw new ArgumentNullException(nameof(moveSetString));
             }
 
             string[] split = moveSetString.Split(MoveStringSeparator);

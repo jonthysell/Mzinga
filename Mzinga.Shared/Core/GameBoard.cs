@@ -59,7 +59,7 @@ namespace Mzinga.Core
         {
             if (null == move)
             {
-                throw new ArgumentNullException("move");
+                throw new ArgumentNullException(nameof(move));
             }
 
             if (move.IsPass)
@@ -391,14 +391,14 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(gameString))
             {
-                throw new ArgumentNullException("gameString");
+                throw new ArgumentNullException(nameof(gameString));
             }
 
             string[] split = gameString.Split(BoardStringSeparator);
 
             if (!EnumUtils.TryParseExpansionPieces(split[0], out ExpansionPieces expansionPieces))
             {
-                throw new ArgumentException("Couldn't parse expansion pieces.", "gameString");
+                throw new ArgumentException("Couldn't parse expansion pieces.", nameof(gameString));
             }
 
             GameBoard gb = new GameBoard(expansionPieces);
