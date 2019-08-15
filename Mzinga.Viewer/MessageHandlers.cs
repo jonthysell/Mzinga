@@ -27,6 +27,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows;
 using System.Windows.Forms;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -111,8 +112,8 @@ namespace Mzinga.Viewer
         {
             try
             {
-                DialogResult dialogResult = MessageBox.Show(message.Message, "Mzinga", MessageBoxButtons.YesNo);
-                message.Process(dialogResult == DialogResult.Yes);
+                MessageBoxResult result = System.Windows.MessageBox.Show(message.Message, "Mzinga", MessageBoxButton.YesNo);
+                message.Process(result == MessageBoxResult.Yes);
             }
             catch (Exception ex)
             {
