@@ -212,6 +212,9 @@ namespace Mzinga.Engine
                             throw new CommandException();
                         }
                         break;
+                    case "license":
+                        License();
+                        break;
                     case "perft":
                         if (paramCount == 0)
                         {
@@ -298,6 +301,7 @@ namespace Mzinga.Engine
                 ConsoleOut("");
 
                 ConsoleOut("  Advanced commands:");
+                ConsoleOut("  license");
                 ConsoleOut("  perft");
 
 #if DEBUG
@@ -372,6 +376,11 @@ namespace Mzinga.Engine
                         ConsoleOut("");
                         ConsoleOut("  Display the available options for the engine. Use 'get' to get the specified OptionName or 'set' to set the specified OptionName to OptionValue.");
                         ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#options.");
+                        break;
+                    case "license":
+                        ConsoleOut("  license");
+                        ConsoleOut("");
+                        ConsoleOut("  Displays the engine license.");
                         break;
                     case "perft":
                         ConsoleOut("  perft [MaxDepth]");
@@ -708,6 +717,19 @@ namespace Mzinga.Engine
             {
                 ResetAI(resetCaches);
             }
+        }
+
+        private void License()
+        {
+            ConsoleOut(string.Format("# {0} #", AppInfo.HiveProduct));
+            ConsoleOut("");
+            ConsoleOut(string.Join(Environment.NewLine + Environment.NewLine, AppInfo.HiveCopyright, AppInfo.HiveLicense));
+
+            ConsoleOut("");
+
+            ConsoleOut(string.Format("# {0} #", AppInfo.Product));
+            ConsoleOut("");
+            ConsoleOut(string.Join(Environment.NewLine + Environment.NewLine, AppInfo.MitLicenseName, AppInfo.Copyright, AppInfo.MitLicenseBody));
         }
 
         private void Perft(int maxDepth = Int32.MaxValue)
