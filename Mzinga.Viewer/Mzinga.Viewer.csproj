@@ -142,6 +142,9 @@
     <Compile Include="EngineConsoleWindow.xaml.cs">
       <DependentUpon>EngineConsoleWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LicensesWindow.xaml.cs">
+      <DependentUpon>LicensesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="EngineOptionsWindow.xaml.cs">
       <DependentUpon>EngineOptionsWindow.xaml</DependentUpon>
@@ -174,6 +177,10 @@
     <Page Include="EngineOptionsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LicensesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ViewerConfigWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

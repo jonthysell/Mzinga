@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\ListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\MetricWeights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\TranspositionTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\AppInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Board.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BoardHistory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BoardMetrics.cs" />

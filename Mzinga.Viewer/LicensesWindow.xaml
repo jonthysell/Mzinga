@@ -1,0 +1,46 @@
+<Window Icon="{StaticResource MzingaIcon}"
+        MinHeight="100"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
+        Title="{Binding Title, FallbackValue=Licenses}"
+        Width="500"
+        WindowStartupLocation="CenterScreen"
+        x:Class="Mzinga.Viewer.LicensesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Accept, Mode=OneWay}"
+                    Key="Escape" />
+    </Window.InputBindings>
+    <StackPanel>
+        <TabControl Height="300"
+                    ItemsSource="{Binding Licenses}"
+                    Margin="5">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Header, Mode=OneWay}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <TextBox Height="Auto"
+                             HorizontalScrollBarVisibility="Disabled"
+                             IsReadOnly="True"
+                             IsReadOnlyCaretVisible="False"
+                             Text="{Binding Body, Mode=OneWay}"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        <StackPanel HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Command="{Binding Accept}"
+                    Content="OK"
+                    IsDefault="True"
+                    Margin="5"
+                    Style="{StaticResource CleanButton}"
+                    Width="75" />
+        </StackPanel>
+    </StackPanel>
+</Window>

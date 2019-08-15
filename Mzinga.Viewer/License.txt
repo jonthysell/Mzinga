@@ -1,4 +1,10 @@
-﻿# Mzinga #
+﻿# Hive #
+
+Copyright (c) 2016 Gen42 Games
+
+Mzinga is in no way associated with or endorsed by Gen42 Games.
+
+# Mzinga #
 
 The MIT License (MIT)
 

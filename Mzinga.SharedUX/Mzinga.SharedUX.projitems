@@ -29,6 +29,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\InformationViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InternalEngineWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LicenseViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Messages.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\NewGameViewModel.cs" />
@@ -37,6 +38,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableEngineOption.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PositionUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewerConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ObservableLicense.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewerConfigViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)XamlBoardRenderer.cs" />
   </ItemGroup>

@@ -865,27 +865,15 @@ namespace Mzinga.SharedUX.ViewModel
 
         #region Help
 
-        public RelayCommand ShowAbout
+        public RelayCommand ShowLicenses
         {
             get
             {
-                return _showAbout ?? (_showAbout = new RelayCommand(() =>
+                return _showLicenses ?? (_showLicenses = new RelayCommand(() =>
                 {
                     try
                     {
-                        StringBuilder sb = new StringBuilder();
-
-                        sb.AppendLine("Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.");
-                        sb.AppendLine();
-
-                        sb.AppendLine("Mzinga Copyright (c) 2015-2019 Jon Thysell");
-                        sb.AppendLine("MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion");
-
-                        sb.AppendLine();
-
-                        sb.Append(string.Join(Environment.NewLine + Environment.NewLine, _license));
-
-                        Messenger.Default.Send(new InformationMessage(sb.ToString(), "About Mzinga.Viewer"));
+                        Messenger.Default.Send(new ShowLicensesMessage());
                     }
                     catch (Exception ex)
                     {
@@ -894,7 +882,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }));
             }
         }
-        private RelayCommand _showAbout = null;
+        private RelayCommand _showLicenses = null;
 
         public RelayCommand LaunchHiveWebsite
         {
@@ -1308,11 +1296,5 @@ namespace Mzinga.SharedUX.ViewModel
                 AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
             }
         }
-
-        private static readonly string[] _license = {
-            @"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
-            @"The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-            @"THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-        };
     }
 }

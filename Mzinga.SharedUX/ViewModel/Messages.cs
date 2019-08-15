@@ -84,6 +84,21 @@ namespace Mzinga.SharedUX.ViewModel
         }
     }
 
+    public class ShowLicensesMessage : MessageBase
+    {
+        public LicensesViewModel LicensesVM { get; private set; }
+
+        public ShowLicensesMessage(Action callback = null) : base()
+        {
+            LicensesVM = new LicensesViewModel(callback);
+        }
+
+        public void Process()
+        {
+            LicensesVM.ProcessClose();
+        }
+    }
+
     public class NewGameMessage : MessageBase
     {
         public NewGameViewModel NewGameVM { get; private set; }
