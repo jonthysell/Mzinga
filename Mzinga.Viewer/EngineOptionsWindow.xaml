@@ -8,7 +8,8 @@
         x:Class="Mzinga.Viewer.EngineOptionsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xwt="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Height="32"
@@ -39,9 +40,11 @@
                                        MinWidth="200"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <TextBox Margin="5"
-                                         MinWidth="150"
-                                         Text="{Binding Value}" />
+                                <xwt:IntegerUpDown Margin="5"
+                                                   Maximum="{Binding MaxValue}"
+                                                   MinWidth="150"
+                                                   Minimum="{Binding MinValue}"
+                                                   Value="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableDoubleEngineOption}">
@@ -51,9 +54,11 @@
                                        MinWidth="200"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <TextBox Margin="5"
-                                         MinWidth="150"
-                                         Text="{Binding Value}" />
+                                <xwt:DoubleUpDown Margin="5"
+                                                  Maximum="{Binding MaxValue}"
+                                                  MinWidth="150"
+                                                  Minimum="{Binding MinValue}"
+                                                  Value="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableEnumEngineOption}">
