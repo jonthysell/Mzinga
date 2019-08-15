@@ -37,3 +37,5 @@ Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endo
 Mzinga Copyright (c) 2015-2019 Jon Thysell.
 
 MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
+
+Extended WPF Toolkit Copyright (c) 2010-2019 Xceed Software Inc.

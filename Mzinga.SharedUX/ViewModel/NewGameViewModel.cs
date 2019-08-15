@@ -208,7 +208,10 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     Settings.BestMoveType = value;
                     RaisePropertyChanged("BestMoveType");
-                    RaisePropertyChanged("BestMoveMaxValue");
+                    RaisePropertyChanged("EnableBestMoveMaxDepthValue");
+                    RaisePropertyChanged("BestMoveMaxDepthValue");
+                    RaisePropertyChanged("EnableBestMoveMaxTimeValue");
+                    RaisePropertyChanged("BestMoveMaxTimeValue");
                 }
                 catch (Exception ex)
                 {
@@ -217,38 +220,45 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string BestMoveMaxValue
+        public bool EnableBestMoveMaxDepthValue
         {
             get
             {
-                if (Settings.BestMoveType == BestMoveType.MaxDepth)
-                {
-                    return Settings.BestMoveMaxDepth.Value.ToString();
-                }
-                else
-                {
-                    return Settings.BestMoveMaxTime.Value.ToString(@"hh\:mm\:ss");
-                }
+                return Settings.BestMoveType == BestMoveType.MaxDepth;
+            }
+        }
+
+        public int? BestMoveMaxDepthValue
+        {
+            get
+            {
+                return Settings.BestMoveMaxDepth;
             }
             set
             {
-                try
-                {
-                    if (Settings.BestMoveType == BestMoveType.MaxDepth)
-                    {
-                        Settings.BestMoveMaxDepth = int.Parse(value);
-                    }
-                    else
-                    {
-                        Settings.BestMoveMaxTime = TimeSpan.Parse(value);
-                    }
+                Settings.BestMoveMaxDepth = value;
+                RaisePropertyChanged("BestMoveMaxDepthValue");
+            }
+        }
 
-                    RaisePropertyChanged("BestMoveMaxValue");
-                }
-                catch (Exception ex)
-                {
-                    ExceptionUtils.HandleException(ex);
-                }
+        public bool EnableBestMoveMaxTimeValue
+        {
+            get
+            {
+                return Settings.BestMoveType == BestMoveType.MaxTime;
+            }
+        }
+
+        public TimeSpan? BestMoveMaxTimeValue
+        {
+            get
+            {
+                return Settings.BestMoveMaxTime;
+            }
+            set
+            {
+                Settings.BestMoveMaxTime = value;
+                RaisePropertyChanged("BestMoveMaxTimeValue");
             }
         }
 
