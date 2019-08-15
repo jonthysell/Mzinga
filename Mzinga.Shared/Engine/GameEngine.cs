@@ -212,8 +212,8 @@ namespace Mzinga.Engine
                             throw new CommandException();
                         }
                         break;
-                    case "license":
-                        License();
+                    case "licenses":
+                        Licenses();
                         break;
                     case "perft":
                         if (paramCount == 0)
@@ -301,7 +301,7 @@ namespace Mzinga.Engine
                 ConsoleOut("");
 
                 ConsoleOut("  Advanced commands:");
-                ConsoleOut("  license");
+                ConsoleOut("  licenses");
                 ConsoleOut("  perft");
 
 #if DEBUG
@@ -377,10 +377,10 @@ namespace Mzinga.Engine
                         ConsoleOut("  Display the available options for the engine. Use 'get' to get the specified OptionName or 'set' to set the specified OptionName to OptionValue.");
                         ConsoleOut("  See https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol#options.");
                         break;
-                    case "license":
-                        ConsoleOut("  license");
+                    case "licenses":
+                        ConsoleOut("  licenses");
                         ConsoleOut("");
-                        ConsoleOut("  Displays the engine license.");
+                        ConsoleOut("  Displays the engine licenses.");
                         break;
                     case "perft":
                         ConsoleOut("  perft [MaxDepth]");
@@ -719,7 +719,7 @@ namespace Mzinga.Engine
             }
         }
 
-        private void License()
+        private void Licenses()
         {
             ConsoleOut(string.Format("# {0} #", AppInfo.HiveProduct));
             ConsoleOut("");
