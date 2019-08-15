@@ -9,7 +9,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:xwt="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit">
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <Image Height="32"
@@ -40,11 +40,11 @@
                                        MinWidth="200"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <xwt:IntegerUpDown Margin="5"
-                                                   Maximum="{Binding MaxValue}"
-                                                   MinWidth="150"
-                                                   Minimum="{Binding MinValue}"
-                                                   Value="{Binding Value}" />
+                                <xctk:IntegerUpDown Margin="5"
+                                                    Maximum="{Binding MaxValue}"
+                                                    MinWidth="150"
+                                                    Minimum="{Binding MinValue}"
+                                                    Value="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableDoubleEngineOption}">
@@ -54,11 +54,11 @@
                                        MinWidth="200"
                                        Padding="0"
                                        VerticalAlignment="Center" />
-                                <xwt:DoubleUpDown Margin="5"
-                                                  Maximum="{Binding MaxValue}"
-                                                  MinWidth="150"
-                                                  Minimum="{Binding MinValue}"
-                                                  Value="{Binding Value}" />
+                                <xctk:DoubleUpDown Margin="5"
+                                                   Maximum="{Binding MaxValue}"
+                                                   MinWidth="150"
+                                                   Minimum="{Binding MinValue}"
+                                                   Value="{Binding Value}" />
                             </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ObservableEnumEngineOption}">
