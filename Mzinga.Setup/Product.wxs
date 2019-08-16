@@ -27,6 +27,7 @@
       <ComponentRef Id="MzingaEngineApp" />
       <ComponentRef Id="MzingaTrainerApp" />
       <ComponentRef Id="MvvmLib" />
+      <ComponentRef Id="XctkLib" />
     </Feature>
     <Icon Id="icon.ico"
           SourceFile="$(var.Mzinga.Viewer.ProjectDir)\Resources\mzinga.ico" />
@@ -101,6 +102,10 @@
           <Component Id="MvvmLib">
             <File Id="MvvmLib"
                   Source="$(var.Mzinga.Viewer.TargetDir)\GalaSoft.MvvmLight.dll" />
+          </Component>
+          <Component Id="XctkLib">
+            <File Id="XctkLib"
+                  Source="$(var.Mzinga.Viewer.TargetDir)\Xceed.Wpf.Toolkit.dll" />
           </Component>
         </Directory>
       </Directory>
