@@ -8,7 +8,7 @@
         ResizeMode="CanResizeWithGrip"
         Title="{Binding Title, FallbackValue=Engine Console}"
         Width="480"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         x:Class="Mzinga.Viewer.EngineConsoleWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:local="clr-namespace:Mzinga.Viewer"

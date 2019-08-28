@@ -75,7 +75,8 @@ namespace Mzinga.Viewer
         {
             ExceptionWindow window = new ExceptionWindow
             {
-                DataContext = message.ExceptionVM
+                DataContext = message.ExceptionVM,
+                Owner = App.Current.MainWindow,
             };
             message.ExceptionVM.RequestClose += (sender, e) =>
             {
@@ -90,7 +91,8 @@ namespace Mzinga.Viewer
             {
                 InformationWindow window = new InformationWindow
                 {
-                    DataContext = message.InformationVM
+                    DataContext = message.InformationVM,
+                    Owner = App.Current.MainWindow,
                 };
                 message.InformationVM.RequestClose += (sender, e) =>
                 {
@@ -135,11 +137,13 @@ namespace Mzinga.Viewer
 
         private static void ShowLicense(ShowLicensesMessage message)
         {
-            LicensesWindow window = new LicensesWindow();
+            LicensesWindow window = new LicensesWindow()
+            {
+                DataContext = message.LicensesVM,
+                Owner = App.Current.MainWindow
+            };
 
             message.LicensesVM.Licenses.Add(GetExtendedWpfToolkitLicense());
-
-            window.DataContext = message.LicensesVM;
             message.LicensesVM.RequestClose += () =>
             {
                 window.Close();
@@ -154,7 +158,8 @@ namespace Mzinga.Viewer
             {
                 NewGameWindow window = new NewGameWindow
                 {
-                    DataContext = message.NewGameVM
+                    DataContext = message.NewGameVM,
+                    Owner = App.Current.MainWindow,
                 };
                 message.NewGameVM.RequestClose += (sender, e) =>
                 {
@@ -231,7 +236,8 @@ namespace Mzinga.Viewer
             {
                 GameMetadataWindow window = new GameMetadataWindow
                 {
-                    DataContext = message.GameMetadataVM
+                    DataContext = message.GameMetadataVM,
+                    Owner = App.Current.MainWindow,
                 };
                 message.GameMetadataVM.RequestClose += (sender, e) =>
                 {
@@ -252,7 +258,8 @@ namespace Mzinga.Viewer
             {
                 ViewerConfigWindow window = new ViewerConfigWindow
                 {
-                    DataContext = message.ViewerConfigVM
+                    DataContext = message.ViewerConfigVM,
+                    Owner = App.Current.MainWindow,
                 };
                 message.ViewerConfigVM.RequestClose += (sender, e) =>
                 {
@@ -278,7 +285,8 @@ namespace Mzinga.Viewer
 
                 EngineOptionsWindow window = new EngineOptionsWindow
                 {
-                    DataContext = message.EngineOptionsVM
+                    DataContext = message.EngineOptionsVM,
+                    Owner = App.Current.MainWindow,
                 };
                 message.EngineOptionsVM.RequestClose += (sender, e) =>
                 {

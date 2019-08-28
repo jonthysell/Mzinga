@@ -4,7 +4,7 @@
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight"
         Title="{Binding Title, FallbackValue=Edit Metadata}"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         x:Class="Mzinga.Viewer.GameMetadataWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"

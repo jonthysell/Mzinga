@@ -227,7 +227,7 @@ namespace Mzinga.Engine
                         break;
                     case "exit":
                         Exit();
-                        break;
+                        return; // nothing to do after exiting
 #if DEBUG
                     case "break":
                         Break();
