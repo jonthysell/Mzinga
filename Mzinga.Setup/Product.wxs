@@ -37,9 +37,9 @@
               Value="http://jonthysell.com" />
     <Property Id="ARPURLINFOABOUT"
               Value="http://jonthysell.com" />
-    <PropertyRef Id="WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED" />
-    <Condition Message="This application requires .NET Framework 4.6. Please install the .NET Framework then run this installer again.">
-      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_46_OR_LATER_INSTALLED]]>
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_462_OR_LATER_INSTALLED" />
+    <Condition Message="This application requires .NET Framework 4.6.2. Please install the .NET Framework then run this installer again.">
+      <![CDATA[Installed OR WIX_IS_NETFRAMEWORK_462_OR_LATER_INSTALLED]]>
     </Condition>
     <Property Id="WixShellExecTarget"
               Value="[#MzingaViewerApp]" />
