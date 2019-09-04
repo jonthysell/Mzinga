@@ -704,7 +704,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("Switching to play mode will reset the game metadata. Do you want to continue?", (confirmed) =>
+                        Messenger.Default.Send(new ConfirmationMessage("Switching to play mode starts a new game at the current position. Do you want to continue?", (confirmed) =>
                         {
                             try
                             {
@@ -737,7 +737,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && IsReviewMode;
+                    return IsIdle && IsReviewMode && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
                 }));
             }
         }
@@ -751,20 +751,27 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("Switching to review mode will end your game. Do you want to continue?", (confirmed) =>
+                        if (AppVM.EngineWrapper.GameIsOver)
                         {
-                            try
+                            AppVM.EngineWrapper.SwitchToReviewMode();
+                        }
+                        else
+                        {
+                            Messenger.Default.Send(new ConfirmationMessage("Switching to review mode will end your game. Do you want to continue?", (confirmed) =>
                             {
-                                if (confirmed)
+                                try
                                 {
-                                    AppVM.EngineWrapper.SwitchToReviewMode();
+                                    if (confirmed)
+                                    {
+                                        AppVM.EngineWrapper.SwitchToReviewMode();
+                                    }
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
+                                catch (Exception ex)
+                                {
+                                    ExceptionUtils.HandleException(ex);
+                                }
+                            }));
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -772,7 +779,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && IsPlayMode;
+                    return IsIdle && IsPlayMode && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
                 }));
             }
         }
