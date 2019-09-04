@@ -70,7 +70,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _moveNumberChangedCallback?.Invoke(value + 1);
-                RaisePropertyChanged("CurrentMoveIndex");
+                RaisePropertyChanged(nameof(CurrentMoveIndex));
             }
         }
 

@@ -68,8 +68,8 @@ namespace Mzinga.SharedUX.ViewModel
             protected set
             {
                 _isIdle = value;
-                RaisePropertyChanged("IsIdle");
-                RaisePropertyChanged("IsBusy");
+                RaisePropertyChanged(nameof(IsIdle));
+                RaisePropertyChanged(nameof(IsBusy));
 
                 NewGame.RaiseCanExecuteChanged();
                 LoadGame.RaiseCanExecuteChanged();
@@ -118,8 +118,8 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _isRunningTimeCommand = value;
-                RaisePropertyChanged("IsRunningTimedCommand");
-                RaisePropertyChanged("IsRunningIndeterminateCommand");
+                RaisePropertyChanged(nameof(IsRunningTimedCommand));
+                RaisePropertyChanged(nameof(IsRunningIndeterminateCommand));
             }
         }
         private bool _isRunningTimeCommand = false;
@@ -141,7 +141,7 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _timedCommandProgress = Math.Max(0.0, Math.Min(1.0, value));
-                RaisePropertyChanged("TimedCommandProgress");
+                RaisePropertyChanged(nameof(TimedCommandProgress));
             }
         }
         private double _timedCommandProgress = 0.0;
@@ -195,7 +195,7 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _boardHistory = value;
-                RaisePropertyChanged("BoardHistory");
+                RaisePropertyChanged(nameof(BoardHistory));
                 CopyHistoryToClipboard.RaiseCanExecuteChanged();
             }
         }
@@ -304,7 +304,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }
 
                 _canvasHexRadius = value;
-                RaisePropertyChanged("CanvasHexRadius");
+                RaisePropertyChanged(nameof(CanvasHexRadius));
             }
         }
         private double _canvasHexRadius = 20;
@@ -318,7 +318,7 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _canvasCursorX = value;
-                RaisePropertyChanged("CanvasCursorX");
+                RaisePropertyChanged(nameof(CanvasCursorX));
             }
         }
         private double _canvasCursorX;
@@ -332,7 +332,7 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _canvasCursorY = value;
-                RaisePropertyChanged("CanvasCursorY");
+                RaisePropertyChanged(nameof(CanvasCursorY));
             }
         }
         private double _canvasCursorY;
@@ -346,7 +346,7 @@ namespace Mzinga.SharedUX.ViewModel
             internal set
             {
                 _canRaiseStackedPieces = value;
-                RaisePropertyChanged("CanRaiseStackedPieces");
+                RaisePropertyChanged(nameof(CanRaiseStackedPieces));
             }
         }
         private bool _canRaiseStackedPieces = false;
@@ -476,8 +476,8 @@ namespace Mzinga.SharedUX.ViewModel
                             {
                                 AppVM.ViewerConfig.CopyFrom(config);
 
-                                RaisePropertyChanged("ViewerConfig");
-                                RaisePropertyChanged("TargetMove");
+                                RaisePropertyChanged(nameof(ViewerConfig));
+                                RaisePropertyChanged(nameof(TargetMove));
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
 
@@ -992,7 +992,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged("Board");
+                    RaisePropertyChanged(nameof(Board));
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();
@@ -1005,7 +1005,7 @@ namespace Mzinga.SharedUX.ViewModel
                     MoveToEnd.RaiseCanExecuteChanged();
 
                     FindBestMove.RaiseCanExecuteChanged();
-                    RaisePropertyChanged("GameState");
+                    RaisePropertyChanged(nameof(GameState));
 
                     if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
                     {
@@ -1036,7 +1036,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged("ValidMoves");
+                    RaisePropertyChanged(nameof(ValidMoves));
                 });
             };
 
@@ -1044,7 +1044,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged("TargetMove");
+                    RaisePropertyChanged(nameof(TargetMove));
                     PlayTarget.RaiseCanExecuteChanged();
                 });
             };
@@ -1053,7 +1053,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged("TargetMove");
+                    RaisePropertyChanged(nameof(TargetMove));
                     PlayTarget.RaiseCanExecuteChanged();
 
                     if (!ViewerConfig.RequireMoveConfirmation)
@@ -1107,8 +1107,8 @@ namespace Mzinga.SharedUX.ViewModel
 
             AppVM.EngineWrapper.GameModeChanged += (sender, args) =>
             {
-                RaisePropertyChanged("IsPlayMode");
-                RaisePropertyChanged("IsReviewMode");
+                RaisePropertyChanged(nameof(IsPlayMode));
+                RaisePropertyChanged(nameof(IsReviewMode));
             };
 
             PropertyChanged += MainViewModel_PropertyChanged;
@@ -1176,8 +1176,8 @@ namespace Mzinga.SharedUX.ViewModel
         {
             switch (e.PropertyName)
             {
-                case "IsPlayMode":
-                case "IsReviewMode":
+                case nameof(IsPlayMode):
+                case nameof(IsReviewMode):
                     AppVM.DoOnUIThread(() =>
                     {
                         PlayTarget.RaiseCanExecuteChanged();

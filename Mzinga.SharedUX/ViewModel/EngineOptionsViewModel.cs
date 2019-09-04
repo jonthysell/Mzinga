@@ -101,7 +101,7 @@ namespace Mzinga.SharedUX.ViewModel
                     try
                     {
                         LoadOptions(true);
-                        RaisePropertyChanged("Options");
+                        RaisePropertyChanged(nameof(Options));
                     }
                     catch (Exception ex)
                     {

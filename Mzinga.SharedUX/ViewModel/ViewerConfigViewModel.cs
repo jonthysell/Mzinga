@@ -50,8 +50,8 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.EngineType = value;
-                RaisePropertyChanged("EngineType");
-                RaisePropertyChanged("EngineCommandLine");
+                RaisePropertyChanged(nameof(EngineType));
+                RaisePropertyChanged(nameof(EngineCommandLine));
             }
         }
 
@@ -64,7 +64,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.EngineCommandLine = value;
-                RaisePropertyChanged("EngineCommandLine");
+                RaisePropertyChanged(nameof(EngineCommandLine));
             }
         }
 
@@ -77,7 +77,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.HexOrientation = value;
-                RaisePropertyChanged("HexOrientation");
+                RaisePropertyChanged(nameof(HexOrientation));
             }
         }
 
@@ -90,7 +90,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.NotationType = value;
-                RaisePropertyChanged("NotationType");
+                RaisePropertyChanged(nameof(NotationType));
             }
         }
 
@@ -103,7 +103,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.PieceStyle = value;
-                RaisePropertyChanged("PieceStyle");
+                RaisePropertyChanged(nameof(PieceStyle));
             }
         }
 
@@ -116,7 +116,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.PieceColors = value;
-                RaisePropertyChanged("PieceColors");
+                RaisePropertyChanged(nameof(PieceColors));
             }
         }
 
@@ -129,7 +129,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.DisablePiecesInHandWithNoMoves = value;
-                RaisePropertyChanged("DisablePiecesInHandWithNoMoves");
+                RaisePropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
             }
         }
 
@@ -142,7 +142,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.DisablePiecesInPlayWithNoMoves = value;
-                RaisePropertyChanged("DisablePiecesInPlayWithNoMoves");
+                RaisePropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
             }
         }
 
@@ -155,7 +155,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.HighlightTargetMove = value;
-                RaisePropertyChanged("HighlightTargetMove");
+                RaisePropertyChanged(nameof(HighlightTargetMove));
             }
         }
 
@@ -168,7 +168,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.HighlightValidMoves = value;
-                RaisePropertyChanged("HighlightValidMoves");
+                RaisePropertyChanged(nameof(HighlightValidMoves));
             }
         }
 
@@ -181,7 +181,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.HighlightLastMovePlayed = value;
-                RaisePropertyChanged("HighlightLastMovePlayed");
+                RaisePropertyChanged(nameof(HighlightLastMovePlayed));
             }
         }
 
@@ -194,7 +194,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.BlockInvalidMoves = value;
-                RaisePropertyChanged("BlockInvalidMoves");
+                RaisePropertyChanged(nameof(BlockInvalidMoves));
             }
         }
 
@@ -207,7 +207,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.RequireMoveConfirmation = value;
-                RaisePropertyChanged("RequireMoveConfirmation");
+                RaisePropertyChanged(nameof(RequireMoveConfirmation));
             }
         }
 
@@ -220,7 +220,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.AddPieceNumbers = value;
-                RaisePropertyChanged("AddPieceNumbers");
+                RaisePropertyChanged(nameof(AddPieceNumbers));
             }
         }
 
@@ -233,7 +233,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.StackPiecesInHand = value;
-                RaisePropertyChanged("StackPiecesInHand");
+                RaisePropertyChanged(nameof(StackPiecesInHand));
             }
         }
 
@@ -246,7 +246,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.PlaySoundEffects = value;
-                RaisePropertyChanged("PlaySoundEffects");
+                RaisePropertyChanged(nameof(PlaySoundEffects));
             }
         }
 
@@ -259,7 +259,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Config.CheckUpdateOnStart = value;
-                RaisePropertyChanged("CheckUpdateOnStart");
+                RaisePropertyChanged(nameof(CheckUpdateOnStart));
             }
         }
 
@@ -316,23 +316,23 @@ namespace Mzinga.SharedUX.ViewModel
                         newConfig.InternalGameEngineConfig = Config.InternalGameEngineConfig;
                         Config = newConfig;
 
-                        RaisePropertyChanged("EngineType");
-                        RaisePropertyChanged("EngineCommandLine");
-                        RaisePropertyChanged("HexOrientation");
-                        RaisePropertyChanged("NotationType");
-                        RaisePropertyChanged("PieceStyle");
-                        RaisePropertyChanged("PieceColors");
-                        RaisePropertyChanged("DisablePiecesInHandWithNoMoves");
-                        RaisePropertyChanged("DisablePiecesInPlayWithNoMoves");
-                        RaisePropertyChanged("HighlightTargetMove");
-                        RaisePropertyChanged("HighlightValidMoves");
-                        RaisePropertyChanged("HighlightLastMovePlayed");
-                        RaisePropertyChanged("BlockInvalidMoves");
-                        RaisePropertyChanged("RequireMoveConfirmation");
-                        RaisePropertyChanged("AddPieceNumbers");
-                        RaisePropertyChanged("StackPiecesInHand");
-                        RaisePropertyChanged("PlaySoundEffects");
-                        RaisePropertyChanged("CheckUpdateOnStart");
+                        RaisePropertyChanged(nameof(EngineType));
+                        RaisePropertyChanged(nameof(EngineCommandLine));
+                        RaisePropertyChanged(nameof(HexOrientation));
+                        RaisePropertyChanged(nameof(NotationType));
+                        RaisePropertyChanged(nameof(PieceStyle));
+                        RaisePropertyChanged(nameof(PieceColors));
+                        RaisePropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
+                        RaisePropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
+                        RaisePropertyChanged(nameof(HighlightTargetMove));
+                        RaisePropertyChanged(nameof(HighlightValidMoves));
+                        RaisePropertyChanged(nameof(HighlightLastMovePlayed));
+                        RaisePropertyChanged(nameof(BlockInvalidMoves));
+                        RaisePropertyChanged(nameof(RequireMoveConfirmation));
+                        RaisePropertyChanged(nameof(AddPieceNumbers));
+                        RaisePropertyChanged(nameof(StackPiecesInHand));
+                        RaisePropertyChanged(nameof(PlaySoundEffects));
+                        RaisePropertyChanged(nameof(CheckUpdateOnStart));
 
                     }
                     catch (Exception ex)

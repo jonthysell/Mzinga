@@ -58,7 +58,7 @@ namespace Mzinga.SharedUX.ViewModel
             protected set
             {
                 _isIdle = value;
-                RaisePropertyChanged("IsIdle");
+                RaisePropertyChanged(nameof(IsIdle));
                 SendEngineCommand.RaiseCanExecuteChanged();
                 CancelEngineCommand.RaiseCanExecuteChanged();
             }
@@ -82,7 +82,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _engineInputText = value;
-                RaisePropertyChanged("EngineInputText");
+                RaisePropertyChanged(nameof(EngineInputText));
                 SendEngineCommand.RaiseCanExecuteChanged();
             }
         }
@@ -144,7 +144,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged("EngineOutputText");
+                    RaisePropertyChanged(nameof(EngineOutputText));
                 });
             };
 

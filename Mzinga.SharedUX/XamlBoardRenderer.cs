@@ -206,10 +206,10 @@ namespace Mzinga.SharedUX
         {
             switch (e.PropertyName)
             {
-                case "Board":
-                case "ValidMoves":
-                case "TargetMove":
-                case "ViewerConfig":
+                case nameof(VM.Board):
+                case nameof(VM.ValidMoves):
+                case nameof(VM.TargetMove):
+                case nameof(VM.ViewerConfig):
                     AppViewModel.Instance.DoOnUIThread(() =>
                     {
                         DrawBoard(VM.Board);

@@ -43,7 +43,7 @@ namespace Mzinga.SharedUX.ViewModel
             protected set
             {
                 _key = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentNullException();
-                RaisePropertyChanged("Key");
+                RaisePropertyChanged(nameof(Key));
             }
         }
         private string _key = "";
@@ -57,7 +57,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _value = value;
-                RaisePropertyChanged("Value");
+                RaisePropertyChanged(nameof(Value));
             }
         }
         private string _value = "";
@@ -79,8 +79,8 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _canEdit = value;
-                RaisePropertyChanged("CanEdit");
-                RaisePropertyChanged("IsReadOnly");
+                RaisePropertyChanged(nameof(CanEdit));
+                RaisePropertyChanged(nameof(IsReadOnly));
             }
         }
         private bool _canEdit = true;

@@ -78,7 +78,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _value = value;
-                RaisePropertyChanged("Value");
+                RaisePropertyChanged(nameof(Value));
             }
         }
         private bool _value;
@@ -112,7 +112,7 @@ namespace Mzinga.SharedUX.ViewModel
                     ExceptionUtils.HandleException(ex);
                 }
                 
-                RaisePropertyChanged("Value");
+                RaisePropertyChanged(nameof(Value));
             }
         }
         private int _value;
@@ -151,7 +151,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     ExceptionUtils.HandleException(ex);
                 }
-                RaisePropertyChanged("Value");
+                RaisePropertyChanged(nameof(Value));
             }
         }
         private double _value;
@@ -179,9 +179,9 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 _selectedValueIndex = value;
-                RaisePropertyChanged("SelectedValueIndex");
-                RaisePropertyChanged("Value");
-                RaisePropertyChanged("FriendlyValue");
+                RaisePropertyChanged(nameof(SelectedValueIndex));
+                RaisePropertyChanged(nameof(Value));
+                RaisePropertyChanged(nameof(FriendlyValue));
             }
         }
         private int _selectedValueIndex = 0;

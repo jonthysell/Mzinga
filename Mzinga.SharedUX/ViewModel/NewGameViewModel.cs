@@ -62,7 +62,7 @@ namespace Mzinga.SharedUX.ViewModel
                 try
                 {
                     Settings.WhitePlayerType = value;
-                    RaisePropertyChanged("WhitePlayerType");
+                    RaisePropertyChanged(nameof(WhitePlayerType));
                 }
                 catch (Exception ex)
                 {
@@ -82,7 +82,7 @@ namespace Mzinga.SharedUX.ViewModel
                 try
                 {
                     Settings.BlackPlayerType = value;
-                    RaisePropertyChanged("BlackPlayerType");
+                    RaisePropertyChanged(nameof(BlackPlayerType));
                 }
                 catch (Exception ex)
                 {
@@ -117,7 +117,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         Settings.ExpansionPieces &= ~ExpansionPieces.Mosquito; 
                     }
-                    RaisePropertyChanged("IncludeMosquito");
+                    RaisePropertyChanged(nameof(IncludeMosquito));
                 }
                 catch (Exception ex)
                 {
@@ -152,7 +152,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         Settings.ExpansionPieces &= ~ExpansionPieces.Ladybug;
                     }
-                    RaisePropertyChanged("IncludeLadybug");
+                    RaisePropertyChanged(nameof(IncludeLadybug));
                 }
                 catch (Exception ex)
                 {
@@ -187,7 +187,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         Settings.ExpansionPieces &= ~ExpansionPieces.Pillbug;
                     }
-                    RaisePropertyChanged("IncludePillbug");
+                    RaisePropertyChanged(nameof(IncludePillbug));
                 }
                 catch (Exception ex)
                 {
@@ -207,11 +207,11 @@ namespace Mzinga.SharedUX.ViewModel
                 try
                 {
                     Settings.BestMoveType = value;
-                    RaisePropertyChanged("BestMoveType");
-                    RaisePropertyChanged("EnableBestMoveMaxDepthValue");
-                    RaisePropertyChanged("BestMoveMaxDepthValue");
-                    RaisePropertyChanged("EnableBestMoveMaxTimeValue");
-                    RaisePropertyChanged("BestMoveMaxTimeValue");
+                    RaisePropertyChanged(nameof(BestMoveType));
+                    RaisePropertyChanged(nameof(EnableBestMoveMaxDepthValue));
+                    RaisePropertyChanged(nameof(BestMoveMaxDepthValue));
+                    RaisePropertyChanged(nameof(EnableBestMoveMaxTimeValue));
+                    RaisePropertyChanged(nameof(BestMoveMaxTimeValue));
                 }
                 catch (Exception ex)
                 {
@@ -237,7 +237,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Settings.BestMoveMaxDepth = value;
-                RaisePropertyChanged("BestMoveMaxDepthValue");
+                RaisePropertyChanged(nameof(BestMoveMaxDepthValue));
             }
         }
 
@@ -258,7 +258,7 @@ namespace Mzinga.SharedUX.ViewModel
             set
             {
                 Settings.BestMoveMaxTime = value;
-                RaisePropertyChanged("BestMoveMaxTimeValue");
+                RaisePropertyChanged(nameof(BestMoveMaxTimeValue));
             }
         }
 
