@@ -28,7 +28,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Forms;
+
+using Microsoft.Win32;
 
 using GalaSoft.MvvmLight.Messaging;
 
@@ -76,7 +77,7 @@ namespace Mzinga.Viewer
             ExceptionWindow window = new ExceptionWindow
             {
                 DataContext = message.ExceptionVM,
-                Owner = App.Current.MainWindow,
+                Owner = Application.Current.MainWindow,
             };
             message.ExceptionVM.RequestClose += (sender, e) =>
             {
@@ -92,7 +93,7 @@ namespace Mzinga.Viewer
                 InformationWindow window = new InformationWindow
                 {
                     DataContext = message.InformationVM,
-                    Owner = App.Current.MainWindow,
+                    Owner = Application.Current.MainWindow,
                 };
                 message.InformationVM.RequestClose += (sender, e) =>
                 {
@@ -114,7 +115,7 @@ namespace Mzinga.Viewer
         {
             try
             {
-                MessageBoxResult result = System.Windows.MessageBox.Show(message.Message, "Mzinga", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show(message.Message, "Mzinga", MessageBoxButton.YesNo);
                 message.Process(result == MessageBoxResult.Yes);
             }
             catch (Exception ex)
@@ -140,7 +141,7 @@ namespace Mzinga.Viewer
             LicensesWindow window = new LicensesWindow()
             {
                 DataContext = message.LicensesVM,
-                Owner = App.Current.MainWindow
+                Owner = Application.Current.MainWindow
             };
 
             message.LicensesVM.Licenses.Add(GetExtendedWpfToolkitLicense());
@@ -159,7 +160,7 @@ namespace Mzinga.Viewer
                 NewGameWindow window = new NewGameWindow
                 {
                     DataContext = message.NewGameVM,
-                    Owner = App.Current.MainWindow,
+                    Owner = Application.Current.MainWindow,
                 };
                 message.NewGameVM.RequestClose += (sender, e) =>
                 {
@@ -186,7 +187,7 @@ namespace Mzinga.Viewer
                 dialog.Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|Smart Game Format|*.sgf";
                 dialog.AddExtension = true;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
                 {
                     using (Stream inputStream = dialog.OpenFile())
                     {
@@ -216,7 +217,7 @@ namespace Mzinga.Viewer
                 dialog.Filter = "Portable Game Notation|*.pgn";
                 dialog.AddExtension = true;
 
-                if (dialog.ShowDialog() == DialogResult.OK)
+                if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
                 {
                     using (Stream outputStream = dialog.OpenFile())
                     {
@@ -237,7 +238,7 @@ namespace Mzinga.Viewer
                 GameMetadataWindow window = new GameMetadataWindow
                 {
                     DataContext = message.GameMetadataVM,
-                    Owner = App.Current.MainWindow,
+                    Owner = Application.Current.MainWindow,
                 };
                 message.GameMetadataVM.RequestClose += (sender, e) =>
                 {
@@ -259,7 +260,7 @@ namespace Mzinga.Viewer
                 ViewerConfigWindow window = new ViewerConfigWindow
                 {
                     DataContext = message.ViewerConfigVM,
-                    Owner = App.Current.MainWindow,
+                    Owner = Application.Current.MainWindow,
                 };
                 message.ViewerConfigVM.RequestClose += (sender, e) =>
                 {
@@ -286,7 +287,7 @@ namespace Mzinga.Viewer
                 EngineOptionsWindow window = new EngineOptionsWindow
                 {
                     DataContext = message.EngineOptionsVM,
-                    Owner = App.Current.MainWindow,
+                    Owner = Application.Current.MainWindow,
                 };
                 message.EngineOptionsVM.RequestClose += (sender, e) =>
                 {
