@@ -34,7 +34,7 @@ using Mzinga.SharedUX;
 
 namespace Mzinga.Viewer
 {
-    public class CLIEngineWrapper : EngineWrapper
+    public sealed class CLIEngineWrapper : EngineWrapper, IDisposable
     {
         private Process _process;
         private StreamWriter _writer;
@@ -101,13 +101,12 @@ namespace Mzinga.Viewer
             {
                 _process.CancelOutputRead();
                 _writer.WriteLine("exit");
+                _writer.Flush();
                 _process.WaitForExit(WaitForExitTimeoutMS);
                 _process.Close();
+                _writer.Close();
             }
             catch (Exception) { }
-
-            _process = null;
-            _writer = null;
         }
 
         protected override void OnEngineInput(string command)
@@ -129,6 +128,12 @@ namespace Mzinga.Viewer
 
                 NativeMethods.SetConsoleCtrlHandler(null, false);
             }
+        }
+
+        public void Dispose()
+        {
+            ((IDisposable)_process).Dispose();
+            ((IDisposable)_writer)?.Dispose();
         }
 
         private const int WaitForExitTimeoutMS = 10 * 1000;

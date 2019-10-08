@@ -138,7 +138,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public EngineConsoleViewModel()
         {
-            IsIdle = AppVM.EngineWrapper.IsIdle;
+            _isIdle = AppVM.EngineWrapper.IsIdle;
 
             AppVM.EngineWrapper.EngineTextUpdated += (sender, args) =>
             {

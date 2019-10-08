@@ -30,6 +30,7 @@ using System.Text;
 
 namespace Mzinga.Core
 {
+    [Serializable]
     public class MoveSet : HashSet<Move>
     {
         public static readonly MoveSet EmptySet = new MoveSet();

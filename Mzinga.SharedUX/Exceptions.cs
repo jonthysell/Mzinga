@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2018, 2019 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,21 +28,19 @@ using System;
 
 namespace Mzinga.SharedUX
 {
-    public class EngineException : Exception
+    [Serializable]
+    public class EngineErrorException : Exception
     {
         public string[] OutputLines { get; private set; }
 
-        public EngineException(string message, string[] outputLines) : base(message)
+        public EngineErrorException(string message, string[] outputLines) : base(message)
         {
             OutputLines = outputLines;
         }
     }
 
-#if !WINDOWS_UWP
-    [Serializable]
-#endif
-    public class InvalidMoveException : EngineException
+    public class EngineInvalidMoveException : EngineErrorException
     {
-        public InvalidMoveException(string message, string[] outputLines) : base(message, outputLines) { }
+        public EngineInvalidMoveException(string message, string[] outputLines) : base(message, outputLines) { }
     }
 }

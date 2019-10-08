@@ -712,12 +712,12 @@ namespace Mzinga.SharedUX
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                throw new EngineException(errorMessage.Trim(), outputLines);
+                throw new EngineErrorException(errorMessage.Trim(), outputLines);
             }
 
             if (!string.IsNullOrWhiteSpace(invalidMoveMessage))
             {
-                throw new InvalidMoveException(invalidMoveMessage.Trim(), outputLines);
+                throw new EngineInvalidMoveException(invalidMoveMessage.Trim(), outputLines);
             }
 
             string firstLine = "";

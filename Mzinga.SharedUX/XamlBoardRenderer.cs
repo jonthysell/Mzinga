@@ -522,8 +522,10 @@ namespace Mzinga.SharedUX
             numPieces = 0;
             maxStack = -1;
 
-            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>();
-            pieces[0] = new List<Piece>();
+            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>
+            {
+                [0] = new List<Piece>()
+            };
 
             PieceName targetPieceName = VM.AppVM.EngineWrapper.TargetPiece;
             Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
@@ -620,8 +622,10 @@ namespace Mzinga.SharedUX
             }
 
             PathGeometry data = new PathGeometry();
-            PathFigure figure = new PathFigure();
-            figure.IsClosed = true;
+            PathFigure figure = new PathFigure
+            {
+                IsClosed = true
+            };
 
             double hexRadius = size - 0.75 * strokeThickness;
 
@@ -871,9 +875,7 @@ namespace Mzinga.SharedUX
         private void PieceCanvas_Click(object sender, MouseButtonEventArgs e)
 #endif
         {
-            Canvas pieceCanvas = sender as Canvas;
-
-            if (null != pieceCanvas)
+            if (sender is Canvas pieceCanvas)
             {
                 PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
                 VM.PieceClick(clickedPiece);

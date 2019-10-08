@@ -180,12 +180,13 @@ namespace Mzinga.Viewer
             GameRecording gr = null;
             try
             {
-                OpenFileDialog dialog = new OpenFileDialog();
-
-                dialog.Title = "Open Game";
-                dialog.DefaultExt = ".pgn";
-                dialog.Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|Smart Game Format|*.sgf";
-                dialog.AddExtension = true;
+                OpenFileDialog dialog = new OpenFileDialog
+                {
+                    Title = "Open Game",
+                    DefaultExt = ".pgn",
+                    Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|Smart Game Format|*.sgf",
+                    AddExtension = true
+                };
 
                 if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
                 {
@@ -210,12 +211,13 @@ namespace Mzinga.Viewer
         {
             try
             {
-                SaveFileDialog dialog = new SaveFileDialog();
-
-                dialog.Title = "Save Game";
-                dialog.DefaultExt = ".pgn";
-                dialog.Filter = "Portable Game Notation|*.pgn";
-                dialog.AddExtension = true;
+                SaveFileDialog dialog = new SaveFileDialog
+                {
+                    Title = "Save Game",
+                    DefaultExt = ".pgn",
+                    Filter = "Portable Game Notation|*.pgn",
+                    AddExtension = true
+                };
 
                 if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
                 {

@@ -190,7 +190,7 @@ namespace Mzinga.Test
             }
         }
 
-        private static int TestMaxHelperThreads = 0;
-        private static int PerfTestMaxHelperThreads = 0;
+        private static readonly int TestMaxHelperThreads = 0;
+        private static readonly int PerfTestMaxHelperThreads = 0;
     }
 }

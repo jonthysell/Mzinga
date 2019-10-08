@@ -408,7 +408,7 @@ namespace Mzinga.SharedUX
             return new GameRecording(gameBoard, metadata);
         }
 
-        private static string[] SgfDateFormats = new string[]
+        private static readonly string[] SgfDateFormats = new string[]
         {
             "d MMMM yyyy",
             "d. MMMM yyyy",

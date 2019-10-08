@@ -830,6 +830,7 @@ namespace Mzinga.Engine
 
     public delegate void ConsoleOut(string format, params object[] arg);
 
+    [Serializable]
     public class CommandException : Exception
     {
         public CommandException(string message) : base(message) { }

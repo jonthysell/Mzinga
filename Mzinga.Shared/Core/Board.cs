@@ -1233,8 +1233,10 @@ namespace Mzinga.Core
 
             Position startingPosition = targetPiece.Position;
 
-            HashSet<Position> visitedPositions = new HashSet<Position>();
-            visitedPositions.Add(startingPosition);
+            HashSet<Position> visitedPositions = new HashSet<Position>
+            {
+                startingPosition
+            };
 
             MovePiece(targetPiece, null, false);
             GetValidSlides(targetPiece.PieceName, startingPosition, visitedPositions, 0, maxRange, validMoves);
@@ -1397,9 +1399,7 @@ namespace Mzinga.Core
         Pillbug = 0x4,
     }
 
-#if !WINDOWS_UWP
     [Serializable]
-#endif
     public class InvalidMoveException : Exception
     {
         public Move Move { get; private set; }
