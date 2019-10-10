@@ -160,16 +160,16 @@ namespace Mzinga.Test
 
         private class GameAIBestMoveTestCase : ITestCase
         {
-            public GameBoard gameBoard;
-            public int maxDepth;
+            public GameBoard Board;
+            public int MaxDepth;
 
             public Move ExpectedBestMove;
             public Move ActualBestMove;
 
             public void Execute()
             {
-                GameAI ai = GetTestGameAI(gameBoard.ExpansionPieces);
-                ActualBestMove = ai.GetBestMove(gameBoard, maxDepth, TestMaxHelperThreads);
+                GameAI ai = GetTestGameAI(Board.ExpansionPieces);
+                ActualBestMove = ai.GetBestMove(Board, MaxDepth, TestMaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove);
             }
 
@@ -184,8 +184,8 @@ namespace Mzinga.Test
 
                 string[] vals = s.Split('\t');
 
-                gameBoard = new GameBoard(vals[0]);
-                maxDepth = int.Parse(vals[1]);
+                Board = new GameBoard(vals[0]);
+                MaxDepth = int.Parse(vals[1]);
                 ExpectedBestMove = new Move(vals[2]);
             }
         }

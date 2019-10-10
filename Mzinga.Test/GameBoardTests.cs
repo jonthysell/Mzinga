@@ -33,6 +33,7 @@ using Mzinga.Core;
 namespace Mzinga.Test
 {
     [TestClass]
+    [DeploymentItem("TestCases\\GameBoardTests")]
     public class GameBoardTests
     {
         [TestMethod]
@@ -144,6 +145,12 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
+        public void GameBoard_InvalidMovesTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardInvalidMoveTestCase>("GameBoard_InvalidMovesTest.csv");
+        }
+
+        [TestMethod]
         [TestCategory("Performance")]
         public void GameBoard_NewGamePerftTest()
         {
@@ -182,6 +189,46 @@ namespace Mzinga.Test
             }
 
             return line;
+        }
+
+        private class GameBoardInvalidMoveTestCase : ITestCase
+        {
+            public GameBoard Board;
+            
+            public string InvalidMoveString;
+            public Move InvalidMove;
+
+            public void Execute()
+            {
+                try
+                {
+                    Trace.TraceInformation($"Current Board: {Board.ToGameString()}");
+                    Trace.TraceInformation($"Playing: {InvalidMoveString}");
+                    Board.Play(InvalidMove);
+                    Assert.Fail();
+                }
+                catch (InvalidMoveException ex)
+                {
+                    Trace.TraceInformation($"Invalid move reason: {ex.Message}");
+                    Assert.AreEqual(InvalidMove, ex.Move);
+                }
+            }
+
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException(nameof(s));
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                Board = GameBoard.ParseGameString(vals[0]);
+                InvalidMoveString = vals[1];
+                InvalidMove = NotationUtils.ParseMoveString(Board, vals[1]);
+            }
         }
     }
 

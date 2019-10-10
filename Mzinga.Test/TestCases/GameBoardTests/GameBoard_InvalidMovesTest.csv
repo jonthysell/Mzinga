@@ -1,0 +1,49 @@
+﻿# You can't play, the game is over.
+Base;BlackWins;White[7];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 -wQ;bG1 bQ-;wA1 wG1\;bA1 bQ\;wA2 \wQ;bA2 \bG1;wG2 wQ/;bG1 wG2\	wB1 wG2/
+Base;WhiteWins;Black[7];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 -wQ;bG1 bQ-;wA1 wG1\;bA1 bQ\;wA2 \wQ;bA2 \bG1;wG2 wA2/;bA3 -bA2;wG1 /bA3	bS2 \bA2
+
+# It's not that player's turn.
+Base;NotStarted;White[1]	bA1
+Base;NotStarted;Black[1];wS1	wA1 wS1-
+
+# That piece is not enabled in this game.
+Base;NotStarted;White[1]	wM
+Base;NotStarted;White[1];wS1	bM wS1-
+
+# You can't put a piece back into your hand.
+
+# You can't play your Queen Bee on your first turn.
+Base;NotStarted;White[1]	wQ
+Base;NotStarted;White[1];wS1	bQ wS1-
+
+# You must play your Queen Bee on or before your fourth turn.
+Base;InProgress;White[4];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\	wS2 /wG1
+Base;InProgress;Black[4];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wG1	bS2 bG1\
+
+# You can't move a piece in play until you've played your Queen Bee.
+Base;InProgress;White[3];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/	wB1 -wS1
+Base;InProgress;Black[3];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1	bB1 bS1-
+
+# When there are multiple pieces of the same bug type, you must play the pieces in order.
+Base;InProgress;White[3];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/	wG2 /wS1
+Base;InProgress;Black[3];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1	bG2 bS1\
+
+# You can't move there because a piece already exists at that position.
+Base;InProgress;White[5];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wB1;bQ bB1\	wB1 /wS1
+Base;InProgress;Black[5];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wB1;bQ bB1\;wS2 /wG1	bB1 -bQ
+
+# You can't move that piece because it has another piece on top of it.
+Base;InProgress;White[6];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wB1;bQ bB1\;wB1 wQ;bB1 bQ	wQ \wS1
+Base;InProgress;Black[6];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wB1;bQ bB1\;wB1 wQ;bB1 bQ;wA1 \wS1	bQ bS1/
+
+# You can't move that piece because it will break the hive.
+Base;InProgress;White[5];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wG1;bQ bG1\	wG1 -bB1
+Base;InProgress;Black[5];wS1;bS1 wS1-;wB1 \wS1;bB1 bS1/;wG1 /wS1;bG1 bS1\;wQ /wG1;bQ bG1\;wQ -wG1	bG1 -bB1
+
+# You can't pass, the game is over.
+Base;BlackWins;White[7];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 -wQ;bG1 bQ-;wA1 wG1\;bA1 bQ\;wA2 \wQ;bA2 \bG1;wG2 wQ/;bG1 wG2\	pass
+Base;WhiteWins;Black[7];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 -wQ;bG1 bQ-;wA1 wG1\;bA1 bQ\;wA2 \wQ;bA2 \bG1;wG2 wA2/;bA3 -bA2;wG1 /bA3	pass
+
+# You can't pass when you have valid moves.
+Base;NotStarted;White[1]	pass
+Base;NotStarted;Black[1];wS1	pass

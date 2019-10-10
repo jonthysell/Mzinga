@@ -121,11 +121,7 @@ namespace Mzinga.Core
 
                 if (targetPiece.InPlay)
                 {
-                    if (targetPiece.Position == move.Position)
-                    {
-                        throw new InvalidMoveException(move, "You can't move a piece to its current position.");
-                    }
-                    else if (!PieceIsOnTop(targetPiece))
+                    if (!PieceIsOnTop(targetPiece))
                     {
                         throw new InvalidMoveException(move, "You can't move that piece because it has another piece on top of it.");
                     }
