@@ -450,9 +450,9 @@ namespace Mzinga.Engine
             {
                 move = NotationUtils.ParseMoveString(_gameBoard, moveString);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
+                throw new InvalidMoveException(move);
             }
 
             NotationUtils.TryNormalizeBoardSpaceMoveString(moveString, out moveString);

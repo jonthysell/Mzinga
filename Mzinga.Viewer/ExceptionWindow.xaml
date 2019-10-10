@@ -24,7 +24,8 @@
                     </Label.Content>
                 </Label>
                 <Expander Header="Details"
-                          Margin="5">
+                          Margin="5"
+                          Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBox Height="100"
                              IsReadOnly="True"
                              Margin="5"

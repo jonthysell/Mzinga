@@ -328,6 +328,11 @@ namespace Mzinga.SharedUX
                     _outputLines.CopyTo(0, outputLines, 0, outputLines.Length);
                     ProcessEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
                 }
+                catch (EngineErrorException ex)
+                {
+                    TargetPiece = PieceName.INVALID; // Reset the move
+                    ExceptionUtils.HandleException(ex);
+                }
                 catch (Exception ex)
                 {
                     ExceptionUtils.HandleException(ex);

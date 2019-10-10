@@ -53,17 +53,16 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool ShowDetails => !(Exception is EngineInvalidMoveException);
+
         public string Details
         {
             get
             {
-                if (Exception is EngineErrorException ee)
-                {
-                    return string.Format(string.Join(Environment.NewLine, ee.OutputLines));
-                }
-                return string.Format(Exception.ToString());
+                return _details ?? (_details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString()));
             }
         }
+        private string _details = null;
 
         public RelayCommand Accept
         {
