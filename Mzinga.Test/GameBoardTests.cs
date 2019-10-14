@@ -145,9 +145,57 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
-        public void GameBoard_InvalidMovesTest()
+        public void GameBoard_ValidMovesForQueenBeeTest()
         {
-            TestUtils.LoadAndExecuteTestCases<GameBoardInvalidMoveTestCase>("GameBoard_InvalidMovesTest.csv");
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForQueenBeeTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForSpiderTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForSpiderTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForBeetleTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForBeetleTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForGrasshopperTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForGrasshopperTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForSoldierAntTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForSoldierAntTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForMosquitoTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForMosquitoTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForLadybugTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForLadybugTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_ValidMovesForPillbugTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardValidMoveTestCase>("GameBoard_ValidMovesForPillbugTest.csv");
+        }
+
+        [TestMethod]
+        public void GameBoard_InvalidMovesByRuleTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameBoardInvalidMoveTestCase>("GameBoard_InvalidMovesByRuleTest.csv");
         }
 
         [TestMethod]
@@ -189,6 +237,47 @@ namespace Mzinga.Test
             }
 
             return line;
+        }
+
+        private class GameBoardValidMoveTestCase : ITestCase
+        {
+            public GameBoard Board;
+
+            public string[] ValidMoveStrings;
+            public Move[] ValidMoves;
+
+            public void Execute()
+            {
+                Trace.TraceInformation($"Current Board: {Board.ToGameString()}");
+                for (int i = 0; i < ValidMoveStrings.Length; i++)
+                {
+                    Trace.TraceInformation($"Playing: {ValidMoveStrings[i]}");
+                    Board.Play(ValidMoves[i]);
+                    Board.UndoLastMove();
+                }
+            }
+
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException(nameof(s));
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                Board = GameBoard.ParseGameString(vals[0]);
+
+                ValidMoveStrings = vals[1].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                ValidMoves = new Move[ValidMoveStrings.Length];
+
+                for (int i = 0; i < ValidMoveStrings.Length; i++)
+                {
+                    ValidMoves[i] = NotationUtils.ParseMoveString(Board, ValidMoveStrings[i]);
+                }
+            }
         }
 
         private class GameBoardInvalidMoveTestCase : ITestCase

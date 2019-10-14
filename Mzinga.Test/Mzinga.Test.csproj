@@ -98,7 +98,31 @@
     <None Include="TestCases\GameAITests\GameAI_WinningMoveIsBestMoveTest.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestCases\GameBoardTests\GameBoard_InvalidMovesTest.csv">
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForGrasshopperTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForPillbugTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForSoldierAntTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForMosquitoTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForLadybugTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForBeetleTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForSpiderTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_ValidMovesForQueenBeeTest.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestCases\GameBoardTests\GameBoard_InvalidMovesByRuleTest.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
