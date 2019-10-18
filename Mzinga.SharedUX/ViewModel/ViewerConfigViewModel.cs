@@ -237,6 +237,32 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool ShowBoardHistory
+        {
+            get
+            {
+                return Config.ShowBoardHistory;
+            }
+            set
+            {
+                Config.ShowBoardHistory = value;
+                RaisePropertyChanged(nameof(ShowBoardHistory));
+            }
+        }
+
+        public bool ShowMoveCommentary
+        {
+            get
+            {
+                return Config.ShowMoveCommentary;
+            }
+            set
+            {
+                Config.ShowMoveCommentary = value;
+                RaisePropertyChanged(nameof(ShowMoveCommentary));
+            }
+        }
+
         public bool PlaySoundEffects
         {
             get

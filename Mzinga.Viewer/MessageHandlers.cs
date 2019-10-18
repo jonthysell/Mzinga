@@ -184,7 +184,7 @@ namespace Mzinga.Viewer
                 {
                     Title = "Open Game",
                     DefaultExt = ".pgn",
-                    Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|Smart Game Format|*.sgf",
+                    Filter = "All Supported Files|*.pgn;*.sgf|Portable Game Notation|*.pgn|BoardSpace Smart Game Format|*.sgf",
                     AddExtension = true
                 };
 
@@ -215,7 +215,7 @@ namespace Mzinga.Viewer
                 {
                     Title = "Save Game",
                     DefaultExt = ".pgn",
-                    Filter = "Portable Game Notation|*.pgn",
+                    Filter = "HPortable Game Notation|*.pgn",
                     AddExtension = true
                 };
 

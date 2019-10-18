@@ -101,6 +101,10 @@ namespace Mzinga.SharedUX
 
         public bool PlaySoundEffects { get; set; } = true;
 
+        public bool ShowBoardHistory { get; set; } = false;
+
+        public bool ShowMoveCommentary { get; set; } = false;
+
         public bool FirstRun { get; set; } = true;
 
         public bool CheckUpdateOnStart { get; set; } = true;
@@ -172,6 +176,12 @@ namespace Mzinga.SharedUX
                             case "PlaySoundEffects":
                                 PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
                                 break;
+                            case "ShowBoardHistory":
+                                ShowBoardHistory = ParseBoolValue(reader.ReadElementContentAsString(), ShowBoardHistory);
+                                break;
+                            case "ShowMoveCommentary":
+                                ShowMoveCommentary = ParseBoolValue(reader.ReadElementContentAsString(), ShowMoveCommentary);
+                                break;
                             case "FirstRun":
                                 FirstRun = ParseBoolValue(reader.ReadElementContentAsString(), FirstRun);
                                 break;
@@ -237,6 +247,8 @@ namespace Mzinga.SharedUX
                 writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
                 writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
                 writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
+                writer.WriteElementString("ShowBoardHistory", ShowBoardHistory.ToString());
+                writer.WriteElementString("ShowMoveCommentary", ShowMoveCommentary.ToString());
                 writer.WriteElementString("FirstRun", FirstRun.ToString());
                 writer.WriteElementString("CheckUpdateOnStart", CheckUpdateOnStart.ToString());
 
@@ -273,6 +285,9 @@ namespace Mzinga.SharedUX
                 StackPiecesInHand = StackPiecesInHand,
 
                 PlaySoundEffects = PlaySoundEffects,
+
+                ShowBoardHistory = ShowBoardHistory,
+                ShowMoveCommentary = ShowMoveCommentary,
 
                 FirstRun = FirstRun,
                 CheckUpdateOnStart = CheckUpdateOnStart,
@@ -313,6 +328,9 @@ namespace Mzinga.SharedUX
             StackPiecesInHand = config.StackPiecesInHand;
 
             PlaySoundEffects = config.PlaySoundEffects;
+
+            ShowBoardHistory = config.ShowBoardHistory;
+            ShowMoveCommentary = config.ShowMoveCommentary;
 
             FirstRun = config.FirstRun;
             CheckUpdateOnStart = config.CheckUpdateOnStart;

@@ -34,7 +34,7 @@
                     Key="E"
                     Modifiers="Ctrl+Shift" />
         <KeyBinding Command="{Binding ShowViewerConfig}"
-                    Key="O"
+                    Key="V"
                     Modifiers="Ctrl+Shift" />
     </Window.InputBindings>
     <Window.Resources>
@@ -79,10 +79,6 @@
                           Header="_Save As..."
                           InputGestureText="Ctrl+S" />
                 <Separator />
-                <MenuItem Command="{Binding ShowViewerConfig}"
-                          Header="_Viewer Options"
-                          InputGestureText="Ctrl+Shift+O" />
-                <Separator />
                 <MenuItem Click="Exit_Click"
                           Header="E_xit"
                           InputGestureText="Alt+F4" />
@@ -125,6 +121,18 @@
                           Header="Engine _Console"
                           InputGestureText="Ctrl+Shift+C" />
             </MenuItem>
+            <MenuItem Header="_Viewer">
+                <MenuItem Header="Show Board _History"
+                          IsCheckable="True"
+                          IsChecked="{Binding ShowBoardHistory}" />
+                <MenuItem Header="Show Move _Commentary"
+                          IsCheckable="True"
+                          IsChecked="{Binding ShowMoveCommentary}" />
+                <Separator />
+                <MenuItem Command="{Binding ShowViewerConfig}"
+                          Header="Viewer _Options"
+                          InputGestureText="Ctrl+Shift+V" />
+            </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Command="{Binding LaunchMzingaWebsite}"
                           Header="_Mzinga Website" />
@@ -146,6 +154,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -201,21 +210,29 @@
                                 Content="|&lt;"
                                 Margin="5"
                                 Style="{DynamicResource CleanButton}"
+                                ToolTip="Move to Start"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Width="50" />
                         <Button Command="{Binding MoveBack}"
                                 Content="&lt;"
                                 Margin="5"
                                 Style="{DynamicResource CleanButton}"
+                                ToolTip="Move Back"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Width="50" />
                         <Button Command="{Binding MoveForward}"
                                 Content="&gt;"
                                 Margin="5"
                                 Style="{DynamicResource CleanButton}"
+                                ToolTip="Move Forward"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Width="50" />
                         <Button Command="{Binding MoveToEnd}"
                                 Content="&gt;|"
                                 Margin="5"
                                 Style="{DynamicResource CleanButton}"
+                                ToolTip="Move Back"
+                                Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"
                                 Width="50" />
                     </StackPanel>
                 </StackPanel>
@@ -226,18 +243,19 @@
                         Name="BlackHandStackPanel"
                         Orientation="Vertical" />
             <Grid Grid.Column="3"
-                  Grid.Row="0">
+                  Grid.Row="0"
+                  Visibility="{Binding ShowBoardHistory, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Visible}">
                 <GroupBox FontWeight="Bold"
                           Header="History"
                           Margin="5">
                     <ListBox HorizontalContentAlignment="Stretch"
                              ItemsSource="{Binding BoardHistory.Items}"
                              Margin="5"
-                             MinWidth="120"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
-                             SelectionMode="Single">
+                             SelectionMode="Single"
+                             Width="140">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
@@ -257,8 +275,23 @@
                     </ListBox>
                 </GroupBox>
             </Grid>
+            <Grid Grid.Column="4"
+                  Grid.Row="0"
+                  Visibility="{Binding ShowMoveCommentary, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Visible}">
+                <GroupBox FontWeight="Bold"
+                          Header="Commentary"
+                          Margin="5">
+                    <TextBox AcceptsReturn="True"
+                             FontWeight="Normal"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Text="{Binding CurrentMoveCommentary, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap"
+                             Width="140" />
+                </GroupBox>
+            </Grid>
             <Grid Grid.Column="0"
-                  Grid.ColumnSpan="3"
+                  Grid.ColumnSpan="5"
                   Grid.Row="1"
                   Margin="5">
                 <Grid.ColumnDefinitions>
@@ -283,15 +316,17 @@
                     <Label Content="{Binding TargetMove}" />
                 </StackPanel>
             </Grid>
-            <ProgressBar Grid.Column="4"
-                         Grid.Row="1"
-                         HorizontalAlignment="Stretch"
+            <ProgressBar Grid.Column="1"
+                         Grid.Row="0"
+                         Height="20"
                          IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
                          Margin="5"
                          Maximum="1.0"
                          Minimum="0.0"
                          Value="{Binding TimedCommandProgress, Mode=OneWay}"
-                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" />
+                         VerticalAlignment="Bottom"
+                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
+                         Width="120" />
         </Grid>
     </DockPanel>
 </Window>

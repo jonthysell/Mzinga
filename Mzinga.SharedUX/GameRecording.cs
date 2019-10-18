@@ -88,11 +88,15 @@ namespace Mzinga.SharedUX
                 {
                     sw.WriteLine();
 
+                    WritePGNMoveCommentary(sw, 0);
+
                     // Write Moves
                     int count = 1;
                     foreach (BoardHistoryItem item in GameBoard.BoardHistory)
                     {
                         sw.WriteLine("{0}. {1}", count, NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString));
+                        WritePGNMoveCommentary(sw, count);
+
                         count++;
                     }
                 }
@@ -111,6 +115,15 @@ namespace Mzinga.SharedUX
             return string.Format("[{0} \"{1}\"]", key.Trim(), null != value ? value.Trim() : "");
         }
 
+        private void WritePGNMoveCommentary(StreamWriter streamWriter,  int moveNum)
+        {
+            string commentary = Metadata.GetMoveCommentary(moveNum)?.Trim(new char[] { ' ', '\t', '\r', '\n' });
+            if (!string.IsNullOrEmpty(commentary))
+            {
+                streamWriter.WriteLine("{" + commentary + "}");
+            }
+        }
+
         public static GameRecording LoadPGN(Stream inputStream)
         {
             if (null == inputStream)
@@ -124,40 +137,60 @@ namespace Mzinga.SharedUX
 
             string rawResult = "";
 
+            string multiLineCommentary = null;
+
             using (StreamReader sr = new StreamReader(inputStream, Encoding.ASCII))
             {
                 string line = null;
                 while ((line = sr.ReadLine()) != null)
                 {
                     line = line.Trim();
-                    if (!string.IsNullOrWhiteSpace(line))
+
+                    if (null != multiLineCommentary)
                     {
-                        // Line has contents
-                        if (line.StartsWith("[") && line.EndsWith("]"))
+                        // Line is part of multiline commentary
+                        multiLineCommentary += Environment.NewLine + line;
+
+                        if (multiLineCommentary.EndsWith("}"))
                         {
-                            // Line is a tag
-                            KeyValuePair<string, string> kvp = ParsePGNTag(line);
-                            if (kvp.Key == "Result")
-                            {
-                                rawResult = kvp.Value;
-                            }
-                            else
-                            {
-                                metadata.SetTag(kvp.Key, kvp.Value);
-                            }
+                            // End of multiline commentary
+                            metadata.SetMoveCommentary(moveList.Count, multiLineCommentary);
+                            multiLineCommentary = null;
+                        }
+                    }
+                    else if (line.StartsWith("[") && line.EndsWith("]"))
+                    {
+                        // Line is a tag
+                        KeyValuePair<string, string> kvp = ParsePGNTag(line);
+                        if (kvp.Key == "Result")
+                        {
+                            rawResult = kvp.Value;
                         }
                         else
                         {
-                            // Line is a move or result
-                            if (Enum.TryParse(line, out BoardState lineResult))
-                            {
-                                rawResult = lineResult.ToString();
-                            }
-                            else
-                            {
-                                // Not a result, add as moveString
-                                moveList.Add(line.TrimStart('.', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'));
-                            }
+                            metadata.SetTag(kvp.Key, kvp.Value);
+                        }
+                    }
+                    else if (line.StartsWith("{") && line.EndsWith("}"))
+                    {
+                        // Line is a single line of commentary
+                        metadata.SetMoveCommentary(moveList.Count, line);
+                    }
+                    else if (line.StartsWith("{") && null == multiLineCommentary)
+                    {
+                        multiLineCommentary = line;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        // Line is a move or result
+                        if (Enum.TryParse(line, out BoardState lineResult))
+                        {
+                            rawResult = lineResult.ToString();
+                        }
+                        else
+                        {
+                            // Not a result, add as moveString
+                            moveList.Add(line.TrimStart('.', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'));
                         }
                     }
                 }

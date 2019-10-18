@@ -62,6 +62,19 @@ namespace Mzinga.SharedUX
 
         #endregion
 
+        #region Move Commentary
+
+        public IReadOnlyDictionary<int, string> MoveCommentary
+        {
+            get
+            {
+                return _moveCommentary;
+            }
+        }
+        private Dictionary<int, string> _moveCommentary = new Dictionary<int, string>();
+
+        #endregion
+
         public void Clear()
         {
             Event = "";
@@ -153,6 +166,31 @@ namespace Mzinga.SharedUX
             }
         }
 
+        public void SetMoveCommentary(int moveNum, string commentary)
+        {
+            if (moveNum < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(moveNum));
+            }
+
+            _moveCommentary[moveNum] = commentary?.Replace("{", "").Replace("}", "");
+        }
+
+        public string GetMoveCommentary(int moveNum)
+        {
+            if (moveNum < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(moveNum));
+            }
+
+            if (_moveCommentary.TryGetValue(moveNum, out string commentary))
+            {
+                return commentary;
+            }
+
+            return null;
+        }
+
         public GameMetadata Clone()
         {
             GameMetadata clone = new GameMetadata()
@@ -171,6 +209,11 @@ namespace Mzinga.SharedUX
             foreach (KeyValuePair<string, string> kvp in OptionalTags)
             {
                 clone._optionalTags.Add(kvp.Key, kvp.Value);
+            }
+
+            foreach (KeyValuePair<int, string> kvp in MoveCommentary)
+            {
+                clone._moveCommentary.Add(kvp.Key, kvp.Value);
             }
 
             return clone;
@@ -196,6 +239,11 @@ namespace Mzinga.SharedUX
             foreach (KeyValuePair<string, string> kvp in metadata.OptionalTags)
             {
                 _optionalTags[kvp.Key] = kvp.Value;
+            }
+
+            foreach (KeyValuePair<int, string> kvp in metadata.MoveCommentary)
+            {
+                _moveCommentary[kvp.Key] = kvp.Value;
             }
         }
     }

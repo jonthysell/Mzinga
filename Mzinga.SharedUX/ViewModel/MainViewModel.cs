@@ -186,6 +186,32 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public bool ShowBoardHistory
+        {
+            get
+            {
+                return ViewerConfig.ShowBoardHistory;
+            }
+            set
+            {
+                ViewerConfig.ShowBoardHistory = value;
+                RaisePropertyChanged(nameof(ShowBoardHistory));
+            }
+        }
+
+        public bool ShowMoveCommentary
+        {
+            get
+            {
+                return ViewerConfig.ShowMoveCommentary;
+            }
+            set
+            {
+                ViewerConfig.ShowMoveCommentary = value;
+                RaisePropertyChanged(nameof(ShowMoveCommentary));
+            }
+        }
+
         public ObservableBoardHistory BoardHistory
         {
             get
@@ -197,6 +223,7 @@ namespace Mzinga.SharedUX.ViewModel
                 _boardHistory = value;
                 RaisePropertyChanged(nameof(BoardHistory));
                 CopyHistoryToClipboard.RaiseCanExecuteChanged();
+                RaisePropertyChanged(nameof(CurrentMoveCommentary));
             }
         }
         private ObservableBoardHistory _boardHistory = null;
@@ -574,6 +601,21 @@ namespace Mzinga.SharedUX.ViewModel
         #endregion
 
         #region Review Mode
+
+        public string CurrentMoveCommentary
+        {
+            get
+            {
+                return AppVM.EngineWrapper.CurrentGameSettings?.Metadata.GetMoveCommentary(BoardHistory.CurrentMoveIndex + 1);
+            }
+            set
+            {
+                if (null != AppVM.EngineWrapper.CurrentGameSettings)
+                {
+                    AppVM.EngineWrapper.CurrentGameSettings?.Metadata.SetMoveCommentary(BoardHistory.CurrentMoveIndex + 1, value);
+                }
+            }
+        }
 
         public RelayCommand MoveToStart
         {
@@ -1194,6 +1236,13 @@ namespace Mzinga.SharedUX.ViewModel
                         SwitchToReviewMode.RaiseCanExecuteChanged();
 
                         UpdateBoardHistory();
+                    });
+                    break;
+                case nameof(ViewerConfig):
+                    AppVM.DoOnUIThread(() =>
+                    {
+                        RaisePropertyChanged(nameof(ShowBoardHistory));
+                        RaisePropertyChanged(nameof(ShowMoveCommentary));
                     });
                     break;
             }

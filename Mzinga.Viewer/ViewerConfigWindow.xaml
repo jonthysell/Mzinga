@@ -17,7 +17,7 @@
                    Width="32" />
             <StackPanel Margin="5"
                         Orientation="Vertical">
-                <GroupBox Header="Play"
+                <GroupBox Header="Game"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
@@ -82,7 +82,7 @@
                                VerticalAlignment="Center" />
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="Other"
+                <GroupBox Header="Miscellaneous"
                           Margin="5">
                     <StackPanel Orientation="Vertical">
                         <CheckBox Content="Play sound effects"
@@ -166,6 +166,13 @@
                                   IsChecked="{Binding DisablePiecesInPlayWithNoMoves}"
                                   Margin="5" />
                         <CheckBox Content="Disable pieces in hand with no moves"
+                                  IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
+                                  Margin="5" />
+                        <Separator Margin="5" />
+                        <CheckBox Content="Show the board history sidebar"
+                                  IsChecked="{Binding ShowBoardHistory}"
+                                  Margin="5" />
+                        <CheckBox Content="Show the move commentary sidebar"
                                   IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
                                   Margin="5" />
                     </StackPanel>
