@@ -36,6 +36,7 @@ namespace Mzinga.Viewer
         public LicensesWindow()
         {
             InitializeComponent();
+            LicensesTab.SelectedIndex = 0; // Fixes focus bug when check for updates is disabled
         }
     }
 }

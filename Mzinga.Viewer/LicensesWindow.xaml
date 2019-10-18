@@ -15,7 +15,8 @@
     <StackPanel>
         <TabControl Height="300"
                     ItemsSource="{Binding Licenses}"
-                    Margin="5">
+                    Margin="5"
+                    Name="LicensesTab">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Header, Mode=OneWay}" />
