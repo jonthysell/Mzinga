@@ -51,6 +51,10 @@ namespace Mzinga.Viewer
 
         public static bool IsCheckingforUpdate { get; private set; }
 
+        public static int TimeoutMS = 3000;
+
+        public const int MaxTimeoutMS = 100000;
+
         public static Task UpdateCheckAsync(bool confirmUpdate, bool showUpToDate)
         {
             return Task.Factory.StartNew(() =>
@@ -131,6 +135,15 @@ namespace Mzinga.Viewer
                     }
                 }
             }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.Timeout)
+                {
+                    TimeoutMS = Math.Min(TimeoutMS + 1000, MaxTimeoutMS);
+                }
+
+                ExceptionUtils.HandleException(new UpdateException(ex));
+            }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(new UpdateException(ex));
@@ -153,6 +166,7 @@ namespace Mzinga.Viewer
             HttpWebRequest request = WebRequest.CreateHttp(_updateUrl);
             request.UserAgent = _userAgent;
             request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
+            request.Timeout = TimeoutMS;
 
             using (XmlReader reader = XmlReader.Create(request.GetResponse().GetResponseStream()))
             {
@@ -251,7 +265,12 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return "Unable to update Mzinga at this time.";
+                string message = "Unable to update Mzinga at this time. Please try again later.";
+                if (InnerException is WebException wex)
+                {
+                    message = $"{message} ({wex.Status.ToString()})";
+                }
+                return message;
             }
         }
 
