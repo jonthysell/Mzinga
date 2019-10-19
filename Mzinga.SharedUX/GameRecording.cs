@@ -39,11 +39,17 @@ namespace Mzinga.SharedUX
     {
         public GameBoard GameBoard { get; private set; }
 
-        public GameMetadata Metadata {get; private set;}
+        public GameMetadata Metadata { get; private set; }
 
-        public GameRecording(GameBoard gameBoard, GameMetadata metadata = null)
+        public GameRecordingSource GameRecordingSource { get; private set; }
+
+        public string FileName { get; private set; } = null;
+
+        public GameRecording(GameBoard gameBoard, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
         {
             GameBoard = gameBoard?.Clone() ?? throw new ArgumentNullException(nameof(gameBoard));
+
+            GameRecordingSource = gameRecordingSource;
 
             if (null != metadata)
             {
@@ -124,7 +130,7 @@ namespace Mzinga.SharedUX
             }
         }
 
-        public static GameRecording LoadPGN(Stream inputStream)
+        public static GameRecording LoadPGN(Stream inputStream, string fileName = null)
         {
             if (null == inputStream)
             {
@@ -223,7 +229,10 @@ namespace Mzinga.SharedUX
                 metadata.SetTag("Result", gameBoard.BoardState.ToString());
             }
 
-            return new GameRecording(gameBoard, metadata);
+            return new GameRecording(gameBoard, GameRecordingSource.PGN, metadata)
+            {
+                FileName = fileName?.Trim()
+            };
         }
 
         private static KeyValuePair<string, string> ParsePGNTag(string line)
@@ -241,7 +250,7 @@ namespace Mzinga.SharedUX
             return new KeyValuePair<string, string>(key, value);
         }
 
-        public static GameRecording LoadSGF(Stream inputStream)
+        public static GameRecording LoadSGF(Stream inputStream, string fileName = null)
         {
             if (null == inputStream)
             {
@@ -438,7 +447,10 @@ namespace Mzinga.SharedUX
                 metadata.SetTag("Result", gameBoard.BoardState.ToString());
             }
 
-            return new GameRecording(gameBoard, metadata);
+            return new GameRecording(gameBoard, GameRecordingSource.SGF, metadata)
+            {
+                FileName = fileName?.Trim()
+            };
         }
 
         private static readonly string[] SgfDateFormats = new string[]
@@ -448,5 +460,12 @@ namespace Mzinga.SharedUX
             "MMMM d, yyyy",
             "ddd MMM dd HH:mm:ss yyyy",
         };
+    }
+
+    public enum GameRecordingSource
+    {
+        Game,
+        PGN,
+        SGF
     }
 }

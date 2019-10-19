@@ -143,7 +143,7 @@
                           Header="_Check for Updates" />
                 <Separator />
                 <MenuItem Command="{Binding ShowLicenses}"
-                          Header="_Licenses" />
+                          Header="_About Mzinga.Viewer" />
             </MenuItem>
         </Menu>
         <Grid Background="White">

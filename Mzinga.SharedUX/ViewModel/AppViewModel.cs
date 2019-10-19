@@ -91,7 +91,7 @@ namespace Mzinga.SharedUX.ViewModel
             if (null == EngineWrapper)
             {
                 // No engine started, use an internal one
-                EngineWrapper = new InternalEngineWrapper(ProgramTitle, InternalGameEngineConfig);
+                EngineWrapper = new InternalEngineWrapper($"{ProgramTitle} v{FullVersion}", InternalGameEngineConfig);
                 EngineWrapper.StartEngine();
             }
 

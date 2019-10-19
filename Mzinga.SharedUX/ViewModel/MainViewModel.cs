@@ -55,7 +55,19 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return AppVM.ProgramTitle;
+                string title = AppVM.ProgramTitle;
+
+                if (IsReviewMode)
+                {
+                    string fileName = AppVM.EngineWrapper.CurrentGameSettings?.GameRecording?.FileName;
+
+                    if (!string.IsNullOrWhiteSpace(fileName))
+                    {
+                        title = $"{fileName} - {title}";
+                    }
+                }
+
+                return title;
             }
         }
 
@@ -395,6 +407,7 @@ namespace Mzinga.SharedUX.ViewModel
                             try
                             {
                                 AppVM.EngineWrapper.NewGame(settings);
+                                RaisePropertyChanged(nameof(Title));
                             }
                             catch (Exception ex)
                             {
@@ -430,6 +443,7 @@ namespace Mzinga.SharedUX.ViewModel
                                 if (null != gameRecording)
                                 {
                                     AppVM.EngineWrapper.LoadGame(gameRecording);
+                                    RaisePropertyChanged(nameof(Title));
                                 }
                             }
                             catch (Exception ex)
@@ -1222,6 +1236,8 @@ namespace Mzinga.SharedUX.ViewModel
                 case nameof(IsReviewMode):
                     AppVM.DoOnUIThread(() =>
                     {
+                        RaisePropertyChanged(nameof(Title));
+
                         PlayTarget.RaiseCanExecuteChanged();
                         Pass.RaiseCanExecuteChanged();
                         UndoLastMove.RaiseCanExecuteChanged();

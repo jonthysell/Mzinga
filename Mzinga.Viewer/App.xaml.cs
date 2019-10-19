@@ -66,7 +66,7 @@ namespace Mzinga.Viewer
 
             AppViewModelParameters parameters = new AppViewModelParameters()
             {
-                ProgramTitle = string.Format("{0} v{1}", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version.ToString()),
+                ProgramTitle = Assembly.GetEntryAssembly().GetName().Name,
                 FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Dispatcher.Invoke(action); },

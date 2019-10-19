@@ -192,10 +192,10 @@ namespace Mzinga.Viewer
                 {
                     using (Stream inputStream = dialog.OpenFile())
                     {
-                        gr = Path.GetExtension(dialog.SafeFileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream) : GameRecording.LoadPGN(inputStream);
+                        string fileName = dialog.SafeFileName;
+                        gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -215,7 +215,7 @@ namespace Mzinga.Viewer
                 {
                     Title = "Save Game",
                     DefaultExt = ".pgn",
-                    Filter = "HPortable Game Notation|*.pgn",
+                    Filter = "Portable Game Notation|*.pgn",
                     AddExtension = true
                 };
 

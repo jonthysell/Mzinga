@@ -122,7 +122,7 @@ namespace Mzinga.SharedUX
 
                 if (GameMode == GameMode.Play)
                 {
-                    GameRecording = new GameRecording(CurrentGameBoard, GameRecording.Metadata);
+                    GameRecording = new GameRecording(CurrentGameBoard, GameRecordingSource.Game, GameRecording.Metadata);
                     Metadata.SetTag("Result", CurrentGameBoard.BoardState.ToString());
                 }
             }
@@ -141,7 +141,7 @@ namespace Mzinga.SharedUX
 
         public GameSettings()
         {
-            GameRecording = new GameRecording(new GameBoard());
+            GameRecording = new GameRecording(new GameBoard(), GameRecordingSource.Game);
             _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 
@@ -158,7 +158,7 @@ namespace Mzinga.SharedUX
                 throw new ArgumentNullException(nameof(gameBoard));
             }
 
-            GameRecording = new GameRecording(gameBoard, metadata);
+            GameRecording = new GameRecording(gameBoard, GameRecordingSource.Game, metadata);
             _currentGameBoard = GameRecording.GameBoard.Clone();
         }
 

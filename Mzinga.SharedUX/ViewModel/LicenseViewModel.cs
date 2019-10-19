@@ -48,7 +48,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return "Licenses";
+                return $"About {AppVM.ProgramTitle} v{AppVM.FullVersion}";
             }
         }
 
