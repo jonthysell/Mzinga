@@ -43,7 +43,7 @@ namespace Mzinga.SharedUX
 
         public GameRecordingSource GameRecordingSource { get; private set; }
 
-        public string FileName { get; private set; } = null;
+        public string FileName { get; set; } = null;
 
         public GameRecording(GameBoard gameBoard, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
         {

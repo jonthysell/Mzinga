@@ -209,6 +209,7 @@ namespace Mzinga.Viewer
 
         private static void ShowSaveGame(SaveGameMessage message)
         {
+            string fileName = null;
             try
             {
                 SaveFileDialog dialog = new SaveFileDialog
@@ -216,7 +217,8 @@ namespace Mzinga.Viewer
                     Title = "Save Game",
                     DefaultExt = ".pgn",
                     Filter = "Portable Game Notation|*.pgn",
-                    AddExtension = true
+                    AddExtension = true,
+                    FileName = Path.GetFileNameWithoutExtension(message.GameRecording.FileName)
                 };
 
                 if (dialog.ShowDialog(Application.Current.MainWindow).GetValueOrDefault())
@@ -224,12 +226,17 @@ namespace Mzinga.Viewer
                     using (Stream outputStream = dialog.OpenFile())
                     {
                         message.GameRecording.SavePGN(outputStream);
+                        fileName = dialog.SafeFileName;
                     }
                 }
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process(fileName);
             }
         }
 

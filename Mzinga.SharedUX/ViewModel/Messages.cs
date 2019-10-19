@@ -131,11 +131,19 @@ namespace Mzinga.SharedUX.ViewModel
 
     public class SaveGameMessage : MessageBase
     {
+        private readonly Action<string> Callback;
+
         public GameRecording GameRecording { get; private set; }
 
-        public SaveGameMessage(GameRecording gameRecording) : base()
+        public SaveGameMessage(GameRecording gameRecording, Action<string> callback = null) : base()
         {
             GameRecording = gameRecording;
+            Callback = callback;
+        }
+
+        public void Process(string fileName)
+        {
+            Callback?.Invoke(fileName);
         }
     }
 

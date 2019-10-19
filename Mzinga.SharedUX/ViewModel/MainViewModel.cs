@@ -483,7 +483,14 @@ namespace Mzinga.SharedUX.ViewModel
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.Clear();
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.CopyFrom(metadata);
 
-                                Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording));
+                                Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording, (fileName) =>
+                                {
+                                    if (IsReviewMode)
+                                    {
+                                        AppVM.EngineWrapper.CurrentGameSettings.GameRecording.FileName = fileName;
+                                        RaisePropertyChanged(nameof(Title));
+                                    }
+                                }));
                             }
                             catch (Exception ex)
                             {
