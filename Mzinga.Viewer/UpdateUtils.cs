@@ -225,7 +225,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        private const string _updateUrl = "http://mzingaupdate.jonthysell.com";
+        private const string _updateUrl = "https://gitcdn.link/repo/jonthysell/Mzinga/master/update.xml";
         private const string _userAgent = "Mozilla/5.0";
     }
 
