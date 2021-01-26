@@ -8,7 +8,7 @@ For more information, please check out the [Mzinga Wiki](https://github.com/jont
 
 ## Projects ##
 
-Mzinga is developed in C# for .NET 4.6.2.
+Mzinga is developed in C# for .NET Core 3.1.
 
 ### Mzinga.Engine ###
 
@@ -34,7 +34,7 @@ Mzinga.Trainer.exe is a command-line utility with the goal to improve Mzinga's A
 
 Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
 
-Mzinga Copyright (c) 2015-2019 Jon Thysell.
+Mzinga Copyright (c) 2015-2021 Jon Thysell.
 
 MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
 

@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Engine", "Mzinga.Engine\Mzinga.Engine.csproj", "{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Mzinga.Shared", "Mzinga.Shared\Mzinga.Shared.shproj", "{3A664979-A4DB-4C05-BD8F-C6A1799624DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Trainer", "Mzinga.Trainer\Mzinga.Trainer.csproj", "{36CC70C4-9BCE-4546-8C4F-B116D5086291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Test", "Mzinga.Test\Mzinga.Test.csproj", "{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Mzinga.SharedUX", "Mzinga.SharedUX\Mzinga.SharedUX.shproj", "{766F35B9-DCFC-4358-8A3A-68E61C6D3BAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Viewer", "Mzinga.Viewer\Mzinga.Viewer.csproj", "{E3448B5E-41C3-4828-91F5-06BD49C73E22}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Mzinga.Shared\Mzinga.Shared.projitems*{23c4244b-2965-41fb-9f35-bdcae2ab2c7b}*SharedItemsImports = 5
+		Mzinga.Shared\Mzinga.Shared.projitems*{36cc70c4-9bce-4546-8c4f-b116d5086291}*SharedItemsImports = 5
+		Mzinga.Shared\Mzinga.Shared.projitems*{3a664979-a4db-4c05-bd8f-c6a1799624df}*SharedItemsImports = 13
+		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{766f35b9-dcfc-4358-8a3a-68e61c6d3baa}*SharedItemsImports = 13
+		Mzinga.Shared\Mzinga.Shared.projitems*{ada152d0-9a37-4884-a3b0-61fa7790bd9c}*SharedItemsImports = 5
+		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{e3448b5e-41c3-4828-91f5-06bd49c73e22}*SharedItemsImports = 5
+		Mzinga.Shared\Mzinga.Shared.projitems*{e3448b5e-41c3-4828-91f5-06bd49c73e22}*SharedItemsImports = 5
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {711CA248-3C3F-459E-A673-CECF8681F7D4}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>Mzinga.Engine.Program</StartupObject>
+    <AssemblyName>Mzinga.Engine</AssemblyName>
+    <RootNamespace>Mzinga.Engine</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
+
+</Project>
