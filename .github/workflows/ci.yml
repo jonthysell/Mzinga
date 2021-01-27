@@ -1,0 +1,98 @@
+name: CI Build
+
+env:
+  BuildDir: ./bld
+  ScriptDir: ./scripts
+  SrcDir: ./src
+  Product: Mzinga
+
+on:
+  push:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  ci_build_windows:
+    name: CI Windows Build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target: [Portable, Windows]
+    steps:
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Run Tests
+      run: dotnet test ${{ env.SrcDir }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.zip
+    
+  ci_build_linux:
+    name: CI Linux Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [Linux]
+    steps:
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Run Tests
+      run: dotnet test ${{ env.SrcDir }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
+  
+  ci_build_macos:
+    name: CI MacOS Build
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        target: [MacOS]
+    steps:
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Run Tests
+      run: dotnet test ${{ env.SrcDir }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
