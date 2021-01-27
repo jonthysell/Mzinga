@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>Mzinga.Perft.Program</StartupObject>
+    <AssemblyName>Mzinga.Perft</AssemblyName>
+    <RootNamespace>Mzinga.Perft</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
+
+</Project>

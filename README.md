@@ -22,6 +22,10 @@ Mzinga.Viewer is not meant to be graphically impressive or compete with commerci
 
 ## Other Components ##
 
+### Mzinga.Perft ###
+
+Mzinga.Perft.exe is a command-line utility for measuring Mzinga's performance by running [Perft](https://github.com/jonthysell/Mzinga/wiki/Perft).
+
 ### Mzinga.Test ###
 
 Mzinga.Test.dll contains unit tests for Mzinga.
