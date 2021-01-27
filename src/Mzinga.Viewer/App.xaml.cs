@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,11 +58,7 @@ namespace Mzinga.Viewer
         {
             MessageHandlers.RegisterMessageHandlers(this);
 
-#if PORTABLE
             ViewerConfigPath = !string.IsNullOrWhiteSpace(configFile) ? configFile : DefaultViewerConfigFileName;
-#else
-            ViewerConfigPath = !string.IsNullOrWhiteSpace(configFile) ? configFile : GetAppDataViewerConfigPath();
-#endif
 
             AppViewModelParameters parameters = new AppViewModelParameters()
             {
@@ -116,18 +112,6 @@ namespace Mzinga.Viewer
 
                 return viewerConfig;
             }
-        }
-
-        private string GetAppDataViewerConfigPath()
-        {
-            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            userFolder = Path.Combine(userFolder, "Mzinga");
-            if (!Directory.Exists(userFolder))
-            {
-                Directory.CreateDirectory(userFolder);
-            }
-
-            return Path.Combine(userFolder, DefaultViewerConfigFileName);
         }
 
         private void SaveConfig()
