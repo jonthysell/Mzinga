@@ -1,0 +1,38 @@
+name: Pull Request Validation
+
+env:
+  BinDir: ./src/Mzinga/bin
+  SolutionFile: ./src/Mzinga.sln
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pr_build_and_test:
+    name: PR Build and Test
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build Solution
+      run: dotnet build --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
+
+    - name: Test Solution
+      run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name:  ${{ matrix.configuration }}Binaries
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/netcoreapp3.1

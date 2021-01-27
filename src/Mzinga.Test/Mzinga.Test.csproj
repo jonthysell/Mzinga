@@ -5,6 +5,7 @@
     <AssemblyName>Mzinga.Test</AssemblyName>
     <RootNamespace>Mzinga.Test</RootNamespace>
     <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
