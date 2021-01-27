@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,13 +53,13 @@ namespace Mzinga.Test
 
             int count = tt.Capacity;
 
-            long startMemoryUsage = GC.GetTotalMemory(true);
+            long startMemoryUsage = GC.GetTotalAllocatedBytes(true);
             for (int i = 0; i < tt.Capacity; i++)
             {
                 ulong key = (ulong)i;
                 tt.Store(key, CreateMaxEntry(i));
             }
-            long endMemoryUsage = GC.GetTotalMemory(true);
+            long endMemoryUsage = GC.GetTotalAllocatedBytes(true);
 
             Assert.AreEqual(tt.Capacity, tt.Count);
 

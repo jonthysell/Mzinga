@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -122,7 +122,7 @@ namespace Mzinga.Core.AI
 
         public const long DefaultSizeInBytes = 32 * 1024 * 1024;
 
-        private const double FillFactor = 0.92; // To leave room for unaccounted for overhead and unused dictionary capcacity
+        private const double FillFactor = 0.99; // To leave room for unaccounted overhead and unused dictionary capcacity
     }
 
     public class TranspositionTableEntry
@@ -132,16 +132,18 @@ namespace Mzinga.Core.AI
         public int Depth;
         public Move BestMove;
 
-        public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType)
-                                                    + sizeof(double) // Value
-                                                    + sizeof(int) // Depth
-                                                    + IntPtr.Size // BestMove pointer
-                                                    + sizeof(PieceName) // BestMove PieceName
-                                                    + sizeof(PlayerColor) // BestMove PieceName Color
-                                                    + sizeof(BugType) // BestMove PieceName BugType
-                                                    + IntPtr.Size // BestMove Position pointer
-                                                    + IntPtr.Size // BestMove Position internal pointer
-                                                    + (4 * sizeof(int)); // BestMove Position values
+        public static readonly long SizeInBytes = 2 * ( // For some reason the actual size is closer to double the amount calculated below
+                                                  sizeof(TranspositionTableEntryType) // Type
+                                                  + sizeof(double) // Value
+                                                  + sizeof(int) // Depth
+                                                  + IntPtr.Size // BestMove pointer
+                                                  + sizeof(PieceName) // BestMove PieceName
+                                                  + sizeof(PlayerColor) // BestMove PieceName Color
+                                                  + sizeof(BugType) // BestMove PieceName BugType
+                                                  + IntPtr.Size // BestMove Position pointer
+                                                  + IntPtr.Size // BestMove Position internal pointer
+                                                  + (3 * sizeof(int)) // BestMove Position values
+                                                  );
     }
 
     public enum TranspositionTableEntryType : byte
