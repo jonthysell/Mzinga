@@ -6,6 +6,7 @@
     <StartupObject>Mzinga.Trainer.Program</StartupObject>
     <AssemblyName>Mzinga.Trainer</AssemblyName>
     <RootNamespace>Mzinga.Trainer</RootNamespace>
+    <Configurations>Debug;Release;CliRelease</Configurations>
   </PropertyGroup>
 
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />

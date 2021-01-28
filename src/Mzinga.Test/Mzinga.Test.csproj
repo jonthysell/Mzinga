@@ -6,6 +6,7 @@
     <RootNamespace>Mzinga.Test</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsPublishable>false</IsPublishable>
+    <Configurations>Debug;Release;CliRelease</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

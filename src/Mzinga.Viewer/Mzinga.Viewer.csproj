@@ -9,6 +9,7 @@
     <UseWPF>true</UseWPF>
     <DefineConstants>WINDOWS_WPF</DefineConstants>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'linux-x64' ">

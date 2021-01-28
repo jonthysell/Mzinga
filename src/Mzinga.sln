@@ -15,7 +15,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Mzinga.SharedUX", "Mzinga.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mzinga.Viewer", "Mzinga.Viewer\Mzinga.Viewer.csproj", "{E3448B5E-41C3-4828-91F5-06BD49C73E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga.Perft", "Mzinga.Perft\Mzinga.Perft.csproj", "{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mzinga.Perft", "Mzinga.Perft\Mzinga.Perft.csproj", "{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -29,26 +29,36 @@ Global
 		Mzinga.Shared\Mzinga.Shared.projitems*{e3448b5e-41c3-4828-91f5-06bd49c73e22}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CliRelease|Any CPU = CliRelease|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.CliRelease|Any CPU.ActiveCfg = CliRelease|Any CPU
+		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.CliRelease|Any CPU.Build.0 = CliRelease|Any CPU
 		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23C4244B-2965-41FB-9F35-BDCAE2AB2C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.CliRelease|Any CPU.ActiveCfg = CliRelease|Any CPU
+		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.CliRelease|Any CPU.Build.0 = CliRelease|Any CPU
 		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36CC70C4-9BCE-4546-8C4F-B116D5086291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.CliRelease|Any CPU.ActiveCfg = CliRelease|Any CPU
+		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.CliRelease|Any CPU.Build.0 = CliRelease|Any CPU
 		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADA152D0-9A37-4884-A3B0-61FA7790BD9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.CliRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3448B5E-41C3-4828-91F5-06BD49C73E22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.CliRelease|Any CPU.ActiveCfg = CliRelease|Any CPU
+		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.CliRelease|Any CPU.Build.0 = CliRelease|Any CPU
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
