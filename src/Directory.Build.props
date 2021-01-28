@@ -4,6 +4,7 @@
     <Company>Jon Thysell</Company>
     <Authors>Jon Thysell</Authors>
     <Copyright>Copyright © 2015-2021 Jon Thysell</Copyright>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/jonthysell/Mzinga</RepositoryUrl>
     <Version>0.9.21000</Version>
