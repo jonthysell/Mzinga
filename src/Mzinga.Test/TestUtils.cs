@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,6 +38,9 @@ namespace Mzinga.Test
 {
     public class TestUtils
     {
+        public static Assembly TestAssembly => _testAssembly ??= typeof(TestUtils).GetTypeInfo().Assembly;
+        private static Assembly _testAssembly;
+
         public static void AssertExceptionThrown<T>(Action action) where T : Exception
         {
             bool exceptionThrown = false;
@@ -88,7 +92,7 @@ namespace Mzinga.Test
         {
             List<T> testCases = new List<T>();
 
-            using (StreamReader sr = new StreamReader(fileName))
+            using (StreamReader sr = new StreamReader(GetEmbeddedResource(fileName)))
             {
                 string line;
                 while (null != (line = sr.ReadLine()))
@@ -104,6 +108,19 @@ namespace Mzinga.Test
             }
 
             return testCases;
+        }
+
+        private static Stream GetEmbeddedResource(string fileName)
+        {
+            foreach (var name in TestAssembly.GetManifestResourceNames())
+            {
+                if (name.EndsWith(fileName))
+                {
+                    return TestAssembly.GetManifestResourceStream(name);
+                }
+            }
+
+            throw new FileNotFoundException();
         }
 
         public static void ExecuteTestCases<T>(IEnumerable<T> testCases) where T : ITestCase, new()
