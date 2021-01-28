@@ -2,7 +2,7 @@
 
 ![CI Build](https://github.com/jonthysell/Mzinga/workflows/CI%20Build/badge.svg)
 
-Mzinga is a collection of open-source software project to play the board game [Hive](https://gen42.com/games/hive), with the primary goal of building a community of developers who create Hive-playing AIs.
+Mzinga is a collection of open-source software to play the board game [Hive](https://gen42.com/games/hive), with the primary goal of building a community of developers who create Hive-playing AIs.
 
 To that end, Mzinga proposes a [Universal Hive Protocol](https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol) to support interoperability for Hive-playing software.
 
