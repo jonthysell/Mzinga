@@ -35,7 +35,7 @@ jobs:
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Run Tests
-      run: dotnet test ${{ env.SrcDir }}
+      run: ${{ env.ScriptDir }}/RunTests.ps1
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
@@ -62,7 +62,7 @@ jobs:
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Run Tests
-      run: dotnet test ${{ env.SrcDir }}
+      run: ${{ env.ScriptDir }}/RunTests.ps1
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
@@ -89,7 +89,7 @@ jobs:
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Run Tests
-      run: dotnet test ${{ env.SrcDir }}
+      run: ${{ env.ScriptDir }}/RunTests.ps1
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
