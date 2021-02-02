@@ -1,10 +1,10 @@
-﻿// 
-// IdleBoolToWaitCursorConverter.cs
+// 
+// Program.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,35 @@
 // THE SOFTWARE.
 
 using System;
+using System.Diagnostics;
 
-#if AVALONIAUI
-using System.Globalization;
-using Avalonia.Data.Converters;
-using Avalonia.Input;
-#elif WINDOWS_WPF
-using System.Globalization;
-using System.Windows.Input;
-using System.Windows.Data;
-#endif
+using Avalonia;
 
-namespace Mzinga.SharedUX
+namespace Mzinga
 {
-    public class IdleBoolToWaitCursorConverter : IValueConverter
+    class Program
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        // Initialization code. Don't use any Avalonia, third-party APIs or any
+        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+        // yet and stuff might break.
+        public static void Main(string[] args)
         {
-            if (null != value as bool?)
-            {
-                if (!(bool)value)
-                {
-#if AVALONIAUI
-                    return StandardCursorType.Wait;
-#elif WINDOWS_WPF
-                    return Cursors.Wait;
-#endif
-                }
-            }
-
-#if AVALONIAUI
-            return StandardCursorType.Arrow;
-#elif WINDOWS_WPF
-            return Cursors.Arrow;
-#endif
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        // Avalonia configuration, don't remove; also used by visual designer.
+        public static AppBuilder BuildAvaloniaApp()
         {
-            return value;
+            return AppBuilder.Configure<App>()
+                .UsePlatformDetect()
+                .LogToTrace()
+                .With(new AvaloniaNativePlatformOptions { UseGpu = false });
+        }
+
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Trace.TraceError($"Unhandled Exception: { (e.ExceptionObject as Exception)?.ToString() }");
         }
     }
 }

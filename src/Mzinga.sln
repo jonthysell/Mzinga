@@ -17,11 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mzinga.Viewer", "Mzinga.Vie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mzinga.Perft", "Mzinga.Perft\Mzinga.Perft.csproj", "{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mzinga", "Mzinga\Mzinga.csproj", "{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Mzinga.Shared\Mzinga.Shared.projitems*{23c4244b-2965-41fb-9f35-bdcae2ab2c7b}*SharedItemsImports = 5
 		Mzinga.Shared\Mzinga.Shared.projitems*{36cc70c4-9bce-4546-8c4f-b116d5086291}*SharedItemsImports = 5
 		Mzinga.Shared\Mzinga.Shared.projitems*{3a664979-a4db-4c05-bd8f-c6a1799624df}*SharedItemsImports = 13
+		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{531ffff0-0603-4eda-8ab7-a780ba7b4908}*SharedItemsImports = 5
+		Mzinga.Shared\Mzinga.Shared.projitems*{531ffff0-0603-4eda-8ab7-a780ba7b4908}*SharedItemsImports = 5
 		Mzinga.SharedUX\Mzinga.SharedUX.projitems*{766f35b9-dcfc-4358-8a3a-68e61c6d3baa}*SharedItemsImports = 13
 		Mzinga.Shared\Mzinga.Shared.projitems*{ada152d0-9a37-4884-a3b0-61fa7790bd9c}*SharedItemsImports = 5
 		Mzinga.Shared\Mzinga.Shared.projitems*{bd3a0e3a-eb2a-409b-af6e-f88ffbf34cc4}*SharedItemsImports = 5
@@ -63,6 +67,12 @@ Global
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD3A0E3A-EB2A-409B-AF6E-F88FFBF34CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.CliRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.CliRelease|Any CPU.Build.0 = Release|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{531FFFF0-0603-4EDA-8AB7-A780BA7B4908}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

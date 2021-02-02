@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,9 @@
 
 using System;
 
-#if WINDOWS_UWP
-using Windows.UI.Xaml.Data;
+#if AVALONIAUI
+using System.Globalization;
+using Avalonia.Data.Converters;
 #elif WINDOWS_WPF
 using System.Globalization;
 using System.Windows.Data;
@@ -39,11 +40,7 @@ namespace Mzinga.SharedUX
 {
     public class EnumMatchToBooleanConverter : IValueConverter
     {
-#if WINDOWS_UWP
-        public object Convert(object value, Type targetType, object parameter, string language)
-#else
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-#endif
         {
             if (null == value || null == parameter)
             {
@@ -56,11 +53,7 @@ namespace Mzinga.SharedUX
             return checkValue.Equals(targetValue, StringComparison.OrdinalIgnoreCase);
         }
 
-#if WINDOWS_UWP
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-#else
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-#endif
         {
             if (null == value || null == parameter)
             {

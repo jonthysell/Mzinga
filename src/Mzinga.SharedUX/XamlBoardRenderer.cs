@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,15 +29,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-#if WINDOWS_UWP
-using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
+#if AVALONIAUI
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
+using Avalonia.Interactivity;
+using Avalonia.Input;
+using Avalonia.Layout;
+using Avalonia.Media;
 #elif WINDOWS_WPF
 using System.Windows;
 using System.Windows.Controls;
@@ -59,21 +58,15 @@ namespace Mzinga.SharedUX
         public StackPanel WhiteHandStackPanel { get; private set; }
         public StackPanel BlackHandStackPanel { get; private set; }
 
+
         public Point CanvasCursorPosition
         {
             get
             {
-#if WINDOWS_UWP
-                Point point = CoreWindow.GetForCurrentThread().PointerPosition;
-                point.X -= (Window.Current.Bounds.X);
-                point.Y -= (Window.Current.Bounds.Y);
-
-                Point canvasCoordinates = BoardCanvas.TransformToVisual(Window.Current.Content).TransformPoint(new Point(0, 0));
-                point.X -= canvasCoordinates.X;
-                point.Y -= canvasCoordinates.Y;
-
-                point.X -= CanvasOffsetX;
-                point.Y -= CanvasOffsetY;
+#if AVALONIAUI
+                Point point = new Point();
+                //point.X -= CanvasOffsetX;
+                //point.Y -= CanvasOffsetY;
 #elif WINDOWS_WPF
                 Point point = Mzinga.Viewer.MouseUtils.CorrectGetPosition(BoardCanvas);
                 point.X -= CanvasOffsetX;
@@ -187,12 +180,11 @@ namespace Mzinga.SharedUX
             }
 
             // Attach events
-#if WINDOWS_UWP
-            BoardCanvas.SizeChanged += BoardCanvas_SizeChanged;
-            BoardCanvas.Tapped += BoardCanvas_Click;
-            BoardCanvas.RightTapped += CancelClick;
-            WhiteHandStackPanel.RightTapped += CancelClick;
-            BlackHandStackPanel.RightTapped += CancelClick;
+#if AVALONIAUI
+            BoardCanvas.PropertyChanged += BoardCanvas_SizeChanged;
+            BoardCanvas.PointerReleased += BoardCanvas_Click;
+            WhiteHandStackPanel.PointerReleased += CancelClick;
+            BlackHandStackPanel.PointerReleased += CancelClick;
 #elif WINDOWS_WPF
             BoardCanvas.SizeChanged += BoardCanvas_SizeChanged;
             BoardCanvas.MouseLeftButtonUp += BoardCanvas_Click;
@@ -238,8 +230,13 @@ namespace Mzinga.SharedUX
                 Point minPoint = new Point(double.MaxValue, double.MaxValue);
                 Point maxPoint = new Point(double.MinValue, double.MinValue);
 
+#if AVALONIAUI
+                double boardCanvasWidth = BoardCanvas.Bounds.Width;
+                double boardCanvasHeight = BoardCanvas.Bounds.Height;
+#elif WINDOWS_WPF
                 double boardCanvasWidth = BoardCanvas.ActualWidth;
                 double boardCanvasHeight = BoardCanvas.ActualHeight;
+#endif
                 Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out int numPieces, out int maxStack);
 
                 int whiteHandCount = board.WhiteHand.Count();
@@ -286,7 +283,7 @@ namespace Mzinga.SharedUX
 
                             bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
-                            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+                            var hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
                             BoardCanvas.Children.Add(hexText);
 
@@ -447,16 +444,16 @@ namespace Mzinga.SharedUX
                         Y = offsetY
                     };
 
-                    foreach (UIElement child in BoardCanvas.Children)
+                    foreach (var child in BoardCanvas.Children)
                     {
-                        if (null != (child as Border)) // Hex labels
+                        if (child is Border hexLabel) // Hex labels
                         {
-                            Canvas.SetLeft(child, Canvas.GetLeft(child) + offsetX);
-                            Canvas.SetTop(child, Canvas.GetTop(child) + offsetY);
+                            Canvas.SetLeft(hexLabel, Canvas.GetLeft(hexLabel) + offsetX);
+                            Canvas.SetTop(hexLabel, Canvas.GetTop(hexLabel) + offsetY);
                         }
-                        else if (null != (child as Shape)) // Hexes
+                        else if (child is Shape hex) // Hexes
                         {
-                            child.RenderTransform = translate;
+                            hex.RenderTransform = translate;
                         }
                     }
 
@@ -646,7 +643,14 @@ namespace Mzinga.SharedUX
                 else
                 {
                     figure.Segments.Add(new LineSegment() { Point = p1 });
-                    figure.Segments.Add(new ArcSegment() { Point = p2, SweepDirection = SweepDirection.Counterclockwise });
+                    figure.Segments.Add(new ArcSegment() {
+                        Point = p2,
+#if AVALONIAUI
+                        SweepDirection = SweepDirection.CounterClockwise
+#elif WINDOWS_WPF
+                        SweepDirection = SweepDirection.Counterclockwise
+#endif
+                    });
                 }
             }
 
@@ -714,6 +718,8 @@ namespace Mzinga.SharedUX
                 Data = Geometry.Parse(BugPathGeometries[(int)EnumUtils.GetBugType(pieceName)]),
                 Stretch = Stretch.Uniform,
                 Fill = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
             };
 
             Grid safeGrid = new Grid() { Height = size * 2.0, Width = size * 2.0 };
@@ -754,11 +760,15 @@ namespace Mzinga.SharedUX
 
                     safeGrid.Children.Add(bugTextEllipse);
                     safeGrid.Children.Add(bugText);
-
                 }
             }
 
+#if AVALONIAUI
+            bugGrid.RenderTransform = new RotateTransform(rotateAngle);
+            bugGrid.RenderTransformOrigin = RelativePoint.Center;
+#elif WINDOWS_WPF
             bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);
+#endif
 
             Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
             b.Child = safeGrid;
@@ -837,7 +847,7 @@ namespace Mzinga.SharedUX
             HexType hexType = (piece.Color == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Shape hex = GetHex(center, size, hexType, hexOrientation);
-            UIElement hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+            var hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
             {
@@ -858,9 +868,8 @@ namespace Mzinga.SharedUX
                 pieceCanvas.Children.Add(highlightHex);
             }
 
-#if WINDOWS_UWP
-            pieceCanvas.Tapped += PieceCanvas_Click;
-            pieceCanvas.RightTapped += CancelClick;
+#if AVALONIAUI
+            pieceCanvas.PointerReleased += PieceCanvas_Click;
 #elif WINDOWS_WPF
             pieceCanvas.MouseLeftButtonUp += PieceCanvas_Click;
             pieceCanvas.MouseRightButtonUp += CancelClick;
@@ -869,11 +878,26 @@ namespace Mzinga.SharedUX
             return pieceCanvas;
         }
 
-#if WINDOWS_UWP
-        private void PieceCanvas_Click(object sender, TappedRoutedEventArgs e)
+#if AVALONIAUI
+        private void PieceCanvas_Click(object sender, PointerReleasedEventArgs e)
+        {
+            if (sender is Canvas pieceCanvas)
+            {
+                if (e.InitialPressMouseButton == MouseButton.Left)
+                {
+                    PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
+                    VM.PieceClick(clickedPiece);
+                    e.Handled = true;
+                }
+                else if (e.InitialPressMouseButton == MouseButton.Right)
+                {
+                    VM.CancelClick();
+                    e.Handled = true;
+                }
+            }
+        }
 #elif WINDOWS_WPF
         private void PieceCanvas_Click(object sender, MouseButtonEventArgs e)
-#endif
         {
             if (sender is Canvas pieceCanvas)
             {
@@ -881,19 +905,35 @@ namespace Mzinga.SharedUX
                 VM.PieceClick(clickedPiece);
             }
         }
+#endif
 
-#if WINDOWS_UWP
-        private void BoardCanvas_Click(object sender, TappedRoutedEventArgs e)
+#if AVALONIAUI
+        private void BoardCanvas_Click(object sender, PointerReleasedEventArgs e)
+        {
+            if (e.InitialPressMouseButton == MouseButton.Left)
+            {
+                Point point = e.GetPosition(BoardCanvas);
+                VM.CanvasClick(point.X - CanvasOffsetX, point.Y - CanvasOffsetY);
+                e.Handled = true;
+            }
+            else if (e.InitialPressMouseButton == MouseButton.Right)
+            {
+                VM.CancelClick();
+                e.Handled = true;
+            }
+        }
 #elif WINDOWS_WPF
         private void BoardCanvas_Click(object sender, MouseButtonEventArgs e)
-#endif
         {
-            Point p = CanvasCursorPosition;
-            VM.CanvasClick(p.X, p.Y);
+            Point point = Mzinga.Viewer.MouseUtils.CorrectGetPosition(BoardCanvas);
+            point.X -= CanvasOffsetX;
+            point.Y -= CanvasOffsetY;
+            VM.CanvasClick(point.X, point.Y);
         }
+#endif
 
-#if WINDOWS_UWP
-        private void CancelClick(object sender, RightTappedRoutedEventArgs e)
+#if AVALONIAUI
+        private void CancelClick(object sender, RoutedEventArgs e)
 #elif WINDOWS_WPF
         private void CancelClick(object sender, MouseButtonEventArgs e)
 #endif
@@ -903,9 +943,7 @@ namespace Mzinga.SharedUX
 
         private DateTime LastRedrawOnSizeChange = DateTime.Now;
 
-#if WINDOWS_UWP || WINDOWS_WPF
-        private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-#endif
+        private void TryRedraw()
         {
             if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(20))
             {
@@ -913,5 +951,20 @@ namespace Mzinga.SharedUX
                 LastRedrawOnSizeChange = DateTime.Now;
             }
         }
+
+#if AVALONIAUI
+        private void BoardCanvas_SizeChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property == Canvas.WidthProperty || e.Property == Canvas.HeightProperty)
+            {
+                TryRedraw();
+            }
+        }
+#elif WINDOWS_WPF
+        private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TryRedraw();
+        }
+#endif
     }
 }

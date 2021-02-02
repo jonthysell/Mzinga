@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,14 @@
 using System;
 
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 
 using Mzinga.Engine;
+
+#if WINDOWS_WPF
+using Mzinga.Viewer;
+#endif
 
 namespace Mzinga.SharedUX.ViewModel
 {
@@ -52,6 +58,124 @@ namespace Mzinga.SharedUX.ViewModel
 
         public Exception EngineExceptionOnStart { get; private set; } = null;
 
+        public MainViewModel MainVM { get; private set; }
+
+        #region Help
+
+        public RelayCommand ShowLicenses
+        {
+            get
+            {
+                return _showLicenses ?? (_showLicenses = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ShowLicensesMessage());
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _showLicenses = null;
+
+        public RelayCommand LaunchHiveWebsite
+        {
+            get
+            {
+                return _launchHiveWebsite ?? (_launchHiveWebsite = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("This will open the official Hive website in your browser. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    Messenger.Default.Send(new LaunchUrlMessage("https://gen42.com/games/hive"));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _launchHiveWebsite;
+
+        public RelayCommand LaunchMzingaWebsite
+        {
+            get
+            {
+                return _launchMzingaWebsite ?? (_launchMzingaWebsite = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ConfirmationMessage("This will open the Mzinga website in your browser. Do you want to continue?", (confirmed) =>
+                        {
+                            try
+                            {
+                                if (confirmed)
+                                {
+                                    Messenger.Default.Send(new LaunchUrlMessage("http://mzinga.jonthysell.com"));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ExceptionUtils.HandleException(ex);
+                            }
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _launchMzingaWebsite;
+
+#if WINDOWS_WPF
+        public RelayCommand CheckForUpdatesAsync
+        {
+            get
+            {
+                return _checkForUpdatesAsync ?? (_checkForUpdatesAsync = new RelayCommand(async () =>
+                {
+                    try
+                    {
+                        MainVM.IsIdle = false;
+                        await UpdateUtils.UpdateCheckAsync(true, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                    finally
+                    {
+                        MainVM.IsIdle = true;
+                    }
+                }, () =>
+                {
+                    return MainVM.IsIdle && !UpdateUtils.IsCheckingforUpdate;
+                }));
+            }
+        }
+        private RelayCommand _checkForUpdatesAsync = null;
+#endif
+
+        #endregion
+
         public static void Init(AppViewModelParameters parameters)
         {
             if (null != Instance)
@@ -60,6 +184,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
 
             Instance = new AppViewModel(parameters);
+            Instance.MainVM = new MainViewModel();
         }
 
         private AppViewModel(AppViewModelParameters parameters)

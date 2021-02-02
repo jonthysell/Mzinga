@@ -1,0 +1,25 @@
+<Application x:Class="Mzinga.App"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:shared="clr-namespace:Mzinga.SharedUX"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <shared:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
+    </Application.Resources>
+    <Application.Styles>
+        <FluentTheme Mode="Light" />
+    </Application.Styles>
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Command="{Binding LaunchMzingaWebsite}"
+                            Header="Mzinga Website" />
+            <NativeMenuItem Command="{Binding LaunchHiveWebsite}"
+                            Header="Hive Website" />
+            <NativeMenuItemSeperator />
+            <NativeMenuItem Command="{Binding CheckForUpdates}"
+                            Header="Check for Updates" />
+            <NativeMenuItemSeperator />
+            <NativeMenuItem Command="{Binding ShowLicenses}"
+                            Header="About Mzinga.Viewer" />
+        </NativeMenu>
+    </NativeMenu.Menu>
+</Application>

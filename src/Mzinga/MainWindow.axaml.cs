@@ -1,10 +1,10 @@
-﻿// 
-// MainWindow.xaml.cs
+// 
+// MainWindow.axaml.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,17 @@
 
 using System;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
+
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
-namespace Mzinga.Viewer
+namespace Mzinga
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public class MainWindow : Window
     {
         public MainViewModel VM
         {
@@ -52,6 +51,15 @@ namespace Mzinga.Viewer
             }
         }
 
+        public Canvas BoardCanvas => _boardCanvas ??= this.FindControl<Canvas>(nameof(BoardCanvas));
+        private Canvas _boardCanvas;
+
+        public StackPanel WhiteHandStackPanel => _whiteHandStackPanel ??= this.FindControl<StackPanel>(nameof(WhiteHandStackPanel));
+        private StackPanel _whiteHandStackPanel;
+
+        public StackPanel BlackHandStackPanel => _blackHandStackPanel ??= this.FindControl<StackPanel>(nameof(BlackHandStackPanel));
+        private StackPanel _blackHandStackPanel;
+
         public XamlBoardRenderer BoardRenderer { get; private set; }
 
         public MainWindow()
@@ -59,14 +67,21 @@ namespace Mzinga.Viewer
             VM = AppViewModel.Instance.MainVM;
 
             InitializeComponent();
-
+#if DEBUG
+            this.AttachDevTools();
+#endif
             BoardRenderer = new XamlBoardRenderer(VM, BoardCanvas, WhiteHandStackPanel, BlackHandStackPanel);
 
-            Loaded += MainWindow_Loaded;
+            Opened += MainWindow_Opened;
             Closing += MainWindow_Closing;
         }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+
+        private void MainWindow_Opened(object sender, EventArgs e)
         {
             try
             {
@@ -85,43 +100,7 @@ namespace Mzinga.Viewer
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            EngineConsoleWindow.Instance.Close();
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.X)
-            {
-                BoardRenderer.RaiseStackedPieces = false;
-                e.Handled = true;
-            }
-        }
-
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (VM.CanRaiseStackedPieces)
-            {
-                if (e.Key == Key.X)
-                {
-                    BoardRenderer.RaiseStackedPieces = true;
-                    e.Handled = true;
-                }
-            }
-        }
-
-        private void LiftButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            BoardRenderer.RaiseStackedPieces = false;
-            e.Handled = true;
-        }
-
-        private void LiftButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (VM.CanRaiseStackedPieces)
-            {
-                BoardRenderer.RaiseStackedPieces = true;
-                e.Handled = true;
-            }
+            //EngineConsoleWindow.Instance.Close();
         }
     }
 }
