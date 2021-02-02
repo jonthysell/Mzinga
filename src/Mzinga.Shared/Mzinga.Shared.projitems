@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ZobristHash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngineConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VersionUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Engine\DefaultEngineConfig.xml" />

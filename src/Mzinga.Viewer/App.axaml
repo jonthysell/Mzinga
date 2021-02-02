@@ -1,4 +1,4 @@
-<Application x:Class="Mzinga.App"
+<Application x:Class="Mzinga.Viewer.App"
              xmlns="https://github.com/avaloniaui"
              xmlns:shared="clr-namespace:Mzinga.SharedUX"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

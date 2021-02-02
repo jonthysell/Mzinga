@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,18 +6,23 @@
     <StartupObject>Mzinga.Viewer.Program</StartupObject>
     <AssemblyName>Mzinga.Viewer</AssemblyName>
     <RootNamespace>Mzinga.Viewer</RootNamespace>
-    <UseWPF>true</UseWPF>
-    <DefineConstants>WINDOWS_WPF</DefineConstants>
-    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
-    <Configurations>Debug;Release</Configurations>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+    <DefineConstants>TRACE;AVALONIAUI</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'linux-x64' ">
-    <IsPublishable>false</IsPublishable>
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
+    <CFBundleName>Mzinga.Viewer</CFBundleName>
+    <CFBundleDisplayName>Mzinga.Viewer</CFBundleDisplayName>
+    <CFBundleIdentifier>com.jonthysell.mzinga.viewer</CFBundleIdentifier>
+    <CFBundlePackageType>AAPL</CFBundlePackageType>
+    <CFBundleExecutable>Mzinga.Viewer</CFBundleExecutable>
+    <CFBundleIconFile>icon.icns</CFBundleIconFile>
+    <NSPrincipalClass>NSApplication</NSPrincipalClass>
+    <NSHighResolutionCapable>true</NSHighResolutionCapable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\*.*" />
+    <AvaloniaResource Include="Resources\*.*" />
   </ItemGroup>
 
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
@@ -25,9 +30,10 @@
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.96" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
+    <PackageReference Include="Avalonia" Version="0.10.0" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0" />
+    <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
-  </ItemGroup>
-
+   </ItemGroup>
 </Project>

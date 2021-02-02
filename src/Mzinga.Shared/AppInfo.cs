@@ -59,8 +59,7 @@ namespace Mzinga
             {
                 if (!_longVersion.HasValue)
                 {
-                    //Utils.UpdateUtils.TryParseLongVersion(Version, out ulong result);
-                    //_longVersion = result;
+                    _longVersion = VersionUtils.ParseLongVersion(Version);
                 }
                 return _longVersion.Value;
             }

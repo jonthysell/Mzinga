@@ -37,7 +37,7 @@ using Mzinga.Engine;
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
-namespace Mzinga
+namespace Mzinga.Viewer
 {
     public class App : Application
     {
@@ -94,7 +94,7 @@ namespace Mzinga
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var window = new MainWindow();
+                var window = new Views.MainWindow();
                 desktop.MainWindow = window;
             }
         }

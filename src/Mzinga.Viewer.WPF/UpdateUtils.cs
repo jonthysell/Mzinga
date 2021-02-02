@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -73,7 +73,7 @@ namespace Mzinga.Viewer
 
                 ReleaseChannel targetReleaseChannel = GetReleaseChannel();
 
-                ulong maxVersion = LongVersion(AppVM.FullVersion);
+                ulong maxVersion = VersionUtils.ParseLongVersion(AppVM.FullVersion);
 
                 UpdateInfo latestVersion = null;
 
@@ -82,7 +82,7 @@ namespace Mzinga.Viewer
                 {
                     if (updateInfo.ReleaseChannel == targetReleaseChannel)
                     {
-                        ulong updateVersion = LongVersion(updateInfo.Version);
+                        ulong updateVersion = VersionUtils.ParseLongVersion(updateInfo.Version);
 
                         if (updateVersion > maxVersion)
                         {
@@ -189,25 +189,6 @@ namespace Mzinga.Viewer
             }
 
             return updateInfos;
-        }
-
-        public static ulong LongVersion(string version)
-        {
-            if (string.IsNullOrWhiteSpace(version))
-            {
-                throw new ArgumentNullException(nameof(version));
-            }
-
-            ulong vers = 0;
-
-            string[] parts = version.Trim().Split('.');
-
-            for (int i = 0; i < parts.Length; i++)
-            {
-                vers |= (ulong.Parse(parts[i]) << ((4 - (i + 1)) * 16));
-            }
-
-            return vers;
         }
 
         public static ReleaseChannel GetReleaseChannel()

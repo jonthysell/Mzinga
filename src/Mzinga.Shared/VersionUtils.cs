@@ -1,5 +1,5 @@
-// 
-// Program.cs
+﻿// 
+// VersionUtils.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
@@ -25,35 +25,36 @@
 // THE SOFTWARE.
 
 using System;
-using System.Diagnostics;
-
-using Avalonia;
 
 namespace Mzinga
 {
-    class Program
+    public class VersionUtils
     {
-        // Initialization code. Don't use any Avalonia, third-party APIs or any
-        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-        // yet and stuff might break.
-        public static void Main(string[] args)
+        public static ulong ParseLongVersion(string s)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            ulong vers = 0;
+
+            string[] parts = s.TrimStart('v').Trim().Split('.');
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                vers |= (ulong.Parse(parts[i]) << ((4 - (i + 1)) * 16));
+            }
+
+            return vers;
         }
 
-        // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
+        public static bool TryParseLongVersion(string s, out ulong result)
         {
-            return AppBuilder.Configure<App>()
-                .UsePlatformDetect()
-                .LogToTrace()
-                .With(new AvaloniaNativePlatformOptions { UseGpu = false });
-        }
+            try
+            {
+                result = ParseLongVersion(s);
+                return true;
+            }
+            catch (Exception) { }
 
-        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            Trace.TraceError($"Unhandled Exception: { (e.ExceptionObject as Exception)?.ToString() }");
+            result = 0;
+            return false;
         }
     }
 }

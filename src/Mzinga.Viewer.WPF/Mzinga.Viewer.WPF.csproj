@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>Mzinga.Viewer.Program</StartupObject>
+    <AssemblyName>Mzinga.Viewer.WPF</AssemblyName>
+    <RootNamespace>Mzinga.Viewer</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <DefineConstants>WINDOWS_WPF</DefineConstants>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+    <ApplicationIcon>Resources\mzinga.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'linux-x64' ">
+    <IsPublishable>false</IsPublishable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\*.*" />
+  </ItemGroup>
+
+  <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
+
+  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="DotNetProjects.Extended.Wpf.Toolkit" Version="4.6.96" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.1" />
+    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+  </ItemGroup>
+
+</Project>

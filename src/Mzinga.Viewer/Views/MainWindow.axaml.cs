@@ -34,7 +34,7 @@ using Avalonia.Markup.Xaml;
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
-namespace Mzinga
+namespace Mzinga.Viewer.Views
 {
     public class MainWindow : Window
     {
