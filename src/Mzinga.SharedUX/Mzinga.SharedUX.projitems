@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ConfirmationViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\EngineConsoleViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EngineOptions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\GameMetadataViewModel.cs" />

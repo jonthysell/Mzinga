@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -115,7 +115,7 @@ namespace Mzinga.Viewer
         {
             try
             {
-                MessageBoxResult result = MessageBox.Show(message.Message, "Mzinga", MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show(message.ConfirmationVM.Message, message.ConfirmationVM.Title, MessageBoxButton.YesNo);
                 message.Process(result == MessageBoxResult.Yes);
             }
             catch (Exception ex)
@@ -128,7 +128,10 @@ namespace Mzinga.Viewer
         {
             try
             {
-                Process.Start(message.Url, null);
+                Process.Start(new ProcessStartInfo(message.Url)
+                {
+                    UseShellExecute = true
+                });
             }
             catch (Exception ex)
             {

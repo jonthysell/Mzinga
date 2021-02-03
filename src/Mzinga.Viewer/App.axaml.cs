@@ -77,8 +77,8 @@ namespace Mzinga.Viewer
 
             AppViewModelParameters parameters = new AppViewModelParameters()
             {
-                ProgramTitle = Assembly.GetEntryAssembly().GetName().Name,
-                FullVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                ProgramTitle = AppInfo.Name,
+                FullVersion = AppInfo.Version,
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Avalonia.Threading.Dispatcher.UIThread.Post(action); },
                 TextToClipboard = TextToClipboard,

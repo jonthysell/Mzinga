@@ -1,10 +1,10 @@
 ﻿// 
-// ExceptionViewModel.cs
+// ConfirmationWindow.axaml.cs
 //  
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
 
-namespace Mzinga.SharedUX.ViewModel
+using Mzinga.SharedUX.ViewModel;
+
+namespace Mzinga.Viewer.Views
 {
-    public class ExceptionViewModel : InformationViewModel
+    public class ConfirmationWindow : Window
     {
-        public override bool ShowDetails => !(Exception is EngineInvalidMoveException);
-
-        public Exception Exception
+        public ConfirmationViewModel VM
         {
             get
             {
-                return _exception;
+                return (ConfirmationViewModel)DataContext;
             }
-            private set
+            set
             {
-                _exception = value ?? throw new ArgumentNullException();
+                DataContext = value;
+                value.RequestClose += (s, e) => Close();
             }
         }
-        private Exception _exception;
 
-        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : "Error")
+        public ConfirmationWindow()
         {
-            Exception = exception;
-            Details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString());
+            InitializeComponent();
+#if DEBUG
+            this.AttachDevTools();
+#endif
+        }
+
+        private void InitializeComponent()
+        {
+            AvaloniaXamlLoader.Load(this);
         }
     }
 }

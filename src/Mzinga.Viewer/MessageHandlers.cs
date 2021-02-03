@@ -39,6 +39,8 @@ using GalaSoft.MvvmLight.Messaging;
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
 
+using Mzinga.Viewer.Views;
+
 namespace Mzinga.Viewer
 {
     public class MessageHandlers
@@ -47,9 +49,9 @@ namespace Mzinga.Viewer
 
         public static void RegisterMessageHandlers(object recipient)
         {
-            Messenger.Default.Register<ExceptionMessage>(recipient, (message) => ShowException(message));
-            Messenger.Default.Register<InformationMessage>(recipient, (message) => ShowInformation(message));
-            Messenger.Default.Register<ConfirmationMessage>(recipient, (message) => ShowConfirmation(message));
+            Messenger.Default.Register<ExceptionMessage>(recipient, async (message) => await ShowExceptionAsync(message));
+            Messenger.Default.Register<InformationMessage>(recipient, async (message) => await ShowInformationAsync(message));
+            Messenger.Default.Register<ConfirmationMessage>(recipient, async (message) => await ShowConfirmationAsync(message));
             Messenger.Default.Register<LaunchUrlMessage>(recipient, async (message) => await LaunchUrlAsync(message));
             Messenger.Default.Register<ShowLicensesMessage>(recipient, (message) => ShowLicense(message));
             Messenger.Default.Register<NewGameMessage>(recipient, async (message) => await ShowNewGameAsync(message));
@@ -77,52 +79,56 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
 
-        private static void ShowException(ExceptionMessage message)
-        {
-            //ExceptionWindow window = new ExceptionWindow
-            //{
-            //    DataContext = message.ExceptionVM,
-            //    Owner = Application.Current.MainWindow,
-            //};
-            //message.ExceptionVM.RequestClose += (sender, e) =>
-            //{
-            //    window.Close();
-            //};
-            //window.ShowDialog();
-        }
-
-        private static void ShowInformation(InformationMessage message)
+        private static async Task ShowExceptionAsync(ExceptionMessage message)
         {
             try
             {
-                //InformationWindow window = new InformationWindow
-                //{
-                //    DataContext = message.InformationVM,
-                //    Owner = Application.Current.MainWindow,
-                //};
-                //message.InformationVM.RequestClose += (sender, e) =>
-                //{
-                //    window.Close();
-                //};
-                //window.Closed += (sender, args) =>
-                //{
-                //    message.Process();
-                //};
-                //window.Show();
+                InformationWindow window = new InformationWindow
+                {
+                    VM = message.ExceptionVM,
+                };
+
+                await window.ShowDialog(MainWindow);
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError(ex.Message);
+            }
+        }
+
+        private static async Task ShowInformationAsync(InformationMessage message)
+        {
+            try
+            {
+                InformationWindow window = new InformationWindow
+                {
+                   VM = message.InformationVM,
+                };
+
+                await window.ShowDialog(MainWindow);
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
             }
+            finally
+            {
+                message.Process();
+            }
         }
 
-        private static void ShowConfirmation(ConfirmationMessage message)
+        private static async Task ShowConfirmationAsync(ConfirmationMessage message)
         {
             try
             {
-                //MessageBoxResult result = MessageBox.Show(message.Message, "Mzinga", MessageBoxButton.YesNo);
-                //message.Process(result == MessageBoxResult.Yes);
-                message.Process(true);
+                var window = new ConfirmationWindow()
+                {
+                    VM = message.ConfirmationVM,
+                };
+
+                await window.ShowDialog(MainWindow);
+
+                message.Process(message.ConfirmationVM.Result == ConfirmationResult.Yes);
             }
             catch (Exception ex)
             {
