@@ -200,6 +200,17 @@
                 <StackPanel HorizontalAlignment="Center"
                             Orientation="Vertical"
                             VerticalAlignment="Bottom">
+                  <ProgressBar 
+                         Height="20"
+                         IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
+                         IsVisible="{Binding IsBusy}"
+                         Margin="5"
+                         Maximum="100"
+                         Minimum="0"
+                         ShowProgressText="True"
+                         Value="{Binding TimedCommandProgress, Mode=OneWay}"
+                         VerticalAlignment="Bottom"
+                         Width="120" />
                     <Button Content="Lift Pieces (X)"
                             IsEnabled="{Binding CanRaiseStackedPieces}"
                             IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
@@ -226,7 +237,7 @@
                                 Width="100" />
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center"
-                                IsVisible="{Binding IsReviewMode, FallbackValue=Hidden}"
+                                IsVisible="{Binding IsReviewMode}"
                                 Orientation="Horizontal"
                                 VerticalAlignment="Bottom">
                         <Button Command="{Binding MoveToStart}"
@@ -335,18 +346,6 @@
                     <Label Content="{Binding TargetMove}" />
                 </StackPanel>
             </Grid>
-            <ProgressBar Grid.Column="1"
-                         Grid.Row="0"
-                         Height="20"
-                         IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
-                         IsVisible="{Binding IsBusy, FallbackValue=False}"
-                         Margin="5"
-                         Maximum="1.0"
-                         Minimum="0.0"
-                         ShowProgressText="True"
-                         Value="{Binding TimedCommandProgress, Mode=OneWay}"
-                         VerticalAlignment="Bottom"
-                         Width="120" />
         </Grid>
     </DockPanel>
 </Window>

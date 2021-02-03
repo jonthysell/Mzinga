@@ -7,7 +7,7 @@
     <AssemblyName>Mzinga.Viewer.WPF</AssemblyName>
     <RootNamespace>Mzinga.Viewer</RootNamespace>
     <UseWPF>true</UseWPF>
-    <DefineConstants>WINDOWS_WPF</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS_WPF</DefineConstants>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <ApplicationIcon>Resources\mzinga.ico</ApplicationIcon>
   </PropertyGroup>

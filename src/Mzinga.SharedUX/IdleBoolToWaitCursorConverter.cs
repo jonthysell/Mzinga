@@ -47,7 +47,7 @@ namespace Mzinga.SharedUX
                 if (!(bool)value)
                 {
 #if AVALONIAUI
-                    return StandardCursorType.Wait;
+                    return new Cursor(StandardCursorType.Wait);
 #elif WINDOWS_WPF
                     return Cursors.Wait;
 #endif
@@ -55,7 +55,7 @@ namespace Mzinga.SharedUX
             }
 
 #if AVALONIAUI
-            return StandardCursorType.Arrow;
+            return new Cursor(StandardCursorType.Arrow);
 #elif WINDOWS_WPF
             return Cursors.Arrow;
 #endif

@@ -152,6 +152,9 @@ namespace Mzinga.SharedUX.ViewModel
             private set
             {
                 _timedCommandProgress = Math.Max(0.0, Math.Min(1.0, value));
+#if AVALONIAUI
+                _timedCommandProgress *= 100;
+#endif
                 RaisePropertyChanged(nameof(TimedCommandProgress));
             }
         }
