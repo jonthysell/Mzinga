@@ -1004,10 +1004,7 @@ namespace Mzinga.SharedUX.ViewModel
         public RelayCommand LaunchHiveWebsite => AppVM.LaunchHiveWebsite;
 
         public RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
-
-#if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
-#endif
 
         #endregion
 
@@ -1155,12 +1152,10 @@ namespace Mzinga.SharedUX.ViewModel
                         FirstRun();
                     }
 
-#if WINDOWS_WPF
                     if (ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
                     {
                         await UpdateUtils.UpdateCheckAsync(true, false);
                     }
-#endif
                 }
                 catch (Exception ex)
                 {

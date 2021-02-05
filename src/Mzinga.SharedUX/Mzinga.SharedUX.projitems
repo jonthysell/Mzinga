@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameMetadata.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IdleBoolToWaitCursorConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SoundUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UpdateUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AppViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BoardExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ConfirmationViewModel.cs" />

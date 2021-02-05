@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -145,12 +146,11 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _launchMzingaWebsite;
 
-#if WINDOWS_WPF
         public RelayCommand CheckForUpdatesAsync
         {
             get
             {
-                return _checkForUpdatesAsync ?? (_checkForUpdatesAsync = new RelayCommand(async () =>
+                return _checkForUpdatesAsync ??= new RelayCommand(async () =>
                 {
                     try
                     {
@@ -165,14 +165,10 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         MainVM.IsIdle = true;
                     }
-                }, () =>
-                {
-                    return MainVM.IsIdle && !UpdateUtils.IsCheckingforUpdate;
-                }));
+                });
             }
         }
-        private RelayCommand _checkForUpdatesAsync = null;
-#endif
+        private RelayCommand _checkForUpdatesAsync;
 
         #endregion
 

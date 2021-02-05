@@ -35,7 +35,7 @@
                        Text="{Binding Message}"
                        TextWrapping="Wrap" />
             <Expander Header="Details"
-                      IsVisible="{Binding HasDetails}"
+                      IsVisible="{Binding ShowDetails}"
                       Margin="5">
                 <TextBox Height="100"
                          IsReadOnly="True"
@@ -52,7 +52,7 @@
                     HorizontalAlignment="Right"
                     Margin="5"
                     Orientation="Horizontal">
-            <Button Command="{Binding Close}"
+            <Button Command="{Binding Accept}"
                     Content="OK"
                     FontSize="14"
                     HorizontalAlignment="Right"
