@@ -20,19 +20,18 @@
           RowDefinitions="Auto,Auto">
         <Image Grid.Column="0"
                Grid.Row="0"
-               Grid.RowSpan="2"
                Height="48"
                HorizontalAlignment="Center"
                Margin="5"
                Source="avares://Mzinga.Viewer/Resources/icon.ico"
                VerticalAlignment="Top"
                Width="48" />
-        <TextBlock FontSize="14"
-                   Grid.Column="1"
+        <TextBlock Grid.Column="1"
                    Grid.Row="0"
-                   Margin="10"
+                   Margin="5"
                    Text="{Binding Message}"
-                   TextWrapping="Wrap" />
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Center" />
         <StackPanel Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Grid.Row="1"
@@ -41,7 +40,6 @@
                     Orientation="Horizontal">
             <Button Command="{Binding Yes}"
                     Content="Yes"
-                    FontSize="14"
                     HorizontalAlignment="Right"
                     IsDefault="True"
                     Margin="5"
@@ -49,7 +47,6 @@
                     Width="75" />
             <Button Command="{Binding No}"
                     Content="No"
-                    FontSize="14"
                     HorizontalAlignment="Right"
                     IsDefault="True"
                     Margin="5"
@@ -57,7 +54,6 @@
                     Width="75" />
             <Button Command="{Binding Cancel}"
                     Content="Cancel"
-                    FontSize="14"
                     HorizontalAlignment="Right"
                     IsDefault="True"
                     Margin="5"

@@ -53,7 +53,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<InformationMessage>(recipient, async (message) => await ShowInformationAsync(message));
             Messenger.Default.Register<ConfirmationMessage>(recipient, async (message) => await ShowConfirmationAsync(message));
             Messenger.Default.Register<LaunchUrlMessage>(recipient, async (message) => await LaunchUrlAsync(message));
-            Messenger.Default.Register<ShowLicensesMessage>(recipient, (message) => ShowLicense(message));
+            Messenger.Default.Register<ShowLicensesMessage>(recipient, async (message) => await ShowLicenseAsync(message));
             Messenger.Default.Register<NewGameMessage>(recipient, async (message) => await ShowNewGameAsync(message));
             Messenger.Default.Register<LoadGameMessage>(recipient, async (message) => await ShowLoadGameAsync(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
@@ -119,6 +119,7 @@ namespace Mzinga.Viewer
 
         private static async Task ShowConfirmationAsync(ConfirmationMessage message)
         {
+            bool confirmation = false;
             try
             {
                 var window = new ConfirmationWindow()
@@ -127,12 +128,15 @@ namespace Mzinga.Viewer
                 };
 
                 await window.ShowDialog(MainWindow);
-
-                message.Process(message.ConfirmationVM.Result == ConfirmationResult.Yes);
+                confirmation = message.ConfirmationVM.Result == ConfirmationResult.Yes;
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process(confirmation);
             }
         }
 
@@ -167,21 +171,25 @@ namespace Mzinga.Viewer
             });
         }
 
-        private static void ShowLicense(ShowLicensesMessage message)
+        private static async Task ShowLicenseAsync(ShowLicensesMessage message)
         {
-            //LicensesWindow window = new LicensesWindow()
-            //{
-            //    DataContext = message.LicensesVM,
-            //    Owner = Application.Current.MainWindow
-            //};
+            try
+            {
+                var window = new LicensesWindow()
+                {
+                    VM = message.LicensesVM,
+                };
 
-            //message.LicensesVM.Licenses.Add(GetExtendedWpfToolkitLicense());
-            //message.LicensesVM.RequestClose += () =>
-            //{
-            //    window.Close();
-            //};
-            //window.ShowDialog();
-            message.Process();
+                await window.ShowDialog(MainWindow);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process();
+            }
         }
 
         private static async Task ShowNewGameAsync(NewGameMessage message)

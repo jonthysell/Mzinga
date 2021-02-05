@@ -148,7 +148,7 @@ namespace Mzinga.Viewer
             };
 
             message.LicensesVM.Licenses.Add(GetExtendedWpfToolkitLicense());
-            message.LicensesVM.RequestClose += () =>
+            message.LicensesVM.RequestClose += (s, e) =>
             {
                 window.Close();
             };

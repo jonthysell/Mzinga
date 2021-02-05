@@ -30,10 +30,6 @@ using System.Threading.Tasks;
 
 using Mzinga.Core;
 
-#if WINDOWS_WPF
-using Mzinga.Viewer;
-#endif
-
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -104,10 +100,7 @@ namespace Mzinga.SharedUX.ViewModel
                 ShowViewerConfig.RaiseCanExecuteChanged();
 
                 CopyHistoryToClipboard.RaiseCanExecuteChanged();
-
-#if WINDOWS_WPF
                 CheckForUpdatesAsync.RaiseCanExecuteChanged();
-#endif
             }
         }
         private bool _isIdle = true;

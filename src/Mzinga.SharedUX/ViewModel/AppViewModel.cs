@@ -25,17 +25,12 @@
 // THE SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 
 using Mzinga.Engine;
-
-#if WINDOWS_WPF
-using Mzinga.Viewer;
-#endif
 
 namespace Mzinga.SharedUX.ViewModel
 {
