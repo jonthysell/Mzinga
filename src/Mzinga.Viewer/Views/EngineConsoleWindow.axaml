@@ -1,0 +1,61 @@
+<Window CanResize="True"
+        Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        Height="240"
+        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        MinHeight="240"
+        MinWidth="480"
+        Title="{Binding Title, FallbackValue=Engine Console}"
+        Width="480"
+        WindowStartupLocation="CenterOwner"
+        d:DesignHeight="100"
+        d:DesignWidth="480"
+        mc:Ignorable="d"
+        x:Class="Mzinga.Viewer.Views.EngineConsoleWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBox FontWeight="Normal"
+                 Grid.Column="0"
+                 Grid.Row="0"
+                 Height="20"
+                 KeyUp="EngineConsoleInput_KeyUp"
+                 Margin="5"
+                 Name="EngineConsoleInput"
+                 Text="{Binding EngineInputText}" />
+        <Button Command="{Binding SendEngineCommand}"
+                Content="Send"
+                Grid.Column="1"
+                Grid.Row="0"
+                Margin="5" />
+        <Button Command="{Binding CancelEngineCommand}"
+                Content="Cancel"
+                Grid.Column="2"
+                Grid.Row="0"
+                Margin="5" />
+        <TextBox AcceptsReturn="True"
+                 BorderBrush="Transparent"
+                 FontFamily="Lucida Console"
+                 FontWeight="Normal"
+                 Grid.Column="0"
+                 Grid.ColumnSpan="3"
+                 Grid.Row="1"
+                 IsReadOnly="True"
+                 Margin="5"
+                 Padding="5"
+                 Text="{Binding EngineOutputText, Mode=OneWay}"
+                 TextWrapping="Wrap"
+                 x:Name="EngineConsoleOutput" />
+    </Grid>
+</Window>

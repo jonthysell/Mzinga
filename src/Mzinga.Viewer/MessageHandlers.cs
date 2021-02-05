@@ -393,14 +393,14 @@ namespace Mzinga.Viewer
         {
             try
             {
-                //EngineConsoleWindow window = EngineConsoleWindow.Instance;
+                EngineConsoleWindow window = EngineConsoleWindow.Instance;
 
-                //window.Show();
+                window.Show(MainWindow);
 
-                //if (!window.IsActive)
-                //{
-                //    window.Activate();
-                //}
+                if (!window.IsActive)
+                {
+                    window.Activate();
+                }
             }
             catch (Exception ex)
             {
