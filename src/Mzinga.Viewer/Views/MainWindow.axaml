@@ -276,54 +276,50 @@
                         IsEnabled="{Binding IsIdle}"
                         Name="BlackHandStackPanel"
                         Orientation="Vertical" />
-            <Grid Grid.Column="3"
-                  Grid.Row="0"
-                  IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
-                <StackPanel Margin="5"
-                            Orientation="Vertical">
-                    <Label Content="History"
-                           FontWeight="Bold" />
-                    <ListBox Items="{Binding BoardHistory.Items}"
-                             Margin="5"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
-                             SelectionMode="Single"
-                             Width="140">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Lucida Console"
-                                               Text="{Binding MoveString}"
-                                               TextWrapping="NoWrap" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                        <ListBox.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding CopyHistoryToClipboard}"
-                                          Header="Copy History to Clipboard" />
-                            </ContextMenu>
-                        </ListBox.ContextMenu>
-                    </ListBox>
-                </StackPanel>
-            </Grid>
-            <Grid Grid.Column="4"
-                  Grid.Row="0"
-                  IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
-                <StackPanel Margin="5"
-                            Orientation="Vertical">
-                    <Label Content="Commentary"
-                           FontWeight="Bold" />
-                    <TextBox AcceptsReturn="True"
-                             FontWeight="Normal"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             Text="{Binding CurrentMoveCommentary}"
-                             TextWrapping="Wrap"
-                             Width="140" />
-                </StackPanel>
-            </Grid>
+            <DockPanel Grid.Column="3"
+                       Grid.Row="0"
+                       IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
+                <Label Content="History"
+                       DockPanel.Dock="Top"
+                       FontWeight="Bold" />
+                <ListBox Items="{Binding BoardHistory.Items}"
+                         Margin="5"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
+                         SelectionMode="Single"
+                         Width="140">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Lucida Console"
+                                           Text="{Binding MoveString}"
+                                           TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding CopyHistoryToClipboard}"
+                                      Header="Copy History to Clipboard" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+            </DockPanel>
+            <DockPanel Grid.Column="4"
+                       Grid.Row="0"
+                       IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
+                <Label Content="Commentary"
+                       DockPanel.Dock="Top"
+                       FontWeight="Bold" />
+                <TextBox AcceptsReturn="True"
+                         FontWeight="Normal"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         Text="{Binding CurrentMoveCommentary}"
+                         TextWrapping="Wrap"
+                         Width="140" />
+            </DockPanel>
             <Grid Grid.Column="0"
                   Grid.ColumnSpan="5"
                   Grid.Row="1"
