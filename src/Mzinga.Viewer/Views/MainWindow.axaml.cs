@@ -29,7 +29,10 @@ using System.ComponentModel;
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.VisualTree;
 
 using Mzinga.SharedUX;
 using Mzinga.SharedUX.ViewModel;
@@ -101,6 +104,36 @@ namespace Mzinga.Viewer.Views
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             //EngineConsoleWindow.Instance.Close();
+        }
+
+        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (VM.CanRaiseStackedPieces)
+            {
+                if (e.Key == Key.X)
+                {
+                    BoardRenderer.RaiseStackedPieces = true;
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.X)
+            {
+                BoardRenderer.RaiseStackedPieces = false;
+                e.Handled = true;
+            }
+        }
+
+        private void LiftButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (VM.CanRaiseStackedPieces)
+            {
+                BoardRenderer.RaiseStackedPieces = !BoardRenderer.RaiseStackedPieces;
+                e.Handled = true;
+            }
         }
     }
 }

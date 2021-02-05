@@ -1,6 +1,8 @@
 <Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Height="600"
         Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        KeyDown="MainWindow_KeyDown"
+        KeyUp="MainWindow_KeyUp"
         MinHeight="480"
         MinWidth="640"
         Title="{Binding Title}"
@@ -175,7 +177,7 @@
                           Header="_About Mzinga.Viewer" />
             </MenuItem>
         </Menu>
-        <Grid Background="White">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -193,28 +195,30 @@
                         Name="WhiteHandStackPanel"
                         Orientation="Vertical" />
             <Grid Grid.Column="1"
-                  Grid.Row="0"
-                  IsEnabled="{Binding IsIdle}">
+                  Grid.Row="0">
                 <Canvas ClipToBounds="True"
+                        IsEnabled="{Binding IsIdle}"
                         Name="BoardCanvas" />
                 <StackPanel HorizontalAlignment="Center"
                             Orientation="Vertical"
                             VerticalAlignment="Bottom">
-                  <ProgressBar 
-                         Height="20"
-                         IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
-                         IsVisible="{Binding IsBusy}"
-                         Margin="5"
-                         Maximum="100"
-                         Minimum="0"
-                         ShowProgressText="True"
-                         Value="{Binding TimedCommandProgress, Mode=OneWay}"
-                         VerticalAlignment="Bottom"
-                         Width="120" />
-                    <Button Content="Lift Pieces (X)"
+                    <ProgressBar Height="20"
+                                 HorizontalAlignment="Center"
+                                 IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
+                                 IsVisible="{Binding IsBusy}"
+                                 Margin="5"
+                                 Maximum="100"
+                                 Minimum="0"
+                                 ShowProgressText="True"
+                                 Value="{Binding TimedCommandProgress, Mode=OneWay}"
+                                 Width="120" />
+                    <Button Click="LiftButton_Click"
+                            Content="Lift Pieces (X)"
+                            HorizontalAlignment="Center"
                             IsEnabled="{Binding CanRaiseStackedPieces}"
-                            IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                            IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                             Margin="5"
+                            Name="LiftButton"
                             Width="100" />
                     <StackPanel HorizontalAlignment="Center"
                                 IsVisible="{Binding IsPlayMode}"
@@ -222,17 +226,17 @@
                                 VerticalAlignment="Bottom">
                         <Button Command="{Binding PlayTarget}"
                                 Content="Play Move"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 Width="100" />
                         <Button Command="{Binding Pass}"
                                 Content="Pass"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 Width="100" />
                         <Button Command="{Binding UndoLastMove}"
                                 Content="Undo"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 Width="100" />
                     </StackPanel>
@@ -242,25 +246,25 @@
                                 VerticalAlignment="Bottom">
                         <Button Command="{Binding MoveToStart}"
                                 Content="|&lt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move to Start"
                                 Width="50" />
                         <Button Command="{Binding MoveBack}"
                                 Content="&lt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move Back"
                                 Width="50" />
                         <Button Command="{Binding MoveForward}"
                                 Content="&gt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move Forward"
                                 Width="50" />
                         <Button Command="{Binding MoveToEnd}"
                                 Content="&gt;|"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move Back"
                                 Width="50" />
