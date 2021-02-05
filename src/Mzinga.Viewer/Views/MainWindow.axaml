@@ -246,27 +246,23 @@
                                 VerticalAlignment="Bottom">
                         <Button Command="{Binding MoveToStart}"
                                 Content="|&lt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move to Start"
                                 Width="50" />
                         <Button Command="{Binding MoveBack}"
                                 Content="&lt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move Back"
                                 Width="50" />
                         <Button Command="{Binding MoveForward}"
                                 Content="&gt;"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
                                 ToolTip.Tip="Move Forward"
                                 Width="50" />
                         <Button Command="{Binding MoveToEnd}"
                                 Content="&gt;|"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
                                 Margin="5"
-                                ToolTip.Tip="Move Back"
+                                ToolTip.Tip="Move To End"
                                 Width="50" />
                     </StackPanel>
                 </StackPanel>

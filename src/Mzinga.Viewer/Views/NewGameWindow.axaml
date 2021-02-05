@@ -1,0 +1,185 @@
+<Window CanResize="False"
+        Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        MinHeight="100"
+        MinWidth="100"
+        SizeToContent="WidthAndHeight"
+        Title="{Binding Title, FallbackValue=New Game}"
+        WindowStartupLocation="CenterOwner"
+        d:DesignHeight="640"
+        d:DesignWidth="480"
+        mc:Ignorable="d"
+        x:Class="Mzinga.Viewer.Views.NewGameWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid ColumnDefinitions="Auto,*"
+          Margin="5"
+          RowDefinitions="Auto,Auto">
+        <Image Grid.Column="0"
+               Grid.Row="0"
+               Grid.RowSpan="2"
+               Height="48"
+               HorizontalAlignment="Center"
+               Margin="5"
+               Source="avares://Mzinga.Viewer/Resources/icon.ico"
+               VerticalAlignment="Top"
+               Width="48" />
+        <StackPanel Grid.Column="1"
+                    Grid.Row="0"
+                    Margin="5"
+                    Orientation="Vertical">
+            <DockPanel Margin="5">
+                <Label Content="Players"
+                       DockPanel.Dock="Top"
+                       FontWeight="Bold" />
+                <StackPanel Orientation="Vertical">
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Label Content="White:"
+                               Margin="5"
+                               Padding="0"
+                               VerticalAlignment="Center"
+                               Width="50" />
+                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                     CommandParameter="WhitePlayerType.Human"
+                                     Content="Human"
+                                     GroupName="WhitePlayerType"
+                                     IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                     Margin="5"
+                                     VerticalAlignment="Center"
+                                     VerticalContentAlignment="Center" />
+                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                     CommandParameter="WhitePlayerType.EngineAI"
+                                     Content="Computer"
+                                     GroupName="WhitePlayerType"
+                                     IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                     Margin="5"
+                                     VerticalAlignment="Center"
+                                     VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Label Content="Black:"
+                               Margin="5"
+                               Padding="0"
+                               VerticalAlignment="Center"
+                               Width="50" />
+                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                     CommandParameter="BlackPlayerType.Human"
+                                     Content="Human"
+                                     GroupName="BlackPlayerType"
+                                     IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
+                                     Margin="5"
+                                     VerticalAlignment="Center" />
+                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                     CommandParameter="BlackPlayerType.EngineAI"
+                                     Content="Computer"
+                                     GroupName="BlackPlayerType"
+                                     IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
+                                     Margin="5"
+                                     VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel IsEnabled="{Binding IsNewGame}"
+                       Margin="5">
+                <Label Content="Expansion Pieces"
+                       DockPanel.Dock="Top"
+                       FontWeight="Bold" />
+                <StackPanel HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                    <CheckBox Content="Mosquito"
+                              IsChecked="{Binding IncludeMosquito}"
+                              IsEnabled="{Binding EnableMosquito}"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center" />
+                    <CheckBox Content="Ladybug"
+                              IsChecked="{Binding IncludeLadybug}"
+                              IsEnabled="{Binding EnableLadybug}"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center" />
+                    <CheckBox Content="Pillbug"
+                              IsChecked="{Binding IncludePillbug}"
+                              IsEnabled="{Binding EnablePillbug}"
+                              Margin="5"
+                              VerticalAlignment="Center"
+                              VerticalContentAlignment="Center" />
+                </StackPanel>
+            </DockPanel>
+            <DockPanel Margin="5">
+                <Label Content="Computer"
+                       DockPanel.Dock="Top"
+                       FontWeight="Bold" />
+                <StackPanel Orientation="Vertical">
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Label Content="Best Move Max:"
+                               Margin="5"
+                               Padding="0"
+                               VerticalAlignment="Center" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Vertical">
+                            <RadioButton Command="{Binding ToggleRadioButton}"
+                                         CommandParameter="BestMoveType.MaxDepth"
+                                         GroupName="BestMoveType"
+                                         HorizontalContentAlignment="Right"
+                                         IsChecked="{Binding Path=BestMoveType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=MaxDepth}"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Depth"
+                                           Margin="5" />
+                                    <NumericUpDown Increment="1"
+                                                   IsEnabled="{Binding EnableBestMoveMaxDepthValue}"
+                                                   Margin="5"
+                                                   Minimum="0"
+                                                   Value="{Binding BestMoveMaxDepthValue}"
+                                                   Width="140" />
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Command="{Binding ToggleRadioButton}"
+                                         CommandParameter="BestMoveType.MaxTime"
+                                         GroupName="BestMoveType"
+                                         HorizontalContentAlignment="Right"
+                                         IsChecked="{Binding Path=BestMoveType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=MaxTime}"
+                                         VerticalAlignment="Center"
+                                         VerticalContentAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Time"
+                                           Margin="5" />
+                                    <NumericUpDown Increment="1"
+                                                   IsEnabled="{Binding EnableBestMoveMaxTimeValue}"
+                                                   Margin="5"
+                                                   Minimum="0"
+                                                   Value="{Binding BestMoveMaxTimeValue, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                                                   Width="140" />
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Margin="5"
+                    Orientation="Horizontal">
+            <Button Command="{Binding Accept}"
+                    Content="OK"
+                    IsDefault="True"
+                    Margin="5"
+                    Width="75" />
+            <Button Command="{Binding Reject}"
+                    Content="Cancel"
+                    Margin="5"
+                    Width="75" />
+        </StackPanel>
+    </Grid>
+</Window>

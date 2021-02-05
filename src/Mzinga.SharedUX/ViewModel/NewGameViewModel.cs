@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -261,6 +261,37 @@ namespace Mzinga.SharedUX.ViewModel
                 RaisePropertyChanged(nameof(BestMoveMaxTimeValue));
             }
         }
+
+        public RelayCommand<string> ToggleRadioButton
+        {
+            get
+            {
+                return _toggleRadioButton ?? (_toggleRadioButton = new RelayCommand<string>((parameter) =>
+                {
+                    try
+                    {
+                        string[] split = parameter.Split(".", StringSplitOptions.RemoveEmptyEntries);
+                        switch (split[0])
+                        {
+                            case nameof(WhitePlayerType):
+                                WhitePlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), split[1]);
+                                break;
+                            case nameof(BlackPlayerType):
+                                BlackPlayerType = (PlayerType)Enum.Parse(typeof(PlayerType), split[1]);
+                                break;
+                            case nameof(BestMoveType):
+                                BestMoveType = (BestMoveType)Enum.Parse(typeof(BestMoveType), split[1]);
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand<string> _toggleRadioButton = null;
 
         public RelayCommand Accept
         {

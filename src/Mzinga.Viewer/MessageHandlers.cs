@@ -194,28 +194,23 @@ namespace Mzinga.Viewer
 
         private static async Task ShowNewGameAsync(NewGameMessage message)
         {
-            await Task.Run(() =>
+            try
             {
-                try
+                var window = new NewGameWindow
                 {
-                    //NewGameWindow window = new NewGameWindow
-                    //{
-                    //    DataContext = message.NewGameVM,
-                    //    Owner = Application.Current.MainWindow,
-                    //};
-                    //message.NewGameVM.RequestClose += (sender, e) =>
-                    //{
-                    //    window.Close();
-                    //};
-                    //window.ShowDialog();
-                    message.NewGameVM.Accept.Execute(null);
-                    message.Process();
-                }
-                catch (Exception ex)
-                {
-                    ExceptionUtils.HandleException(ex);
-                }
-            });
+                    VM = message.NewGameVM,
+                };
+
+                await window.ShowDialog(MainWindow);
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process();
+            }
         }
 
         private static async Task ShowLoadGameAsync(LoadGameMessage message)
