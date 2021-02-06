@@ -1,5 +1,4 @@
 <Window CanResize="False"
-        Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Icon="avares://Mzinga.Viewer/Resources/icon.ico"
         MinHeight="100"
         MinWidth="100"
@@ -133,7 +132,8 @@
                                          VerticalContentAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="Depth"
-                                           Margin="5" />
+                                           Margin="5"
+                                           Width="80" />
                                     <NumericUpDown Increment="1"
                                                    IsEnabled="{Binding EnableBestMoveMaxDepthValue}"
                                                    Margin="5"
@@ -150,8 +150,9 @@
                                          VerticalAlignment="Center"
                                          VerticalContentAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Time"
-                                           Margin="5" />
+                                    <Label Content="Time (s)"
+                                           Margin="5"
+                                           Width="80" />
                                     <NumericUpDown Increment="1"
                                                    IsEnabled="{Binding EnableBestMoveMaxTimeValue}"
                                                    Margin="5"
