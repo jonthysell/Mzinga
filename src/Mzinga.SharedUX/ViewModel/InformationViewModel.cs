@@ -33,6 +33,15 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class InformationViewModel : ViewModelBase
     {
+        public AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+
+        }
+
         public string Title
         {
             get

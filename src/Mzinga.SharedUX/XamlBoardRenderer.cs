@@ -218,9 +218,11 @@ namespace Mzinga.SharedUX
 
             // Specify background so hit-test works properly
             // TODO: Let user specify different background
+#if WINDOWS_WPF
             BoardCanvas.Background = WhiteBrush;
             WhiteHandStackPanel.Background = WhiteBrush;
             BlackHandStackPanel.Background = WhiteBrush;
+#endif
 
             CanvasOffsetX = 0.0;
             CanvasOffsetX = 0.0;
