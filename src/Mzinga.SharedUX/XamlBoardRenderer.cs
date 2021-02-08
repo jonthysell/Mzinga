@@ -218,7 +218,9 @@ namespace Mzinga.SharedUX
 
             // Specify background so hit-test works properly
             // TODO: Let user specify different background
-#if WINDOWS_WPF
+#if AVALONIAUI
+            
+#elif WINDOWS_WPF
             BoardCanvas.Background = WhiteBrush;
             WhiteHandStackPanel.Background = WhiteBrush;
             BlackHandStackPanel.Background = WhiteBrush;
@@ -957,7 +959,7 @@ namespace Mzinga.SharedUX
 #if AVALONIAUI
         private void BoardCanvas_SizeChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
-            if (e.Property == Canvas.WidthProperty || e.Property == Canvas.HeightProperty)
+            if (e.Property == Canvas.BoundsProperty)
             {
                 TryRedraw();
             }
