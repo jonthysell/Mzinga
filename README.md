@@ -51,10 +51,6 @@ Mzinga.Viewer.exe is Mzinga's viewer, a graphical application which can drive Mz
 
 Mzinga.Viewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
 
-### Mzinga.Viewer.WPF (Windows-only) ###
-
-Mzinga.Viewer.WPF.exe is the legacy WPF version of Mzinga.Viewer.
-
 ## Other Projects ##
 
 ### Mzinga.Perft ###
@@ -75,6 +71,6 @@ Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endo
 
 Mzinga Copyright (c) 2015-2021 Jon Thysell.
 
-MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
+Avalonia Copyright (c) .NET Foundation and Contributors.
 
-Extended WPF Toolkit Copyright (c) 2010-2019 Xceed Software Inc.
+MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
