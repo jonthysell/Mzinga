@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## vNext ##
+
+* Rebuilt Mzinga.Viewer using Avalonia
+
 ## v0.9.21000.0 ##
 
 * Ported projects to .NET Core 3.1

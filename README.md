@@ -45,11 +45,15 @@ Mzinga is composed of two main projects, the Engine and the Viewer.
 
 Mzinga.Engine.exe is Mzinga's engine, a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
 
-### Mzinga.Viewer (Windows-only) ###
+### Mzinga.Viewer ###
 
 Mzinga.Viewer.exe is Mzinga's viewer, a graphical application which can drive Mzinga.Engine (or any engine that implements the specifications of the Universal Hive Protocol).
 
 Mzinga.Viewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
+
+### Mzinga.Viewer.WPF (Windows-only) ###
+
+Mzinga.Viewer.WPF.exe is the legacy WPF version of Mzinga.Viewer.
 
 ## Other Projects ##
 
