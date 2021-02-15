@@ -59,7 +59,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
             Messenger.Default.Register<GameMetadataMessage>(recipient, (message) => ShowGameMetadata(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, async (message) => await ShowViewerConfigAsync(message));
-            Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
+            Messenger.Default.Register<EngineOptionsMessage>(recipient, async (message) => await ShowEngineOptionsAsync(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
         }
 
@@ -327,11 +327,14 @@ namespace Mzinga.Viewer
                 //    window.Close();
                 //};
                 //window.ShowDialog();
-                //message.Process();
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process();
             }
         }
 
@@ -356,30 +359,29 @@ namespace Mzinga.Viewer
             }
         }
 
-        private static void ShowEngineOptions(EngineOptionsMessage message)
+        private static async Task ShowEngineOptionsAsync(EngineOptionsMessage message)
         {
             try
             {
-                //if (message.EngineOptionsVM.Options.Count == 0)
-                //{
-                //    throw new Exception("This engine exposes no options to set.");
-                //}
+                if (message.EngineOptionsVM.Options.Count == 0)
+                {
+                    throw new Exception("This engine exposes no options to set.");
+                }
 
-                //EngineOptionsWindow window = new EngineOptionsWindow
-                //{
-                //    DataContext = message.EngineOptionsVM,
-                //    Owner = Application.Current.MainWindow,
-                //};
-                //message.EngineOptionsVM.RequestClose += (sender, e) =>
-                //{
-                //    window.Close();
-                //};
-                //window.ShowDialog();
-                //message.Process();
+                var window = new EngineOptionsWindow
+                {
+                    VM = message.EngineOptionsVM,
+                };
+
+                await window.ShowDialog(MainWindow);
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process();
             }
         }
 
