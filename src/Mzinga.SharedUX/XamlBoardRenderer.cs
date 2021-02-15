@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-#if AVALONIAUI
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
@@ -37,13 +36,6 @@ using Avalonia.Interactivity;
 using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
-#elif WINDOWS_WPF
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
-#endif
 
 using Mzinga.Core;
 using Mzinga.SharedUX.ViewModel;
@@ -57,24 +49,6 @@ namespace Mzinga.SharedUX
         public Canvas BoardCanvas { get; private set; }
         public StackPanel WhiteHandStackPanel { get; private set; }
         public StackPanel BlackHandStackPanel { get; private set; }
-
-
-        public Point CanvasCursorPosition
-        {
-            get
-            {
-#if AVALONIAUI
-                Point point = new Point();
-                //point.X -= CanvasOffsetX;
-                //point.Y -= CanvasOffsetY;
-#elif WINDOWS_WPF
-                Point point = Mzinga.Viewer.MouseUtils.CorrectGetPosition(BoardCanvas);
-                point.X -= CanvasOffsetX;
-                point.Y -= CanvasOffsetY;
-#endif
-                return point;
-            }
-        }
 
         private readonly double PieceCanvasMargin = 3.0;
 
@@ -180,18 +154,10 @@ namespace Mzinga.SharedUX
             }
 
             // Attach events
-#if AVALONIAUI
             BoardCanvas.PropertyChanged += BoardCanvas_SizeChanged;
             BoardCanvas.PointerReleased += BoardCanvas_Click;
             WhiteHandStackPanel.PointerReleased += CancelClick;
             BlackHandStackPanel.PointerReleased += CancelClick;
-#elif WINDOWS_WPF
-            BoardCanvas.SizeChanged += BoardCanvas_SizeChanged;
-            BoardCanvas.MouseLeftButtonUp += BoardCanvas_Click;
-            BoardCanvas.MouseRightButtonUp += CancelClick;
-            WhiteHandStackPanel.MouseRightButtonUp += CancelClick;
-            BlackHandStackPanel.MouseRightButtonUp += CancelClick;
-#endif
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -224,13 +190,9 @@ namespace Mzinga.SharedUX
                 Point minPoint = new Point(double.MaxValue, double.MaxValue);
                 Point maxPoint = new Point(double.MinValue, double.MinValue);
 
-#if AVALONIAUI
                 double boardCanvasWidth = BoardCanvas.Bounds.Width;
                 double boardCanvasHeight = BoardCanvas.Bounds.Height;
-#elif WINDOWS_WPF
-                double boardCanvasWidth = BoardCanvas.ActualWidth;
-                double boardCanvasHeight = BoardCanvas.ActualHeight;
-#endif
+
                 Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out int numPieces, out int maxStack);
 
                 int whiteHandCount = board.WhiteHand.Count();
@@ -639,11 +601,7 @@ namespace Mzinga.SharedUX
                     figure.Segments.Add(new LineSegment() { Point = p1 });
                     figure.Segments.Add(new ArcSegment() {
                         Point = p2,
-#if AVALONIAUI
-                        SweepDirection = SweepDirection.CounterClockwise
-#elif WINDOWS_WPF
-                        SweepDirection = SweepDirection.Counterclockwise
-#endif
+                        SweepDirection = SweepDirection.CounterClockwise,
                     });
                 }
             }
@@ -757,12 +715,8 @@ namespace Mzinga.SharedUX
                 }
             }
 
-#if AVALONIAUI
             bugGrid.RenderTransform = new RotateTransform(rotateAngle);
             bugGrid.RenderTransformOrigin = RelativePoint.Center;
-#elif WINDOWS_WPF
-            bugGrid.RenderTransform = new RotateTransform(rotateAngle, bugGrid.Width / 2.0, bugGrid.Height / 2.0);
-#endif
 
             Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
             b.Child = safeGrid;
@@ -862,17 +816,11 @@ namespace Mzinga.SharedUX
                 pieceCanvas.Children.Add(highlightHex);
             }
 
-#if AVALONIAUI
             pieceCanvas.PointerReleased += PieceCanvas_Click;
-#elif WINDOWS_WPF
-            pieceCanvas.MouseLeftButtonUp += PieceCanvas_Click;
-            pieceCanvas.MouseRightButtonUp += CancelClick;
-#endif
 
             return pieceCanvas;
         }
 
-#if AVALONIAUI
         private void PieceCanvas_Click(object sender, PointerReleasedEventArgs e)
         {
             if (sender is Canvas pieceCanvas)
@@ -890,18 +838,7 @@ namespace Mzinga.SharedUX
                 }
             }
         }
-#elif WINDOWS_WPF
-        private void PieceCanvas_Click(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Canvas pieceCanvas)
-            {
-                PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
-                VM.PieceClick(clickedPiece);
-            }
-        }
-#endif
 
-#if AVALONIAUI
         private void BoardCanvas_Click(object sender, PointerReleasedEventArgs e)
         {
             if (e.InitialPressMouseButton == MouseButton.Left)
@@ -916,21 +853,8 @@ namespace Mzinga.SharedUX
                 e.Handled = true;
             }
         }
-#elif WINDOWS_WPF
-        private void BoardCanvas_Click(object sender, MouseButtonEventArgs e)
-        {
-            Point point = Mzinga.Viewer.MouseUtils.CorrectGetPosition(BoardCanvas);
-            point.X -= CanvasOffsetX;
-            point.Y -= CanvasOffsetY;
-            VM.CanvasClick(point.X, point.Y);
-        }
-#endif
 
-#if AVALONIAUI
         private void CancelClick(object sender, RoutedEventArgs e)
-#elif WINDOWS_WPF
-        private void CancelClick(object sender, MouseButtonEventArgs e)
-#endif
         {
             VM.CancelClick();
         }
@@ -946,7 +870,6 @@ namespace Mzinga.SharedUX
             }
         }
 
-#if AVALONIAUI
         private void BoardCanvas_SizeChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (e.Property == Canvas.BoundsProperty)
@@ -954,11 +877,5 @@ namespace Mzinga.SharedUX
                 TryRedraw();
             }
         }
-#elif WINDOWS_WPF
-        private void BoardCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            TryRedraw();
-        }
-#endif
     }
 }

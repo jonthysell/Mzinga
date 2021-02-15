@@ -9,7 +9,6 @@
     <Import_RootNamespace>Mzinga.SharedUX</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)BoolToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CLIEngineWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EngineCapabilities.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TimeSpanToDoubleConverter.cs" />

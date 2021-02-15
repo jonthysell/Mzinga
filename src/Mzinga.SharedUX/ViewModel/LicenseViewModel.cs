@@ -83,9 +83,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 GetHiveLicense(),
                 GetMzingaLicense(),
-#if AVALONIAUI
                 GetAvaloniaLicense(),
-#endif
                 GetMvvmLightLicense(),
             };
         }
@@ -100,12 +98,10 @@ namespace Mzinga.SharedUX.ViewModel
             return new ObservableLicense(AppInfo.Product, AppInfo.Copyright, AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }
 
-#if AVALONIAUI
         private ObservableLicense GetAvaloniaLicense()
         {
             return new ObservableLicense("Avalonia", "Copyright © .NET Foundation and Contributors", AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }
-#endif
 
         private ObservableLicense GetMvvmLightLicense()
         {

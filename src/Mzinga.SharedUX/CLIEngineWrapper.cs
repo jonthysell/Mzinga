@@ -28,10 +28,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-
-#if WINDOWS_WPF
 using System.Runtime.InteropServices;
-#endif
 
 namespace Mzinga.SharedUX
 {
@@ -118,19 +115,20 @@ namespace Mzinga.SharedUX
 
         protected override void OnCancelCommand()
         {
-#if WINDOWS_WPF
-            if (NativeMethods.AttachConsole((uint)_process.Id))
+            if (AppInfo.IsWindows)
             {
-                NativeMethods.SetConsoleCtrlHandler(null, true);
-                NativeMethods.GenerateConsoleCtrlEvent(NativeMethods.CtrlTypes.CTRL_C_EVENT, 0);
+                if (NativeMethods.AttachConsole((uint)_process.Id))
+                {
+                    NativeMethods.SetConsoleCtrlHandler(null, true);
+                    NativeMethods.GenerateConsoleCtrlEvent(NativeMethods.CtrlTypes.CTRL_C_EVENT, 0);
 
-                NativeMethods.FreeConsole();
+                    NativeMethods.FreeConsole();
 
-                _process.WaitForExit(WaitForCancelTimeoutMS);
+                    _process.WaitForExit(WaitForCancelTimeoutMS);
 
-                NativeMethods.SetConsoleCtrlHandler(null, false);
+                    NativeMethods.SetConsoleCtrlHandler(null, false);
+                }
             }
-#endif
         }
 
         public void Dispose()
@@ -143,7 +141,6 @@ namespace Mzinga.SharedUX
         private const int WaitForCancelTimeoutMS = 500;
     }
 
-#if WINDOWS_WPF
     // Adapted from https://stackoverflow.com/questions/813086/can-i-send-a-ctrl-c-sigint-to-an-application-on-windows
     internal static partial class NativeMethods
     {
@@ -172,5 +169,4 @@ namespace Mzinga.SharedUX
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool GenerateConsoleCtrlEvent(CtrlTypes dwCtrlEvent, uint dwProcessGroupId);
     }
-#endif
 }

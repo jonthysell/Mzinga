@@ -25,16 +25,10 @@
 // THE SOFTWARE.
 
 using System;
-
-#if AVALONIAUI
 using System.Globalization;
+
 using Avalonia.Data.Converters;
 using Avalonia.Input;
-#elif WINDOWS_WPF
-using System.Globalization;
-using System.Windows.Input;
-using System.Windows.Data;
-#endif
 
 namespace Mzinga.SharedUX
 {
@@ -46,19 +40,11 @@ namespace Mzinga.SharedUX
             {
                 if (!(bool)value)
                 {
-#if AVALONIAUI
                     return new Cursor(StandardCursorType.Wait);
-#elif WINDOWS_WPF
-                    return Cursors.Wait;
-#endif
                 }
             }
 
-#if AVALONIAUI
             return new Cursor(StandardCursorType.Arrow);
-#elif WINDOWS_WPF
-            return Cursors.Arrow;
-#endif
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
