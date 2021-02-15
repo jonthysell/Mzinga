@@ -37,6 +37,14 @@ The Linux release provides self-contained x64 binaries and runs on many Linux di
 1. Download the latest Linux tar.gz file (Mzinga.Linux.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
 
+### Portable ###
+
+The Portable release provides loose, framework-dependent .NET Core 3.1 binaries.
+
+1. Install the latest [.NET Core Runtime](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+2. Download the latest Portable zip file (Mzinga.Portable.zip) from https://github.com/jonthysell/Mzinga/releases/latest
+3. Extract the zip file
+
 ## Projects ##
 
 Mzinga is composed of two main projects, the Engine and the Viewer.

@@ -33,7 +33,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ env.Product }} ${{ github.ref }}
-          body: See [CHANGELOG.md](./CHANGELOG.md) to see information about this release.
+          body: See [README.md](./README.md) for installation instructions and [CHANGELOG.md](./CHANGELOG.md) for specific information about this release.
           draft: false
           prerelease: ${{ env.Prerelease }}
 
