@@ -57,7 +57,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<NewGameMessage>(recipient, async (message) => await ShowNewGameAsync(message));
             Messenger.Default.Register<LoadGameMessage>(recipient, async (message) => await ShowLoadGameAsync(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
-            Messenger.Default.Register<GameMetadataMessage>(recipient, (message) => ShowGameMetadata(message));
+            Messenger.Default.Register<GameMetadataMessage>(recipient, async (message) => await ShowGameMetadataAsync(message));
             Messenger.Default.Register<ViewerConfigMessage>(recipient, async (message) => await ShowViewerConfigAsync(message));
             Messenger.Default.Register<EngineOptionsMessage>(recipient, async (message) => await ShowEngineOptionsAsync(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
@@ -313,20 +313,16 @@ namespace Mzinga.Viewer
             return filters;
         }
 
-        private static void ShowGameMetadata(GameMetadataMessage message)
+        private static async Task ShowGameMetadataAsync(GameMetadataMessage message)
         {
             try
             {
-                //GameMetadataWindow window = new GameMetadataWindow
-                //{
-                //    DataContext = message.GameMetadataVM,
-                //    Owner = Application.Current.MainWindow,
-                //};
-                //message.GameMetadataVM.RequestClose += (sender, e) =>
-                //{
-                //    window.Close();
-                //};
-                //window.ShowDialog();
+                var window = new GameMetadataWindow
+                {
+                    VM = message.GameMetadataVM,
+                };
+
+                await window.ShowDialog(MainWindow);
             }
             catch (Exception ex)
             {
