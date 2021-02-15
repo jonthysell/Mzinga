@@ -148,16 +148,14 @@
                     <MenuItem Command="{Binding ToggleShowBoardHistory}"
                               Header="Show Board _History">
                         <MenuItem.Icon>
-                            <CheckBox BorderThickness="0"
-                                      IsChecked="{Binding ShowBoardHistory}"
+                            <CheckBox IsChecked="{Binding ShowBoardHistory}"
                                       IsHitTestVisible="False" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Command="{Binding ToggleShowMoveCommentary}"
                               Header="Show Move _Commentary">
                         <MenuItem.Icon>
-                            <CheckBox BorderThickness="0"
-                                      IsChecked="{Binding ShowMoveCommentary}"
+                            <CheckBox IsChecked="{Binding ShowMoveCommentary}"
                                       IsHitTestVisible="False" />
                         </MenuItem.Icon>
                     </MenuItem>

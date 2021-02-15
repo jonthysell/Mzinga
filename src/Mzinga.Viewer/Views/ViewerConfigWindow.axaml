@@ -19,15 +19,10 @@
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="Auto,Auto">
-            <Image Grid.Column="0"
+            <Image Classes="MzingaIcon"
+                   Grid.Column="0"
                    Grid.Row="0"
-                   Grid.RowSpan="2"
-                   Height="48"
-                   HorizontalAlignment="Center"
-                   Margin="5"
-                   Source="avares://Mzinga.Viewer/Resources/icon.ico"
-                   VerticalAlignment="Top"
-                   Width="48" />
+                   Grid.RowSpan="2" />
             <TabControl Grid.Column="1"
                         Grid.Row="0"
                         Height="300">
@@ -184,8 +179,8 @@
                                   Padding="0,5">
                         <StackPanel Width="400">
                             <CheckBox Content="Play sound effects"
-                                      IsEnabled="False"
-                                      IsChecked="{Binding PlaySoundEffects}" />
+                                      IsChecked="{Binding PlaySoundEffects}"
+                                      IsEnabled="False" />
                             <CheckBox Content="Check for updates on start"
                                       IsChecked="{Binding CheckUpdateOnStart}" />
                         </StackPanel>
