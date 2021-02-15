@@ -1,0 +1,337 @@
+<Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
+        Height="600"
+        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        KeyDown="MainWindow_KeyDown"
+        KeyUp="MainWindow_KeyUp"
+        MinHeight="480"
+        MinWidth="640"
+        Title="{Binding Title}"
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        d:DesignHeight="600"
+        d:DesignWidth="800"
+        mc:Ignorable="d"
+        x:Class="Mzinga.Viewer.Views.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <NativeMenu.Menu>
+        <NativeMenu>
+            <NativeMenuItem Header="File">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Command="{Binding NewGame}"
+                                        Gesture="Cmd+N"
+                                        Header="New" />
+                        <NativeMenuItem Command="{Binding LoadGame}"
+                                        Gesture="Cmd+O"
+                                        Header="Open..." />
+                        <NativeMenuItemSeperator />
+                        <NativeMenuItem Command="{Binding SaveGame}"
+                                        Gesture="Cmd+S"
+                                        Header="Save As..." />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Review">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Command="{Binding MoveToStart}"
+                                        Header="Move To Start" />
+                        <NativeMenuItem Command="{Binding MoveBack}"
+                                        Header="Move Back" />
+                        <NativeMenuItem Command="{Binding MoveForward}"
+                                        Header="Move Forward" />
+                        <NativeMenuItem Command="{Binding MoveToEnd}"
+                                        Header="Move To End" />
+                        <NativeMenuItemSeperator />
+                        <NativeMenuItem Command="{Binding ShowGameMetadata}"
+                                        Header="Edit Metadata" />
+                        <NativeMenuItem Command="{Binding SwitchToPlayMode}"
+                                        Header="Switch to Play Mode" />
+                        <NativeMenuItem Command="{Binding SwitchToReviewMode}"
+                                        Header="Switch to Review Mode" />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Engine">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Command="{Binding FindBestMove}"
+                                        Header="Find Best Move" />
+                        <NativeMenuItemSeperator />
+                        <NativeMenuItem Command="{Binding ShowEngineOptions}"
+                                        Gesture="Cmd+Shift+E"
+                                        Header="Engine Options" />
+                        <NativeMenuItem Command="{Binding ShowEngineConsole}"
+                                        Gesture="Cmd+Shift+C"
+                                        Header="Engine Console" />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Viewer">
+                <NativeMenuItem.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Command="{Binding ToggleShowBoardHistory}"
+                                        Header="Show Board History" />
+                        <NativeMenuItem Command="{Binding ToggleShowMoveCommentary}"
+                                        Header="Show Move Commentary" />
+                        <NativeMenuItemSeperator />
+                        <NativeMenuItem Command="{Binding ShowViewerConfig}"
+                                        Gesture="Cmd+Shift+V"
+                                        Header="Viewer Options" />
+                    </NativeMenu>
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+            <NativeMenuItem Header="Help">
+                <NativeMenuItem.Menu>
+                    <NativeMenu />
+                </NativeMenuItem.Menu>
+            </NativeMenuItem>
+        </NativeMenu>
+    </NativeMenu.Menu>
+    <Panel>
+        <ExperimentalAcrylicBorder />
+        <DockPanel Margin="5">
+            <Menu DockPanel.Dock="Top"
+                  IsEnabled="{Binding ShowMenu}"
+                  IsVisible="{Binding ShowMenu}">
+                <MenuItem Header="_File">
+                    <MenuItem Command="{Binding NewGame}"
+                              Header="_New"
+                              HotKey="Ctrl+N" />
+                    <MenuItem Command="{Binding LoadGame}"
+                              Header="_Open..."
+                              HotKey="Ctrl+O" />
+                    <Separator />
+                    <MenuItem Command="{Binding SaveGame}"
+                              Header="_Save As..."
+                              HotKey="Ctrl+S" />
+                    <Separator />
+                    <MenuItem Command="{Binding Close}"
+                              Header="E_xit"
+                              HotKey="Alt+F4" />
+                </MenuItem>
+                <MenuItem Header="_Review">
+                    <MenuItem Command="{Binding MoveToStart}"
+                              Header="Move To _Start" />
+                    <MenuItem Command="{Binding MoveBack}"
+                              Header="Move _Back" />
+                    <MenuItem Command="{Binding MoveForward}"
+                              Header="Move _Forward" />
+                    <MenuItem Command="{Binding MoveToEnd}"
+                              Header="Move To _End" />
+                    <Separator />
+                    <MenuItem Command="{Binding ShowGameMetadata}"
+                              Header="Edit _Metadata" />
+                    <MenuItem Command="{Binding SwitchToPlayMode}"
+                              Header="Switch to _Play Mode"
+                              IsVisible="{Binding IsReviewMode}" />
+                    <MenuItem Command="{Binding SwitchToReviewMode}"
+                              Header="Switch to _Review Mode"
+                              IsVisible="{Binding IsPlayMode}" />
+                </MenuItem>
+                <MenuItem Header="_Engine">
+                    <MenuItem Command="{Binding FindBestMove}"
+                              Header="_Find Best Move" />
+                    <Separator />
+                    <MenuItem Command="{Binding ShowEngineOptions}"
+                              Header="Engine _Options"
+                              HotKey="Ctrl+Shift+E" />
+                    <MenuItem Command="{Binding ShowEngineConsole}"
+                              Header="Engine _Console"
+                              HotKey="Ctrl+Shift+C" />
+                </MenuItem>
+                <MenuItem Header="_Viewer">
+                    <MenuItem Command="{Binding ToggleShowBoardHistory}"
+                              Header="Show Board _History">
+                        <MenuItem.Icon>
+                            <CheckBox BorderThickness="0"
+                                      IsChecked="{Binding ShowBoardHistory}"
+                                      IsHitTestVisible="False" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding ToggleShowMoveCommentary}"
+                              Header="Show Move _Commentary">
+                        <MenuItem.Icon>
+                            <CheckBox BorderThickness="0"
+                                      IsChecked="{Binding ShowMoveCommentary}"
+                                      IsHitTestVisible="False" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Command="{Binding ShowViewerConfig}"
+                              Header="Viewer _Options"
+                              HotKey="Ctrl+Shift+V" />
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem Command="{Binding LaunchMzingaWebsite}"
+                              Header="_Mzinga Website" />
+                    <MenuItem Command="{Binding LaunchHiveWebsite}"
+                              Header="_Hive Website" />
+                    <Separator />
+                    <MenuItem Command="{Binding CheckForUpdatesAsync}"
+                              Header="_Check for Updates" />
+                    <Separator />
+                    <MenuItem Command="{Binding ShowLicenses}"
+                              Header="_About Mzinga.Viewer" />
+                </MenuItem>
+            </Menu>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Background="Transparent"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            IsEnabled="{Binding IsIdle}"
+                            Name="WhiteHandStackPanel"
+                            Orientation="Vertical" />
+                <Grid Grid.Column="1"
+                      Grid.Row="0">
+                    <Canvas Background="Transparent"
+                            ClipToBounds="True"
+                            IsEnabled="{Binding IsIdle}"
+                            Name="BoardCanvas" />
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Vertical"
+                                VerticalAlignment="Bottom">
+                        <ProgressBar Height="20"
+                                     HorizontalAlignment="Center"
+                                     IsIndeterminate="{Binding IsRunningIndeterminateCommand}"
+                                     IsVisible="{Binding IsBusy}"
+                                     Margin="5"
+                                     Maximum="100"
+                                     Minimum="0"
+                                     ShowProgressText="True"
+                                     Value="{Binding TimedCommandProgress, Mode=OneWay}"
+                                     Width="120" />
+                        <Button Click="LiftButton_Click"
+                                Content="Lift Pieces (X)"
+                                HorizontalAlignment="Center"
+                                IsEnabled="{Binding CanRaiseStackedPieces}"
+                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
+                                Name="LiftButton" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    IsVisible="{Binding IsPlayMode}"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Bottom">
+                            <Button Command="{Binding PlayTarget}"
+                                    Content="Play Move"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
+                            <Button Command="{Binding Pass}"
+                                    Content="Pass"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
+                            <Button Command="{Binding UndoLastMove}"
+                                    Content="Undo"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center"
+                                    IsVisible="{Binding IsReviewMode}"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Bottom">
+                            <Button Command="{Binding MoveToStart}"
+                                    Content="|&lt;"
+                                    ToolTip.Tip="Move to Start" />
+                            <Button Command="{Binding MoveBack}"
+                                    Content="&lt;"
+                                    ToolTip.Tip="Move Back" />
+                            <Button Command="{Binding MoveForward}"
+                                    Content="&gt;"
+                                    ToolTip.Tip="Move Forward" />
+                            <Button Command="{Binding MoveToEnd}"
+                                    Content="&gt;|"
+                                    ToolTip.Tip="Move To End" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Background="Transparent"
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            IsEnabled="{Binding IsIdle}"
+                            Name="BlackHandStackPanel"
+                            Orientation="Vertical" />
+                <DockPanel Grid.Column="3"
+                           Grid.Row="0"
+                           IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
+                    <Label Content="History"
+                           DockPanel.Dock="Top"
+                           FontWeight="Bold" />
+                    <ListBox Items="{Binding BoardHistory.Items}"
+                             Margin="5"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
+                             SelectionMode="Single"
+                             Width="140">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Lucida Console"
+                                               Text="{Binding MoveString}"
+                                               TextWrapping="NoWrap" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CopyHistoryToClipboard}"
+                                          Header="Copy History to Clipboard" />
+                            </ContextMenu>
+                        </ListBox.ContextMenu>
+                    </ListBox>
+                </DockPanel>
+                <DockPanel Grid.Column="4"
+                           Grid.Row="0"
+                           IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
+                    <Label Content="Commentary"
+                           DockPanel.Dock="Top"
+                           FontWeight="Bold" />
+                    <TextBox AcceptsReturn="True"
+                             FontWeight="Normal"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             Text="{Binding CurrentMoveCommentary}"
+                             TextWrapping="Wrap"
+                             Width="140" />
+                </DockPanel>
+                <Grid Grid.Column="0"
+                      Grid.ColumnSpan="5"
+                      Grid.Row="1"
+                      Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition MinWidth="120"
+                                          Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal">
+                        <Label Content="State:"
+                               FontWeight="Bold" />
+                        <Label Content="{Binding GameState}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal">
+                        <Label Content="Target:"
+                               FontWeight="Bold" />
+                        <Label Content="{Binding TargetMove}" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </DockPanel>
+    </Panel>
+</Window>

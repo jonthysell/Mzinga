@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,10 @@
 
 using System;
 
-#if WINDOWS_UWP
-using Windows.UI.Core;
-using Windows.UI.Xaml.Data;
+#if AVALONIAUI
+using System.Globalization;
+using Avalonia.Data.Converters;
+using Avalonia.Input;
 #elif WINDOWS_WPF
 using System.Globalization;
 using System.Windows.Input;
@@ -39,36 +40,28 @@ namespace Mzinga.SharedUX
 {
     public class IdleBoolToWaitCursorConverter : IValueConverter
     {
-#if WINDOWS_UWP
-        public object Convert(object value, Type targetType, object parameter, string language)
-#else
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-#endif
         {
             if (null != value as bool?)
             {
                 if (!(bool)value)
                 {
-#if WINDOWS_UWP
-                    return new CoreCursor(CoreCursorType.Wait, 0);
+#if AVALONIAUI
+                    return new Cursor(StandardCursorType.Wait);
 #elif WINDOWS_WPF
                     return Cursors.Wait;
 #endif
                 }
             }
 
-#if WINDOWS_UWP
-            return new CoreCursor(CoreCursorType.Arrow, 0);
+#if AVALONIAUI
+            return new Cursor(StandardCursorType.Arrow);
 #elif WINDOWS_WPF
             return Cursors.Arrow;
 #endif
         }
 
-#if WINDOWS_UWP
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-#else
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-#endif
         {
             return value;
         }

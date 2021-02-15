@@ -25,11 +25,59 @@
 // THE SOFTWARE.
 
 using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace Mzinga.Core
+namespace Mzinga
 {
     public class AppInfo
     {
+        public static Assembly Assembly => _assembly ??= Assembly.GetExecutingAssembly();
+        private static Assembly _assembly = null;
+
+        public static string Name => _name ??= Assembly.GetName().Name;
+        private static string _name = null;
+
+        public static string Version
+        {
+            get
+            {
+                if (null == _version)
+                {
+                    Version vers = Assembly.GetName().Version;
+                    _version = vers.Build == 0 ? $"{vers.Major}.{vers.Minor}" : $"{vers.Major}.{vers.Minor}.{vers.Build}";
+                }
+                return _version;
+            }
+        }
+
+        private static string _version = null;
+
+        public static ulong LongVersion
+        {
+            get
+            {
+                if (!_longVersion.HasValue)
+                {
+                    _longVersion = VersionUtils.ParseLongVersion(Version);
+                }
+                return _longVersion.Value;
+            }
+        }
+        private static ulong? _longVersion;
+
+        public static string Product => _product ??= Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+        private static string _product;
+
+        public static string Copyright => _copyright ??= Assembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+        private static string _copyright = null;
+
+        public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+        public static bool IsMacOS => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+        public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
         public static string HiveProduct
         {
             get
@@ -51,22 +99,6 @@ namespace Mzinga.Core
             get
             {
                 return "Mzinga is in no way associated with or endorsed by Gen42 Games.";
-            }
-        }
-
-        public static string Product
-        {
-            get
-            {
-                return "Mzinga";
-            }
-        }
-
-        public static string Copyright
-        {
-            get
-            {
-                return "Copyright © 2015-2019 Jon Thysell";
             }
         }
 

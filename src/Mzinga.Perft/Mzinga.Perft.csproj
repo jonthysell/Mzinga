@@ -6,7 +6,6 @@
     <StartupObject>Mzinga.Perft.Program</StartupObject>
     <AssemblyName>Mzinga.Perft</AssemblyName>
     <RootNamespace>Mzinga.Perft</RootNamespace>
-    <Configurations>Debug;Release;CliRelease</Configurations>
   </PropertyGroup>
 
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />

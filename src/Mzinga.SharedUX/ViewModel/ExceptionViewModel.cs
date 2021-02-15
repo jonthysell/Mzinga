@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,62 +26,11 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-
 namespace Mzinga.SharedUX.ViewModel
 {
-    public class ExceptionViewModel : ViewModelBase
+    public class ExceptionViewModel : InformationViewModel
     {
-        public string Title
-        {
-            get
-            {
-                if (Exception is EngineInvalidMoveException)
-                {
-                    return "Invalid Move";
-                }
-                return "Error";
-            }
-        }
-
-        public string Message
-        {
-            get
-            {
-                return Exception.Message;
-            }
-        }
-
-        public bool ShowDetails => !(Exception is EngineInvalidMoveException);
-
-        public string Details
-        {
-            get
-            {
-                return _details ?? (_details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString()));
-            }
-        }
-        private string _details = null;
-
-        public RelayCommand Accept
-        {
-            get
-            {
-                return _accept ?? (_accept = new RelayCommand(() =>
-                {
-                    try
-                    {
-                        RequestClose?.Invoke(this, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                }));
-            }
-        }
-        private RelayCommand _accept = null;
+        public override bool ShowDetails => !(Exception is EngineInvalidMoveException);
 
         public Exception Exception
         {
@@ -96,11 +45,10 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private Exception _exception;
 
-        public event EventHandler RequestClose;
-
-        public ExceptionViewModel(Exception exception)
+        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : "Error")
         {
             Exception = exception;
+            Details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString());
         }
     }
 }

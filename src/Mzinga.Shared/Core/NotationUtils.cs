@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,12 +45,19 @@ namespace Mzinga.Core
 
             moveString = moveString.Trim();
 
-            try
+            if (moveString.Equals(Move.PassString, StringComparison.InvariantCultureIgnoreCase))
             {
-                // Attempt to parse as an algebraic move
-                return new Move(moveString);
+                return Move.Pass;
             }
-            catch (Exception) { }
+            else if (moveString.Contains('['))
+            {
+                try
+                {
+                    // Attempt to parse as an algebraic move
+                    return new Move(moveString);
+                }
+                catch (Exception) { }
+            }
 
             string[] moveStringParts = moveString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 

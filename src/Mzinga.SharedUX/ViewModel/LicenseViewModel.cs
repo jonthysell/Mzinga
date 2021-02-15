@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,6 @@ using System.Collections.ObjectModel;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-
-using Mzinga.Core;
 
 namespace Mzinga.SharedUX.ViewModel
 {
@@ -62,7 +60,7 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        RequestClose?.Invoke();
+                        RequestClose?.Invoke(this, null);
                     }
                     catch (Exception ex)
                     {
@@ -73,7 +71,7 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _accept;
 
-        public Action RequestClose;
+        public event EventHandler RequestClose;
 
         public Action Callback { get; private set; }
 
@@ -81,11 +79,15 @@ namespace Mzinga.SharedUX.ViewModel
         {
             Callback = callback;
 
-            Licenses = new ObservableCollection<ObservableLicense>();
-
-            Licenses.Add(GetHiveLicense());
-            Licenses.Add(GetMzingaLicense());
-            Licenses.Add(GetMvvmLightLicense());
+            Licenses = new ObservableCollection<ObservableLicense>
+            {
+                GetHiveLicense(),
+                GetMzingaLicense(),
+#if AVALONIAUI
+                GetAvaloniaLicense(),
+#endif
+                GetMvvmLightLicense(),
+            };
         }
 
         private ObservableLicense GetHiveLicense()
@@ -97,6 +99,13 @@ namespace Mzinga.SharedUX.ViewModel
         {
             return new ObservableLicense(AppInfo.Product, AppInfo.Copyright, AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }
+
+#if AVALONIAUI
+        private ObservableLicense GetAvaloniaLicense()
+        {
+            return new ObservableLicense("Avalonia", "Copyright © .NET Foundation and Contributors", AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
+        }
+#endif
 
         private ObservableLicense GetMvvmLightLicense()
         {

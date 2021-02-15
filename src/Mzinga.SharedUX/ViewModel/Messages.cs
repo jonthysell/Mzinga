@@ -58,13 +58,13 @@ namespace Mzinga.SharedUX.ViewModel
 
     public class ConfirmationMessage : MessageBase
     {
-        public string Message { get; private set; }
+        public ConfirmationViewModel ConfirmationVM { get; private set; }
 
         private readonly Action<bool> Callback;
 
         public ConfirmationMessage(string message, Action<bool> callback) : base()
         {
-            Message = message;
+            ConfirmationVM = new ConfirmationViewModel(message);
             Callback = callback;
         }
 

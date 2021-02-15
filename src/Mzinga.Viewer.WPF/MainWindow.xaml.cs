@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,12 +45,19 @@ namespace Mzinga.Viewer
             {
                 return DataContext as MainViewModel;
             }
+            private set
+            {
+                DataContext = value;
+                value.RequestClose = Close;
+            }
         }
 
         public XamlBoardRenderer BoardRenderer { get; private set; }
 
         public MainWindow()
         {
+            VM = AppViewModel.Instance.MainVM;
+
             InitializeComponent();
 
             BoardRenderer = new XamlBoardRenderer(VM, BoardCanvas, WhiteHandStackPanel, BlackHandStackPanel);
@@ -100,11 +107,6 @@ namespace Mzinga.Viewer
                     e.Handled = true;
                 }
             }
-        }
-
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
 
         private void LiftButton_PreviewMouseUp(object sender, MouseButtonEventArgs e)

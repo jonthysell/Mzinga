@@ -16,7 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\ListExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\MetricWeights.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\AI\TranspositionTable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\AppInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AppInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Board.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BoardHistory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\BoardMetrics.cs" />
@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\ZobristHash.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\GameEngineConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VersionUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Engine\DefaultEngineConfig.xml" />

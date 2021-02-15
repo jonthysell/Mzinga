@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,13 +33,22 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class InformationViewModel : ViewModelBase
     {
+        public AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+
+        }
+
         public string Title
         {
             get
             {
                 return _title;
             }
-            private set
+            protected set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
@@ -56,7 +65,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 return _message;
             }
-            private set
+            protected set
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
@@ -66,6 +75,10 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private string _message;
+
+        public string Details { get; protected set; }
+
+        public virtual bool ShowDetails => !string.IsNullOrWhiteSpace(Details);
 
         public RelayCommand Accept
         {

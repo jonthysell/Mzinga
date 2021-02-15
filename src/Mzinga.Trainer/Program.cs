@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Reflection;
 using System.Text;
 
 using Mzinga.Core;
@@ -40,7 +39,7 @@ namespace Mzinga.Trainer
 
             try
             {
-                Console.WriteLine("Mzinga.Trainer v{0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                Console.WriteLine($"{AppInfo.Name} v{AppInfo.Version}");
                 Console.WriteLine();
 
                 if (args.Length == 0)

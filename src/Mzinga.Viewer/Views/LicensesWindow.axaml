@@ -1,0 +1,65 @@
+<Window CanResize="False"
+        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        MinHeight="100"
+        MinWidth="100"
+        SizeToContent="WidthAndHeight"
+        Title="{Binding Title}"
+        WindowStartupLocation="CenterOwner"
+        d:DesignHeight="640"
+        d:DesignWidth="480"
+        mc:Ignorable="d"
+        x:Class="Mzinga.Viewer.Views.LicensesWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Panel>
+        <ExperimentalAcrylicBorder />
+        <Grid ColumnDefinitions="Auto,*"
+              Margin="5"
+              RowDefinitions="Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.Row="0"
+                   Grid.RowSpan="2"
+                   Height="48"
+                   HorizontalAlignment="Center"
+                   Margin="5"
+                   Source="avares://Mzinga.Viewer/Resources/icon.ico"
+                   VerticalAlignment="Top"
+                   Width="48" />
+            <TabControl Grid.Column="1"
+                        Grid.Row="0"
+                        Height="300"
+                        Items="{Binding Licenses}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock FontSize="14"
+                                   FontWeight="Bold"
+                                   Text="{Binding Header, Mode=OneWay}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer Margin="0,5"
+                                      Padding="0,5">
+                            <TextBlock Text="{Binding Body, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       Width="400" />
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+            <StackPanel Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="5"
+                        Orientation="Horizontal">
+                <Button Command="{Binding Accept}"
+                        Content="OK"
+                        IsDefault="True" />
+            </StackPanel>
+        </Grid>
+    </Panel>
+</Window>

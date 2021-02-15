@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,9 @@
 
 using System;
 using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
 
 using Mzinga.Core;
-
-#if WINDOWS_WPF
-using Mzinga.Viewer;
-#endif
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -77,7 +72,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 return _isIdle;
             }
-            protected set
+            set
             {
                 _isIdle = value;
                 RaisePropertyChanged(nameof(IsIdle));
@@ -105,10 +100,7 @@ namespace Mzinga.SharedUX.ViewModel
                 ShowViewerConfig.RaiseCanExecuteChanged();
 
                 CopyHistoryToClipboard.RaiseCanExecuteChanged();
-
-#if WINDOWS_WPF
                 CheckForUpdatesAsync.RaiseCanExecuteChanged();
-#endif
             }
         }
         private bool _isIdle = true;
@@ -152,7 +144,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
             private set
             {
-                _timedCommandProgress = Math.Max(0.0, Math.Min(1.0, value));
+                _timedCommandProgress = Math.Max(0.0, Math.Min(100, value * 100));
                 RaisePropertyChanged(nameof(TimedCommandProgress));
             }
         }
@@ -173,6 +165,8 @@ namespace Mzinga.SharedUX.ViewModel
                 return null != AppVM.EngineWrapper.CurrentGameSettings && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
             }
         }
+
+        public bool ShowMenu => AppInfo.IsWindows || AppInfo.IsLinux;
 
         public ViewerConfig ViewerConfig
         {
@@ -195,32 +189,6 @@ namespace Mzinga.SharedUX.ViewModel
             get
             {
                 return AppVM.EngineWrapper.ReviewBoard;
-            }
-        }
-
-        public bool ShowBoardHistory
-        {
-            get
-            {
-                return ViewerConfig.ShowBoardHistory;
-            }
-            set
-            {
-                ViewerConfig.ShowBoardHistory = value;
-                RaisePropertyChanged(nameof(ShowBoardHistory));
-            }
-        }
-
-        public bool ShowMoveCommentary
-        {
-            get
-            {
-                return ViewerConfig.ShowMoveCommentary;
-            }
-            set
-            {
-                ViewerConfig.ShowMoveCommentary = value;
-                RaisePropertyChanged(nameof(ShowMoveCommentary));
             }
         }
 
@@ -261,6 +229,8 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
         private RelayCommand _copyHistoryToClipboard = null;
+
+        public Action RequestClose;
 
         #region Status properties
 
@@ -510,44 +480,24 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private RelayCommand _saveGame = null;
 
-        public RelayCommand ShowViewerConfig
+        public RelayCommand Close
         {
             get
             {
-                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
+                return _close ??= new RelayCommand(() =>
                 {
                     try
                     {
-                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
-                        {
-                            try
-                            {
-                                AppVM.ViewerConfig.CopyFrom(config);
-
-                                RaisePropertyChanged(nameof(ViewerConfig));
-                                RaisePropertyChanged(nameof(TargetMove));
-                                PlayTarget.RaiseCanExecuteChanged();
-                                Pass.RaiseCanExecuteChanged();
-
-                                UpdateBoardHistory();
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
+                        RequestClose?.Invoke();
                     }
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }, () =>
-                {
-                    return IsIdle;
-                }));
+                });
             }
         }
-        private RelayCommand _showViewerConfig = null;
+        private RelayCommand _close;
 
         #endregion
 
@@ -933,17 +883,43 @@ namespace Mzinga.SharedUX.ViewModel
 
         #endregion
 
-        #region Help
+        #region Viewer
 
-        public RelayCommand ShowLicenses
+        public bool ShowBoardHistory
         {
             get
             {
-                return _showLicenses ?? (_showLicenses = new RelayCommand(() =>
+                return ViewerConfig.ShowBoardHistory;
+            }
+            set
+            {
+                ViewerConfig.ShowBoardHistory = value;
+                RaisePropertyChanged(nameof(ShowBoardHistory));
+            }
+        }
+
+        public bool ShowMoveCommentary
+        {
+            get
+            {
+                return ViewerConfig.ShowMoveCommentary;
+            }
+            set
+            {
+                ViewerConfig.ShowMoveCommentary = value;
+                RaisePropertyChanged(nameof(ShowMoveCommentary));
+            }
+        }
+
+        public RelayCommand ToggleShowBoardHistory
+        {
+            get
+            {
+                return _toggleShowBoardHistory ?? (_toggleShowBoardHistory = new RelayCommand(() =>
                 {
                     try
                     {
-                        Messenger.Default.Send(new ShowLicensesMessage());
+                        ShowBoardHistory = !ShowBoardHistory;
                     }
                     catch (Exception ex)
                     {
@@ -952,24 +928,47 @@ namespace Mzinga.SharedUX.ViewModel
                 }));
             }
         }
-        private RelayCommand _showLicenses = null;
+        private RelayCommand _toggleShowBoardHistory = null;
 
-        public RelayCommand LaunchHiveWebsite
+        public RelayCommand ToggleShowMoveCommentary
         {
             get
             {
-                return _launchHiveWebsite ?? (_launchHiveWebsite = new RelayCommand(() =>
+                return _toggleShowMoveCommentary ?? (_toggleShowMoveCommentary = new RelayCommand(() =>
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("This will open the official Hive website in your browser. Do you want to continue?", (confirmed) =>
+                        ShowMoveCommentary = !ShowMoveCommentary;
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand _toggleShowMoveCommentary = null;
+
+        public RelayCommand ShowViewerConfig
+        {
+            get
+            {
+                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
+                {
+                    try
+                    {
+                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
                         {
                             try
                             {
-                                if (confirmed)
-                                {
-                                    Messenger.Default.Send(new LaunchUrlMessage("https://gen42.com/games/hive"));
-                                }
+                                AppVM.ViewerConfig.CopyFrom(config);
+
+                                RaisePropertyChanged(nameof(ViewerConfig));
+                                RaisePropertyChanged(nameof(TargetMove));
+                                PlayTarget.RaiseCanExecuteChanged();
+                                Pass.RaiseCanExecuteChanged();
+
+                                UpdateBoardHistory();
                             }
                             catch (Exception ex)
                             {
@@ -980,72 +979,25 @@ namespace Mzinga.SharedUX.ViewModel
                     catch (Exception ex)
                     {
                         ExceptionUtils.HandleException(ex);
-                    }
-                }));
-            }
-        }
-        private RelayCommand _launchHiveWebsite;
-
-        public RelayCommand LaunchMzingaWebsite
-        {
-            get
-            {
-                return _launchMzingaWebsite ?? (_launchMzingaWebsite = new RelayCommand(() =>
-                {
-                    try
-                    {
-                        Messenger.Default.Send(new ConfirmationMessage("This will open the Mzinga website in your browser. Do you want to continue?", (confirmed) =>
-                        {
-                            try
-                            {
-                                if (confirmed)
-                                {
-                                    Messenger.Default.Send(new LaunchUrlMessage("http://mzinga.jonthysell.com"));
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                }));
-            }
-        }
-        private RelayCommand _launchMzingaWebsite;
-
-#if WINDOWS_WPF
-        public RelayCommand CheckForUpdatesAsync
-        {
-            get
-            {
-                return _checkForUpdatesAsync ?? (_checkForUpdatesAsync = new RelayCommand(async () =>
-                {
-                    try
-                    {
-                        IsIdle = false;
-                        await UpdateUtils.UpdateCheckAsync(true, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                    finally
-                    {
-                        IsIdle = true;
                     }
                 }, () =>
                 {
-                    return IsIdle && !UpdateUtils.IsCheckingforUpdate;
+                    return IsIdle;
                 }));
             }
         }
-        private RelayCommand _checkForUpdatesAsync = null;
-#endif
+        private RelayCommand _showViewerConfig = null;
+
+        #endregion
+
+        #region Help
+
+        public RelayCommand ShowLicenses => AppVM.ShowLicenses;
+
+        public RelayCommand LaunchHiveWebsite => AppVM.LaunchHiveWebsite;
+
+        public RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
+        public RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
 
         #endregion
 
@@ -1193,12 +1145,10 @@ namespace Mzinga.SharedUX.ViewModel
                         FirstRun();
                     }
 
-#if WINDOWS_WPF
                     if (ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
                     {
                         await UpdateUtils.UpdateCheckAsync(true, false);
                     }
-#endif
                 }
                 catch (Exception ex)
                 {
