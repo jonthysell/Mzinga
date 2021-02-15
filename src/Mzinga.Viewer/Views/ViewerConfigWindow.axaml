@@ -184,6 +184,7 @@
                                   Padding="0,5">
                         <StackPanel Width="400">
                             <CheckBox Content="Play sound effects"
+                                      IsEnabled="False"
                                       IsChecked="{Binding PlaySoundEffects}" />
                             <CheckBox Content="Check for updates on start"
                                       IsChecked="{Binding CheckUpdateOnStart}" />
