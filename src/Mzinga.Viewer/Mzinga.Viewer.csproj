@@ -30,6 +30,7 @@
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
 
   <ItemGroup>
+    <TrimmerRootAssembly Include="System.ComponentModel.EventBasedAsync" />
     <TrimmerRootAssembly Include="System.Text.Json" />
   </ItemGroup>
 
