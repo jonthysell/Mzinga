@@ -58,10 +58,7 @@
                 <Button Command="{Binding Accept}"
                         Content="OK"
                         HorizontalAlignment="Right"
-                        IsDefault="True"
-                        Margin="5"
-                        Padding="5"
-                        Width="75" />
+                        IsDefault="True" />
             </StackPanel>
         </Grid>
     </Panel>

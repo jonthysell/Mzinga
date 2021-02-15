@@ -58,7 +58,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<LoadGameMessage>(recipient, async (message) => await ShowLoadGameAsync(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
             Messenger.Default.Register<GameMetadataMessage>(recipient, (message) => ShowGameMetadata(message));
-            Messenger.Default.Register<ViewerConfigMessage>(recipient, (message) => ShowViewerConfig(message));
+            Messenger.Default.Register<ViewerConfigMessage>(recipient, async (message) => await ShowViewerConfigAsync(message));
             Messenger.Default.Register<EngineOptionsMessage>(recipient, (message) => ShowEngineOptions(message));
             Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
         }
@@ -335,25 +335,24 @@ namespace Mzinga.Viewer
             }
         }
 
-        private static void ShowViewerConfig(ViewerConfigMessage message)
+        private static async Task ShowViewerConfigAsync(ViewerConfigMessage message)
         {
             try
             {
-                //ViewerConfigWindow window = new ViewerConfigWindow
-                //{
-                //    DataContext = message.ViewerConfigVM,
-                //    Owner = Application.Current.MainWindow,
-                //};
-                //message.ViewerConfigVM.RequestClose += (sender, e) =>
-                //{
-                //    window.Close();
-                //};
-                //window.ShowDialog();
-                //message.Process();
+                var window = new ViewerConfigWindow
+                {
+                    VM = message.ViewerConfigVM,
+                };
+
+                await window.ShowDialog(MainWindow);
             }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(ex);
+            }
+            finally
+            {
+                message.Process();
             }
         }
 

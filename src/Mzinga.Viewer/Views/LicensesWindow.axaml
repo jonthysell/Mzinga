@@ -1,12 +1,11 @@
 <Window CanResize="False"
         Icon="avares://Mzinga.Viewer/Resources/icon.ico"
         MinHeight="100"
-        MinWidth="480"
-        SizeToContent="Height"
+        MinWidth="100"
+        SizeToContent="WidthAndHeight"
         Title="{Binding Title}"
-        Width="480"
         WindowStartupLocation="CenterOwner"
-        d:DesignHeight="100"
+        d:DesignHeight="640"
         d:DesignWidth="480"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.LicensesWindow"
@@ -31,6 +30,7 @@
                    Width="48" />
             <TabControl Grid.Column="1"
                         Grid.Row="0"
+                        Height="300"
                         Items="{Binding Licenses}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -41,11 +41,12 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <TextBox AcceptsReturn="True"
-                                 Height="300"
-                                 IsReadOnly="True"
-                                 Text="{Binding Body, Mode=OneWay}"
-                                 TextWrapping="Wrap" />
+                        <ScrollViewer Margin="0,5"
+                                      Padding="0,5">
+                            <TextBlock Text="{Binding Body, Mode=OneWay}"
+                                       TextWrapping="Wrap"
+                                       Width="400" />
+                        </ScrollViewer>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
@@ -57,11 +58,7 @@
                         Orientation="Horizontal">
                 <Button Command="{Binding Accept}"
                         Content="OK"
-                        HorizontalAlignment="Right"
-                        IsDefault="True"
-                        Margin="5"
-                        Padding="5"
-                        Width="75" />
+                        IsDefault="True" />
             </StackPanel>
         </Grid>
     </Panel>

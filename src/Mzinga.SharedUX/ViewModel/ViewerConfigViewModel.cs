@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,14 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class ViewerConfigViewModel : ViewModelBase
     {
+        public AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+        }
+
         public string Title
         {
             get
@@ -288,6 +296,40 @@ namespace Mzinga.SharedUX.ViewModel
                 RaisePropertyChanged(nameof(CheckUpdateOnStart));
             }
         }
+
+        public RelayCommand<string> ToggleRadioButton
+        {
+            get
+            {
+                return _toggleRadioButton ?? (_toggleRadioButton = new RelayCommand<string>((parameter) =>
+                {
+                    try
+                    {
+                        string[] split = parameter.Split(".", StringSplitOptions.RemoveEmptyEntries);
+                        switch (split[0])
+                        {
+                            case nameof(EngineType):
+                                EngineType = (EngineType)Enum.Parse(typeof(EngineType), split[1]);
+                                break;
+                            case nameof(HexOrientation):
+                                HexOrientation = (HexOrientation)Enum.Parse(typeof(HexOrientation), split[1]);
+                                break;
+                            case nameof(NotationType):
+                                NotationType = (NotationType)Enum.Parse(typeof(NotationType), split[1]);
+                                break;
+                            case nameof(PieceStyle):
+                                PieceStyle = (PieceStyle)Enum.Parse(typeof(PieceStyle), split[1]);
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }));
+            }
+        }
+        private RelayCommand<string> _toggleRadioButton = null;
 
         public RelayCommand Accept
         {

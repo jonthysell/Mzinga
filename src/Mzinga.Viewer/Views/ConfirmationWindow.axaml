@@ -42,25 +42,13 @@
                         Orientation="Horizontal">
                 <Button Command="{Binding Yes}"
                         Content="Yes"
-                        HorizontalAlignment="Right"
-                        IsDefault="True"
-                        Margin="5"
-                        Padding="5"
-                        Width="75" />
+                        IsDefault="True" />
                 <Button Command="{Binding No}"
                         Content="No"
-                        HorizontalAlignment="Right"
-                        IsDefault="True"
-                        Margin="5"
-                        Padding="5"
-                        Width="75" />
+                        IsDefault="True" />
                 <Button Command="{Binding Cancel}"
                         Content="Cancel"
-                        HorizontalAlignment="Right"
-                        IsDefault="True"
-                        Margin="5"
-                        Padding="5"
-                        Width="75" />
+                        IsDefault="True" />
             </StackPanel>
         </Grid>
     </Panel>

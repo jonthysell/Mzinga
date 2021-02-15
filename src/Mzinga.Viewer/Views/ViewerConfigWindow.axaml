@@ -1,0 +1,216 @@
+<Window CanResize="False"
+        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        MinHeight="100"
+        MinWidth="100"
+        SizeToContent="WidthAndHeight"
+        Title="{Binding Title, FallbackValue=Viewer Options}"
+        WindowStartupLocation="CenterOwner"
+        d:DesignHeight="640"
+        d:DesignWidth="480"
+        mc:Ignorable="d"
+        x:Class="Mzinga.Viewer.Views.ViewerConfigWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Panel>
+        <ExperimentalAcrylicBorder />
+        <Grid ColumnDefinitions="Auto,*"
+              Margin="5"
+              RowDefinitions="Auto,Auto">
+            <Image Grid.Column="0"
+                   Grid.Row="0"
+                   Grid.RowSpan="2"
+                   Height="48"
+                   HorizontalAlignment="Center"
+                   Margin="5"
+                   Source="avares://Mzinga.Viewer/Resources/icon.ico"
+                   VerticalAlignment="Top"
+                   Width="48" />
+            <TabControl Grid.Column="1"
+                        Grid.Row="0"
+                        Height="300">
+                <TabItem FontSize="14"
+                         FontWeight="Bold"
+                         Header="Game">
+                    <ScrollViewer Margin="0,5"
+                                  Padding="0,5">
+                        <StackPanel Width="400">
+                            <DockPanel>
+                                <Label Content="Notation"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="Bold" />
+                                <StackPanel>
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="NotationType.BoardSpace"
+                                                 Content="BoardSpace"
+                                                 GroupName="NotationType"
+                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
+                                                 Margin="5" />
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="NotationType.Mzinga"
+                                                 Content="Mzinga"
+                                                 GroupName="NotationType"
+                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
+                                                 Margin="5" />
+                                </StackPanel>
+                            </DockPanel>
+                            <Separator Margin="5" />
+                            <CheckBox Content="Only allow valid moves"
+                                      IsChecked="{Binding BlockInvalidMoves}"
+                                      Margin="5" />
+                            <CheckBox Content="Require move confirmation"
+                                      IsChecked="{Binding RequireMoveConfirmation}"
+                                      Margin="5" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem FontSize="14"
+                         FontWeight="Bold"
+                         Header="Engine">
+                    <ScrollViewer Margin="0,5"
+                                  Padding="0,5">
+                        <StackPanel Width="400">
+                            <DockPanel>
+                                <Label Content="Type"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="Bold" />
+                                <StackPanel>
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="EngineType.Internal"
+                                                 Content="Internal"
+                                                 GroupName="EngineType"
+                                                 IsChecked="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Internal}" />
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="EngineType.CommandLine"
+                                                 Content="External"
+                                                 GroupName="EngineType"
+                                                 IsChecked="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <TextBox IsEnabled="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                     Margin="5"
+                                     Text="{Binding EngineCommandLine}" />
+                            <Label Content="Note: Restart viewer to take effect."
+                                   HorizontalAlignment="Center"
+                                   Margin="5"
+                                   Padding="0" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem FontSize="14"
+                         FontWeight="Bold"
+                         Header="Visuals">
+                    <ScrollViewer Margin="0,5"
+                                  Padding="0,5">
+                        <StackPanel Width="400">
+                            <DockPanel>
+                                <Label Content="Hexes"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="Bold" />
+                                <StackPanel>
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="HexOrientation.PointyTop"
+                                                 Content="Pointy Top"
+                                                 GroupName="HexOrientation"
+                                                 IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}" />
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="HexOrientation.FlatTop"
+                                                 Content="Flat Top"
+                                                 GroupName="HexOrientation"
+                                                 IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <Separator Margin="5" />
+                            <DockPanel>
+                                <Label Content="Bug Style"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="Bold" />
+                                <StackPanel>
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="PieceStyle.Graphical"
+                                                 Content="Graphical"
+                                                 GroupName="PieceStyle"
+                                                 IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Graphical}" />
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="PieceStyle.Text"
+                                                 Content="Text"
+                                                 GroupName="PieceStyle"
+                                                 IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <Separator Margin="5" />
+                            <CheckBox Content="Colored bug pieces"
+                                      IsChecked="{Binding PieceColors}"
+                                      Margin="5" />
+                            <CheckBox Content="Add numbers to piece of similar type"
+                                      IsChecked="{Binding AddPieceNumbers}"
+                                      Margin="5" />
+                            <CheckBox Content="Stack pieces of similar type in hand"
+                                      IsChecked="{Binding StackPiecesInHand}"
+                                      Margin="5" />
+                            <Separator Margin="5" />
+                            <CheckBox Content="Highlight target move"
+                                      IsChecked="{Binding HighlightTargetMove}"
+                                      Margin="5" />
+                            <CheckBox Content="Highlight valid moves"
+                                      IsChecked="{Binding HighlightValidMoves}"
+                                      Margin="5" />
+                            <CheckBox Content="Highlight last move played"
+                                      IsChecked="{Binding HighlightLastMovePlayed}"
+                                      Margin="5" />
+                            <Separator Margin="5" />
+                            <CheckBox Content="Disable pieces in play with no moves"
+                                      IsChecked="{Binding DisablePiecesInPlayWithNoMoves}"
+                                      Margin="5" />
+                            <CheckBox Content="Disable pieces in hand with no moves"
+                                      IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
+                                      Margin="5" />
+                            <Separator Margin="5" />
+                            <CheckBox Content="Show the board history sidebar"
+                                      IsChecked="{Binding ShowBoardHistory}"
+                                      Margin="5" />
+                            <CheckBox Content="Show the move commentary sidebar"
+                                      IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
+                                      Margin="5" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem FontSize="14"
+                         FontWeight="Bold"
+                         Header="Misc">
+                    <ScrollViewer Margin="0,5"
+                                  Padding="0,5">
+                        <StackPanel Width="400">
+                            <CheckBox Content="Play sound effects"
+                                      IsChecked="{Binding PlaySoundEffects}" />
+                            <CheckBox Content="Check for updates on start"
+                                      IsChecked="{Binding CheckUpdateOnStart}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+            <StackPanel Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1"
+                        HorizontalAlignment="Left"
+                        Margin="5"
+                        Orientation="Horizontal">
+                <Button Command="{Binding Reset}"
+                        Content="Defaults" />
+            </StackPanel>
+            <StackPanel Grid.Column="1"
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        Margin="5"
+                        Orientation="Horizontal">
+                <Button Command="{Binding Accept}"
+                        Content="OK"
+                        IsDefault="True" />
+                <Button Command="{Binding Reject}"
+                        Content="Cancel" />
+            </StackPanel>
+        </Grid>
+    </Panel>
+</Window>

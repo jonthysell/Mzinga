@@ -19,6 +19,18 @@
             <Setter Property="Padding"
                     Value="10" />
         </Style>
+        <Style Selector="CheckBox">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="10" />
+        </Style>
+        <Style Selector="RadioButton">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="10" />
+        </Style>
         <Style Selector="ExperimentalAcrylicBorder">
             <Setter Property="Material">
                 <ExperimentalAcrylicMaterial MaterialOpacity="1"

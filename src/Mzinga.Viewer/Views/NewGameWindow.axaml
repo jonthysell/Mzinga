@@ -49,17 +49,13 @@
                                          Content="Human"
                                          GroupName="WhitePlayerType"
                                          IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
-                                         Margin="5"
-                                         VerticalAlignment="Center"
-                                         VerticalContentAlignment="Center" />
+                                         Margin="5" />
                             <RadioButton Command="{Binding ToggleRadioButton}"
                                          CommandParameter="WhitePlayerType.EngineAI"
                                          Content="Computer"
                                          GroupName="WhitePlayerType"
                                          IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
-                                         Margin="5"
-                                         VerticalAlignment="Center"
-                                         VerticalContentAlignment="Center" />
+                                         Margin="5" />
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center"
                                     Orientation="Horizontal">
@@ -73,15 +69,13 @@
                                          Content="Human"
                                          GroupName="BlackPlayerType"
                                          IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}"
-                                         Margin="5"
-                                         VerticalAlignment="Center" />
+                                         Margin="5" />
                             <RadioButton Command="{Binding ToggleRadioButton}"
                                          CommandParameter="BlackPlayerType.EngineAI"
                                          Content="Computer"
                                          GroupName="BlackPlayerType"
                                          IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}"
-                                         Margin="5"
-                                         VerticalAlignment="Center" />
+                                         Margin="5" />
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>

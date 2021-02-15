@@ -221,28 +221,20 @@
                                 HorizontalAlignment="Center"
                                 IsEnabled="{Binding CanRaiseStackedPieces}"
                                 IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
-                                Margin="5"
-                                Name="LiftButton"
-                                Width="100" />
+                                Name="LiftButton" />
                         <StackPanel HorizontalAlignment="Center"
                                     IsVisible="{Binding IsPlayMode}"
                                     Orientation="Horizontal"
                                     VerticalAlignment="Bottom">
                             <Button Command="{Binding PlayTarget}"
                                     Content="Play Move"
-                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
-                                    Margin="5"
-                                    Width="100" />
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
                             <Button Command="{Binding Pass}"
                                     Content="Pass"
-                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
-                                    Margin="5"
-                                    Width="100" />
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
                             <Button Command="{Binding UndoLastMove}"
                                     Content="Undo"
-                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
-                                    Margin="5"
-                                    Width="100" />
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}" />
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center"
                                     IsVisible="{Binding IsReviewMode}"
@@ -250,24 +242,16 @@
                                     VerticalAlignment="Bottom">
                             <Button Command="{Binding MoveToStart}"
                                     Content="|&lt;"
-                                    Margin="5"
-                                    ToolTip.Tip="Move to Start"
-                                    Width="50" />
+                                    ToolTip.Tip="Move to Start" />
                             <Button Command="{Binding MoveBack}"
                                     Content="&lt;"
-                                    Margin="5"
-                                    ToolTip.Tip="Move Back"
-                                    Width="50" />
+                                    ToolTip.Tip="Move Back" />
                             <Button Command="{Binding MoveForward}"
                                     Content="&gt;"
-                                    Margin="5"
-                                    ToolTip.Tip="Move Forward"
-                                    Width="50" />
+                                    ToolTip.Tip="Move Forward" />
                             <Button Command="{Binding MoveToEnd}"
                                     Content="&gt;|"
-                                    Margin="5"
-                                    ToolTip.Tip="Move To End"
-                                    Width="50" />
+                                    ToolTip.Tip="Move To End" />
                         </StackPanel>
                     </StackPanel>
                 </Grid>
