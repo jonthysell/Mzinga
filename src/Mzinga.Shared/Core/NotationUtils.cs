@@ -45,7 +45,11 @@ namespace Mzinga.Core
 
             moveString = moveString.Trim();
 
-            if (moveString.Contains('['))
+            if (moveString.Equals(Move.PassString, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Move.Pass;
+            }
+            else if (moveString.Contains('['))
             {
                 try
                 {
