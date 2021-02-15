@@ -25,14 +25,9 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 
-#if AVALONIAUI
-using System.Globalization;
 using Avalonia.Data.Converters;
-#elif WINDOWS_WPF
-using System.Globalization;
-using System.Windows.Data;
-#endif
 
 namespace Mzinga.SharedUX
 {

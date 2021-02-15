@@ -7,7 +7,7 @@
     <AssemblyName>Mzinga.Viewer</AssemblyName>
     <RootNamespace>Mzinga.Viewer</RootNamespace>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
-    <DefineConstants>TRACE;AVALONIAUI</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">

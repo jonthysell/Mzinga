@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,47 +24,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#if WINDOWS_WPF
-using System;
-using System.Media;
-using System.Windows;
-using System.Windows.Resources;
-#endif
-
 namespace Mzinga.SharedUX
 {
     public class SoundUtils
     {
         public static void PlaySound(GameSound sound)
         {
-#if WINDOWS_WPF
-            string resPath = "pack://application:,,,/Resources/";
-
-            switch (sound)
-            {
-                case GameSound.Move:
-                    resPath += "movesfx.wav";
-                    break;
-                case GameSound.Undo:
-                    resPath += "undosfx.wav";
-                    break;
-                case GameSound.GameOver:
-                    resPath += "gameoversfx.wav";
-                    break;
-            }
-
-            StreamResourceInfo sri = Application.GetResourceStream(new Uri(resPath));
-
-            if (null != sri)
-            {
-                using (sri.Stream)
-                {
-                    SoundPlayer player = new SoundPlayer(sri.Stream);
-                    player.Load();
-                    player.Play();
-                }
-            }
-#endif
+            // TODO
         }
     }
 
