@@ -16,13 +16,21 @@
     <CFBundleIdentifier>com.jonthysell.mzinga.viewer</CFBundleIdentifier>
     <CFBundlePackageType>AAPL</CFBundlePackageType>
     <CFBundleExecutable>Mzinga.Viewer</CFBundleExecutable>
-    <CFBundleIconFile>icon.icns</CFBundleIconFile>
+    <CFBundleIconFile>Resources\icon.icns</CFBundleIconFile>
     <NSPrincipalClass>NSApplication</NSPrincipalClass>
     <NSHighResolutionCapable>true</NSHighResolutionCapable>
+    <CFBundleVersion>$(AssemblyVersion)</CFBundleVersion>
+    <CFBundleShortVersionString>$(Version)</CFBundleShortVersionString>
   </PropertyGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="Resources\*.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
+    <Content Include="Resources\icon.icns">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />

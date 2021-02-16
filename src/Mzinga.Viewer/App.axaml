@@ -1,4 +1,5 @@
-<Application x:Class="Mzinga.Viewer.App"
+<Application Name="Mzinga.Viewer"
+             x:Class="Mzinga.Viewer.App"
              xmlns="https://github.com/avaloniaui"
              xmlns:shared="clr-namespace:Mzinga.SharedUX"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -62,7 +63,7 @@
             <NativeMenuItem Command="{Binding LaunchHiveWebsite}"
                             Header="Hive Website" />
             <NativeMenuItemSeperator />
-            <NativeMenuItem Command="{Binding CheckForUpdates}"
+            <NativeMenuItem Command="{Binding CheckForUpdatesAsync}"
                             Header="Check for Updates" />
             <NativeMenuItemSeperator />
             <NativeMenuItem Command="{Binding ShowLicenses}"

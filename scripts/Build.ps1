@@ -1,10 +1,10 @@
 param(
     [string]$Product,
     [string]$Target,
-    [string]$BuildArgs = ""
+    [boolean]$Clean = $True,
+    [string]$BuildArgs = "",
+    [string]$ProjectPath = "src\$Product.sln"
 )
-
-[string] $SolutionPath = "src\$Product.sln"
 
 [string] $RepoRoot = Resolve-Path "$PSScriptRoot\.."
 
@@ -14,16 +14,16 @@ param(
 $StartingLocation = Get-Location
 Set-Location -Path $RepoRoot
 
-if (Test-Path "$OutputRoot\$TargetOutputDirectory") {
+if ($Clean -and (Test-Path "$OutputRoot\$TargetOutputDirectory")) {
     Write-Host "Clean output folder..."
     Remove-Item "$OutputRoot\$TargetOutputDirectory" -Recurse
 }
 
 Write-Host "Build release..."
 
-dotnet msbuild $BuildArgs.Split() -restore -p:Configuration=Release -target:Publish -p:PublishDir="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$SolutionPath"
+dotnet msbuild $BuildArgs.Split() -restore -p:Configuration=Release -p:PublishDir="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$ProjectPath"
 Copy-Item "README.md" -Destination "$OutputRoot\$TargetOutputDirectory\ReadMe.txt"
 Copy-Item "scripts\Licenses.txt" -Destination "$OutputRoot\$TargetOutputDirectory\Licenses.txt"
-Copy-Item "CHANGELOG.md" -Destination "$OutputRoot\$TargetOutputDirectory\Changelog.txt"
+Copy-Item "CHANGELOG.md" -Destination "$OutputRoot\$TargetOutputDirectory\ChangeLog.txt"
 
 Set-Location -Path "$StartingLocation"

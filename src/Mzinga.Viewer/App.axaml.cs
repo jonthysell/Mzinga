@@ -91,6 +91,7 @@ namespace Mzinga.Viewer
             }
 
             AppViewModel.Init(parameters);
+            DataContext = AppVM;
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
