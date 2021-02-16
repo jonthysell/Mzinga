@@ -1171,7 +1171,7 @@ namespace Mzinga.SharedUX.ViewModel
                 // Turn off first-run so it doesn't run next time
                 ViewerConfig.FirstRun = false;
 
-                Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, "Welcome to Mzinga.Viewer!", "Would you like to check for updates when Mzinga.Viewer starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
+                Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, $"Welcome to {AppInfo.Name}!", $"Would you like to check for updates when {AppInfo.Name} starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
                 {
                     try
                     {

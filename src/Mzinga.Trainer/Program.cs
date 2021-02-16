@@ -136,11 +136,11 @@ namespace Mzinga.Trainer
         static void ShowHelp()
         {
             Console.WriteLine("Usage:");
-            Console.WriteLine("Mzinga.Trainer.exe [command] ([parametername] [parametervalue]...)");
+            Console.WriteLine($"{AppInfo.Name} [command] ([parametername] [parametervalue]...)");
             Console.WriteLine();
 
             Console.WriteLine("Example:");
-            Console.WriteLine("Mzinga.Trainer.exe enumerate -ProfilesPath c:\\profiles\\");
+            Console.WriteLine($"{AppInfo.Name} enumerate -ProfilesPath c:\\profiles\\");
             Console.WriteLine();
 
             Console.WriteLine("Commands:");

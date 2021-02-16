@@ -1,5 +1,5 @@
 <Window CanResize="False"
-        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        Icon="avares://MzingaViewer/Resources/icon.ico"
         MinHeight="100"
         MinWidth="100"
         SizeToContent="WidthAndHeight"
@@ -25,7 +25,7 @@
                    Height="48"
                    HorizontalAlignment="Center"
                    Margin="5"
-                   Source="avares://Mzinga.Viewer/Resources/icon.ico"
+                   Source="avares://MzingaViewer/Resources/icon.ico"
                    VerticalAlignment="Top"
                    Width="48" />
             <ScrollViewer Grid.Column="1"

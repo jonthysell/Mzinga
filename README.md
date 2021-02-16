@@ -49,29 +49,29 @@ The Portable release provides loose, framework-dependent .NET Core 3.1 binaries.
 
 Mzinga is composed of two main projects, the Engine and the Viewer.
 
-### Mzinga.Engine ###
+### Engine ###
 
-Mzinga.Engine.exe is Mzinga's engine, a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
+*MzingaEngine* is a command-line application through which you can play a game of Hive. It accepts input commands and outputs results according to the specifications of the Universal Hive Protocol.
 
-### Mzinga.Viewer ###
+### Viewer ###
 
-Mzinga.Viewer.exe is Mzinga's viewer, a graphical application which can drive Mzinga.Engine (or any engine that implements the specifications of the Universal Hive Protocol).
+*MzingaViewer* is a graphical application which can drive the *MzingaEngine* (or any other engine that implements the specifications of the Universal Hive Protocol).
 
-Mzinga.Viewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
+*MzingaViewer* is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.
 
 ## Other Projects ##
 
-### Mzinga.Perft ###
+### Perft ###
 
-Mzinga.Perft.exe is a command-line utility for measuring Mzinga's performance by running [Perft](https://github.com/jonthysell/Mzinga/wiki/Perft).
+*MzingaPerft* is a command-line utility for measuring Mzinga's performance by running [Perft](https://github.com/jonthysell/Mzinga/wiki/Perft).
 
-### Mzinga.Test ###
+### Test ###
 
-Mzinga.Test.dll contains unit tests for Mzinga.
+*MzingaTest* is a library that contains unit tests for Mzinga.
 
-### Mzinga.Trainer ###
+### Trainer ###
 
-Mzinga.Trainer.exe is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
+*MzingaTrainer* is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
 
 ## Copyright ##
 

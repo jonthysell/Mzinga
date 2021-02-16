@@ -148,6 +148,6 @@ namespace Mzinga.Viewer
             Clipboard.SetTextAsync(text);
         }
 
-        private const string DefaultViewerConfigFileName = "Mzinga.Viewer.xml";
+        private const string DefaultViewerConfigFileName = "MzingaViewerConfig.xml";
     }
 }

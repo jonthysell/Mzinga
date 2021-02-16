@@ -226,7 +226,7 @@ namespace Mzinga.SharedUX
 
             using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
             {
-                writer.WriteStartElement("Mzinga.Viewer");
+                writer.WriteStartElement("MzingaViewer");
 
                 writer.WriteAttributeString("version", AppVM.FullVersion);
                 writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
@@ -338,7 +338,7 @@ namespace Mzinga.SharedUX
             InternalGameEngineConfig = config.InternalGameEngineConfig;
         }
 
-        private const string MzingaEngineCommandLine = "./Mzinga.Engine";
+        private const string MzingaEngineCommandLine = "./MzingaEngine";
     }
 
     public enum HexOrientation

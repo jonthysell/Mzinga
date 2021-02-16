@@ -4,18 +4,18 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StartupObject>Mzinga.Viewer.Program</StartupObject>
-    <AssemblyName>Mzinga.Viewer</AssemblyName>
+    <AssemblyName>MzingaViewer</AssemblyName>
     <RootNamespace>Mzinga.Viewer</RootNamespace>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
-    <CFBundleName>Mzinga.Viewer</CFBundleName>
-    <CFBundleDisplayName>Mzinga.Viewer</CFBundleDisplayName>
-    <CFBundleIdentifier>com.jonthysell.mzinga.viewer</CFBundleIdentifier>
+    <CFBundleName>MzingaViewer</CFBundleName>
+    <CFBundleDisplayName>MzingaViewer</CFBundleDisplayName>
+    <CFBundleIdentifier>com.jonthysell.mzingaviewer</CFBundleIdentifier>
     <CFBundlePackageType>AAPL</CFBundlePackageType>
-    <CFBundleExecutable>Mzinga.Viewer</CFBundleExecutable>
+    <CFBundleExecutable>MzingaViewer</CFBundleExecutable>
     <CFBundleIconFile>Resources\icon.icns</CFBundleIconFile>
     <NSPrincipalClass>NSApplication</NSPrincipalClass>
     <NSHighResolutionCapable>true</NSHighResolutionCapable>

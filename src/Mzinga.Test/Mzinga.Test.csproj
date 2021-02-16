@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>Mzinga.Test</AssemblyName>
+    <AssemblyName>MzingaTest</AssemblyName>
     <RootNamespace>Mzinga.Test</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsPublishable>false</IsPublishable>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Mzinga.Engine>
+<MzingaEngine>
   <GameAI>
     <TranspositionTableSizeMB>32</TranspositionTableSizeMB>
     <MaxHelperThreads>Auto</MaxHelperThreads>
@@ -758,4 +758,4 @@
       <Pillbug.EnemyNeighborWeight>51605.21317328867</Pillbug.EnemyNeighborWeight>
     </EndMetricWeights>
   </GameAI>
-</Mzinga.Engine>
+</MzingaEngine>

@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StartupObject>Mzinga.Engine.Program</StartupObject>
-    <AssemblyName>Mzinga.Engine</AssemblyName>
+    <AssemblyName>MzingaEngine</AssemblyName>
     <RootNamespace>Mzinga.Engine</RootNamespace>
   </PropertyGroup>
 

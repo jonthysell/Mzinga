@@ -1,6 +1,6 @@
 <Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Height="600"
-        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        Icon="avares://MzingaViewer/Resources/icon.ico"
         KeyDown="MainWindow_KeyDown"
         KeyUp="MainWindow_KeyUp"
         MinHeight="480"
@@ -169,7 +169,7 @@
                               Header="_Check for Updates" />
                     <Separator />
                     <MenuItem Command="{Binding ShowLicenses}"
-                              Header="_About Mzinga.Viewer" />
+                              Header="_About MzingaViewer" />
                 </MenuItem>
             </Menu>
             <Grid>

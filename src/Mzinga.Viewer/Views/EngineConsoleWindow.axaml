@@ -1,7 +1,7 @@
 <Window CanResize="True"
         Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Height="240"
-        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        Icon="avares://MzingaViewer/Resources/icon.ico"
         MinHeight="240"
         MinWidth="480"
         Title="{Binding Title, FallbackValue=Engine Console}"

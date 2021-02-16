@@ -1,5 +1,5 @@
 <Window CanResize="False"
-        Icon="avares://Mzinga.Viewer/Resources/icon.ico"
+        Icon="avares://MzingaViewer/Resources/icon.ico"
         MinHeight="100"
         MinWidth="480"
         SizeToContent="Height"
