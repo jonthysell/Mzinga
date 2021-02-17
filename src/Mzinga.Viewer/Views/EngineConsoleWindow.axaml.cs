@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -35,21 +37,7 @@ namespace Mzinga.Viewer.Views
 {
     public class EngineConsoleWindow : Window
     {
-        public static EngineConsoleWindow Instance
-        {
-            get
-            {
-                if (null == _instance)
-                {
-                    _instance = new EngineConsoleWindow()
-                    {
-                        VM = new EngineConsoleViewModel(),
-                    };
-                }
-                return _instance;
-            }
-        }
-        private static EngineConsoleWindow _instance;
+        public static EngineConsoleWindow Instance { get; set; }
 
         public EngineConsoleViewModel VM
         {
@@ -74,6 +62,11 @@ namespace Mzinga.Viewer.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        private void EngineConsoleWindow_Closed(object sender, EventArgs e)
+        {
+            Instance = null;
         }
 
         private void EngineConsoleInput_KeyUp(object sender, KeyEventArgs e)

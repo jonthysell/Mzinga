@@ -385,14 +385,13 @@ namespace Mzinga.Viewer
         {
             try
             {
-                EngineConsoleWindow window = EngineConsoleWindow.Instance;
+                var window = EngineConsoleWindow.Instance ??= new EngineConsoleWindow()
+                {
+                    VM = message.EngineConsoleVM,
+                };
 
                 window.Show(MainWindow);
-
-                if (!window.IsActive)
-                {
-                    window.Activate();
-                }
+                window.Activate();
             }
             catch (Exception ex)
             {

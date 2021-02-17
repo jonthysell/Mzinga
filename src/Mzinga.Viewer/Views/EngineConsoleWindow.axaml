@@ -1,4 +1,5 @@
 <Window CanResize="True"
+        Closed="EngineConsoleWindow_Closed"
         Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Height="240"
         MinHeight="240"
