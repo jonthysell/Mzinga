@@ -42,7 +42,7 @@ namespace Mzinga.Engine
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            GameEngineConfig config = null != args && args.Length > 0 ? LoadConfig(args[0]) : GameEngineConfig.GetDefaultEngineConfig();
+            GameEngineConfig config = LoadConfig(null != args && args.Length > 0 ? args[0] : null);
 
             _engine = new GameEngine(ID, config, PrintLine);
             _engine.ParseCommand("info");
@@ -83,17 +83,38 @@ namespace Mzinga.Engine
             Console.Out.WriteLine(format, arg);
         }
 
-        static GameEngineConfig LoadConfig(string path)
+        static GameEngineConfig LoadConfig(string configPath)
         {
-            if (string.IsNullOrWhiteSpace(path))
+            GameEngineConfig result;
+
+            // Try loading specified file
+            if (!TryLoadConfig(configPath, out result))
             {
-                throw new ArgumentNullException(nameof(path));
+                // Try loading default file
+                if (!TryLoadConfig(DefaultEngineConfigFileName, out result))
+                {
+                    // Load default from embedded resource
+                    result = GameEngineConfig.GetDefaultEngineConfig();
+                }
             }
 
-            using (FileStream fs = new FileStream(path, FileMode.Open))
-            {
-                return new GameEngineConfig(fs);
-            }
+            return result;
         }
+
+        private static bool TryLoadConfig(string configPath, out GameEngineConfig result)
+        {
+            try
+            {
+                using FileStream fs = new FileStream(configPath, FileMode.Open);
+                result = new GameEngineConfig(fs);
+                return true;
+            }
+            catch (Exception) { }
+
+            result = default;
+            return false;
+        }
+
+        private const string DefaultEngineConfigFileName = "MzingaEngineConfig.xml";
     }
 }
