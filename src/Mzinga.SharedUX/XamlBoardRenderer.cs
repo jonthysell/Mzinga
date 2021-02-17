@@ -531,11 +531,6 @@ namespace Mzinga.SharedUX
 
         private Shape GetHex(Point center, double size, HexType hexType, HexOrientation hexOrientation)
         {
-            if (null == center)
-            {
-                throw new ArgumentNullException(nameof(center));
-            }
-
             if (size <= 0)
             {
                 throw new ArgumentOutOfRangeException("size");
@@ -614,11 +609,6 @@ namespace Mzinga.SharedUX
 
         private Border GetPieceText(Point center, double size, PieceName pieceName, bool disabled)
         {
-            if (null == center)
-            {
-                throw new ArgumentNullException(nameof(center));
-            }
-
             if (size <= 0)
             {
                 throw new ArgumentOutOfRangeException("size");
@@ -652,11 +642,6 @@ namespace Mzinga.SharedUX
 
         private Border GetPieceGraphics(Point center, double size, PieceName pieceName, bool disabled)
         {
-            if (null == center)
-            {
-                throw new ArgumentNullException(nameof(center));
-            }
-
             if (size <= 0)
             {
                 throw new ArgumentOutOfRangeException("size");

@@ -77,10 +77,10 @@ jobs:
       matrix:
         target: [MacOS]
     steps:
-    - name: Setup .NET Core
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.x'
+        dotnet-version: '5.0.x'
 
     - name: Checkout
       uses: actions/checkout@v2

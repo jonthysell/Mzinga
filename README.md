@@ -10,7 +10,7 @@ For more information, please check out the [Mzinga Wiki](https://github.com/jont
 
 ## Installation ##
 
-Mzinga was written in C# and should run anywhere that supports [.NET Core 3.1](https://github.com/dotnet/core/blob/master/release-notes/3.1/3.1-supported-os.md). It has been officially tested on:
+Mzinga was written in C# and should run anywhere that supports [.NET 5.0](https://github.com/dotnet/core/blob/master/release-notes/5.0/5.0-supported-os.md). It has been officially tested on:
 
 * Windows 10
 * Ubuntu 20.04
@@ -39,9 +39,9 @@ The Linux release provides self-contained x64 binaries and runs on many Linux di
 
 ### Portable ###
 
-The Portable release provides loose, framework-dependent .NET Core 3.1 binaries.
+The Portable release provides loose, framework-dependent .NET 5 binaries.
 
-1. Install the latest [.NET Core Runtime](https://dotnet.microsoft.com/download/dotnet-core/3.1)
+1. Install the latest [.NET Runtime](https://dotnet.microsoft.com/download/dotnet/5.0)
 2. Download the latest Portable zip file (Mzinga.Portable.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 3. Extract the zip file
 
