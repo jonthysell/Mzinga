@@ -1,5 +1,4 @@
 <Window CanResize="False"
-        Icon="avares://MzingaViewer/Resources/icon.ico"
         MinHeight="100"
         MinWidth="100"
         SizeToContent="WidthAndHeight"
@@ -18,7 +17,7 @@
         <ExperimentalAcrylicBorder />
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
-              RowDefinitions="Auto,Auto">
+              RowDefinitions="*,Auto">
             <Image Classes="MzingaIcon"
                    Grid.Column="0"
                    Grid.Row="0"
@@ -31,33 +30,36 @@
                          Header="Game">
                     <ScrollViewer Margin="0,5"
                                   Padding="0,5">
-                        <StackPanel Width="400">
-                            <DockPanel>
-                                <Label Content="Notation"
-                                       DockPanel.Dock="Top"
-                                       FontWeight="Bold" />
+                        <StackPanel Margin="5,0"
+                                    Width="400">
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Notation"
+                                       DockPanel.Dock="Top" />
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="NotationType.BoardSpace"
                                                  Content="BoardSpace"
                                                  GroupName="NotationType"
-                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}"
-                                                 Margin="5" />
+                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}" />
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="NotationType.Mzinga"
                                                  Content="Mzinga"
                                                  GroupName="NotationType"
-                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}"
-                                                 Margin="5" />
+                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}" />
                                 </StackPanel>
                             </DockPanel>
-                            <Separator Margin="5" />
-                            <CheckBox Content="Only allow valid moves"
-                                      IsChecked="{Binding BlockInvalidMoves}"
-                                      Margin="5" />
-                            <CheckBox Content="Require move confirmation"
-                                      IsChecked="{Binding RequireMoveConfirmation}"
-                                      Margin="5" />
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Moves"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Only allow valid moves"
+                                              IsChecked="{Binding BlockInvalidMoves}" />
+                                    <CheckBox Content="Require move confirmation"
+                                              IsChecked="{Binding RequireMoveConfirmation}" />
+                                </StackPanel>
+                            </DockPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -66,11 +68,12 @@
                          Header="Engine">
                     <ScrollViewer Margin="0,5"
                                   Padding="0,5">
-                        <StackPanel Width="400">
-                            <DockPanel>
-                                <Label Content="Type"
-                                       DockPanel.Dock="Top"
-                                       FontWeight="Bold" />
+                        <StackPanel Margin="5,0"
+                                    Width="400">
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Type"
+                                       DockPanel.Dock="Top" />
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="EngineType.Internal"
@@ -82,15 +85,12 @@
                                                  Content="External"
                                                  GroupName="EngineType"
                                                  IsChecked="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}" />
+                                    <TextBox IsEnabled="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
+                                             Text="{Binding EngineCommandLine}" />
+                                    <Label Content="Note: Restart viewer to take effect."
+                                           HorizontalAlignment="Center" />
                                 </StackPanel>
                             </DockPanel>
-                            <TextBox IsEnabled="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
-                                     Margin="5"
-                                     Text="{Binding EngineCommandLine}" />
-                            <Label Content="Note: Restart viewer to take effect."
-                                   HorizontalAlignment="Center"
-                                   Margin="5"
-                                   Padding="0" />
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -99,11 +99,12 @@
                          Header="Visuals">
                     <ScrollViewer Margin="0,5"
                                   Padding="0,5">
-                        <StackPanel Width="400">
-                            <DockPanel>
-                                <Label Content="Hexes"
-                                       DockPanel.Dock="Top"
-                                       FontWeight="Bold" />
+                        <StackPanel Margin="5,0"
+                                    Width="400">
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Hex Orientation"
+                                       DockPanel.Dock="Top" />
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="HexOrientation.PointyTop"
@@ -117,11 +118,10 @@
                                                  IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}" />
                                 </StackPanel>
                             </DockPanel>
-                            <Separator Margin="5" />
-                            <DockPanel>
-                                <Label Content="Bug Style"
-                                       DockPanel.Dock="Top"
-                                       FontWeight="Bold" />
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Bug Style"
+                                       DockPanel.Dock="Top" />
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="PieceStyle.Graphical"
@@ -135,40 +135,55 @@
                                                  IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}" />
                                 </StackPanel>
                             </DockPanel>
-                            <Separator Margin="5" />
-                            <CheckBox Content="Colored bug pieces"
-                                      IsChecked="{Binding PieceColors}"
-                                      Margin="5" />
-                            <CheckBox Content="Add numbers to piece of similar type"
-                                      IsChecked="{Binding AddPieceNumbers}"
-                                      Margin="5" />
-                            <CheckBox Content="Stack pieces of similar type in hand"
-                                      IsChecked="{Binding StackPiecesInHand}"
-                                      Margin="5" />
-                            <Separator Margin="5" />
-                            <CheckBox Content="Highlight target move"
-                                      IsChecked="{Binding HighlightTargetMove}"
-                                      Margin="5" />
-                            <CheckBox Content="Highlight valid moves"
-                                      IsChecked="{Binding HighlightValidMoves}"
-                                      Margin="5" />
-                            <CheckBox Content="Highlight last move played"
-                                      IsChecked="{Binding HighlightLastMovePlayed}"
-                                      Margin="5" />
-                            <Separator Margin="5" />
-                            <CheckBox Content="Disable pieces in play with no moves"
-                                      IsChecked="{Binding DisablePiecesInPlayWithNoMoves}"
-                                      Margin="5" />
-                            <CheckBox Content="Disable pieces in hand with no moves"
-                                      IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
-                                      Margin="5" />
-                            <Separator Margin="5" />
-                            <CheckBox Content="Show the board history sidebar"
-                                      IsChecked="{Binding ShowBoardHistory}"
-                                      Margin="5" />
-                            <CheckBox Content="Show the move commentary sidebar"
-                                      IsChecked="{Binding DisablePiecesInHandWithNoMoves}"
-                                      Margin="5" />
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Piece Style"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Colored bug pieces"
+                                              IsChecked="{Binding PieceColors}" />
+                                    <CheckBox Content="Add numbers to piece of similar type"
+                                              IsChecked="{Binding AddPieceNumbers}" />
+                                    <CheckBox Content="Stack pieces of similar type in hand"
+                                              IsChecked="{Binding StackPiecesInHand}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Move Highlights"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Highlight target move"
+                                              IsChecked="{Binding HighlightTargetMove}" />
+                                    <CheckBox Content="Highlight valid moves"
+                                              IsChecked="{Binding HighlightValidMoves}"
+                                              Margin="5" />
+                                    <CheckBox Content="Highlight last move played"
+                                              IsChecked="{Binding HighlightLastMovePlayed}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Disabled Highlights"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Disable pieces in play with no moves"
+                                              IsChecked="{Binding DisablePiecesInPlayWithNoMoves}" />
+                                    <CheckBox Content="Disable pieces in hand with no moves"
+                                              IsChecked="{Binding DisablePiecesInHandWithNoMoves}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="Sidebars"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Show the board history sidebar"
+                                              IsChecked="{Binding ShowBoardHistory}" />
+                                    <CheckBox Content="Show the move commentary sidebar"
+                                              IsChecked="{Binding DisablePiecesInHandWithNoMoves}" />
+                                </StackPanel>
+                            </DockPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -177,12 +192,20 @@
                          Header="Misc">
                     <ScrollViewer Margin="0,5"
                                   Padding="0,5">
-                        <StackPanel Width="400">
-                            <CheckBox Content="Play sound effects"
-                                      IsChecked="{Binding PlaySoundEffects}"
-                                      IsEnabled="False" />
-                            <CheckBox Content="Check for updates on start"
-                                      IsChecked="{Binding CheckUpdateOnStart}" />
+                        <StackPanel Margin="5,0"
+                                    Width="400">
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
+                                       Content="General"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Play sound effects (coming soon)"
+                                              IsChecked="{Binding PlaySoundEffects}"
+                                              IsEnabled="False" />
+                                    <CheckBox Content="Check for updates on start"
+                                              IsChecked="{Binding CheckUpdateOnStart}" />
+                                </StackPanel>
+                            </DockPanel>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>

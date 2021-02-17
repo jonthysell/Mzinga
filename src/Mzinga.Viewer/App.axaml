@@ -10,6 +10,10 @@
     </Application.Resources>
     <Application.Styles>
         <FluentTheme Mode="Light" />
+        <Style Selector="Window">
+            <Setter Property="Icon"
+                    Value="avares://MzingaViewer/Resources/icon.ico" />
+        </Style>
         <Style Selector="Button">
             <Setter Property="HorizontalContentAlignment"
                     Value="Center" />
@@ -31,6 +35,14 @@
                     Value="5" />
             <Setter Property="Padding"
                     Value="10" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Padding"
+                    Value="10" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
         </Style>
         <Style Selector="ExperimentalAcrylicBorder">
             <Setter Property="Material">
@@ -54,6 +66,36 @@
                     Value="48" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
+        </Style>
+        <Style Selector="StackPanel.DialogMain">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="Orientation"
+                    Value="Vertical" />
+        </Style>
+        <Style Selector="StackPanel.DialogButtons">
+            <Setter Property="Margin"
+                    Value="5" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Right" />
+            <Setter Property="Orientation"
+                    Value="Horizontal" />
+        </Style>
+        <Style Selector="DockPanel.GroupBox">
+            <Setter Property="Margin"
+                    Value="5" />
+        </Style>
+        <Style Selector="DockPanel.GroupBox &gt; :is(Control)">
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Stretch" />
+        </Style>
+        <Style Selector="Label.Header">
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="Margin"
+                    Value="0,0,5,0" />
         </Style>
     </Application.Styles>
     <NativeMenu.Menu>

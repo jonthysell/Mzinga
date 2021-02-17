@@ -1,6 +1,5 @@
 <Window Cursor="{Binding IsIdle, Converter={StaticResource IdleBoolToWaitCursorConverter}}"
         Height="600"
-        Icon="avares://MzingaViewer/Resources/icon.ico"
         KeyDown="MainWindow_KeyDown"
         KeyUp="MainWindow_KeyUp"
         MinHeight="480"
@@ -189,7 +188,8 @@
                             Grid.Row="0"
                             IsEnabled="{Binding IsIdle}"
                             Name="WhiteHandStackPanel"
-                            Orientation="Vertical" />
+                            Orientation="Vertical"
+                            VerticalAlignment="Stretch" />
                 <Grid Grid.Column="1"
                       Grid.Row="0">
                     <Canvas Background="Transparent"
@@ -253,7 +253,8 @@
                             Grid.Row="0"
                             IsEnabled="{Binding IsIdle}"
                             Name="BlackHandStackPanel"
-                            Orientation="Vertical" />
+                            Orientation="Vertical"
+                            VerticalAlignment="Stretch" />
                 <DockPanel Grid.Column="3"
                            Grid.Row="0"
                            IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
