@@ -97,14 +97,30 @@ namespace Mzinga.SharedUX
         {
             try
             {
+                // Stop processing output
                 _process.CancelOutputRead();
+
+                // Try to cancel a running command
+                if (!IsIdle)
+                {
+                    OnCancelCommand();
+                }
+
                 _writer.WriteLine("exit");
                 _writer.Flush();
+
                 _process.WaitForExit(WaitForExitTimeoutMS);
+            }
+            catch (Exception) { }
+            finally
+            {
+                if (!_process.HasExited)
+                {
+                    _process.Kill(true);
+                }
                 _process.Close();
                 _writer.Close();
             }
-            catch (Exception) { }
         }
 
         protected override void OnEngineInput(string command)
@@ -137,7 +153,7 @@ namespace Mzinga.SharedUX
             ((IDisposable)_writer)?.Dispose();
         }
 
-        private const int WaitForExitTimeoutMS = 10 * 1000;
+        private const int WaitForExitTimeoutMS = 3 * 1000;
         private const int WaitForCancelTimeoutMS = 500;
     }
 
