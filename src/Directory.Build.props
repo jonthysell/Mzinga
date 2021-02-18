@@ -9,6 +9,7 @@
     <Version>0.9.21000</Version>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
   
   <ItemGroup>
