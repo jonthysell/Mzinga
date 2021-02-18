@@ -95,18 +95,22 @@
                 <MenuItem Header="_File">
                     <MenuItem Command="{Binding NewGame}"
                               Header="_New"
-                              HotKey="Ctrl+N" />
+                              HotKey="Ctrl+N"
+                              InputGesture="Ctrl+N" />
                     <MenuItem Command="{Binding LoadGame}"
                               Header="_Open..."
-                              HotKey="Ctrl+O" />
+                              HotKey="Ctrl+O"
+                              InputGesture="Ctrl+O" />
                     <Separator />
                     <MenuItem Command="{Binding SaveGame}"
                               Header="_Save As..."
-                              HotKey="Ctrl+S" />
+                              HotKey="Ctrl+S"
+                              InputGesture="Ctrl+S" />
                     <Separator />
                     <MenuItem Command="{Binding Close}"
                               Header="E_xit"
-                              HotKey="Alt+F4" />
+                              HotKey="Alt+F4"
+                              InputGesture="Alt+F4" />
                 </MenuItem>
                 <MenuItem Header="_Review">
                     <MenuItem Command="{Binding MoveToStart}"
@@ -133,10 +137,12 @@
                     <Separator />
                     <MenuItem Command="{Binding ShowEngineOptions}"
                               Header="Engine _Options"
-                              HotKey="Ctrl+Shift+E" />
+                              HotKey="Ctrl+Shift+E"
+                              InputGesture="Ctrl+Shift+E" />
                     <MenuItem Command="{Binding ShowEngineConsole}"
                               Header="Engine _Console"
-                              HotKey="Ctrl+Shift+C" />
+                              HotKey="Ctrl+Shift+C"
+                              InputGesture="Ctrl+Shift+C" />
                 </MenuItem>
                 <MenuItem Header="_Viewer">
                     <MenuItem Command="{Binding ToggleShowBoardHistory}"
@@ -156,7 +162,8 @@
                     <Separator />
                     <MenuItem Command="{Binding ShowViewerConfig}"
                               Header="Viewer _Options"
-                              HotKey="Ctrl+Shift+V" />
+                              HotKey="Ctrl+Shift+V"
+                              InputGesture="Ctrl+Shift+V" />
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Command="{Binding LaunchMzingaWebsite}"
