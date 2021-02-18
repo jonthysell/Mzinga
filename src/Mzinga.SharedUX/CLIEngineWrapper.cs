@@ -145,6 +145,13 @@ namespace Mzinga.SharedUX
                     NativeMethods.SetConsoleCtrlHandler(null, false);
                 }
             }
+            else if (AppInfo.IsLinux || AppInfo.IsMacOS)
+            {
+                if (NativeMethods.kill(_process.Id, NativeMethods.SIGINT) != 0)
+                {
+                    throw new Exception($"Cancel failed with error code 0x{Marshal.GetLastWin32Error():X}");
+                }
+            }
         }
 
         public void Dispose()
@@ -184,5 +191,12 @@ namespace Mzinga.SharedUX
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool GenerateConsoleCtrlEvent(CtrlTypes dwCtrlEvent, uint dwProcessGroupId);
+
+        // http://man7.org/linux/man-pages/man2/kill.2.html
+        // from https://developers.redhat.com/blog/2019/03/25/using-net-pinvoke-for-linux-system-functions/
+        [DllImport("libc", SetLastError = true)]
+        internal static extern int kill(int pid, int sig);
+
+        internal const int SIGINT = 2;
     }
 }
