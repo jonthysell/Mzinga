@@ -30,6 +30,8 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
+using Mono.Unix.Native;
+
 namespace Mzinga.SharedUX
 {
     public sealed class CLIEngineWrapper : EngineWrapper, IDisposable
@@ -147,9 +149,9 @@ namespace Mzinga.SharedUX
             }
             else if (AppInfo.IsLinux || AppInfo.IsMacOS)
             {
-                if (NativeMethods.kill(_process.Id, NativeMethods.SIGINT) != 0)
+                if (Syscall.kill(_process.Id, Signum.SIGINT) != Stdlib.EXIT_SUCCESS)
                 {
-                    throw new Exception($"Cancel failed with error code 0x{Marshal.GetLastWin32Error():X}");
+                    throw new Exception($"Cancel failed with error code {Stdlib.GetLastError()}.");
                 }
             }
         }
@@ -191,12 +193,5 @@ namespace Mzinga.SharedUX
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool GenerateConsoleCtrlEvent(CtrlTypes dwCtrlEvent, uint dwProcessGroupId);
-
-        // http://man7.org/linux/man-pages/man2/kill.2.html
-        // from https://developers.redhat.com/blog/2019/03/25/using-net-pinvoke-for-linux-system-functions/
-        [DllImport("libc", SetLastError = true)]
-        internal static extern int kill(int pid, int sig);
-
-        internal const int SIGINT = 2;
     }
 }

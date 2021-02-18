@@ -38,6 +38,8 @@ namespace Mzinga.Engine
 
         private static volatile bool _interceptCancel = false;
 
+        private static SigIntMonitor _sigIntMonitor;
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -47,7 +49,14 @@ namespace Mzinga.Engine
             _engine = new GameEngine(ID, config, PrintLine);
             _engine.ParseCommand("info");
 
-            Console.CancelKeyPress += Console_CancelKeyPress;
+            if (AppInfo.IsWindows)
+            {
+                Console.CancelKeyPress += Console_CancelKeyPress;
+            }
+            else if (AppInfo.IsLinux || AppInfo.IsMacOS)
+            {
+                _sigIntMonitor = SigIntMonitor.CreateAndStart(SigIntMonitor_SigIntReceived);
+            }
 
             _engine.StartAsyncCommand += (s, e) =>
             {
@@ -67,6 +76,8 @@ namespace Mzinga.Engine
                     _engine.ParseCommand(command);
                 }
             }
+
+            _sigIntMonitor?.Stop();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
@@ -77,6 +88,21 @@ namespace Mzinga.Engine
                 e.Cancel = true;
             }
         }
+
+        private static void SigIntMonitor_SigIntReceived(object sender, EventArgs e)
+        {
+            if (_interceptCancel)
+            {
+                _engine.TryCancelAsyncCommand();
+            }
+            else
+            {
+                _sigIntMonitor?.Stop();
+                Environment.Exit(CtrlCExitCode);
+            }
+        }
+
+        private const int CtrlCExitCode = 130;
 
         static void PrintLine(string format, params object[] arg)
         {

@@ -10,4 +10,8 @@
 
   <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
 
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
