@@ -2,7 +2,10 @@
 
 ## vNext ##
 
-* Rebuilt Mzinga.Viewer using Avalonia
+* Ported projects to .NET 5
+* Viewer: Rebuilt on Avalonia, now runs on MacOS and Linux
+* Viewer: Properly send SIGINT signal to cancel engine processing Linux and MacOS
+* Engine: Properly handle incoming SIGINT signals to cancel engine processing on Linux and MacOS
 
 ## v0.9.21000.0 ##
 

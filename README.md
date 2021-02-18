@@ -18,21 +18,23 @@ Mzinga was written in C# and should run anywhere that supports [.NET 5.0](https:
 
 ### Windows ###
 
-The Windows release provides self-contained x86 binaries and runs on Windows 7 SP1+, 8.1, and 10.
+The Windows release provides self-contained x86/x64 binaries which run on Windows 7 SP1+, 8.1, and 10.
 
-1. Download the latest Windows zip file (Mzinga.Windows.zip) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Windows zip file (Mzinga.Win32.zip *or* Mzinga.Win64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the zip file
+
+**Note:** If you're unsure which version to download, try Mzinga.Win64.zip first. Most modern PCs are 64-Bit.
 
 ### MacOS ###
 
-The MacOS release provides self-contained x64 binaries and runs on OSX >= 10.13.
+The MacOS release provides self-contained x64 binaries which run on OSX >= 10.13.
 
 1. Download the latest MacOS tar.gz file (Mzinga.MacOS.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
 
 ### Linux ###
 
-The Linux release provides self-contained x64 binaries and runs on many Linux distributions.
+The Linux release provides self-contained x64 binaries which run on many Linux distributions.
 
 1. Download the latest Linux tar.gz file (Mzinga.Linux.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
