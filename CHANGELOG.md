@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## vNext ##
+## v0.10 ##
 
 * Ported projects to .NET 5
 * Viewer: Rebuilt on Avalonia, now runs on MacOS and Linux
