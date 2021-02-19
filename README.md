@@ -75,6 +75,10 @@ Mzinga is composed of two main projects, the Engine and the Viewer.
 
 *MzingaTrainer* is a command-line utility with the goal to improve Mzinga's AI. Through it you can generate randomized AI profiles and execute AI vs. AI battles.
 
+## Build ##
+
+If you want to build Mzinga yourself, see [Building Mzinga on the Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki/BuildingMzinga).
+
 ## Copyright ##
 
 Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
