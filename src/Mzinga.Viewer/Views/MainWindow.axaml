@@ -87,10 +87,8 @@
         </NativeMenu>
     </NativeMenu.Menu>
     <Panel>
-        <ExperimentalAcrylicBorder />
         <DockPanel Margin="5">
             <Menu DockPanel.Dock="Top"
-                  IsEnabled="{Binding ShowMenu}"
                   IsVisible="{Binding ShowMenu}">
                 <MenuItem Header="_File">
                     <MenuItem Command="{Binding NewGame}"
@@ -178,18 +176,8 @@
                               Header="_About MzingaViewer" />
                 </MenuItem>
             </Menu>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                  RowDefinitions="*,Auto">
                 <StackPanel Background="Transparent"
                             Grid.Column="0"
                             Grid.Row="0"
@@ -264,12 +252,13 @@
                             VerticalAlignment="Stretch" />
                 <DockPanel Grid.Column="3"
                            Grid.Row="0"
+                           Classes="GroupBox"
                            IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
                     <Label Content="History"
                            DockPanel.Dock="Top"
-                           FontWeight="Bold" />
+                           Classes="Header" />
                     <ListBox Items="{Binding BoardHistory.Items}"
-                             Margin="5"
+                             VerticalAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
@@ -294,12 +283,14 @@
                 </DockPanel>
                 <DockPanel Grid.Column="4"
                            Grid.Row="0"
+                           Classes="GroupBox"
                            IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
                     <Label Content="Commentary"
                            DockPanel.Dock="Top"
-                           FontWeight="Bold" />
+                           Classes="Header" />
                     <TextBox AcceptsReturn="True"
-                             FontWeight="Normal"
+                             VerticalContentAlignment="Top"
+                             VerticalAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              Text="{Binding CurrentMoveCommentary}"

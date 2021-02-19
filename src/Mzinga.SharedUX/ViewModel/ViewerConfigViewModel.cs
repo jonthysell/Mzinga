@@ -76,6 +76,19 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
+        public VisualTheme VisualTheme
+        {
+            get
+            {
+                return Config.VisualTheme;
+            }
+            set
+            {
+                Config.VisualTheme = value;
+                RaisePropertyChanged(nameof(VisualTheme));
+            }
+        }
+
         public HexOrientation HexOrientation
         {
             get
@@ -311,6 +324,9 @@ namespace Mzinga.SharedUX.ViewModel
                             case nameof(EngineType):
                                 EngineType = (EngineType)Enum.Parse(typeof(EngineType), split[1]);
                                 break;
+                            case nameof(VisualTheme):
+                                VisualTheme = (VisualTheme)Enum.Parse(typeof(VisualTheme), split[1]);
+                                break;
                             case nameof(HexOrientation):
                                 HexOrientation = (HexOrientation)Enum.Parse(typeof(HexOrientation), split[1]);
                                 break;
@@ -386,6 +402,7 @@ namespace Mzinga.SharedUX.ViewModel
 
                         RaisePropertyChanged(nameof(EngineType));
                         RaisePropertyChanged(nameof(EngineCommandLine));
+                        RaisePropertyChanged(nameof(VisualTheme));
                         RaisePropertyChanged(nameof(HexOrientation));
                         RaisePropertyChanged(nameof(NotationType));
                         RaisePropertyChanged(nameof(PieceStyle));

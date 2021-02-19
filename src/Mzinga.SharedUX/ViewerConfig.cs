@@ -73,6 +73,8 @@ namespace Mzinga.SharedUX
         }
         private string _engineCommandLine = MzingaEngineCommandLine;
 
+        public VisualTheme VisualTheme { get; set; } = VisualTheme.Light;
+
         public HexOrientation HexOrientation { get; set; } = HexOrientation.PointyTop;
 
         public NotationType NotationType { get; set; } = NotationType.BoardSpace;
@@ -133,6 +135,9 @@ namespace Mzinga.SharedUX
                                 break;
                             case "EngineCommandLine":
                                 EngineCommandLine = ParseStringValue(reader.ReadElementContentAsString(), EngineCommandLine);
+                                break;
+                            case "VisualTheme":
+                                VisualTheme = ParseEnumValue(reader.ReadElementContentAsString(), VisualTheme);
                                 break;
                             case "HexOrientation":
                                 HexOrientation = ParseEnumValue(reader.ReadElementContentAsString(), HexOrientation);
@@ -233,6 +238,7 @@ namespace Mzinga.SharedUX
 
                 writer.WriteElementString("EngineType", EngineType.ToString());
                 writer.WriteElementString("EngineCommandLine", EngineCommandLine);
+                writer.WriteElementString("VisualTheme", VisualTheme.ToString());
                 writer.WriteElementString("HexOrientation", HexOrientation.ToString());
                 writer.WriteElementString("NotationType", NotationType.ToString());
                 writer.WriteElementString("PieceStyle", PieceStyle.ToString());
@@ -265,6 +271,7 @@ namespace Mzinga.SharedUX
                 EngineCommandLine = EngineCommandLine,
                 EngineType = EngineType,
 
+                VisualTheme = VisualTheme,
                 HexOrientation = HexOrientation,
                 NotationType = NotationType,
 
@@ -308,6 +315,7 @@ namespace Mzinga.SharedUX
             EngineCommandLine = config.EngineCommandLine;
             EngineType = config.EngineType;
 
+            VisualTheme = config.VisualTheme;
             HexOrientation = config.HexOrientation;
             NotationType = config.NotationType;
 
@@ -339,6 +347,12 @@ namespace Mzinga.SharedUX
         }
 
         private const string MzingaEngineCommandLine = "./MzingaEngine";
+    }
+
+    public enum VisualTheme
+    {
+        Light,
+        Dark,
     }
 
     public enum HexOrientation

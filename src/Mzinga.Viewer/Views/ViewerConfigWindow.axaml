@@ -14,7 +14,6 @@
         xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Panel>
-        <ExperimentalAcrylicBorder />
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">
@@ -39,7 +38,7 @@
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="NotationType.BoardSpace"
-                                                 Content="BoardSpace"
+                                                 Content="BoardSpace (Default)"
                                                  GroupName="NotationType"
                                                  IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}" />
                                     <RadioButton Command="{Binding ToggleRadioButton}"
@@ -77,17 +76,17 @@
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="EngineType.Internal"
-                                                 Content="Internal"
+                                                 Content="Use internal engine (Default)"
                                                  GroupName="EngineType"
                                                  IsChecked="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Internal}" />
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="EngineType.CommandLine"
-                                                 Content="External"
+                                                 Content="Use UHP engine:"
                                                  GroupName="EngineType"
                                                  IsChecked="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}" />
                                     <TextBox IsEnabled="{Binding Path=EngineType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=CommandLine}"
                                              Text="{Binding EngineCommandLine}" />
-                                    <Label Content="Note: Restart viewer to take effect."
+                                    <Label Content="Note: Restart viewer to change engines."
                                            HorizontalAlignment="Center" />
                                 </StackPanel>
                             </DockPanel>
@@ -103,12 +102,31 @@
                                     Width="400">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
+                                       Content="Theme"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="VisualTheme.Light"
+                                                 Content="Light (Default)"
+                                                 GroupName="VisualTheme"
+                                                 IsChecked="{Binding Path=VisualTheme, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Light}" />
+                                    <RadioButton Command="{Binding ToggleRadioButton}"
+                                                 CommandParameter="VisualTheme.Dark"
+                                                 Content="Dark"
+                                                 GroupName="VisualTheme"
+                                                 IsChecked="{Binding Path=VisualTheme, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Dark}" />
+                                    <Label Content="Note: Restart viewer to change theme."
+                                           HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
                                        Content="Hex Orientation"
                                        DockPanel.Dock="Top" />
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="HexOrientation.PointyTop"
-                                                 Content="Pointy Top"
+                                                 Content="Pointy Top (Default)"
                                                  GroupName="HexOrientation"
                                                  IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}" />
                                     <RadioButton Command="{Binding ToggleRadioButton}"
@@ -125,7 +143,7 @@
                                 <StackPanel>
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="PieceStyle.Graphical"
-                                                 Content="Graphical"
+                                                 Content="Graphical (Default)"
                                                  GroupName="PieceStyle"
                                                  IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Graphical}" />
                                     <RadioButton Command="{Binding ToggleRadioButton}"

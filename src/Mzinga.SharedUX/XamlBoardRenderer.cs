@@ -91,6 +91,8 @@ namespace Mzinga.SharedUX
         private readonly SolidColorBrush WhiteBrush;
         private readonly SolidColorBrush BlackBrush;
 
+        private readonly SolidColorBrush PieceOutlineBrush;
+
         private readonly SolidColorBrush SelectedMoveEdgeBrush;
         private readonly SolidColorBrush SelectedMoveBodyBrush;
 
@@ -112,6 +114,8 @@ namespace Mzinga.SharedUX
             // Init brushes
             WhiteBrush = new SolidColorBrush(Colors.White);
             BlackBrush = new SolidColorBrush(Colors.Black);
+
+            PieceOutlineBrush = new SolidColorBrush(Color.Parse("#333333"));
 
             SelectedMoveEdgeBrush = new SolidColorBrush(Colors.Orange);
             SelectedMoveBodyBrush = new SolidColorBrush(Colors.Aqua)
@@ -547,11 +551,11 @@ namespace Mzinga.SharedUX
             {
                 case HexType.WhitePiece:
                     hex.Fill = WhiteBrush;
-                    hex.Stroke = BlackBrush;
+                    hex.Stroke = PieceOutlineBrush;
                     break;
                 case HexType.BlackPiece:
                     hex.Fill = BlackBrush;
-                    hex.Stroke = BlackBrush;
+                    hex.Stroke = PieceOutlineBrush;
                     break;
                 case HexType.ValidMove:
                     hex.Fill = SelectedMoveBodyBrush;

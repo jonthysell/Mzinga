@@ -168,13 +168,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public bool ShowMenu => AppInfo.IsWindows || AppInfo.IsLinux;
 
-        public ViewerConfig ViewerConfig
-        {
-            get
-            {
-                return AppVM.ViewerConfig;
-            }
-        }
+        public ViewerConfig ViewerConfig => AppVM.ViewerConfig;
 
         public GameBoard Board
         {
@@ -519,7 +513,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
                 }));
             }
         }
@@ -541,7 +535,7 @@ namespace Mzinga.SharedUX.ViewModel
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
                 }));
             }
         }
@@ -957,16 +951,18 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        Messenger.Default.Send(new ViewerConfigMessage(AppVM.ViewerConfig, (config) =>
+                        Messenger.Default.Send(new ViewerConfigMessage(ViewerConfig, (config) =>
                         {
                             try
                             {
-                                AppVM.ViewerConfig.CopyFrom(config);
+                                ViewerConfig.CopyFrom(config);
 
                                 RaisePropertyChanged(nameof(ViewerConfig));
                                 RaisePropertyChanged(nameof(TargetMove));
+
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
+
 
                                 UpdateBoardHistory();
                             }
@@ -1257,8 +1253,8 @@ namespace Mzinga.SharedUX.ViewModel
                 CanvasCursorX = cursorX;
                 CanvasCursorY = cursorY;
 
-                PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, AppVM.ViewerConfig.HexOrientation);
-                Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, AppVM.ViewerConfig.HexOrientation);
+                PieceName clickedPiece = AppVM.EngineWrapper.GetPieceAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, ViewerConfig.HexOrientation);
+                Position clickedPosition = AppVM.EngineWrapper.GetTargetPositionAt(CanvasCursorX, CanvasCursorY, CanvasHexRadius, ViewerConfig.HexOrientation);
 
                 // Make sure the first move is on the origin, no matter what
                 if (Board.BoardState == BoardState.NotStarted && AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
@@ -1290,7 +1286,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         // Get the move with the clicked position
                         Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
-                        if (!AppVM.ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove))
+                        if (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove))
                         {
                             // Move is selectable, select position
                             AppVM.EngineWrapper.TargetPosition = clickedPosition;

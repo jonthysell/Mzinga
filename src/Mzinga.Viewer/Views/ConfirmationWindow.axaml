@@ -15,7 +15,6 @@
         xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Panel>
-        <ExperimentalAcrylicBorder />
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">

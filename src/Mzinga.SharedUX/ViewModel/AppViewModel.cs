@@ -56,8 +56,6 @@ namespace Mzinga.SharedUX.ViewModel
 
         public MainViewModel MainVM { get; private set; }
 
-        public bool UseFluent => false;
-
         #region Help
 
         public RelayCommand ShowLicenses

@@ -4,6 +4,7 @@
 
 * Ported projects to .NET 5
 * Viewer: Rebuilt on Avalonia, now runs on MacOS and Linux
+* Viewer: Added Light / Dark theme option
 * Viewer: Properly send SIGINT signal to cancel engine processing Linux and MacOS
 * Engine: Properly handle incoming SIGINT signals to cancel engine processing on Linux and MacOS
 
