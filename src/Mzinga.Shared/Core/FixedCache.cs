@@ -74,7 +74,7 @@ namespace Mzinga.Core
         {
             if (capacity <= 0)
             {
-                throw new ArgumentOutOfRangeException("capacity");
+                throw new ArgumentOutOfRangeException(nameof(capacity));
             }
 
             Capacity = capacity;
@@ -150,7 +150,7 @@ namespace Mzinga.Core
             Metrics.Miss();
 #endif
 
-            entry = default(TEntry);
+            entry = default;
             return false;
         }
 

@@ -72,7 +72,7 @@ namespace Mzinga.Core.AI
         {
             if (targetMaxValue <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("targetMaxValue");
+                throw new ArgumentOutOfRangeException(nameof(targetMaxValue));
             }
 
             MetricWeights clone = Clone();
@@ -205,8 +205,8 @@ namespace Mzinga.Core.AI
                 catch (Exception) { }
             }
 
-            bugType = default(BugType);
-            bugTypeWeight = default(BugTypeWeight);
+            bugType = default;
+            bugTypeWeight = default;
             return false;
         }
 

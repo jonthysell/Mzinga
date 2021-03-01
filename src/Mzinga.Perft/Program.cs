@@ -26,7 +26,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +38,7 @@ namespace Mzinga.Perft
     {
         static ExpansionPieces GameType = ExpansionPieces.None;
         static uint MaxDepth = uint.MaxValue;
+        static bool MultiThreaded = false;
 
         static CancellationTokenSource PerftCTS = new CancellationTokenSource();
 
@@ -108,6 +108,10 @@ namespace Mzinga.Perft
                     {
                         MaxDepth = maxDepth;
                     }
+                    else if (args[i].Equals("-mt", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        MultiThreaded = true;
+                    }
                 }
             }
         }
@@ -121,7 +125,7 @@ namespace Mzinga.Perft
             for (int depth = 0; depth <= MaxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = gameBoard.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token);
+                Task<long?> task = MultiThreaded ? gameBoard.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token) : gameBoard.CalculatePerftAsync(depth, token);
                 task.Wait();
                 sw.Stop();
 

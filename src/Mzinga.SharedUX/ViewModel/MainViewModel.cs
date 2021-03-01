@@ -206,7 +206,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _copyHistoryToClipboard ?? (_copyHistoryToClipboard = new RelayCommand(() =>
+                return _copyHistoryToClipboard ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -219,7 +219,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && (null != BoardHistory) && BoardHistory.CurrentMoveIndex >= 0;
-                }));
+                });
             }
         }
         private RelayCommand _copyHistoryToClipboard = null;
@@ -362,7 +362,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _newGame ?? (_newGame = new RelayCommand(() =>
+                return _newGame ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -386,7 +386,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, ()=>
                 {
                     return IsIdle;
-                }));
+                });
             }
         }
         private RelayCommand _newGame = null;
@@ -395,7 +395,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _loadGame ?? (_loadGame = new RelayCommand(() =>
+                return _loadGame ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -427,7 +427,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle;
-                }));
+                });
             }
         }
         private RelayCommand _loadGame = null;
@@ -436,7 +436,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _saveGame ?? (_saveGame = new RelayCommand(() =>
+                return _saveGame ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -469,7 +469,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
-                }));
+                });
             }
         }
         private RelayCommand _saveGame = null;
@@ -501,7 +501,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _playTarget ?? (_playTarget = new RelayCommand(() =>
+                return _playTarget ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -514,7 +514,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
-                }));
+                });
             }
         }
         private RelayCommand _playTarget = null;
@@ -523,7 +523,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _pass ?? (_pass = new RelayCommand(() =>
+                return _pass ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -536,7 +536,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
-                }));
+                });
             }
         }
         private RelayCommand _pass = null;
@@ -545,7 +545,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _undoLastMove ?? (_undoLastMove = new RelayCommand(() =>
+                return _undoLastMove ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -558,7 +558,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanUndoLastMove;
-                }));
+                });
             }
         }
         private RelayCommand _undoLastMove = null;
@@ -586,7 +586,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _moveToStart ?? (_moveToStart = new RelayCommand(() =>
+                return _moveToStart ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -599,7 +599,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanMoveBack;
-                }));
+                });
             }
         }
         private RelayCommand _moveToStart = null;
@@ -608,7 +608,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _moveBack ?? (_moveBack = new RelayCommand(() =>
+                return _moveBack ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -621,7 +621,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanMoveBack;
-                }));
+                });
             }
         }
         private RelayCommand _moveBack = null;
@@ -630,7 +630,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _moveForward ?? (_moveForward = new RelayCommand(() =>
+                return _moveForward ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -643,7 +643,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanMoveForward;
-                }));
+                });
             }
         }
         private RelayCommand _moveForward = null;
@@ -652,7 +652,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _moveToEnd ?? (_moveToEnd = new RelayCommand(() =>
+                return _moveToEnd ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -665,7 +665,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanMoveForward;
-                }));
+                });
             }
         }
         private RelayCommand _moveToEnd = null;
@@ -674,7 +674,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _showGameMetadata ?? (_showGameMetadata = new RelayCommand(() =>
+                return _showGameMetadata ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -698,7 +698,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && IsReviewMode;
-                }));
+                });
             }
         }
         private RelayCommand _showGameMetadata = null;
@@ -707,7 +707,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _switchToPlayMode ?? (_switchToPlayMode = new RelayCommand(() =>
+                return _switchToPlayMode ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -745,7 +745,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && IsReviewMode && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
-                }));
+                });
             }
         }
         private RelayCommand _switchToPlayMode = null;
@@ -754,7 +754,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _switchToReviewMode ?? (_switchToReviewMode = new RelayCommand(() =>
+                return _switchToReviewMode ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -787,7 +787,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && IsPlayMode && (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver);
-                }));
+                });
             }
         }
         private RelayCommand _switchToReviewMode = null;
@@ -800,7 +800,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _findBestMove ?? (_findBestMove = new RelayCommand(() =>
+                return _findBestMove ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -813,7 +813,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && AppVM.EngineWrapper.CanFindBestMove;
-                }));
+                });
             }
         }
         private RelayCommand _findBestMove = null;
@@ -822,7 +822,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _showEngineConsole ?? (_showEngineConsole = new RelayCommand(() =>
+                return _showEngineConsole ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -832,7 +832,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _showEngineConsole = null;
@@ -841,7 +841,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _showEngineOptions ?? (_showEngineOptions = new RelayCommand(() =>
+                return _showEngineOptions ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -870,7 +870,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle;
-                }));
+                });
             }
         }
         private RelayCommand _showEngineOptions = null;
@@ -909,7 +909,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _toggleShowBoardHistory ?? (_toggleShowBoardHistory = new RelayCommand(() =>
+                return _toggleShowBoardHistory ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -919,7 +919,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _toggleShowBoardHistory = null;
@@ -928,7 +928,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _toggleShowMoveCommentary ?? (_toggleShowMoveCommentary = new RelayCommand(() =>
+                return _toggleShowMoveCommentary ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -938,7 +938,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _toggleShowMoveCommentary = null;
@@ -947,7 +947,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _showViewerConfig ?? (_showViewerConfig = new RelayCommand(() =>
+                return _showViewerConfig ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -979,7 +979,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle;
-                }));
+                });
             }
         }
         private RelayCommand _showViewerConfig = null;

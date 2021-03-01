@@ -111,10 +111,9 @@ namespace Mzinga.Engine
 
         static GameEngineConfig LoadConfig(string configPath)
         {
-            GameEngineConfig result;
 
             // Try loading specified file
-            if (!TryLoadConfig(configPath, out result))
+            if (!TryLoadConfig(configPath, out GameEngineConfig result))
             {
                 // Try loading default file
                 if (!TryLoadConfig(DefaultEngineConfigFileName, out result))

@@ -65,13 +65,7 @@ namespace Mzinga.Core.AI
 
         public override int GetHashCode()
         {
-            int hash = 17;
-
-            hash = hash * 31 + Move.GetHashCode();
-            hash = hash * 31 + ScoreAfterMove.GetHashCode();
-            hash = hash * 31 + Depth;
-
-            return hash;
+            return HashCode.Combine(Move, ScoreAfterMove, Depth);
         }
 
         public static bool operator ==(EvaluatedMove a, EvaluatedMove b)

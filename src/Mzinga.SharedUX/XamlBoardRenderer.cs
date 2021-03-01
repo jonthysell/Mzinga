@@ -454,7 +454,7 @@ namespace Mzinga.SharedUX
 
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             double x = hexOrientation == HexOrientation.FlatTop ? size * 1.5 * position.Q : size * Math.Sqrt(3.0) * (position.Q + (0.5 * position.R));
@@ -537,7 +537,7 @@ namespace Mzinga.SharedUX
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             double strokeThickness = size / 10;
@@ -615,7 +615,7 @@ namespace Mzinga.SharedUX
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
@@ -648,7 +648,7 @@ namespace Mzinga.SharedUX
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);

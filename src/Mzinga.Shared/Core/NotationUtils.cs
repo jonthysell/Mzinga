@@ -175,7 +175,7 @@ namespace Mzinga.Core
                             switch (dir)
                             {
                                 case 0: // Up
-                                    endPiece = endPiece + @"\";
+                                    endPiece += @"\";
                                     break;
                                 case 1:  // UpRight
                                     endPiece = @"/" + endPiece;
@@ -187,10 +187,10 @@ namespace Mzinga.Core
                                     endPiece = @"\" + endPiece;
                                     break;
                                 case 4: // DownLeft
-                                    endPiece = endPiece + @"/";
+                                    endPiece += @"/";
                                     break;
                                 case 5: // UpLeft
-                                    endPiece = endPiece + @"-";
+                                    endPiece += @"-";
                                     break;
                             }
 

@@ -71,7 +71,7 @@ namespace Mzinga.Trainer
         {
             get
             {
-                return _random ?? (_random = new Random());
+                return _random ??= new Random();
             }
         }
         private static Random _random;
@@ -95,7 +95,7 @@ namespace Mzinga.Trainer
         {
             if (generation < 0)
             {
-                throw new ArgumentOutOfRangeException("generation");
+                throw new ArgumentOutOfRangeException(nameof(generation));
             }
 
             if (!parentA.HasValue)
@@ -130,7 +130,7 @@ namespace Mzinga.Trainer
         {
             if (generation < 0)
             {
-                throw new ArgumentOutOfRangeException("generation");
+                throw new ArgumentOutOfRangeException(nameof(generation));
             }
 
             Id = id;
@@ -154,7 +154,7 @@ namespace Mzinga.Trainer
         {
             if (rating < EloUtils.MinRating)
             {
-                throw new ArgumentOutOfRangeException("rating");
+                throw new ArgumentOutOfRangeException(nameof(rating));
             }
 
             Records[(int)expansionPieces].EloRating = rating;
@@ -202,67 +202,65 @@ namespace Mzinga.Trainer
                 Indent = true
             };
 
-            using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
+            using XmlWriter writer = XmlWriter.Create(outputStream, settings);
+            writer.WriteStartElement("Profile");
+
+            writer.WriteStartElement("Id");
+            writer.WriteValue(Id.ToString());
+            writer.WriteEndElement();
+
+            if (!string.IsNullOrWhiteSpace(_name))
             {
-                writer.WriteStartElement("Profile");
-
-                writer.WriteStartElement("Id");
-                writer.WriteValue(Id.ToString());
+                writer.WriteStartElement("Name");
+                writer.WriteValue(_name.Trim());
                 writer.WriteEndElement();
-
-                if (!string.IsNullOrWhiteSpace(_name))
-                {
-                    writer.WriteStartElement("Name");
-                    writer.WriteValue(_name.Trim());
-                    writer.WriteEndElement();
-                }
-
-                writer.WriteStartElement("Generation");
-                writer.WriteValue(Generation);
-                writer.WriteEndElement();
-
-                if (ParentA.HasValue)
-                {
-                    writer.WriteStartElement("ParentA");
-                    writer.WriteValue(ParentA.ToString());
-                    writer.WriteEndElement();
-                }
-
-                if (ParentB.HasValue)
-                {
-                    writer.WriteStartElement("ParentB");
-                    writer.WriteValue(ParentB.ToString());
-                    writer.WriteEndElement();
-                }
-
-                writer.WriteStartElement("Records");
-                for (int i = 0; i < Records.Length; i++)
-                {
-                    writer.WriteStartElement("Record");
-                    writer.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i));
-                    writer.WriteAttributeString("EloRating", Records[i].EloRating.ToString());
-                    writer.WriteAttributeString("Wins", Records[i].Wins.ToString());
-                    writer.WriteAttributeString("Losses", Records[i].Losses.ToString());
-                    writer.WriteAttributeString("Draws", Records[i].Draws.ToString());
-                    writer.WriteAttributeString("AutoTrains", Records[i].AutoTrains.ToString());
-                    writer.WriteEndElement();
-                }
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("Creation");
-                writer.WriteValue(CreationTimestamp);
-                writer.WriteEndElement();
-
-                writer.WriteStartElement("LastUpdated");
-                writer.WriteValue(LastUpdatedTimestamp);
-                writer.WriteEndElement();
-
-                StartMetricWeights.WriteMetricWeightsXml(writer, "StartMetricWeights");
-
-                EndMetricWeights.WriteMetricWeightsXml(writer, "EndMetricWeights");
-
-                writer.WriteEndElement(); // </Profile>
             }
+
+            writer.WriteStartElement("Generation");
+            writer.WriteValue(Generation);
+            writer.WriteEndElement();
+
+            if (ParentA.HasValue)
+            {
+                writer.WriteStartElement("ParentA");
+                writer.WriteValue(ParentA.ToString());
+                writer.WriteEndElement();
+            }
+
+            if (ParentB.HasValue)
+            {
+                writer.WriteStartElement("ParentB");
+                writer.WriteValue(ParentB.ToString());
+                writer.WriteEndElement();
+            }
+
+            writer.WriteStartElement("Records");
+            for (int i = 0; i < Records.Length; i++)
+            {
+                writer.WriteStartElement("Record");
+                writer.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i));
+                writer.WriteAttributeString("EloRating", Records[i].EloRating.ToString());
+                writer.WriteAttributeString("Wins", Records[i].Wins.ToString());
+                writer.WriteAttributeString("Losses", Records[i].Losses.ToString());
+                writer.WriteAttributeString("Draws", Records[i].Draws.ToString());
+                writer.WriteAttributeString("AutoTrains", Records[i].AutoTrains.ToString());
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("Creation");
+            writer.WriteValue(CreationTimestamp);
+            writer.WriteEndElement();
+
+            writer.WriteStartElement("LastUpdated");
+            writer.WriteValue(LastUpdatedTimestamp);
+            writer.WriteEndElement();
+
+            StartMetricWeights.WriteMetricWeightsXml(writer, "StartMetricWeights");
+
+            EndMetricWeights.WriteMetricWeightsXml(writer, "EndMetricWeights");
+
+            writer.WriteEndElement(); // </Profile>
         }
 
         public override string ToString()
@@ -374,7 +372,7 @@ namespace Mzinga.Trainer
 
             if (minMix > maxMix)
             {
-                throw new ArgumentOutOfRangeException("minMix");
+                throw new ArgumentOutOfRangeException(nameof(minMix));
             }
 
             Guid id = Guid.NewGuid();
@@ -415,7 +413,7 @@ namespace Mzinga.Trainer
                 {
                     value = -0.01 + (Random.NextDouble() * 0.02);
                 }
-                value = value * (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
+                value *= (minMix + (Random.NextDouble() * Math.Abs(maxMix - minMix)));
                 mw.Set(bugType, bugTypeWeight, value);
             });
 

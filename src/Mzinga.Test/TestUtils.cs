@@ -174,7 +174,7 @@ namespace Mzinga.Test
         {
             get
             {
-                return _defaultGameEngineConfig ?? (_defaultGameEngineConfig = GameEngineConfig.GetDefaultEngineConfig());
+                return _defaultGameEngineConfig ??= GameEngineConfig.GetDefaultEngineConfig();
             }
         }
         private static GameEngineConfig _defaultGameEngineConfig;

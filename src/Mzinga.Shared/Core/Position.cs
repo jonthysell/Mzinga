@@ -35,7 +35,7 @@ namespace Mzinga.Core
         {
             get
             {
-                return _origin ?? (_origin = new Position(0, 0, 0));
+                return _origin ??= new Position(0, 0, 0);
             }
         }
         private static Position _origin;
@@ -154,7 +154,7 @@ namespace Mzinga.Core
         {
             if (count < 1)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             Queue<Position> positions = new Queue<Position>();
@@ -189,7 +189,7 @@ namespace Mzinga.Core
                 return position;
             }
 
-            throw new ArgumentOutOfRangeException("positionString");
+            throw new ArgumentOutOfRangeException(nameof(positionString));
         }
 
         public static bool TryParse(string positionString, out Position position)
@@ -248,11 +248,7 @@ namespace Mzinga.Core
 
         public override int GetHashCode()
         {
-            int hash = 17;
-            hash = hash * 31 + Q;
-            hash = hash * 31 + R;
-            hash = hash * 31 + (int)Stack;
-            return hash;
+            return HashCode.Combine(Q, R, Stack);
         }
 
         public static bool operator ==(Position a, Position b)

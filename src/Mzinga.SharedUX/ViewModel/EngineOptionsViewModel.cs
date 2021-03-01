@@ -64,7 +64,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _accept ?? (_accept = new RelayCommand(() =>
+                return _accept ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -75,7 +75,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _accept = null;
@@ -84,7 +84,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _reject ?? (_reject = new RelayCommand(() =>
+                return _reject ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -95,7 +95,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _reject = null;
@@ -104,7 +104,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _reset ?? (_reset = new RelayCommand(() =>
+                return _reset ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -115,7 +115,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _reset = null;

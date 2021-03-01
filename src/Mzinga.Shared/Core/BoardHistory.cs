@@ -78,7 +78,7 @@ namespace Mzinga.Core
         {
             if (string.IsNullOrWhiteSpace(boardHistoryString))
             {
-                throw new ArgumentOutOfRangeException("boardHistoryString");
+                throw new ArgumentOutOfRangeException(nameof(boardHistoryString));
             }
 
             string[] split = boardHistoryString.Split(BoardHistoryItemStringSeparator);

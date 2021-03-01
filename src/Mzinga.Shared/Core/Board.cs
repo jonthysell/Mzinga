@@ -366,7 +366,7 @@ namespace Mzinga.Core
         {
             if (pieceName == PieceName.INVALID)
             {
-                throw new ArgumentOutOfRangeException("pieceName");
+                throw new ArgumentOutOfRangeException(nameof(pieceName));
             }
 
             return GetPiece(pieceName).Position;

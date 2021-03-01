@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -751,7 +751,7 @@ namespace Mzinga.Engine
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = _gameBoard.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token);
+                Task<long?> task = _gameBoard.CalculatePerftAsync(depth, token);
                 task.Wait();
                 sw.Stop();
 

@@ -82,18 +82,16 @@ namespace Mzinga.Engine
                 throw new ArgumentNullException(nameof(inputStream));
             }
 
-            using (XmlReader reader = XmlReader.Create(inputStream))
+            using XmlReader reader = XmlReader.Create(inputStream);
+            while (reader.Read())
             {
-                while (reader.Read())
+                if (reader.IsStartElement())
                 {
-                    if (reader.IsStartElement())
+                    switch (reader.Name)
                     {
-                        switch (reader.Name)
-                        {
-                            case "GameAI":
-                                LoadGameAIConfig(reader.ReadSubtree());
-                                break;
-                        }
+                        case "GameAI":
+                            LoadGameAIConfig(reader.ReadSubtree());
+                            break;
                     }
                 }
             }
@@ -168,17 +166,15 @@ namespace Mzinga.Engine
                 Indent = true
             };
 
-            using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
-            {
-                writer.WriteStartElement(rootName);
+            using XmlWriter writer = XmlWriter.Create(outputStream, settings);
+            writer.WriteStartElement(rootName);
 
-                writer.WriteAttributeString("version", GetVersion());
-                writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
+            writer.WriteAttributeString("version", GetVersion());
+            writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
-                SaveGameAIConfig(writer, "GameAI", configSaveType);
+            SaveGameAIConfig(writer, "GameAI", configSaveType);
 
-                writer.WriteEndElement();
-            }
+            writer.WriteEndElement();
         }
 
         public void SaveGameAIConfig(XmlWriter writer, string rootName, ConfigSaveType configSaveType)
@@ -390,10 +386,9 @@ namespace Mzinga.Engine
 
         public MetricWeights[] GetMetricWeights(ExpansionPieces expansionPieces)
         {
-            MetricWeights[] result;
 
             // Start with the weights for the base game type
-            if (!MetricWeightSet.TryGetValue(ExpansionPieces.None, out result))
+            if (!MetricWeightSet.TryGetValue(ExpansionPieces.None, out MetricWeights[] result))
             {
                 // No base game type, start with nulls
                 result = new MetricWeights[2];
@@ -419,8 +414,7 @@ namespace Mzinga.Engine
 
         public TranspositionTable GetInitialTranspositionTable(ExpansionPieces expansionPieces)
         {
-            TranspositionTable result;
-            if (!InitialTranspositionTables.TryGetValue(expansionPieces, out result))
+            if (!InitialTranspositionTables.TryGetValue(expansionPieces, out TranspositionTable result))
             {
                 result = null;
             }
@@ -448,10 +442,8 @@ namespace Mzinga.Engine
             {
                 if (resourceName.EndsWith("DefaultEngineConfig.xml"))
                 {
-                    using (Stream inputStream = Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceStream(resourceName))
-                    {
-                        return new GameEngineConfig(inputStream);
-                    }
+                    using Stream inputStream = Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceStream(resourceName);
+                    return new GameEngineConfig(inputStream);
                 }
             }
 

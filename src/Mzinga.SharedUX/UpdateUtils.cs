@@ -53,12 +53,10 @@ namespace Mzinga.SharedUX
             {
                 try
                 {
-                    using (var client = new WebClient())
+                    using var client = new WebClient();
+                    using (client.OpenRead("http://google.com/generate_204"))
                     {
-                        using (client.OpenRead("http://google.com/generate_204"))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
                 catch (Exception)
@@ -167,21 +165,19 @@ namespace Mzinga.SharedUX
                 request.UserAgent = _userAgent;
                 request.Timeout = TimeoutMS;
 
-                using (var response = await request.GetResponseAsync())
+                using var response = await request.GetResponseAsync();
+                var responseStream = response.GetResponseStream();
+                var jsonDocument = await JsonDocument.ParseAsync(responseStream);
+
+                foreach (var releaseObject in jsonDocument.RootElement.EnumerateArray())
                 {
-                    var responseStream = response.GetResponseStream();
-                    var jsonDocument = await JsonDocument.ParseAsync(responseStream);
+                    string name = releaseObject.GetProperty("name").GetString();
+                    string tagName = releaseObject.GetProperty("tag_name").GetString();
+                    string htmlUrl = releaseObject.GetProperty("html_url").GetString();
+                    bool draft = releaseObject.GetProperty("draft").GetBoolean();
+                    bool prerelease = releaseObject.GetProperty("prerelease").GetBoolean();
 
-                    foreach (var releaseObject in jsonDocument.RootElement.EnumerateArray())
-                    {
-                        string name = releaseObject.GetProperty("name").GetString();
-                        string tagName = releaseObject.GetProperty("tag_name").GetString();
-                        string htmlUrl = releaseObject.GetProperty("html_url").GetString();
-                        bool draft = releaseObject.GetProperty("draft").GetBoolean();
-                        bool prerelease = releaseObject.GetProperty("prerelease").GetBoolean();
-
-                        releaseInfos.Add(new GitHubReleaseInfo(name, tagName, htmlUrl, draft, prerelease));
-                    }
+                    releaseInfos.Add(new GitHubReleaseInfo(name, tagName, htmlUrl, draft, prerelease));
                 }
             }
             catch (Exception) { }

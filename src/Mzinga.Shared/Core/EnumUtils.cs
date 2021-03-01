@@ -109,7 +109,7 @@ namespace Mzinga.Core
                 }
             }
 
-            throw new ArgumentOutOfRangeException("nameString");
+            throw new ArgumentOutOfRangeException(nameof(nameString));
         }
 
         public static string[] PieceShortName = new string[]
@@ -186,7 +186,7 @@ namespace Mzinga.Core
                     return PlayerColor.Black;
             }
 
-            throw new ArgumentOutOfRangeException("pieceName");
+            throw new ArgumentOutOfRangeException(nameof(pieceName));
         }
 
         public const int NumColors = 2;
@@ -248,7 +248,7 @@ namespace Mzinga.Core
                     return BugType.Pillbug;
             }
 
-            throw new ArgumentOutOfRangeException("pieceName");
+            throw new ArgumentOutOfRangeException(nameof(pieceName));
         }
 
         public const int NumBugTypes = 8;
@@ -299,7 +299,7 @@ namespace Mzinga.Core
             }
             catch (Exception)
             {
-                expansionPieces = default(ExpansionPieces);
+                expansionPieces = default;
                 return false;
             }
         }

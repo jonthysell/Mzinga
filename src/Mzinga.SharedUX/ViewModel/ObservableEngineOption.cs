@@ -57,7 +57,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 if (i > 0 && char.IsUpper(s[i]) && char.IsLower(s[i - 1]))
                 {
-                    sb.Append(" ");
+                    sb.Append(' ');
                 }
 
                 sb.Append(s[i]);

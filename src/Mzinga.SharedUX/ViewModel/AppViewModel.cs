@@ -62,7 +62,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _showLicenses ?? (_showLicenses = new RelayCommand(() =>
+                return _showLicenses ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -72,7 +72,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _showLicenses = null;
@@ -81,7 +81,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _launchHiveWebsite ?? (_launchHiveWebsite = new RelayCommand(() =>
+                return _launchHiveWebsite ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -104,7 +104,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _launchHiveWebsite;
@@ -113,7 +113,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _launchMzingaWebsite ?? (_launchMzingaWebsite = new RelayCommand(() =>
+                return _launchMzingaWebsite ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -136,7 +136,7 @@ namespace Mzinga.SharedUX.ViewModel
                     {
                         ExceptionUtils.HandleException(ex);
                     }
-                }));
+                });
             }
         }
         private RelayCommand _launchMzingaWebsite;

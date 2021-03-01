@@ -122,81 +122,79 @@ namespace Mzinga.SharedUX
                 throw new ArgumentNullException(nameof(inputStream));
             }
 
-            using (XmlReader reader = XmlReader.Create(inputStream))
+            using XmlReader reader = XmlReader.Create(inputStream);
+            while (reader.Read())
             {
-                while (reader.Read())
+                if (reader.IsStartElement())
                 {
-                    if (reader.IsStartElement())
+                    switch (reader.Name)
                     {
-                        switch (reader.Name)
-                        {
-                            case "EngineType":
-                                EngineType = ParseEnumValue(reader.ReadElementContentAsString(), EngineType);
-                                break;
-                            case "EngineCommandLine":
-                                EngineCommandLine = ParseStringValue(reader.ReadElementContentAsString(), EngineCommandLine);
-                                break;
-                            case "VisualTheme":
-                                VisualTheme = ParseEnumValue(reader.ReadElementContentAsString(), VisualTheme);
-                                break;
-                            case "HexOrientation":
-                                HexOrientation = ParseEnumValue(reader.ReadElementContentAsString(), HexOrientation);
-                                break;
-                            case "NotationType":
-                                NotationType = ParseEnumValue(reader.ReadElementContentAsString(), NotationType);
-                                break;
-                            case "PieceStyle":
-                                PieceStyle = ParseEnumValue(reader.ReadElementContentAsString(), PieceStyle);
-                                break;
-                            case "PieceColors":
-                                PieceColors = ParseBoolValue(reader.ReadElementContentAsString(), PieceColors);
-                                break;
-                            case "DisablePiecesInHandWithNoMoves":
-                                DisablePiecesInHandWithNoMoves = ParseBoolValue(reader.ReadElementContentAsString(), DisablePiecesInHandWithNoMoves);
-                                break;
-                            case "DisablePiecesInPlayWithNoMoves":
-                                DisablePiecesInPlayWithNoMoves = ParseBoolValue(reader.ReadElementContentAsString(), DisablePiecesInPlayWithNoMoves);
-                                break;
-                            case "HighlightTargetMove":
-                                HighlightTargetMove = ParseBoolValue(reader.ReadElementContentAsString(), HighlightTargetMove);
-                                break;
-                            case "HighlightValidMoves":
-                                HighlightValidMoves = ParseBoolValue(reader.ReadElementContentAsString(), HighlightValidMoves);
-                                break;
-                            case "HighlightLastMovePlayed":
-                                HighlightLastMovePlayed = ParseBoolValue(reader.ReadElementContentAsString(), HighlightLastMovePlayed);
-                                break;
-                            case "BlockInvalidMoves":
-                                BlockInvalidMoves = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
-                                break;
-                            case "RequireMoveConfirmation":
-                                RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), RequireMoveConfirmation);
-                                break;
-                            case "StackPiecesInHand":
-                                StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), StackPiecesInHand);
-                                break;
-                            case "AddPieceNumbers":
-                                AddPieceNumbers = ParseBoolValue(reader.ReadElementContentAsString(), AddPieceNumbers);
-                                break;
-                            case "PlaySoundEffects":
-                                PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
-                                break;
-                            case "ShowBoardHistory":
-                                ShowBoardHistory = ParseBoolValue(reader.ReadElementContentAsString(), ShowBoardHistory);
-                                break;
-                            case "ShowMoveCommentary":
-                                ShowMoveCommentary = ParseBoolValue(reader.ReadElementContentAsString(), ShowMoveCommentary);
-                                break;
-                            case "FirstRun":
-                                FirstRun = ParseBoolValue(reader.ReadElementContentAsString(), FirstRun);
-                                break;
-                            case "CheckUpdateOnStart":
-                                CheckUpdateOnStart = ParseBoolValue(reader.ReadElementContentAsString(), CheckUpdateOnStart);
-                                break;
-                            case "InternalGameAI":
-                                InternalGameEngineConfig?.LoadGameAIConfig(reader.ReadSubtree());
-                                break;
-                        }
+                        case "EngineType":
+                            EngineType = ParseEnumValue(reader.ReadElementContentAsString(), EngineType);
+                            break;
+                        case "EngineCommandLine":
+                            EngineCommandLine = ParseStringValue(reader.ReadElementContentAsString(), EngineCommandLine);
+                            break;
+                        case "VisualTheme":
+                            VisualTheme = ParseEnumValue(reader.ReadElementContentAsString(), VisualTheme);
+                            break;
+                        case "HexOrientation":
+                            HexOrientation = ParseEnumValue(reader.ReadElementContentAsString(), HexOrientation);
+                            break;
+                        case "NotationType":
+                            NotationType = ParseEnumValue(reader.ReadElementContentAsString(), NotationType);
+                            break;
+                        case "PieceStyle":
+                            PieceStyle = ParseEnumValue(reader.ReadElementContentAsString(), PieceStyle);
+                            break;
+                        case "PieceColors":
+                            PieceColors = ParseBoolValue(reader.ReadElementContentAsString(), PieceColors);
+                            break;
+                        case "DisablePiecesInHandWithNoMoves":
+                            DisablePiecesInHandWithNoMoves = ParseBoolValue(reader.ReadElementContentAsString(), DisablePiecesInHandWithNoMoves);
+                            break;
+                        case "DisablePiecesInPlayWithNoMoves":
+                            DisablePiecesInPlayWithNoMoves = ParseBoolValue(reader.ReadElementContentAsString(), DisablePiecesInPlayWithNoMoves);
+                            break;
+                        case "HighlightTargetMove":
+                            HighlightTargetMove = ParseBoolValue(reader.ReadElementContentAsString(), HighlightTargetMove);
+                            break;
+                        case "HighlightValidMoves":
+                            HighlightValidMoves = ParseBoolValue(reader.ReadElementContentAsString(), HighlightValidMoves);
+                            break;
+                        case "HighlightLastMovePlayed":
+                            HighlightLastMovePlayed = ParseBoolValue(reader.ReadElementContentAsString(), HighlightLastMovePlayed);
+                            break;
+                        case "BlockInvalidMoves":
+                            BlockInvalidMoves = ParseBoolValue(reader.ReadElementContentAsString(), BlockInvalidMoves);
+                            break;
+                        case "RequireMoveConfirmation":
+                            RequireMoveConfirmation = ParseBoolValue(reader.ReadElementContentAsString(), RequireMoveConfirmation);
+                            break;
+                        case "StackPiecesInHand":
+                            StackPiecesInHand = ParseBoolValue(reader.ReadElementContentAsString(), StackPiecesInHand);
+                            break;
+                        case "AddPieceNumbers":
+                            AddPieceNumbers = ParseBoolValue(reader.ReadElementContentAsString(), AddPieceNumbers);
+                            break;
+                        case "PlaySoundEffects":
+                            PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
+                            break;
+                        case "ShowBoardHistory":
+                            ShowBoardHistory = ParseBoolValue(reader.ReadElementContentAsString(), ShowBoardHistory);
+                            break;
+                        case "ShowMoveCommentary":
+                            ShowMoveCommentary = ParseBoolValue(reader.ReadElementContentAsString(), ShowMoveCommentary);
+                            break;
+                        case "FirstRun":
+                            FirstRun = ParseBoolValue(reader.ReadElementContentAsString(), FirstRun);
+                            break;
+                        case "CheckUpdateOnStart":
+                            CheckUpdateOnStart = ParseBoolValue(reader.ReadElementContentAsString(), CheckUpdateOnStart);
+                            break;
+                        case "InternalGameAI":
+                            InternalGameEngineConfig?.LoadGameAIConfig(reader.ReadSubtree());
+                            break;
                     }
                 }
             }
@@ -229,39 +227,37 @@ namespace Mzinga.SharedUX
                 Indent = true
             };
 
-            using (XmlWriter writer = XmlWriter.Create(outputStream, settings))
-            {
-                writer.WriteStartElement("MzingaViewer");
+            using XmlWriter writer = XmlWriter.Create(outputStream, settings);
+            writer.WriteStartElement("MzingaViewer");
 
-                writer.WriteAttributeString("version", AppVM.FullVersion);
-                writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
+            writer.WriteAttributeString("version", AppVM.FullVersion);
+            writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
-                writer.WriteElementString("EngineType", EngineType.ToString());
-                writer.WriteElementString("EngineCommandLine", EngineCommandLine);
-                writer.WriteElementString("VisualTheme", VisualTheme.ToString());
-                writer.WriteElementString("HexOrientation", HexOrientation.ToString());
-                writer.WriteElementString("NotationType", NotationType.ToString());
-                writer.WriteElementString("PieceStyle", PieceStyle.ToString());
-                writer.WriteElementString("PieceColors", PieceColors.ToString());
-                writer.WriteElementString("DisablePiecesInHandWithNoMoves", DisablePiecesInHandWithNoMoves.ToString());
-                writer.WriteElementString("DisablePiecesInPlayWithNoMoves", DisablePiecesInPlayWithNoMoves.ToString());
-                writer.WriteElementString("HighlightTargetMove", HighlightTargetMove.ToString());
-                writer.WriteElementString("HighlightValidMoves", HighlightValidMoves.ToString());
-                writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
-                writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
-                writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
-                writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
-                writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
-                writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
-                writer.WriteElementString("ShowBoardHistory", ShowBoardHistory.ToString());
-                writer.WriteElementString("ShowMoveCommentary", ShowMoveCommentary.ToString());
-                writer.WriteElementString("FirstRun", FirstRun.ToString());
-                writer.WriteElementString("CheckUpdateOnStart", CheckUpdateOnStart.ToString());
+            writer.WriteElementString("EngineType", EngineType.ToString());
+            writer.WriteElementString("EngineCommandLine", EngineCommandLine);
+            writer.WriteElementString("VisualTheme", VisualTheme.ToString());
+            writer.WriteElementString("HexOrientation", HexOrientation.ToString());
+            writer.WriteElementString("NotationType", NotationType.ToString());
+            writer.WriteElementString("PieceStyle", PieceStyle.ToString());
+            writer.WriteElementString("PieceColors", PieceColors.ToString());
+            writer.WriteElementString("DisablePiecesInHandWithNoMoves", DisablePiecesInHandWithNoMoves.ToString());
+            writer.WriteElementString("DisablePiecesInPlayWithNoMoves", DisablePiecesInPlayWithNoMoves.ToString());
+            writer.WriteElementString("HighlightTargetMove", HighlightTargetMove.ToString());
+            writer.WriteElementString("HighlightValidMoves", HighlightValidMoves.ToString());
+            writer.WriteElementString("HighlightLastMovePlayed", HighlightLastMovePlayed.ToString());
+            writer.WriteElementString("BlockInvalidMoves", BlockInvalidMoves.ToString());
+            writer.WriteElementString("RequireMoveConfirmation", RequireMoveConfirmation.ToString());
+            writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
+            writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
+            writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
+            writer.WriteElementString("ShowBoardHistory", ShowBoardHistory.ToString());
+            writer.WriteElementString("ShowMoveCommentary", ShowMoveCommentary.ToString());
+            writer.WriteElementString("FirstRun", FirstRun.ToString());
+            writer.WriteElementString("CheckUpdateOnStart", CheckUpdateOnStart.ToString());
 
-                InternalGameEngineConfig?.SaveGameAIConfig(writer, "InternalGameAI", ConfigSaveType.BasicOptions);
+            InternalGameEngineConfig?.SaveGameAIConfig(writer, "InternalGameAI", ConfigSaveType.BasicOptions);
 
-                writer.WriteEndElement();
-            }
+            writer.WriteEndElement();
         }
 
         public ViewerConfig Clone()

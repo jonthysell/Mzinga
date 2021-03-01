@@ -70,49 +70,47 @@ namespace Mzinga.SharedUX
                 throw new ArgumentNullException(nameof(outputStream));
             }
 
-            using (StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII))
+            using StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII);
+            // Write Mandatory Tags
+            sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
+
+            sw.WriteLine(GetPGNTag("Date", Metadata.Date));
+            sw.WriteLine(GetPGNTag("Event", Metadata.Event));
+            sw.WriteLine(GetPGNTag("Site", Metadata.Site));
+            sw.WriteLine(GetPGNTag("Round", Metadata.Round));
+            sw.WriteLine(GetPGNTag("White", Metadata.White));
+            sw.WriteLine(GetPGNTag("Black", Metadata.Black));
+
+            sw.WriteLine(GetPGNTag("Result", Metadata.Result.ToString()));
+
+            // Write Optional Tags
+            foreach (KeyValuePair<string, string> tag in Metadata.OptionalTags)
             {
-                // Write Mandatory Tags
-                sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
+                sw.WriteLine(GetPGNTag(tag.Key, tag.Value));
+            }
 
-                sw.WriteLine(GetPGNTag("Date", Metadata.Date));
-                sw.WriteLine(GetPGNTag("Event", Metadata.Event));
-                sw.WriteLine(GetPGNTag("Site", Metadata.Site));
-                sw.WriteLine(GetPGNTag("Round", Metadata.Round));
-                sw.WriteLine(GetPGNTag("White", Metadata.White));
-                sw.WriteLine(GetPGNTag("Black", Metadata.Black));
+            if (GameBoard.BoardHistory.Count > 0)
+            {
+                sw.WriteLine();
 
-                sw.WriteLine(GetPGNTag("Result", Metadata.Result.ToString()));
+                WritePGNMoveCommentary(sw, 0);
 
-                // Write Optional Tags
-                foreach (KeyValuePair<string, string> tag in Metadata.OptionalTags)
+                // Write Moves
+                int count = 1;
+                foreach (BoardHistoryItem item in GameBoard.BoardHistory)
                 {
-                    sw.WriteLine(GetPGNTag(tag.Key, tag.Value));
+                    sw.WriteLine("{0}. {1}", count, NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString));
+                    WritePGNMoveCommentary(sw, count);
+
+                    count++;
                 }
+            }
 
-                if (GameBoard.BoardHistory.Count > 0)
-                {
-                    sw.WriteLine();
-
-                    WritePGNMoveCommentary(sw, 0);
-
-                    // Write Moves
-                    int count = 1;
-                    foreach (BoardHistoryItem item in GameBoard.BoardHistory)
-                    {
-                        sw.WriteLine("{0}. {1}", count, NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString));
-                        WritePGNMoveCommentary(sw, count);
-
-                        count++;
-                    }
-                }
-
-                // Write Result
-                if (EnumUtils.GameIsOver(Metadata.Result))
-                {
-                    sw.WriteLine();
-                    sw.WriteLine(Metadata.Result.ToString());
-                }
+            // Write Result
+            if (EnumUtils.GameIsOver(Metadata.Result))
+            {
+                sw.WriteLine();
+                sw.WriteLine(Metadata.Result.ToString());
             }
         }
 

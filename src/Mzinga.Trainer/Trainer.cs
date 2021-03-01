@@ -75,7 +75,7 @@ namespace Mzinga.Trainer
         {
             get
             {
-                return _random ?? (_random = new Random());
+                return _random ??= new Random();
             }
         }
         private Random _random;
@@ -145,17 +145,17 @@ namespace Mzinga.Trainer
 
             if (maxBattles < 1 && maxBattles != TrainerSettings.MaxMaxBattles)
             {
-                throw new ArgumentOutOfRangeException("maxBattles");
+                throw new ArgumentOutOfRangeException(nameof(maxBattles));
             }
 
             if (maxDraws < 1)
             {
-                throw new ArgumentOutOfRangeException("maxDraws");
+                throw new ArgumentOutOfRangeException(nameof(maxDraws));
             }
 
             if (maxConcurrentBattles < 1 && maxConcurrentBattles != TrainerSettings.MaxMaxConcurrentBattles)
             {
-                throw new ArgumentOutOfRangeException("maxConcurrentBattles");
+                throw new ArgumentOutOfRangeException(nameof(maxConcurrentBattles));
             }
 
             StartTime = DateTime.Now;
@@ -256,19 +256,15 @@ namespace Mzinga.Trainer
                 lock (whiteProfile)
                 {
                     string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                    using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
-                    {
-                        whiteProfile.WriteXml(fs);
-                    }
+                    using FileStream fs = new FileStream(whiteProfilePath, FileMode.Create);
+                    whiteProfile.WriteXml(fs);
                 }
 
                 lock (blackProfile)
                 {
                     string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                    using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
-                    {
-                        blackProfile.WriteXml(fs);
-                    }
+                    using FileStream fs = new FileStream(blackProfilePath, FileMode.Create);
+                    blackProfile.WriteXml(fs);
                 }
 
                 lock (_progressLock)
@@ -482,7 +478,7 @@ namespace Mzinga.Trainer
 
             if (keepCount < TrainerSettings.CullMinKeepCount && keepCount != TrainerSettings.CullKeepMax)
             {
-                throw new ArgumentOutOfRangeException("keepCount");
+                throw new ArgumentOutOfRangeException(nameof(keepCount));
             }
 
             StartTime = DateTime.Now;
@@ -551,10 +547,8 @@ namespace Mzinga.Trainer
                 Log("{0}", ToString(p));
 
                 string profilePath = Path.Combine(path, p.Id + ".xml");
-                using (FileStream fs = new FileStream(profilePath, FileMode.Create))
-                {
-                    p.WriteXml(fs);
-                }
+                using FileStream fs = new FileStream(profilePath, FileMode.Create);
+                p.WriteXml(fs);
             }
 
             Log("Enumerate end.");
@@ -626,7 +620,7 @@ namespace Mzinga.Trainer
 
             if (count < 1)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             StartTime = DateTime.Now;
@@ -664,7 +658,7 @@ namespace Mzinga.Trainer
 
             if (generations == 0)
             {
-                throw new ArgumentOutOfRangeException("generations");
+                throw new ArgumentOutOfRangeException(nameof(generations));
             }
 
             StartTime = DateTime.Now;
@@ -742,12 +736,12 @@ namespace Mzinga.Trainer
 
             if (minMix > maxMix)
             {
-                throw new ArgumentOutOfRangeException("minMix");
+                throw new ArgumentOutOfRangeException(nameof(minMix));
             }
 
             if (parentCount < TrainerSettings.MateMinParentCount && parentCount != TrainerSettings.MateParentMax)
             {
-                throw new ArgumentOutOfRangeException("parentCount");
+                throw new ArgumentOutOfRangeException(nameof(parentCount));
             }
 
             StartTime = DateTime.Now;
@@ -784,10 +778,8 @@ namespace Mzinga.Trainer
 
                     Log("Mated {0} and {1} to sire {2}.", ToString(parentA), ToString(parentB), ToString(child));
 
-                    using (FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create))
-                    {
-                        child.WriteXml(fs);
-                    }
+                    using FileStream fs = new FileStream(Path.Combine(path, child.Id + ".xml"), FileMode.Create);
+                    child.WriteXml(fs);
                 }
             }
 
@@ -808,12 +800,12 @@ namespace Mzinga.Trainer
 
             if (maxDraws < 1)
             {
-                throw new ArgumentOutOfRangeException("maxDraws");
+                throw new ArgumentOutOfRangeException(nameof(maxDraws));
             }
 
             if (maxConcurrentBattles < 1 && maxConcurrentBattles != TrainerSettings.MaxMaxConcurrentBattles)
             {
-                throw new ArgumentOutOfRangeException("maxConcurrentBattles");
+                throw new ArgumentOutOfRangeException(nameof(maxConcurrentBattles));
             }
 
             StartTime = DateTime.Now;
@@ -919,19 +911,15 @@ namespace Mzinga.Trainer
                         lock (whiteProfile)
                         {
                             string whiteProfilePath = Path.Combine(path, whiteProfile.Id + ".xml");
-                            using (FileStream fs = new FileStream(whiteProfilePath, FileMode.Create))
-                            {
-                                whiteProfile.WriteXml(fs);
-                            }
+                            using FileStream fs = new FileStream(whiteProfilePath, FileMode.Create);
+                            whiteProfile.WriteXml(fs);
                         }
 
                         lock (blackProfile)
                         {
                             string blackProfilePath = Path.Combine(path, blackProfile.Id + ".xml");
-                            using (FileStream fs = new FileStream(blackProfilePath, FileMode.Create))
-                            {
-                                blackProfile.WriteXml(fs);
-                            }
+                            using FileStream fs = new FileStream(blackProfilePath, FileMode.Create);
+                            blackProfile.WriteXml(fs);
                         }
 
                         lock (_progressLock)
@@ -1157,11 +1145,9 @@ namespace Mzinga.Trainer
                 Profile p = new Profile(id, name, config.MetricWeightSet[gameType][0], config.MetricWeightSet[gameType][1]);
 
                 string profilePath = Path.Combine(path, p.Id + ".xml");
-                using (FileStream fs = new FileStream(profilePath, FileMode.Create))
-                {
-                    Log("{0}", ToString(p, gameType));
-                    p.WriteXml(fs);
-                }
+                using FileStream fs = new FileStream(profilePath, FileMode.Create);
+                Log("{0}", ToString(p, gameType));
+                p.WriteXml(fs);
             }
 
             Log("ExportAI end.");
@@ -1286,13 +1272,11 @@ namespace Mzinga.Trainer
             
             Parallel.ForEach(Directory.EnumerateFiles(path, "*.xml"), (profilePath) =>
             {
-                using (FileStream fs = new FileStream(profilePath, FileMode.Open))
+                using FileStream fs = new FileStream(profilePath, FileMode.Open);
+                Profile profile = Profile.ReadXml(fs);
+                lock (profiles)
                 {
-                    Profile profile = Profile.ReadXml(fs);
-                    lock (profiles)
-                    {
-                        profiles.Add(profile);
-                    }
+                    profiles.Add(profile);
                 }
             }
             );
@@ -1378,12 +1362,12 @@ namespace Mzinga.Trainer
         {
             if (completed < 0)
             {
-                throw new ArgumentOutOfRangeException("completed");
+                throw new ArgumentOutOfRangeException(nameof(completed));
             }
 
             if (remaining < 0)
             {
-                throw new ArgumentOutOfRangeException("remaining");
+                throw new ArgumentOutOfRangeException(nameof(remaining));
             }
 
             double total = completed + remaining;

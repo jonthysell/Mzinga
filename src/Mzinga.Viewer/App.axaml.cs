@@ -127,28 +127,24 @@ namespace Mzinga.Viewer
 
         private ViewerConfig LoadConfig()
         {
-            using (FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate))
+            using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
+            ViewerConfig viewerConfig = new ViewerConfig();
+            viewerConfig.InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone(); // Create clone to store user values
+
+            try
             {
-                ViewerConfig viewerConfig = new ViewerConfig();
-                viewerConfig.InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone(); // Create clone to store user values
-
-                try
-                {
-                    viewerConfig.LoadConfig(inputStream);
-                }
-                catch (Exception) { }
-
-                return viewerConfig;
+                viewerConfig.LoadConfig(inputStream);
             }
+            catch (Exception) { }
+
+            return viewerConfig;
         }
 
         private void SaveConfig()
         {
-            using (FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create))
-            {
-                AppVM.ViewerConfig.InternalGameEngineConfig.CopyOptionsFrom(InternalGameEngineConfig.GetOptionsClone()); // Repopulate with current engine values
-                AppVM.ViewerConfig.SaveConfig(outputStream);
-            }
+            using FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create);
+            AppVM.ViewerConfig.InternalGameEngineConfig.CopyOptionsFrom(InternalGameEngineConfig.GetOptionsClone()); // Repopulate with current engine values
+            AppVM.ViewerConfig.SaveConfig(outputStream);
         }
 
         private void TextToClipboard(string text)

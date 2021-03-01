@@ -169,17 +169,17 @@ namespace Mzinga.Core.AI
 
             if (maxDepth < 0)
             {
-                throw new ArgumentOutOfRangeException("maxDepth");
+                throw new ArgumentOutOfRangeException(nameof(maxDepth));
             }
 
             if (maxTime < TimeSpan.Zero)
             {
-                throw new ArgumentOutOfRangeException("maxTime");
+                throw new ArgumentOutOfRangeException(nameof(maxTime));
             }
 
             if (maxHelperThreads < 0)
             {
-                throw new ArgumentOutOfRangeException("maxHelperThreads");
+                throw new ArgumentOutOfRangeException(nameof(maxHelperThreads));
             }
 
             if (gameBoard.GameIsOver)
@@ -779,17 +779,17 @@ namespace Mzinga.Core.AI
 
             if (maxDepth < 0)
             {
-                throw new ArgumentOutOfRangeException("maxDepth");
+                throw new ArgumentOutOfRangeException(nameof(maxDepth));
             }
 
             if (maxTime < TimeSpan.Zero)
             {
-                throw new ArgumentOutOfRangeException("maxTime");
+                throw new ArgumentOutOfRangeException(nameof(maxTime));
             }
 
             if (maxHelperThreads < 0)
             {
-                throw new ArgumentOutOfRangeException("maxHelperThreads");
+                throw new ArgumentOutOfRangeException(nameof(maxHelperThreads));
             }
 
             // Make sure we have a clean state

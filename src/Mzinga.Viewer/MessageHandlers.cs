@@ -230,10 +230,8 @@ namespace Mzinga.Viewer
                 if (null != filenames && filenames.Length > 0 && !string.IsNullOrWhiteSpace(filenames[0]))
                 {
                     string fileName = filenames[0].Trim();
-                    using (Stream inputStream = File.OpenRead(fileName))
-                    {
-                        gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
-                    }
+                    using Stream inputStream = File.OpenRead(fileName);
+                    gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
                 }
             }
             catch (Exception ex)
@@ -266,10 +264,8 @@ namespace Mzinga.Viewer
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    using (Stream outputStream = File.OpenWrite(fileName))
-                    {
-                        message.GameRecording.SavePGN(outputStream);
-                    }
+                    using Stream outputStream = File.OpenWrite(fileName);
+                    message.GameRecording.SavePGN(outputStream);
                 }
             }
             catch (Exception ex)

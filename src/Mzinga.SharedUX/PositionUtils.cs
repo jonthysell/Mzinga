@@ -36,7 +36,7 @@ namespace Mzinga.SharedUX
         {
             if (hexRadius < 0)
             {
-                throw new ArgumentOutOfRangeException("hexRadius");
+                throw new ArgumentOutOfRangeException(nameof(hexRadius));
             }
             else if (double.IsInfinity(cursorX) || double.IsInfinity(cursorY) || hexRadius == 0) // No hexes on board
             {

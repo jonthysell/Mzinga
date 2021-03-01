@@ -94,7 +94,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _sendEngineCommand ?? (_sendEngineCommand = new RelayCommand(() =>
+                return _sendEngineCommand ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -111,7 +111,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return IsIdle && !string.IsNullOrWhiteSpace(EngineInputText);
-                }));
+                });
             }
         }
         private RelayCommand _sendEngineCommand = null;
@@ -120,7 +120,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return _cancelEngineCommand ?? (_cancelEngineCommand = new RelayCommand(() =>
+                return _cancelEngineCommand ??= new RelayCommand(() =>
                 {
                     try
                     {
@@ -133,7 +133,7 @@ namespace Mzinga.SharedUX.ViewModel
                 }, () =>
                 {
                     return !IsIdle;
-                }));
+                });
             }
         }
         private RelayCommand _cancelEngineCommand = null;

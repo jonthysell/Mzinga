@@ -39,32 +39,32 @@ namespace Mzinga.Trainer
         {
             if (whiteRating < MinRating)
             {
-                throw new ArgumentOutOfRangeException("whiteRating");
+                throw new ArgumentOutOfRangeException(nameof(whiteRating));
             }
 
             if (blackRating < MinRating)
             {
-                throw new ArgumentOutOfRangeException("blackRating");
+                throw new ArgumentOutOfRangeException(nameof(blackRating));
             }
 
             if (whiteScore < 0.0 || whiteScore > 1.0)
             {
-                throw new ArgumentOutOfRangeException("whiteScore");
+                throw new ArgumentOutOfRangeException(nameof(whiteScore));
             }
 
             if (blackScore < 0.0 || blackScore > 1.0)
             {
-                throw new ArgumentOutOfRangeException("blackScore");
+                throw new ArgumentOutOfRangeException(nameof(blackScore));
             }
 
             if (whiteK <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("whiteK");
+                throw new ArgumentOutOfRangeException(nameof(whiteK));
             }
 
             if (blackK <= 0.0)
             {
-                throw new ArgumentOutOfRangeException("blackK");
+                throw new ArgumentOutOfRangeException(nameof(blackK));
             }
 
             double qWhite = Math.Pow(10, whiteRating / 400.0);
