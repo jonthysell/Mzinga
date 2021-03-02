@@ -33,7 +33,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class ViewerConfigViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -41,7 +41,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -395,9 +395,11 @@ namespace Mzinga.SharedUX.ViewModel
                 {
                     try
                     {
-                        ViewerConfig newConfig = new ViewerConfig();
-                        newConfig.FirstRun = Config.FirstRun;
-                        newConfig.InternalGameEngineConfig = Config.InternalGameEngineConfig;
+                        ViewerConfig newConfig = new ViewerConfig()
+                        {
+                            FirstRun = Config.FirstRun,
+                            InternalGameEngineConfig = Config.InternalGameEngineConfig
+                        };
                         Config = newConfig;
 
                         RaisePropertyChanged(nameof(EngineType));

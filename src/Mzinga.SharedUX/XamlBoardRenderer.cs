@@ -168,13 +168,13 @@ namespace Mzinga.SharedUX
         {
             switch (e.PropertyName)
             {
-                case nameof(VM.Board):
-                case nameof(VM.ValidMoves):
-                case nameof(VM.TargetMove):
-                case nameof(VM.ViewerConfig):
+                case nameof(MainViewModel.Board):
+                case nameof(MainViewModel.ValidMoves):
+                case nameof(MainViewModel.TargetMove):
+                case nameof(MainViewModel.ViewerConfig):
                     AppViewModel.Instance.DoOnUIThread(() =>
                     {
-                        DrawBoard(VM.Board);
+                        DrawBoard(MainViewModel.Board);
                     });
                     break;
             }
@@ -210,15 +210,15 @@ namespace Mzinga.SharedUX
                 WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
                 BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
-                Position lastMoveStart = VM.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.OriginalPosition;
-                Position lastMoveEnd = VM.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Move?.Position;
+                Position lastMoveStart = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.OriginalPosition;
+                Position lastMoveEnd = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Move?.Position;
 
-                PieceName selectedPieceName = VM.AppVM.EngineWrapper.TargetPiece;
-                Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
+                PieceName selectedPieceName = MainViewModel.AppVM.EngineWrapper.TargetPiece;
+                Position targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
 
-                MoveSet validMoves = VM.AppVM.EngineWrapper.ValidMoves;
+                MoveSet validMoves = MainViewModel.AppVM.EngineWrapper.ValidMoves;
 
-                HexOrientation hexOrientation = VM.ViewerConfig.HexOrientation;
+                HexOrientation hexOrientation = MainViewModel.ViewerConfig.HexOrientation;
 
                 // Draw the pieces in play
                 for (int stack = 0; stack <= maxStack; stack++)
@@ -241,9 +241,9 @@ namespace Mzinga.SharedUX
                             Shape hex = GetHex(center, size, hexType, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
-                            bool disabled = VM.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
+                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
 
-                            var hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
                             BoardCanvas.Children.Add(hexText);
 
@@ -262,7 +262,7 @@ namespace Mzinga.SharedUX
                     {
                         BugType bugType = EnumUtils.GetBugType(pieceName);
 
-                        bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
@@ -285,7 +285,7 @@ namespace Mzinga.SharedUX
                     {
                         BugType bugType = EnumUtils.GetBugType(pieceName);
 
-                        bool disabled = VM.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
@@ -300,7 +300,7 @@ namespace Mzinga.SharedUX
                 DrawHand(BlackHandStackPanel, pieceCanvasesByBugType);
 
                 // Highlight last move played
-                if (VM.AppVM.ViewerConfig.HighlightLastMovePlayed)
+                if (MainViewModel.AppVM.ViewerConfig.HighlightLastMovePlayed)
                 {
                     // Highlight the lastMove start position
                     if (null != lastMoveStart)
@@ -328,7 +328,7 @@ namespace Mzinga.SharedUX
                 }
 
                 // Highlight the selected piece
-                if (VM.AppVM.ViewerConfig.HighlightTargetMove)
+                if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
                 {
                     if (selectedPieceName != PieceName.INVALID)
                     {
@@ -348,7 +348,7 @@ namespace Mzinga.SharedUX
                 }
 
                 // Draw the valid moves for that piece
-                if (VM.AppVM.ViewerConfig.HighlightValidMoves)
+                if (MainViewModel.AppVM.ViewerConfig.HighlightValidMoves)
                 {
                     if (selectedPieceName != PieceName.INVALID && null != validMoves)
                     {
@@ -369,7 +369,7 @@ namespace Mzinga.SharedUX
                 }
 
                 // Highlight the target position
-                if (VM.AppVM.ViewerConfig.HighlightTargetMove)
+                if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
                 {
                     if (null != targetPosition)
                     {
@@ -429,7 +429,7 @@ namespace Mzinga.SharedUX
             LastBoard = board;
         }
 
-        private Point Min(Point center, double size, Point minPoint)
+        private static Point Min(Point center, double size, Point minPoint)
         {
             double minX = Math.Min(minPoint.X, center.X - size);
             double minY = Math.Min(minPoint.Y, center.Y - size);
@@ -437,7 +437,7 @@ namespace Mzinga.SharedUX
             return new Point(minX, minY);
         }
 
-        private Point Max(Point center, double size, Point maxPoint)
+        private static Point Max(Point center, double size, Point maxPoint)
         {
             double maxX = Math.Max(maxPoint.X, center.X + size);
             double maxY = Math.Max(maxPoint.Y, center.Y + size);
@@ -469,7 +469,7 @@ namespace Mzinga.SharedUX
             return new Point(x, y);
         }
 
-        private Dictionary<int, List<Piece>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
+        private static Dictionary<int, List<Piece>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
         {
             if (null == board)
             {
@@ -484,8 +484,8 @@ namespace Mzinga.SharedUX
                 [0] = new List<Piece>()
             };
 
-            PieceName targetPieceName = VM.AppVM.EngineWrapper.TargetPiece;
-            Position targetPosition = VM.AppVM.EngineWrapper.TargetPosition;
+            PieceName targetPieceName = MainViewModel.AppVM.EngineWrapper.TargetPiece;
+            Position targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
 
             bool targetPieceInPlay = false;
 
@@ -618,13 +618,13 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create text
             string text = EnumUtils.GetShortName(pieceName).Substring(1);
             TextBlock bugText = new TextBlock
             {
-                Text = VM.ViewerConfig.AddPieceNumbers ? text : text.TrimEnd('1', '2', '3'),
+                Text = MainViewModel.ViewerConfig.AddPieceNumbers ? text : text.TrimEnd('1', '2', '3'),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
@@ -651,7 +651,7 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = VM.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create bug
             Path bugPath = new Path()
@@ -671,13 +671,13 @@ namespace Mzinga.SharedUX
             safeGrid.Children.Add(bugGrid);
 
             // Bug rotation
-            double rotateAngle = VM.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
+            double rotateAngle = MainViewModel.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
 
             if (int.TryParse(pieceName.ToString().Last().ToString(), out int bugNum))
             {
                 rotateAngle += (bugNum - 1) * 60.0;
 
-                if (VM.ViewerConfig.AddPieceNumbers)
+                if (MainViewModel.ViewerConfig.AddPieceNumbers)
                 {
                     // Add bug number
                     TextBlock bugText = new TextBlock
@@ -744,7 +744,7 @@ namespace Mzinga.SharedUX
             {
                 if (pieceCanvases.ContainsKey(bugType))
                 {
-                    if (VM.ViewerConfig.StackPiecesInHand)
+                    if (MainViewModel.ViewerConfig.StackPiecesInHand)
                     {
                         int startingCount = pieceCanvases[bugType].Count;
 
@@ -784,7 +784,7 @@ namespace Mzinga.SharedUX
             HexType hexType = (piece.Color == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Shape hex = GetHex(center, size, hexType, hexOrientation);
-            var hexText = VM.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
             {
@@ -799,7 +799,7 @@ namespace Mzinga.SharedUX
             pieceCanvas.Children.Add(hexText);
 
             // Add highlight if the piece is selected
-            if (VM.AppVM.EngineWrapper.TargetPiece == piece.PieceName)
+            if (MainViewModel.AppVM.EngineWrapper.TargetPiece == piece.PieceName)
             {
                 Shape highlightHex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
                 pieceCanvas.Children.Add(highlightHex);
@@ -817,12 +817,12 @@ namespace Mzinga.SharedUX
                 if (e.InitialPressMouseButton == MouseButton.Left)
                 {
                     PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
-                    VM.PieceClick(clickedPiece);
+                    MainViewModel.PieceClick(clickedPiece);
                     e.Handled = true;
                 }
                 else if (e.InitialPressMouseButton == MouseButton.Right)
                 {
-                    VM.CancelClick();
+                    MainViewModel.CancelClick();
                     e.Handled = true;
                 }
             }
@@ -838,14 +838,14 @@ namespace Mzinga.SharedUX
             }
             else if (e.InitialPressMouseButton == MouseButton.Right)
             {
-                VM.CancelClick();
+                MainViewModel.CancelClick();
                 e.Handled = true;
             }
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            VM.CancelClick();
+            MainViewModel.CancelClick();
         }
 
         private DateTime LastRedrawOnSizeChange = DateTime.Now;

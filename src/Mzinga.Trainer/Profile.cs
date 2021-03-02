@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -317,11 +317,11 @@ namespace Mzinga.Trainer
                                 {
                                     if (EnumUtils.TryParseExpansionPieces(reader["GameType"], out ExpansionPieces ep))
                                     {
-                                        int.TryParse(reader["EloRating"], out records[(int)ep].EloRating);
-                                        int.TryParse(reader["Wins"], out records[(int)ep].Wins);
-                                        int.TryParse(reader["Losses"], out records[(int)ep].Losses);
-                                        int.TryParse(reader["Draws"], out records[(int)ep].Draws);
-                                        int.TryParse(reader["AutoTrains"], out records[(int)ep].AutoTrains);
+                                        _ = int.TryParse(reader["EloRating"], out records[(int)ep].EloRating);
+                                        _ = int.TryParse(reader["Wins"], out records[(int)ep].Wins);
+                                        _ = int.TryParse(reader["Losses"], out records[(int)ep].Losses);
+                                        _ = int.TryParse(reader["Draws"], out records[(int)ep].Draws);
+                                        _ = int.TryParse(reader["AutoTrains"], out records[(int)ep].AutoTrains);
                                     }
                                 }
                                 break;
@@ -383,8 +383,7 @@ namespace Mzinga.Trainer
 
             MetricWeights startMetricWeights = MixMetricWeights(parentA.StartMetricWeights.GetNormalized(), parentB.StartMetricWeights.GetNormalized(), minMix, maxMix);
             MetricWeights endMetricWeights = MixMetricWeights(parentA.EndMetricWeights.GetNormalized(), parentB.EndMetricWeights.GetNormalized(), minMix, maxMix);
-
-            DateTime creationTimestamp = DateTime.Now;
+            _ = DateTime.Now;
 
             return new Profile(id, name, generation, parentA.Id, parentB.Id, startMetricWeights, endMetricWeights);
         }
@@ -435,7 +434,7 @@ namespace Mzinga.Trainer
             return name;
         }
 
-        private static string[][] _syllables = new string[][]
+        private static readonly string[][] _syllables = new string[][]
         {
             new string[] { "Fu", "I", "Je", "Ki", "Ku", "M", "Ma", "Mo", "Na", "Ng", "Sa", "Si", "Ta", "Te", "Ti", "Zu" },
             new string[] { "", "ba", "ha", "hi", "ka", "ki", "ku", "li", "ma", "na", "ni", "si", "ta", "ti", "wa", "ya" },

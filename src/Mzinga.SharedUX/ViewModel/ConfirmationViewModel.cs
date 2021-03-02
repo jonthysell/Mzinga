@@ -40,7 +40,7 @@ namespace Mzinga.SharedUX.ViewModel
 
     public class ConfirmationViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -51,7 +51,7 @@ namespace Mzinga.SharedUX.ViewModel
         }
         #region Properties
 
-        public string Title => "Confirmation";
+        public static string Title => "Confirmation";
 
         public string Message { get; private set; }
 

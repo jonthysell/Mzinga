@@ -51,13 +51,11 @@ namespace Mzinga.Test
             TranspositionTable tt = new TranspositionTable(expectedSizeInBytes);
             Assert.IsNotNull(tt);
 
-            int count = tt.Capacity;
-
             long startMemoryUsage = GC.GetTotalAllocatedBytes(true);
             for (int i = 0; i < tt.Capacity; i++)
             {
                 ulong key = (ulong)i;
-                tt.Store(key, CreateMaxEntry(i));
+                tt.Store(key, CreateMaxEntry());
             }
             long endMemoryUsage = GC.GetTotalAllocatedBytes(true);
 
@@ -89,13 +87,13 @@ namespace Mzinga.Test
                 for (int j = 0; j < tt.Capacity; j++)
                 {
                     ulong key = (ulong)j;
-                    tt.Store(key, CreateMaxEntry(j));
+                    tt.Store(key, CreateMaxEntry());
                 }
 
                 // Replace
                 for (int j = tt.Capacity - 1; j >= 0; j--)
                 {
-                    TranspositionTableEntry newEntry = CreateMaxEntry(j);
+                    TranspositionTableEntry newEntry = CreateMaxEntry();
                     newEntry.Depth++;
                     ulong key = (ulong)j;
                     tt.Store(key, newEntry);
@@ -109,7 +107,7 @@ namespace Mzinga.Test
             Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
         }
 
-        private TranspositionTableEntry CreateMaxEntry(int id)
+        private static TranspositionTableEntry CreateMaxEntry()
         {
             TranspositionTableEntry te = new TranspositionTableEntry
             {

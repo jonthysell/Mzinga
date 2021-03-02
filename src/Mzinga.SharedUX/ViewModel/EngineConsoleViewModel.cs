@@ -35,7 +35,7 @@ namespace Mzinga.SharedUX.ViewModel
     {
         internal static readonly EngineConsoleViewModel Instance = new EngineConsoleViewModel();
 
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private bool _isIdle = true;
 
-        public string EngineOutputText
+        public static string EngineOutputText
         {
             get
             {
@@ -146,7 +146,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(EngineOutputText));
+                    RaisePropertyChanged(nameof(ViewModel.EngineConsoleViewModel.EngineOutputText));
                 });
             };
 

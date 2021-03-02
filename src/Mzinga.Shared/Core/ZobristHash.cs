@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,8 @@ namespace Mzinga.Core
 
         private static ulong _next = 1;
         private static readonly ulong _hashPartByTurnColor = 0;
-        private static ulong[] _hashPartByLastMovedPiece = new ulong[EnumUtils.NumPieceNames];
-        private static Dictionary<Position, ulong>[] _hashPartByPosition = new Dictionary<Position, ulong>[EnumUtils.NumPieceNames];
+        private static readonly ulong[] _hashPartByLastMovedPiece = new ulong[EnumUtils.NumPieceNames];
+        private static readonly Dictionary<Position, ulong>[] _hashPartByPosition = new Dictionary<Position, ulong>[EnumUtils.NumPieceNames];
 
         public ZobristHash()
         {

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ namespace Mzinga.Core
             {
                 if (_items.Count > 0)
                 {
-                    return _items[_items.Count - 1];
+                    return _items[^1];
                 }
 
                 return null;
@@ -62,7 +62,7 @@ namespace Mzinga.Core
             }
         }
 
-        private List<BoardHistoryItem> _items;
+        private readonly List<BoardHistoryItem> _items;
 
         public BoardHistory()
         {
@@ -100,7 +100,7 @@ namespace Mzinga.Core
         {
             if (Count > 0)
             {
-                BoardHistoryItem item = _items[_items.Count - 1];
+                BoardHistoryItem item = _items[^1];
                 _items.Remove(item);
                 return item;
             }

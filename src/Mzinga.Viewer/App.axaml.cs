@@ -42,7 +42,7 @@ namespace Mzinga.Viewer
 {
     public class App : Application
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -128,8 +128,10 @@ namespace Mzinga.Viewer
         private ViewerConfig LoadConfig()
         {
             using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
-            ViewerConfig viewerConfig = new ViewerConfig();
-            viewerConfig.InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone(); // Create clone to store user values
+            ViewerConfig viewerConfig = new ViewerConfig()
+            {
+                InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone() // Create clone to store user values
+            };
 
             try
             {

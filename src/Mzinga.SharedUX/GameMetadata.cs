@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ namespace Mzinga.SharedUX
             }
         }
 
-        private Dictionary<string, string> _optionalTags = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _optionalTags = new Dictionary<string, string>();
 
         #endregion
 
@@ -71,7 +71,7 @@ namespace Mzinga.SharedUX
                 return _moveCommentary;
             }
         }
-        private Dictionary<int, string> _moveCommentary = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _moveCommentary = new Dictionary<int, string>();
 
         #endregion
 

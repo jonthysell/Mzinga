@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -118,7 +118,7 @@ namespace Mzinga.SharedUX
             }
             set
             {
-                _currentGameBoard = value ?? throw new ArgumentNullException();
+                _currentGameBoard = value ?? throw new ArgumentNullException(nameof(value));
 
                 if (GameMode == GameMode.Play)
                 {
@@ -199,7 +199,7 @@ namespace Mzinga.SharedUX
         }
 
         private static readonly int DefaultMaxDepth= 2;
-        private static TimeSpan DefaultMaxTime = TimeSpan.FromSeconds(5.0);
+        private static readonly TimeSpan DefaultMaxTime = TimeSpan.FromSeconds(5.0);
     }
 
     public enum PlayerType

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ namespace Mzinga.Core
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 PlayerColor oldColor = CurrentTurnColor;
 
@@ -129,9 +129,9 @@ namespace Mzinga.Core
             }
         }
 
-        private ZobristHash _zobristHash = new ZobristHash();
+        private readonly ZobristHash _zobristHash = new ZobristHash();
 
-        private BoardMetrics _boardMetrics = new BoardMetrics();
+        private readonly BoardMetrics _boardMetrics = new BoardMetrics();
 
         #endregion
 
@@ -189,7 +189,7 @@ namespace Mzinga.Core
 
         private readonly Piece[] _pieces = new Piece[EnumUtils.NumPieceNames];
 
-        private Dictionary<Position, Piece> _piecesByPosition = new Dictionary<Position, Piece>();
+        private readonly Dictionary<Position, Piece> _piecesByPosition = new Dictionary<Position, Piece>();
 
         #endregion
 
@@ -427,7 +427,7 @@ namespace Mzinga.Core
             return topPiece;
         }
 
-        private Piece GetPieceOnTop(Piece piece)
+        private static Piece GetPieceOnTop(Piece piece)
         {
             while (null != piece.PieceAbove)
             {
@@ -437,7 +437,7 @@ namespace Mzinga.Core
             return piece;
         }
 
-        private Piece GetPieceOnBottom(Piece piece)
+        private static Piece GetPieceOnBottom(Piece piece)
         {
             while (null != piece.PieceBelow)
             {
@@ -491,12 +491,12 @@ namespace Mzinga.Core
             }
         }
 
-        protected bool PieceIsOnTop(Piece targetPiece)
+        protected static bool PieceIsOnTop(Piece targetPiece)
         {
             return (null == targetPiece.PieceAbove);
         }
 
-        protected bool PieceIsOnBottom(Piece targetPiece)
+        protected static bool PieceIsOnBottom(Piece targetPiece)
         {
             return (null == targetPiece.PieceBelow);
         }
@@ -667,7 +667,7 @@ namespace Mzinga.Core
 
         protected int CountNeighbors(PieceName pieceName)
         {
-            return CountNeighbors(GetPiece(pieceName), out int friendlyCount, out int enemyCount);
+            return CountNeighbors(GetPiece(pieceName), out _, out _);
         }
 
         private int CountNeighbors(Piece piece, out int friendlyCount, out int enemyCount)

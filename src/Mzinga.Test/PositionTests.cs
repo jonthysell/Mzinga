@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -272,8 +272,8 @@ namespace Mzinga.Test
 
             for (int i = 0; i < positionStrings.Length; i++)
             {
-                Position parsedPosition = Position.Origin;
-                Assert.IsTrue(Position.TryParse(positionStrings[i], out parsedPosition));
+                _ = Position.Origin;
+                Assert.IsTrue(Position.TryParse(positionStrings[i], out Position parsedPosition));
                 Assert.IsNull(parsedPosition);
             }
         }
@@ -314,8 +314,8 @@ namespace Mzinga.Test
 
             for (int i = 0; i < positionStrings.Length; i++)
             {
-                Position parsedPosition = Position.Origin;
-                Assert.IsFalse(Position.TryParse(positionStrings[i], out parsedPosition));
+                _ = Position.Origin;
+                Assert.IsFalse(Position.TryParse(positionStrings[i], out Position parsedPosition));
                 Assert.IsNull(parsedPosition);
             }
         }
@@ -328,8 +328,8 @@ namespace Mzinga.Test
 
             for (int i = 0; i < coordinates.Length; i++)
             {
-                Position parsedPosition = Position.Origin;
-                Assert.IsFalse(Position.TryParse(positionStrings[i], out parsedPosition));
+                _ = Position.Origin;
+                Assert.IsFalse(Position.TryParse(positionStrings[i], out Position parsedPosition));
                 Assert.IsNull(parsedPosition);
             }
         }
@@ -452,21 +452,22 @@ namespace Mzinga.Test
             }
         }
 
-        private Dictionary<Direction, Position> GetOriginNeighbors()
+        private static Dictionary<Direction, Position> GetOriginNeighbors()
         {
-            Dictionary<Direction, Position> originNeighbors = new Dictionary<Direction, Position>();
-
-            originNeighbors.Add(Direction.Up, new Position(0, 1, -1, 0));
-            originNeighbors.Add(Direction.UpRight, new Position(1, 0, -1, 0));
-            originNeighbors.Add(Direction.DownRight, new Position(1, -1, 0, 0));
-            originNeighbors.Add(Direction.Down, new Position(0, -1, 1, 0));
-            originNeighbors.Add(Direction.DownLeft, new Position(-1, 0, 1, 0));
-            originNeighbors.Add(Direction.UpLeft, new Position(-1, 1, 0, 0));
+            Dictionary<Direction, Position> originNeighbors = new Dictionary<Direction, Position>
+            {
+                { Direction.Up, new Position(0, 1, -1, 0) },
+                { Direction.UpRight, new Position(1, 0, -1, 0) },
+                { Direction.DownRight, new Position(1, -1, 0, 0) },
+                { Direction.Down, new Position(0, -1, 1, 0) },
+                { Direction.DownLeft, new Position(-1, 0, 1, 0) },
+                { Direction.UpLeft, new Position(-1, 1, 0, 0) }
+            };
 
             return originNeighbors;
         }
 
-        private string[] GetPositionStrings(int[][] coordinates, bool skipStack = false)
+        private static string[] GetPositionStrings(int[][] coordinates, bool skipStack = false)
         {
             string[] positionStrings = new string[coordinates.Length];
 
@@ -492,7 +493,7 @@ namespace Mzinga.Test
             return positionStrings;
         }
 
-        private void AssertPositionsAreEqual(Position expected, Position actual)
+        private static void AssertPositionsAreEqual(Position expected, Position actual)
         {
             Assert.IsNotNull(expected);
             Assert.IsNotNull(actual);
@@ -508,7 +509,7 @@ namespace Mzinga.Test
             Assert.AreEqual(expected.R, actual.R);
         }
 
-        private int[][] _validXYZCoordinates = new int[][]
+        private readonly int[][] _validXYZCoordinates = new int[][]
         {
             new int[] { 0, 0, 0, 0},
             new int[] { 1, 0, -1, 0},
@@ -533,7 +534,7 @@ namespace Mzinga.Test
             new int[] { 0, -int.MaxValue, int.MaxValue, int.MaxValue},
         };
 
-        private int[][] _validQRCoordinates = new int[][]
+        private readonly int[][] _validQRCoordinates = new int[][]
         {
             new int[] { 0, 0, 0},
             new int[] { 1, -1, 0},
@@ -558,7 +559,7 @@ namespace Mzinga.Test
             new int[] { 0, int.MaxValue, int.MaxValue},
         };
 
-        private int[][] _invalidXYZCoordinates = new int[][]
+        private readonly int[][] _invalidXYZCoordinates = new int[][]
         {
             new int[] { 1, 0, 0, 0},
             new int[] { 0, 1, 0, 0},
@@ -590,7 +591,7 @@ namespace Mzinga.Test
             new int[] { -int.MaxValue, -int.MaxValue, -int.MaxValue, 0},
         };
 
-        private string[] _invalidPositionStrings = new string[]
+        private readonly string[] _invalidPositionStrings = new string[]
         {
             "0",
             "a",

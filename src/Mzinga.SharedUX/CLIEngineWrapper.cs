@@ -36,7 +36,7 @@ namespace Mzinga.SharedUX
 {
     public sealed class CLIEngineWrapper : EngineWrapper, IDisposable
     {
-        private Process _process;
+        private readonly Process _process;
         private StreamWriter _writer;
 
         public CLIEngineWrapper(string engineCommand) : base()

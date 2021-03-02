@@ -35,7 +35,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class EngineOptionsViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -143,21 +143,21 @@ namespace Mzinga.SharedUX.ViewModel
 
             foreach (EngineOption eo in _originalOptions)
             {
-                if (eo is BooleanEngineOption)
+                if (eo is BooleanEngineOption beo)
                 {
-                    _options.Add(new ObservableBooleanEngineOption((BooleanEngineOption)eo, resetToDefaults));
+                    _options.Add(new ObservableBooleanEngineOption(beo, resetToDefaults));
                 }
-                else if (eo is IntegerEngineOption)
+                else if (eo is IntegerEngineOption ieo)
                 {
-                    _options.Add(new ObservableIntegerEngineOption((IntegerEngineOption)eo, resetToDefaults));
+                    _options.Add(new ObservableIntegerEngineOption(ieo, resetToDefaults));
                 }
-                else if (eo is DoubleEngineOption)
+                else if (eo is DoubleEngineOption deo)
                 {
-                    _options.Add(new ObservableDoubleEngineOption((DoubleEngineOption)eo, resetToDefaults));
+                    _options.Add(new ObservableDoubleEngineOption(deo, resetToDefaults));
                 }
-                else if (eo is EnumEngineOption)
+                else if (eo is EnumEngineOption eeo)
                 {
-                    _options.Add(new ObservableEnumEngineOption((EnumEngineOption)eo, resetToDefaults));
+                    _options.Add(new ObservableEnumEngineOption(eeo, resetToDefaults));
                 }
             }
         }
@@ -170,32 +170,32 @@ namespace Mzinga.SharedUX.ViewModel
 
                 foreach (ObservableEngineOption oeo in Options)
                 {
-                    if (oeo is ObservableBooleanEngineOption)
+                    if (oeo is ObservableBooleanEngineOption obeo)
                     {
-                        if (((BooleanEngineOption)_originalOptions[oeo.Key]).Value != ((ObservableBooleanEngineOption)oeo).Value)
+                        if (((BooleanEngineOption)_originalOptions[oeo.Key]).Value != obeo.Value)
                         {
-                            changedOptions.Add(oeo.Key, ((ObservableBooleanEngineOption)oeo).Value.ToString());
+                            changedOptions.Add(oeo.Key, obeo.Value.ToString());
                         }
                     }
-                    else if (oeo is ObservableIntegerEngineOption)
+                    else if (oeo is ObservableIntegerEngineOption oieo)
                     {
-                        if (((IntegerEngineOption)_originalOptions[oeo.Key]).Value != ((ObservableIntegerEngineOption)oeo).Value)
+                        if (((IntegerEngineOption)_originalOptions[oeo.Key]).Value != oieo.Value)
                         {
-                            changedOptions.Add(oeo.Key, ((ObservableIntegerEngineOption)oeo).Value.ToString());
+                            changedOptions.Add(oeo.Key, oieo.Value.ToString());
                         }
                     }
-                    else if (oeo is ObservableDoubleEngineOption)
+                    else if (oeo is ObservableDoubleEngineOption odeo)
                     {
-                        if (((DoubleEngineOption)_originalOptions[oeo.Key]).Value != ((ObservableDoubleEngineOption)oeo).Value)
+                        if (((DoubleEngineOption)_originalOptions[oeo.Key]).Value != odeo.Value)
                         {
-                            changedOptions.Add(oeo.Key, ((ObservableDoubleEngineOption)oeo).Value.ToString());
+                            changedOptions.Add(oeo.Key, odeo.Value.ToString());
                         }
                     }
-                    else if (oeo is ObservableEnumEngineOption)
+                    else if (oeo is ObservableEnumEngineOption oeeo)
                     {
-                        if (((EnumEngineOption)_originalOptions[oeo.Key]).Value != ((ObservableEnumEngineOption)oeo).Value)
+                        if (((EnumEngineOption)_originalOptions[oeo.Key]).Value != oeeo.Value)
                         {
-                            changedOptions.Add(oeo.Key, ((ObservableEnumEngineOption)oeo).Value);
+                            changedOptions.Add(oeo.Key, oeeo.Value);
                         }
                     }
                 }

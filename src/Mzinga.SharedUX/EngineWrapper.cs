@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -285,11 +285,11 @@ namespace Mzinga.SharedUX
 
         public event EventHandler<TimedCommandProgressEventArgs> TimedCommandProgressUpdated;
 
-        private Queue<Action> _commandCallbacks;
+        private readonly Queue<Action> _commandCallbacks;
 
-        private List<string> _outputLines;
+        private readonly List<string> _outputLines;
 
-        private Queue<string> _inputToProcess;
+        private readonly Queue<string> _inputToProcess;
         private EngineCommand? _currentlyRunningCommand = null;
 
         private CancellationTokenSource _timedCommandCTS = null;
@@ -653,7 +653,7 @@ namespace Mzinga.SharedUX
             }
         }
 
-        private EngineCommand IdentifyCommand(string command)
+        private static EngineCommand IdentifyCommand(string command)
         {
             if (string.IsNullOrWhiteSpace(command))
             {
@@ -731,7 +731,7 @@ namespace Mzinga.SharedUX
             if (null != outputLines && outputLines.Length > 0)
             {
                 firstLine = outputLines[0];
-                lastLine = outputLines[outputLines.Length - 1];
+                lastLine = outputLines[^1];
             }
 
             // Update other properties

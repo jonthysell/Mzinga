@@ -50,7 +50,7 @@ namespace Mzinga.Engine
                 UnixSignal signal = new UnixSignal(Signum.SIGINT);
                 while (!_cts.IsCancellationRequested)
                 {
-                    signal.WaitOne();
+                    signal.WaitOne(SignalTimeoutMS);
                     if (signal.IsSet)
                     {
                         OnSigIntReceived();
@@ -64,6 +64,7 @@ namespace Mzinga.Engine
         public void Stop()
         {
             _cts.Cancel();
+            _task.Wait();
         }
 
         private void OnSigIntReceived()
@@ -81,5 +82,7 @@ namespace Mzinga.Engine
             monitor.Start();
             return monitor;
         }
+
+        private const int SignalTimeoutMS = 50;
     }
 }

@@ -37,7 +37,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class GameMetadataViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -152,26 +152,25 @@ namespace Mzinga.SharedUX.ViewModel
 
         private void LoadTags()
         {
-            _standardTags = new ObservableCollection<ObservableGameMetadataTag>();
+            _standardTags = new ObservableCollection<ObservableGameMetadataTag>
+            {
+                new ObservableGameMetadataStringTag("GameType", EnumUtils.GetExpansionPiecesString(_originalMetadata.GameType)) { CanEdit = false },
 
-            _standardTags.Add(new ObservableGameMetadataStringTag("GameType", EnumUtils.GetExpansionPiecesString(_originalMetadata.GameType)) { CanEdit = false });
+                new ObservableGameMetadataStringTag("Date", _originalMetadata.Date),
+                new ObservableGameMetadataStringTag("Event", _originalMetadata.Event),
+                new ObservableGameMetadataStringTag("Site", _originalMetadata.Site),
+                new ObservableGameMetadataStringTag("Round", _originalMetadata.Round),
+                new ObservableGameMetadataStringTag("White", _originalMetadata.White),
+                new ObservableGameMetadataStringTag("Black", _originalMetadata.Black),
 
-            _standardTags.Add(new ObservableGameMetadataStringTag("Date", _originalMetadata.Date));
-            _standardTags.Add(new ObservableGameMetadataStringTag("Event", _originalMetadata.Event));
-            _standardTags.Add(new ObservableGameMetadataStringTag("Site", _originalMetadata.Site));
-            _standardTags.Add(new ObservableGameMetadataStringTag("Round", _originalMetadata.Round));
-            _standardTags.Add(new ObservableGameMetadataStringTag("White", _originalMetadata.White));
-            _standardTags.Add(new ObservableGameMetadataStringTag("Black", _originalMetadata.Black));
-
-            _standardTags.Add(new ObservableGameMetadataEnumTag("Result", _originalMetadata.Result.ToString(), Enum.GetNames(typeof(BoardState))));
+                new ObservableGameMetadataEnumTag("Result", _originalMetadata.Result.ToString(), Enum.GetNames(typeof(BoardState)))
+            };
 
             _optionalTags = new ObservableCollection<ObservableGameMetadataTag>();
             foreach (KeyValuePair<string, string> kvp in _originalMetadata.OptionalTags)
             {
                 _optionalTags.Add(new ObservableGameMetadataStringTag(kvp.Key, kvp.Value));
             }
-
-
         }
 
         public void ProcessClose()

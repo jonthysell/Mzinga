@@ -28,7 +28,7 @@ namespace Mzinga.SharedUX
 {
     public class SoundUtils
     {
-        public static void PlaySound(GameSound sound)
+        public static void PlaySound(GameSound _)
         {
             // TODO
         }

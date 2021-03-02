@@ -35,7 +35,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class NewGameViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -91,7 +91,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool EnableMosquito
+        public static bool EnableMosquito
         {
             get
             {
@@ -126,7 +126,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool EnableLadybug
+        public static bool EnableLadybug
         {
             get
             {
@@ -161,7 +161,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool EnablePillbug
+        public static bool EnablePillbug
         {
             get
             {

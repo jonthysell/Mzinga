@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ namespace Mzinga.Trainer
             }
             set
             {
-                _settings = value ?? throw new ArgumentNullException();
+                _settings = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
         private TrainerSettings _settings;
@@ -346,8 +346,6 @@ namespace Mzinga.Trainer
             Log("Battle start {0} {1} vs. {2}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), ToString(whiteProfile, gameBoard.ExpansionPieces), ToString(blackProfile, gameBoard.ExpansionPieces));
 
             DateTime battleStart = DateTime.Now;
-            TimeSpan battleElapsed = TimeSpan.Zero;
-
             List<ulong> boardKeys = new List<ulong>();
 
             try
@@ -367,7 +365,7 @@ namespace Mzinga.Trainer
                         }
                     }
 
-                    battleElapsed = DateTime.Now - battleStart;
+                    TimeSpan battleElapsed = DateTime.Now - battleStart;
                     if (battleElapsed > timeLimit)
                     {
                         Log("Battle time-out.");
@@ -1261,7 +1259,7 @@ namespace Mzinga.Trainer
             Log("BuildInitialTables end.");
         }
 
-        private List<Profile> LoadProfiles(string path)
+        private static List<Profile> LoadProfiles(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -1358,7 +1356,7 @@ namespace Mzinga.Trainer
             Console.WriteLine(string.Format("{0} > {1}", ToString(elapsedTime), string.Format(format, args)));
         }
 
-        private void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
+        private static void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)
         {
             if (completed < 0)
             {
@@ -1405,12 +1403,12 @@ namespace Mzinga.Trainer
             };
         }
 
-        private bool IsPuzzleCandidate(BestMoveFoundEventArgs args)
+        private static bool IsPuzzleCandidate(BestMoveFoundEventArgs args)
         {
             return args.Depth % 2 == 1 && double.IsPositiveInfinity(args.Score);
         }
 
-        private string ToString(TimeSpan ts)
+        private static string ToString(TimeSpan ts)
         {
             return ts.Days.ToString() + "." + ts.ToString(@"hh\:mm\:ss");
         }

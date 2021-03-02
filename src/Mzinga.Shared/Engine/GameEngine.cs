@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -632,31 +632,31 @@ namespace Mzinga.Engine
 
             key = key.Trim();
 
-            string defaultValue = "";
-            string value = "";
-            string type = "";
-            string values = "";
+            string defaultValue;
+            string value;
+            string type;
+            string values;
 
             switch (key)
             {
                 case "MaxBranchingFactor":
-                    DefaultConfig.GetMaxBranchingFactorValue(out type, out defaultValue, out values);
+                    DefaultConfig.GetMaxBranchingFactorValue(out _, out defaultValue, out _);
                     Config.GetMaxBranchingFactorValue(out type, out value, out values);
                     break;
                 case "MaxHelperThreads":
-                    DefaultConfig.GetMaxHelperThreadsValue(out type, out defaultValue, out values);
+                    DefaultConfig.GetMaxHelperThreadsValue(out _, out defaultValue, out _);
                     Config.GetMaxHelperThreadsValue(out type, out value, out values);
                     break;
                 case "PonderDuringIdle":
-                    DefaultConfig.GetPonderDuringIdleValue(out type, out defaultValue, out values);
+                    DefaultConfig.GetPonderDuringIdleValue(out _, out defaultValue, out _);
                     Config.GetPonderDuringIdleValue(out type, out value, out values);
                     break;
                 case "TranspositionTableSizeMB":
-                    DefaultConfig.GetTranspositionTableSizeMBValue(out type, out defaultValue, out values);
+                    DefaultConfig.GetTranspositionTableSizeMBValue(out _, out defaultValue, out _);
                     Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
                     break;
                 case "ReportIntermediateBestMoves":
-                    DefaultConfig.GetReportIntermediateBestMovesValue(out type, out defaultValue, out values);
+                    DefaultConfig.GetReportIntermediateBestMovesValue(out _, out defaultValue, out _);
                     Config.GetReportIntermediateBestMovesValue(out type, out value, out values);
                     break;
                 default:
@@ -800,7 +800,7 @@ namespace Mzinga.Engine
         }
 
 #if DEBUG
-        private void Break()
+        private static void Break()
         {
             if (!Debugger.IsAttached)
             {

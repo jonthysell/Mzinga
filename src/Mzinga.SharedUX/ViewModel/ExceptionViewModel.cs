@@ -40,7 +40,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
             private set
             {
-                _exception = value ?? throw new ArgumentNullException();
+                _exception = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
         private Exception _exception;

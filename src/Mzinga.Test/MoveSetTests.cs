@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -346,7 +346,7 @@ namespace Mzinga.Test
             Assert.AreEqual("", ms.ToString());
         }
 
-        private static Move[] _validMovesSorted = new Move[]
+        private static readonly Move[] _validMovesSorted = new Move[]
         {
             Move.Pass,
             new Move(PieceName.WhiteQueenBee, new Position(-1, 0, 1, 0)),
@@ -371,6 +371,6 @@ namespace Mzinga.Test
             new Move(PieceName.BlackSoldierAnt3, new Position(1, 0, -1, 0)),
         };
 
-        private static string _validMovesSortedString = @"PASS;WQ[-1,0,1];WQ[-1,1,0];WQ[0,0,0];WQ[1,-1,0];WQ[1,0,-1];WA3[-1,0,1];WA3[-1,1,0];WA3[0,0,0];WA3[1,-1,0];WA3[1,0,-1];BQ[-1,0,1];BQ[-1,1,0];BQ[0,0,0];BQ[1,-1,0];BQ[1,0,-1];BA3[-1,0,1];BA3[-1,1,0];BA3[0,0,0];BA3[1,-1,0];BA3[1,0,-1]";
+        private static readonly string _validMovesSortedString = @"PASS;WQ[-1,0,1];WQ[-1,1,0];WQ[0,0,0];WQ[1,-1,0];WQ[1,0,-1];WA3[-1,0,1];WA3[-1,1,0];WA3[0,0,0];WA3[1,-1,0];WA3[1,0,-1];BQ[-1,0,1];BQ[-1,1,0];BQ[0,0,0];BQ[1,-1,0];BQ[1,0,-1];BA3[-1,0,1];BA3[-1,1,0];BA3[0,0,0];BA3[1,-1,0];BA3[1,0,-1]";
     }
 }

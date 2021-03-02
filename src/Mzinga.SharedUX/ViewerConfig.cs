@@ -35,7 +35,7 @@ namespace Mzinga.SharedUX
 {
     public class ViewerConfig
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {

@@ -34,7 +34,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class LicensesViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -42,7 +42,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -88,22 +88,22 @@ namespace Mzinga.SharedUX.ViewModel
             };
         }
 
-        private ObservableLicense GetHiveLicense()
+        private static ObservableLicense GetHiveLicense()
         {
             return new ObservableLicense("Hive", "Copyright © 2016 Gen42 Games", "", "Mzinga is in no way associated with or endorsed by Gen42 Games.");
         }
 
-        private ObservableLicense GetMzingaLicense()
+        private static ObservableLicense GetMzingaLicense()
         {
             return new ObservableLicense(AppInfo.Product, AppInfo.Copyright, AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }
 
-        private ObservableLicense GetAvaloniaLicense()
+        private static ObservableLicense GetAvaloniaLicense()
         {
             return new ObservableLicense("Avalonia", "Copyright © .NET Foundation and Contributors", AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }
 
-        private ObservableLicense GetMvvmLightLicense()
+        private static ObservableLicense GetMvvmLightLicense()
         {
             return new ObservableLicense("MVVM Light", "Copyright © 2009-2018 Laurent Bugnion", AppInfo.MitLicenseName, AppInfo.MitLicenseBody);
         }

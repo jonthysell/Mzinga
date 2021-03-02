@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -112,7 +112,7 @@ namespace Mzinga.Core
             throw new ArgumentOutOfRangeException(nameof(nameString));
         }
 
-        public static string[] PieceShortName = new string[]
+        public static readonly string[] PieceShortName = new string[]
         {
             "WQ",
             "WS1",
@@ -312,9 +312,9 @@ namespace Mzinga.Core
             {
                 string[] split = s.Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (split[0] != NoExpansionsString)
+                if (!split[0].Equals(NoExpansionsString, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("GameTypeString must start with Base.", nameof(s));
                 }
 
                 if (split.Length == 2)
@@ -333,7 +333,7 @@ namespace Mzinga.Core
                                 expansionPieces |= ExpansionPieces.Pillbug;
                                 break;
                             default:
-                                throw new ArgumentException();
+                                throw new ArgumentException("GameTypeString only supports expansions M, L, and P.", nameof(s));
 
                         }
                     }

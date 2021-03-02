@@ -56,7 +56,7 @@ namespace Mzinga.Test
                 GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
+                _ = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -80,7 +80,7 @@ namespace Mzinga.Test
                 GameAI ai = GetTestGameAI(gb.ExpansionPieces);
 
                 Stopwatch sw = Stopwatch.StartNew();
-                Move m = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
+                _ = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
                 sw.Stop();
 
                 sum += sw.Elapsed;
@@ -139,7 +139,7 @@ namespace Mzinga.Test
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_BlockWinningMoveIsBestMoveTest.csv");
         }
 
-        private GameBoard GetBoardOnFifthTurn()
+        private static GameBoard GetBoardOnFifthTurn()
         {
             GameBoard gb = new GameBoard();
             GameAI ai = GetTestGameAI(gb.ExpansionPieces);

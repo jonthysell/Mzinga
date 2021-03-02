@@ -38,7 +38,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -150,7 +150,7 @@ namespace Mzinga.SharedUX.ViewModel
         }
         private double _timedCommandProgress = 0.0;
 
-        public bool IsPlayMode
+        public static bool IsPlayMode
         {
             get
             {
@@ -158,7 +158,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool IsReviewMode
+        public static bool IsReviewMode
         {
             get
             {
@@ -166,11 +166,11 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public bool ShowMenu => AppInfo.IsWindows || AppInfo.IsLinux;
+        public static bool ShowMenu => AppInfo.IsWindows || AppInfo.IsLinux;
 
-        public ViewerConfig ViewerConfig => AppVM.ViewerConfig;
+        public static ViewerConfig ViewerConfig => AppVM.ViewerConfig;
 
-        public GameBoard Board
+        public static GameBoard Board
         {
             get
             {
@@ -178,7 +178,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public GameBoard ReviewBoard
+        public static GameBoard ReviewBoard
         {
             get
             {
@@ -228,7 +228,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         #region Status properties
 
-        public string GameState
+        public static string GameState
         {
             get
             {
@@ -257,7 +257,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string ValidMoves
+        public static string ValidMoves
         {
             get
             {
@@ -271,7 +271,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public string TargetMove
+        public static string TargetMove
         {
             get
             {
@@ -303,7 +303,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
                 _canvasHexRadius = value;
@@ -371,7 +371,7 @@ namespace Mzinga.SharedUX.ViewModel
                             try
                             {
                                 AppVM.EngineWrapper.NewGame(settings);
-                                RaisePropertyChanged(nameof(Title));
+                                RaisePropertyChanged(nameof(ViewModel.MainViewModel.Title));
                             }
                             catch (Exception ex)
                             {
@@ -407,7 +407,7 @@ namespace Mzinga.SharedUX.ViewModel
                                 if (null != gameRecording)
                                 {
                                     AppVM.EngineWrapper.LoadGame(gameRecording);
-                                    RaisePropertyChanged(nameof(Title));
+                                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.Title));
                                 }
                             }
                             catch (Exception ex)
@@ -452,7 +452,7 @@ namespace Mzinga.SharedUX.ViewModel
                                     if (IsReviewMode)
                                     {
                                         AppVM.EngineWrapper.CurrentGameSettings.GameRecording.FileName = fileName;
-                                        RaisePropertyChanged(nameof(Title));
+                                        RaisePropertyChanged(nameof(ViewModel.MainViewModel.Title));
                                     }
                                 }));
                             }
@@ -957,8 +957,8 @@ namespace Mzinga.SharedUX.ViewModel
                             {
                                 ViewerConfig.CopyFrom(config);
 
-                                RaisePropertyChanged(nameof(ViewerConfig));
-                                RaisePropertyChanged(nameof(TargetMove));
+                                RaisePropertyChanged(nameof(ViewModel.MainViewModel.ViewerConfig));
+                                RaisePropertyChanged(nameof(ViewModel.MainViewModel.TargetMove));
 
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
@@ -988,12 +988,12 @@ namespace Mzinga.SharedUX.ViewModel
 
         #region Help
 
-        public RelayCommand ShowLicenses => AppVM.ShowLicenses;
+        public static RelayCommand ShowLicenses => AppVM.ShowLicenses;
 
-        public RelayCommand LaunchHiveWebsite => AppVM.LaunchHiveWebsite;
+        public static RelayCommand LaunchHiveWebsite => AppVM.LaunchHiveWebsite;
 
-        public RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
-        public RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
+        public static RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
+        public static RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
 
         #endregion
 
@@ -1003,7 +1003,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(Board));
+                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.Board));
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();
@@ -1016,7 +1016,7 @@ namespace Mzinga.SharedUX.ViewModel
                     MoveToEnd.RaiseCanExecuteChanged();
 
                     FindBestMove.RaiseCanExecuteChanged();
-                    RaisePropertyChanged(nameof(GameState));
+                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.GameState));
 
                     if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
                     {
@@ -1047,7 +1047,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(ValidMoves));
+                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.ValidMoves));
                 });
             };
 
@@ -1055,7 +1055,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(TargetMove));
+                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.TargetMove));
                     PlayTarget.RaiseCanExecuteChanged();
                 });
             };
@@ -1064,7 +1064,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(TargetMove));
+                    RaisePropertyChanged(nameof(ViewModel.MainViewModel.TargetMove));
                     PlayTarget.RaiseCanExecuteChanged();
 
                     if (!ViewerConfig.RequireMoveConfirmation)
@@ -1118,8 +1118,8 @@ namespace Mzinga.SharedUX.ViewModel
 
             AppVM.EngineWrapper.GameModeChanged += (sender, args) =>
             {
-                RaisePropertyChanged(nameof(IsPlayMode));
-                RaisePropertyChanged(nameof(IsReviewMode));
+                RaisePropertyChanged(nameof(ViewModel.MainViewModel.IsPlayMode));
+                RaisePropertyChanged(nameof(ViewModel.MainViewModel.IsReviewMode));
             };
 
             PropertyChanged += MainViewModel_PropertyChanged;
@@ -1160,7 +1160,7 @@ namespace Mzinga.SharedUX.ViewModel
             });
         }
 
-        private void FirstRun()
+        private static void FirstRun()
         {
             AppVM.DoOnUIThread(() =>
             {
@@ -1189,7 +1189,7 @@ namespace Mzinga.SharedUX.ViewModel
                 case nameof(IsReviewMode):
                     AppVM.DoOnUIThread(() =>
                     {
-                        RaisePropertyChanged(nameof(Title));
+                        RaisePropertyChanged(nameof(ViewModel.MainViewModel.Title));
 
                         PlayTarget.RaiseCanExecuteChanged();
                         Pass.RaiseCanExecuteChanged();
@@ -1301,7 +1301,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        internal void PieceClick(PieceName clickedPiece)
+        internal static void PieceClick(PieceName clickedPiece)
         {
             if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
@@ -1314,7 +1314,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        internal void CancelClick()
+        internal static void CancelClick()
         {
             if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {

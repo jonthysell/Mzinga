@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ namespace Mzinga.Test
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Piece_InvalidNewTest()
         {
-            Piece p = new Piece(PieceName.INVALID);
+            _ = new Piece(PieceName.INVALID);
         }
 
         [TestMethod]
@@ -146,7 +146,7 @@ namespace Mzinga.Test
             }
         }
 
-        private void VerifyPieceProperties(Piece actualPiece, PieceName expectedPieceName, Position expectedPosition)
+        private static void VerifyPieceProperties(Piece actualPiece, PieceName expectedPieceName, Position expectedPosition)
         {
             Assert.IsNotNull(actualPiece);
 

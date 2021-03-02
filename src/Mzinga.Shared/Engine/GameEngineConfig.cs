@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -269,7 +269,7 @@ namespace Mzinga.Engine
         public void GetTranspositionTableSizeMBValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (TranspositionTableSizeMB.HasValue ? TranspositionTableSizeMB.Value : TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
+            value = (TranspositionTableSizeMB ?? TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
             values = string.Format("{0};{1}", MinTranspositionTableSizeMB, MaxTranspositionTableSizeMB);
         }
 
@@ -345,7 +345,7 @@ namespace Mzinga.Engine
         public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (MaxBranchingFactor.HasValue ? MaxBranchingFactor.Value : GameAI.MaxMaxBranchingFactor).ToString();
+            value = (MaxBranchingFactor ?? GameAI.MaxMaxBranchingFactor).ToString();
             values = string.Format("{0};{1}", MinMaxBranchingFactor, GameAI.MaxMaxBranchingFactor);
         }
 
@@ -452,12 +452,14 @@ namespace Mzinga.Engine
 
         public GameEngineConfig GetOptionsClone()
         {
-            GameEngineConfig clone = new GameEngineConfig();
-            clone.TranspositionTableSizeMB = TranspositionTableSizeMB;
-            clone._maxHelperThreads = _maxHelperThreads;
-            clone.PonderDuringIdle = PonderDuringIdle;
-            clone.MaxBranchingFactor = MaxBranchingFactor;
-            clone.ReportIntermediateBestMoves = ReportIntermediateBestMoves;
+            GameEngineConfig clone = new GameEngineConfig()
+            {
+                TranspositionTableSizeMB = TranspositionTableSizeMB,
+                _maxHelperThreads = _maxHelperThreads,
+                PonderDuringIdle = PonderDuringIdle,
+                MaxBranchingFactor = MaxBranchingFactor,
+                ReportIntermediateBestMoves = ReportIntermediateBestMoves
+            };
 
             return clone;
         }
@@ -471,7 +473,7 @@ namespace Mzinga.Engine
             ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
         }
 
-        private string GetVersion()
+        private static string GetVersion()
         {
             return Assembly.GetAssembly(typeof(GameEngineConfig)).GetName().Version.ToString();
         }

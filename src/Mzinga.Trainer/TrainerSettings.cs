@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ namespace Mzinga.Trainer
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _profilesPath = value;
             }
@@ -59,7 +59,7 @@ namespace Mzinga.Trainer
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _whiteProfilePath = value;
             }
@@ -76,7 +76,7 @@ namespace Mzinga.Trainer
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _blackProfilePath = value;
             }
@@ -93,7 +93,7 @@ namespace Mzinga.Trainer
             {
                 if (value < CullMinKeepCount && value != CullKeepMax)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _cullKeepCount = value;
             }
@@ -113,7 +113,7 @@ namespace Mzinga.Trainer
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _GenerateCount = value;
             }
@@ -155,7 +155,7 @@ namespace Mzinga.Trainer
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _maxDraws = value;
             }
@@ -172,7 +172,7 @@ namespace Mzinga.Trainer
             {
                 if (value < 1 && value != MaxMaxBattles)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _maxBattles = value;
             }
@@ -191,7 +191,7 @@ namespace Mzinga.Trainer
             {
                 if (value < 1 && value != MaxMaxConcurrentBattles)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _maxConcurrentBattles = value;
             }
@@ -237,7 +237,7 @@ namespace Mzinga.Trainer
             {
                 if (value < MateMinParentCount && value != MateParentMax)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _mateParentCount = value;
             }
@@ -284,7 +284,7 @@ namespace Mzinga.Trainer
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _targetProfilePath = value;
             }
@@ -311,7 +311,7 @@ namespace Mzinga.Trainer
             {
                 if (value < _initialTableDepth && value != MinInitialTableDepth)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
                 _initialTableDepth = value;
             }

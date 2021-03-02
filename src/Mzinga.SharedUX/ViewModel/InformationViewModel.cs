@@ -33,7 +33,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class InformationViewModel : ViewModelBase
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _title = value;
             }
@@ -69,7 +69,7 @@ namespace Mzinga.SharedUX.ViewModel
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    throw new ArgumentNullException();
+                    throw new ArgumentNullException(nameof(value));
                 }
                 _message = value;
             }

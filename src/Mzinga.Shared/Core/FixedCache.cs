@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,8 +63,8 @@ namespace Mzinga.Core
         public CacheMetrics Metrics { get; private set; } = new CacheMetrics();
 #endif
 
-        private Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
-        private LinkedList<TKey> _list;
+        private readonly Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
+        private readonly LinkedList<TKey> _list;
 
         private readonly FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
 

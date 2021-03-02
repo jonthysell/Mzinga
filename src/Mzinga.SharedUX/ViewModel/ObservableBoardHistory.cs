@@ -36,7 +36,7 @@ namespace Mzinga.SharedUX.ViewModel
 {
     public class ObservableBoardHistory : ObservableObject
     {
-        public AppViewModel AppVM
+        public static AppViewModel AppVM
         {
             get
             {
@@ -80,7 +80,7 @@ namespace Mzinga.SharedUX.ViewModel
         internal BoardHistory _boardHistory;
         internal BoardHistory _activeBoardHistory;
 
-        private Action<int> _moveNumberChangedCallback;
+        private readonly Action<int> _moveNumberChangedCallback;
 
         public ObservableBoardHistory(BoardHistory boardHistory, BoardHistory activeBoardHistory = null, Action<int> moveNumberChangedCallback = null)
         {

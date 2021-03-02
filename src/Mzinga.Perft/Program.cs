@@ -40,7 +40,7 @@ namespace Mzinga.Perft
         static uint MaxDepth = uint.MaxValue;
         static bool MultiThreaded = false;
 
-        static CancellationTokenSource PerftCTS = new CancellationTokenSource();
+        static readonly CancellationTokenSource PerftCTS = new CancellationTokenSource();
 
         static void Main(string[] args)
         {

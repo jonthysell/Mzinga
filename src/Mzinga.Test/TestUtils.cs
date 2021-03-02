@@ -152,13 +152,13 @@ namespace Mzinga.Test
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(string.Format("{0} test cases failed:", failedTestCases.Count));
 
-                sb.Append(failMessages.ToString());
+                sb.Append(failMessages);
 
                 Assert.Fail(sb.ToString());
             }
         }
 
-        public static string[] NullOrWhiteSpaceStrings = new string[]
+        public static readonly string[] NullOrWhiteSpaceStrings = new string[]
         {
             null,
             string.Empty,

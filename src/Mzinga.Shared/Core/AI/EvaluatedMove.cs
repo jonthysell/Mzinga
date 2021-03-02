@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -70,9 +70,9 @@ namespace Mzinga.Core.AI
 
         public static bool operator ==(EvaluatedMove a, EvaluatedMove b)
         {
-            if (ReferenceEquals(a, null))
+            if (a is null)
             {
-                return ReferenceEquals(b, null);
+                return b is null;
             }
 
             return a.Equals(b);

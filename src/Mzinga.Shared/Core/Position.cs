@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2015, 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2015, 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,13 +51,13 @@ namespace Mzinga.Core
 
         private Position[] _localCache = null;
 
-        private static Dictionary<Position, Position[]> _sharedCache = new Dictionary<Position, Position[]>();
+        private static readonly Dictionary<Position, Position[]> _sharedCache = new Dictionary<Position, Position[]>();
 
         public Position(int x, int y, int z, uint stack)
         {
             if (x + y + z != 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(x));
             }
 
             Q = x;
@@ -113,7 +113,7 @@ namespace Mzinga.Core
 
         private Position CacheLookup(int index)
         {
-            return CacheLookup(index, out bool createdNew);
+            return CacheLookup(index, out _);
         }
 
         private Position CacheLookup(int index, out bool createdNew)
@@ -253,9 +253,9 @@ namespace Mzinga.Core
 
         public static bool operator ==(Position a, Position b)
         {
-            if (ReferenceEquals(a, null))
+            if (a is null)
             {
-                return ReferenceEquals(b, null);
+                return b is null;
             }
 
             return a.Equals(b);

@@ -68,7 +68,7 @@ namespace Mzinga.SharedUX
 
         public static bool IsCheckingforUpdate { get; private set; }
 
-        public static int TimeoutMS = 3000;
+        internal static int TimeoutMS = 3000;
 
         public const int MaxTimeoutMS = 100000;
 
@@ -200,9 +200,8 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                if (!_longVersion.HasValue)
+                if (!_longVersion.HasValue && VersionUtils.TryParseLongVersion(TagName, out ulong result))
                 {
-                    VersionUtils.TryParseLongVersion(TagName, out ulong result);
                     _longVersion = result;
                 }
                 return _longVersion.Value;
@@ -230,7 +229,7 @@ namespace Mzinga.SharedUX
                 string message = "Unable to update at this time. Please try again later.";
                 if (InnerException is WebException wex)
                 {
-                    message = $"{message} ({wex.Status.ToString()})";
+                    message = $"{message} ({wex.Status})";
                 }
                 return message;
             }

@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2016, 2017, 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2016, 2017, 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,14 +44,14 @@ namespace Mzinga.Core.AI
 
         public TranspositionTable TranspositionTable { get; private set; }
 
-        private TranspositionTable _initialTranspositionTable;
+        private readonly TranspositionTable _initialTranspositionTable;
 
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
 
-        private FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
+        private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private const int BoardScoreCacheSize = 262144;
 
-        private FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>(ValidMovesCacheSize);
+        private readonly FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>(ValidMovesCacheSize);
         private const int ValidMovesCacheSize = 65536;
 
         public GameAI()
@@ -74,11 +74,6 @@ namespace Mzinga.Core.AI
 
             if (config.TranspositionTableSizeMB.HasValue)
             {
-                if (config.TranspositionTableSizeMB.Value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException("config.TranspositionTableSizeMB");
-                }
-
                 TranspositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value * 1024 * 1024);
             }
             else
@@ -88,11 +83,6 @@ namespace Mzinga.Core.AI
 
             if (config.MaxBranchingFactor.HasValue)
             {
-                if (config.MaxBranchingFactor.Value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException("config.MaxBranchingFactor");
-                }
-
                 _maxBranchingFactor = config.MaxBranchingFactor.Value;
             }
 
@@ -421,7 +411,7 @@ namespace Mzinga.Core.AI
             return helperThreads;
         }
 
-        private void EndHelperThreads(Task[] helperThreads, CancellationTokenSource tokenSource)
+        private static void EndHelperThreads(Task[] helperThreads, CancellationTokenSource tokenSource)
         {
             if (null != helperThreads)
             {
@@ -899,7 +889,7 @@ namespace Mzinga.Core.AI
             deltaEnd = de;
         }
 
-        private MetricWeights GetGradient(BoardMetrics boardMetrics)
+        private static MetricWeights GetGradient(BoardMetrics boardMetrics)
         {
             MetricWeights gradient = new MetricWeights();
 
@@ -921,7 +911,7 @@ namespace Mzinga.Core.AI
             return gradient;
         }
 
-        private double TruncateBounds(double value)
+        private static double TruncateBounds(double value)
         {
             if (double.IsPositiveInfinity(value))
             {

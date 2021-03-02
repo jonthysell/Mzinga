@@ -4,7 +4,7 @@
 // Author:
 //       Jon Thysell <thysell@gmail.com>
 // 
-// Copyright (c) 2018, 2019 Jon Thysell <http://jonthysell.com>
+// Copyright (c) 2018, 2019, 2021 Jon Thysell <http://jonthysell.com>
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -235,16 +235,12 @@ namespace Mzinga.SharedUX
 
         private static KeyValuePair<string, string> ParsePGNTag(string line)
         {
-            string key = "";
-            string value = "";
-
             line = line.TrimStart('[').TrimEnd(']');
 
             int spaceIndex = line.IndexOf(' ');
 
-            key = line.Substring(0, spaceIndex).Trim();
-            value = line.Substring(spaceIndex).Replace("\"", "").Trim();
-
+            string key = line.Substring(0, spaceIndex).Trim();
+            string value = line.Substring(spaceIndex).Replace("\"", "").Trim();
             return new KeyValuePair<string, string>(key, value);
         }
 
@@ -333,10 +329,10 @@ namespace Mzinga.SharedUX
                         else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                         {
                             // Initial parse
-                            string movingPiece = m.Groups[m.Groups.Count - 3].Value.ToLower();
-                            string destination = m.Groups[m.Groups.Count - 1].Value.ToLower().Replace("\\\\", "\\");
+                            string movingPiece = m.Groups[^3].Value.ToLower();
+                            string destination = m.Groups[^1].Value.ToLower().Replace("\\\\", "\\");
 
-                            string backupPos = m.Groups[m.Groups.Count - 2].Value;
+                            string backupPos = m.Groups[^2].Value;
 
                             // Remove unnecessary numbers
                             movingPiece = movingPiece.Replace("m1", "m").Replace("l1", "l").Replace("p1", "p");

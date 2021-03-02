@@ -174,8 +174,10 @@ namespace Mzinga.SharedUX.ViewModel
                 throw new NotSupportedException();
             }
 
-            Instance = new AppViewModel(parameters);
-            Instance.MainVM = new MainViewModel();
+            Instance = new AppViewModel(parameters)
+            {
+                MainVM = new MainViewModel()
+            };
         }
 
         private AppViewModel(AppViewModelParameters parameters)
@@ -187,9 +189,9 @@ namespace Mzinga.SharedUX.ViewModel
 
             ProgramTitle = parameters.ProgramTitle;
             FullVersion = parameters.FullVersion;
-            ViewerConfig = parameters.ViewerConfig ?? throw new ArgumentNullException(nameof(parameters.ViewerConfig));
-            DoOnUIThread = parameters.DoOnUIThread ?? throw new ArgumentNullException(nameof(parameters.DoOnUIThread));
-            TextToClipboard = parameters.TextToClipboard ?? throw new ArgumentNullException(nameof(parameters.TextToClipboard));
+            ViewerConfig = parameters.ViewerConfig;
+            DoOnUIThread = parameters.DoOnUIThread;
+            TextToClipboard = parameters.TextToClipboard;
             EngineWrapper = parameters.EngineWrapper;
             InternalGameEngineConfig = parameters.InternalGameEngineConfig;
 
@@ -217,16 +219,56 @@ namespace Mzinga.SharedUX.ViewModel
     }
 
     public delegate void DoOnUIThread(Action action);
+
     public delegate void TextToClipboard(string text);
 
     public class AppViewModelParameters
     {
         public string ProgramTitle;
+
         public string FullVersion;
-        public ViewerConfig ViewerConfig;
-        public DoOnUIThread DoOnUIThread;
-        public TextToClipboard TextToClipboard;
+
+        public ViewerConfig ViewerConfig
+        {
+            get
+            {
+                return _viewerConfig;
+            }
+            set
+            {
+                _viewerConfig = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+        private ViewerConfig _viewerConfig;
+
+        public DoOnUIThread DoOnUIThread
+        {
+            get
+            {
+                return _doOnUIThread;
+            }
+            set
+            {
+                _doOnUIThread = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+        private DoOnUIThread _doOnUIThread;
+
+        public TextToClipboard TextToClipboard
+        {
+            get
+            {
+                return _textToClipboard;
+            }
+            set
+            {
+                _textToClipboard = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+        private TextToClipboard _textToClipboard;
+
         public EngineWrapper EngineWrapper;
+
         public GameEngineConfig InternalGameEngineConfig;
     }
 }
