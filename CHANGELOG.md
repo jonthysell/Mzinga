@@ -1,5 +1,12 @@
 # Mzinga ChangeLog #
 
+## v0.10.1 ##
+
+* Core: Fixed missing valid Spider moves
+* Engine: Perft calculations are no longer parallelized
+* Perft: Calculations can be parallelized with "-mt" flag
+* Internal code cleanup
+
 ## v0.10 ##
 
 * Ported projects to .NET 5
