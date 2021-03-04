@@ -151,10 +151,10 @@ namespace Mzinga.SharedUX.ViewModel
                 throw new NotSupportedException();
             }
 
-            Instance = new AppViewModel(parameters)
-            {
-                MainVM = new MainViewModel()
-            };
+#pragma warning disable IDE0017 // Simplify object initialization
+            Instance = new AppViewModel(parameters);
+#pragma warning restore IDE0017 // Simplify object initialization
+            Instance.MainVM = new MainViewModel();
         }
 
         private AppViewModel(AppViewModelParameters parameters)
