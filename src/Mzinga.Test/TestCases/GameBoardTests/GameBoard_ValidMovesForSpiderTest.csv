@@ -1,2 +1,5 @@
 ﻿# Valid Placements
 Base;InProgress;White[2];wS1;bS1 wS1-	wS2 \wS1;wS2 /wS1;wS2 -wS1
+
+# Issue #102
+Base;InProgress;White[5]; wA1; bG1 -wA1; wB1 wA1/; bA1 -bG1; wQ \wB1; bQ \bA1; wS1 \wQ; bS1 bQ/	wS1 wB1-;wS1 \bS1;wS1 bS1\;wS1 /wQ

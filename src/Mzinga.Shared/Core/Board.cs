@@ -965,24 +965,20 @@ namespace Mzinga.Core
 
         private MoveSet GetValidSpiderMovements(Piece targetPiece)
         {
-            // Get all slides up to 2 spots away
-            MoveSet upToTwo = GetValidSlides(targetPiece, 2);
+            MoveSet validMoves = new MoveSet();
 
-            if (upToTwo.Count > 0)
+            // Get all slides up to 3 spots away
+            MoveSet upToThree = GetValidSlides(targetPiece, 3);
+
+            foreach (Move move in upToThree)
             {
-                // Get all slides up to 3 spots away
-                MoveSet upToThree = GetValidSlides(targetPiece, 3);
-
-                if (upToThree.Count > 0)
+                if (CanSlideToPositionInExactRange(targetPiece, move.Position, 3))
                 {
-                    // Get all slides ONLY 3 spots away
-                    upToThree.Remove(upToTwo);
-
-                    return upToThree;
+                    validMoves.Add(move);
                 }
             }
 
-            return MoveSet.EmptySet;
+            return validMoves;
         }
 
         private MoveSet GetValidBeetleMovements(Piece targetPiece)
@@ -1253,6 +1249,53 @@ namespace Mzinga.Core
                     }
                 }
             }
+        }
+
+        private bool CanSlideToPositionInExactRange(Piece targetPiece, Position targetPosition, int targetRange)
+        {
+            Position startingPosition = targetPiece.Position;
+
+            MovePiece(targetPiece, null, false);
+            bool result = CanSlideToPositionInExactRange(targetPiece.PieceName, targetPosition, null, startingPosition, 0, targetRange);
+            MovePiece(targetPiece, startingPosition, false);
+
+            return result;
+        }
+
+        private bool CanSlideToPositionInExactRange(PieceName target, Position targetPosition, Position lastPosition, Position currentPosition, int currentRange, int targetRange)
+        {
+            bool result = false;
+            if (currentRange < targetRange)
+            {
+                for (int slideDirection = 0; slideDirection < EnumUtils.NumDirections; slideDirection++)
+                {
+                    Position slidePosition = currentPosition.NeighborAt(slideDirection);
+
+                    if (slidePosition != lastPosition && !HasPieceAt(slidePosition))
+                    {
+                        // Slide position is open
+
+                        int right = EnumUtils.RightOf(slideDirection);
+                        int left = EnumUtils.LeftOf(slideDirection);
+
+                        if (HasPieceAt(currentPosition.NeighborAt(right)) != HasPieceAt(currentPosition.NeighborAt(left)))
+                        {
+                            // Can slide into slide position
+
+                            if (targetPosition == slidePosition && currentRange + 1 == targetRange)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                result = result || CanSlideToPositionInExactRange(target, targetPosition, currentPosition, slidePosition, currentRange + 1, targetRange);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         protected bool CanMoveWithoutBreakingHive(Piece targetPiece)
