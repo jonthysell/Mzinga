@@ -35,8 +35,6 @@
 
   <Import Project="..\Mzinga.SharedUX\Mzinga.SharedUX.projitems" Label="Shared" />
 
-  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
-
   <ItemGroup>
     <TrimmerRootAssembly Include="System.ComponentModel.EventBasedAsync" />
     <TrimmerRootAssembly Include="System.Text.Json" />
@@ -50,4 +48,8 @@
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
    </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mzinga\Mzinga.csproj" />
+  </ItemGroup>
 </Project>

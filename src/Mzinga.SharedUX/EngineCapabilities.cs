@@ -9,7 +9,9 @@ namespace Mzinga.SharedUX
 {
     public class EngineCapabilities
     {
-        public ExpansionPieces ExpansionPieces { get; private set; } = ExpansionPieces.None;
+        public readonly bool Mosquito = false;
+        public readonly bool Ladybug = false;
+        public readonly bool Pillbug = false;
 
         public EngineCapabilities(string capabilitiesString)
         {
@@ -22,13 +24,13 @@ namespace Mzinga.SharedUX
                         switch (capabilityString.ToLower())
                         {
                             case "mosquito":
-                                ExpansionPieces |= ExpansionPieces.Mosquito;
+                                Mosquito = true;
                                 break;
                             case "ladybug":
-                                ExpansionPieces |= ExpansionPieces.Ladybug;
+                                Ladybug = true;
                                 break;
                             case "pillbug":
-                                ExpansionPieces |= ExpansionPieces.Pillbug;
+                                Pillbug = true;
                                 break;
                         }                       
                     }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
-    public class CacheMetricsSet
+    class CacheMetricsSet
     {
         public CacheMetrics this[string name]
         {
@@ -15,7 +15,7 @@ namespace Mzinga.Core
             }
         }
 
-        private Dictionary<string, CacheMetrics> _cacheMetrics;
+        private readonly Dictionary<string, CacheMetrics> _cacheMetrics = new Dictionary<string, CacheMetrics>();
 
         public CacheMetricsSet()
         {
@@ -24,12 +24,12 @@ namespace Mzinga.Core
 
         public void Reset()
         {
-            _cacheMetrics = new Dictionary<string, CacheMetrics>();
+            _cacheMetrics.Clear();
         }
 
         private CacheMetrics GetCacheMetrics(string name)
         {
-            if (!_cacheMetrics.TryGetValue(name, out CacheMetrics cm))
+            if (!_cacheMetrics.TryGetValue(name, out CacheMetrics? cm))
             {
                 cm = new CacheMetrics();
                 _cacheMetrics.Add(name, cm);

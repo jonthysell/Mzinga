@@ -147,7 +147,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public static ViewerConfig ViewerConfig => AppVM.ViewerConfig;
 
-        public static GameBoard Board
+        public static Board Board
         {
             get
             {
@@ -155,7 +155,7 @@ namespace Mzinga.SharedUX.ViewModel
             }
         }
 
-        public static GameBoard ReviewBoard
+        public static Board ReviewBoard
         {
             get
             {
@@ -225,7 +225,7 @@ namespace Mzinga.SharedUX.ViewModel
                             state = "Black has won the game.";
                             break;
                         default:
-                            state = (Board.CurrentTurnColor == PlayerColor.White) ? "It's white's turn." : "It's black's turn.";
+                            state = (Board.CurrentColor == PlayerColor.White) ? "It's white's turn." : "It's black's turn.";
                             break;
                     }
                 }
@@ -255,11 +255,11 @@ namespace Mzinga.SharedUX.ViewModel
                 string move = "";
                 if (null != AppVM.EngineWrapper.TargetMove)
                 {
-                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpaceMoveString(Board, AppVM.EngineWrapper.TargetMove) : AppVM.EngineWrapper.TargetMove.ToString();
+                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? Board.GetMoveString(AppVM.EngineWrapper.TargetMove.Value) : AppVM.EngineWrapper.TargetMove.ToString();
                 }
                 else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
-                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.ToBoardSpacePieceName(AppVM.EngineWrapper.TargetPiece) : EnumUtils.GetShortName(AppVM.EngineWrapper.TargetPiece);
+                    move = AppVM.EngineWrapper.TargetPiece.ToString();
                 }
 
                 return move;
@@ -694,7 +694,7 @@ namespace Mzinga.SharedUX.ViewModel
                             {
                                 if (confirmed)
                                 {
-                                    string activeGameString = Board.ToGameString();
+                                    string activeGameString = Board.GetGameString();
 
                                     Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, false, (settings) =>
                                     {
@@ -1236,13 +1236,13 @@ namespace Mzinga.SharedUX.ViewModel
                 // Make sure the first move is on the origin, no matter what
                 if (Board.BoardState == BoardState.NotStarted && AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
-                    if (AppVM.EngineWrapper.TargetPosition == Position.Origin)
+                    if (AppVM.EngineWrapper.TargetPosition == Position.OriginPosition)
                     {
                         AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
                     }
                     else
                     {
-                        clickedPosition = Position.Origin;
+                        clickedPosition = Position.OriginPosition;
                     }
                 }
 
@@ -1262,7 +1262,7 @@ namespace Mzinga.SharedUX.ViewModel
                     else
                     {
                         // Get the move with the clicked position
-                        Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, clickedPosition);
+                        Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, Board.GetPosition(AppVM.EngineWrapper.TargetPiece), clickedPosition);
                         if (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove))
                         {
                             // Move is selectable, select position

@@ -7,25 +7,13 @@ using System.Text;
 
 namespace Mzinga.Core.AI
 {
-    internal class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
+    class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
     {
-        public int Count
-        {
-            get
-            {
-                return _evaluatedMoves.Count;
-            }
-        }
+        public int Count => _evaluatedMoves.Count;
 
-        public EvaluatedMove this[int index]
-        {
-            get
-            {
-                return _evaluatedMoves[index];
-            }
-        }
+        public EvaluatedMove this[int index] => _evaluatedMoves[index];
 
-        public EvaluatedMove BestMove
+        public EvaluatedMove? BestMove
         {
             get
             {
@@ -38,12 +26,9 @@ namespace Mzinga.Core.AI
             }
         }
 
-        private readonly List<EvaluatedMove> _evaluatedMoves;
+        private readonly List<EvaluatedMove> _evaluatedMoves = new List<EvaluatedMove>();
 
-        public EvaluatedMoveCollection()
-        {
-            _evaluatedMoves = new List<EvaluatedMove>();
-        }
+        public EvaluatedMoveCollection() { }
 
         public EvaluatedMoveCollection(IEnumerable<EvaluatedMove> evaluatedMoves, bool resort) : this()
         {

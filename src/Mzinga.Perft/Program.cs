@@ -13,7 +13,7 @@ namespace Mzinga.Perft
 {
     public class Program
     {
-        static ExpansionPieces GameType = ExpansionPieces.None;
+        static GameType GameType = GameType.Base;
         static uint MaxDepth = uint.MaxValue;
         static bool MultiThreaded = false;
 
@@ -59,7 +59,7 @@ namespace Mzinga.Perft
 
             Console.ForegroundColor = oldColor;
 
-            if (null != ex.InnerException)
+            if (ex.InnerException is not null)
             {
                 PrintException(ex.InnerException);
             }
@@ -73,11 +73,11 @@ namespace Mzinga.Perft
 
         static void ParseArgs(string[] args)
         {
-            if (null != args)
+            if (args is not null)
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    if (EnumUtils.TryParseExpansionPieces(args[i], out ExpansionPieces gameType))
+                    if (Enums.TryParse(args[i], out GameType gameType))
                     {
                         GameType = gameType;
                     }
@@ -97,12 +97,12 @@ namespace Mzinga.Perft
         {
             CancellationToken token = PerftCTS.Token;
 
-            GameBoard gameBoard = new GameBoard(GameType);
+            var board = new Board(GameType);
 
             for (int depth = 0; depth <= MaxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = MultiThreaded ? gameBoard.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token) : gameBoard.CalculatePerftAsync(depth, token);
+                Task<long?> task = MultiThreaded ? board.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token) : board.CalculatePerftAsync(depth, token);
                 task.Wait();
                 sw.Stop();
 

@@ -27,7 +27,7 @@ namespace Mzinga.SharedUX.ViewModel
 
         public EngineWrapper EngineWrapper { get; private set; }
 
-        public GameEngineConfig InternalGameEngineConfig { get; private set; }
+        public EngineConfig InternalEngineConfig { get; private set; }
 
         public Exception EngineExceptionOnStart { get; private set; } = null;
 
@@ -170,7 +170,7 @@ namespace Mzinga.SharedUX.ViewModel
             DoOnUIThread = parameters.DoOnUIThread;
             TextToClipboard = parameters.TextToClipboard;
             EngineWrapper = parameters.EngineWrapper;
-            InternalGameEngineConfig = parameters.InternalGameEngineConfig;
+            InternalEngineConfig = parameters.InternalEngineConfig;
 
             try
             {
@@ -186,12 +186,12 @@ namespace Mzinga.SharedUX.ViewModel
             if (null == EngineWrapper)
             {
                 // No engine started, use an internal one
-                EngineWrapper = new InternalEngineWrapper($"{ProgramTitle} v{FullVersion}", InternalGameEngineConfig);
+                EngineWrapper = new InternalEngineWrapper($"{ProgramTitle} v{FullVersion}", InternalEngineConfig);
                 EngineWrapper.StartEngine();
             }
 
             // Now that the engine is started, load user options from viewer config
-            InternalGameEngineConfig.CopyOptionsFrom(ViewerConfig.InternalGameEngineConfig);
+            InternalEngineConfig.CopyOptionsFrom(ViewerConfig.InternalEngineConfig);
         }
     }
 
@@ -246,6 +246,6 @@ namespace Mzinga.SharedUX.ViewModel
 
         public EngineWrapper EngineWrapper;
 
-        public GameEngineConfig InternalGameEngineConfig;
+        public EngineConfig InternalEngineConfig;
     }
 }

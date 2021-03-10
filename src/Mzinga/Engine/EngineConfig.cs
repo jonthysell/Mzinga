@@ -12,7 +12,7 @@ using Mzinga.Core.AI;
 
 namespace Mzinga.Engine
 {
-    public class GameEngineConfig
+    public class EngineConfig
     {
         #region GameAI
 
@@ -34,18 +34,16 @@ namespace Mzinga.Engine
 
         public bool ReportIntermediateBestMoves { get; private set; } = false;
 
-        public Dictionary<ExpansionPieces, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<ExpansionPieces, MetricWeights[]>();
-
-        public Dictionary<ExpansionPieces, TranspositionTable> InitialTranspositionTables { get; private set; } = new Dictionary<ExpansionPieces, TranspositionTable>();
+        public Dictionary<GameType, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<GameType, MetricWeights[]>();
 
         #endregion
 
-        public GameEngineConfig()
+        public EngineConfig()
         {
 
         }
 
-        public GameEngineConfig(Stream inputStream) : this()
+        public EngineConfig(Stream inputStream) : this()
         {
             LoadConfig(inputStream);
         }
@@ -76,16 +74,11 @@ namespace Mzinga.Engine
 
         public void LoadGameAIConfig(XmlReader reader)
         {
-            if (null == reader)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
-
             while (reader.Read())
             {
                 if (reader.IsStartElement())
                 {
-                    ExpansionPieces expansionPieces = EnumUtils.ParseExpansionPieces(reader["GameType"]);
+                    _ = Enums.TryParse(reader["GameType"] ?? "", out GameType gameType);
                     
                     switch (reader.Name)
                     {
@@ -105,17 +98,14 @@ namespace Mzinga.Engine
                             ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
                             break;
                         case "MetricWeights":
-                            SetStartMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
-                            SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetStartMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetEndMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "StartMetricWeights":
-                            SetStartMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
+                            SetStartMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                         case "EndMetricWeights":
-                            SetEndMetricWeights(expansionPieces, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
-                            break;
-                        case "InitialTranspositionTable":
-                            SetInitialTranspositionTable(expansionPieces, TranspositionTable.ReadTranspositionTableXml(reader.ReadSubtree()));
+                            SetEndMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                     }
                 }
@@ -146,7 +136,7 @@ namespace Mzinga.Engine
             using XmlWriter writer = XmlWriter.Create(outputStream, settings);
             writer.WriteStartElement(rootName);
 
-            writer.WriteAttributeString("version", GetVersion());
+            writer.WriteAttributeString("version", AppInfo.Version);
             writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
             SaveGameAIConfig(writer, "GameAI", configSaveType);
@@ -200,31 +190,20 @@ namespace Mzinga.Engine
 
             if (configSaveType.HasFlag(ConfigSaveType.MetricWeights))
             {
-                foreach (KeyValuePair<ExpansionPieces, MetricWeights[]> kvp in MetricWeightSet)
+                foreach (KeyValuePair<GameType, MetricWeights[]> kvp in MetricWeightSet)
                 {
-                    ExpansionPieces gameType = kvp.Key;
+                    GameType gameType = kvp.Key;
                     MetricWeights[] mw = kvp.Value;
 
-                    if (null != mw[0] && null != mw[1])
+                    if (mw[0] is not null && mw[1] is not null)
                     {
                         mw[0].WriteMetricWeightsXml(writer, "StartMetricWeights", gameType);
                         mw[1].WriteMetricWeightsXml(writer, "EndMetricWeights", gameType);
                     }
-                    else if (null != mw[0] && null == mw[1])
+                    else if (mw[0] is not null && mw[1] is null)
                     {
                         mw[0].WriteMetricWeightsXml(writer, gameType: gameType);
                     }
-                }
-            }
-
-            if (configSaveType.HasFlag(ConfigSaveType.InitialTranspositionTable))
-            {
-                foreach (KeyValuePair<ExpansionPieces, TranspositionTable> kvp in InitialTranspositionTables)
-                {
-                    ExpansionPieces gameType = kvp.Key;
-                    TranspositionTable tt = kvp.Value;
-
-                    tt?.WriteTranspositionTableXml(writer, "InitialTranspositionTable", gameType);
                 }
             }
 
@@ -341,40 +320,40 @@ namespace Mzinga.Engine
             values = "";
         }
 
-        private void SetStartMetricWeights(ExpansionPieces expansionPieces, MetricWeights metricWeights)
+        private void SetStartMetricWeights(GameType gameType, MetricWeights metricWeights)
         {
-            if (!MetricWeightSet.ContainsKey(expansionPieces))
+            if (!MetricWeightSet.ContainsKey(gameType))
             {
-                MetricWeightSet.Add(expansionPieces, new MetricWeights[2]);
+                MetricWeightSet.Add(gameType, new MetricWeights[2]);
             }
 
-            MetricWeightSet[expansionPieces][0] = metricWeights;
+            MetricWeightSet[gameType][0] = metricWeights;
         }
 
-        private void SetEndMetricWeights(ExpansionPieces expansionPieces, MetricWeights metricWeights)
+        private void SetEndMetricWeights(GameType gameType, MetricWeights metricWeights)
         {
-            if (!MetricWeightSet.ContainsKey(expansionPieces))
+            if (!MetricWeightSet.ContainsKey(gameType))
             {
-                MetricWeightSet.Add(expansionPieces, new MetricWeights[2]);
+                MetricWeightSet.Add(gameType, new MetricWeights[2]);
             }
 
-            MetricWeightSet[expansionPieces][1] = metricWeights;
+            MetricWeightSet[gameType][1] = metricWeights;
         }
 
-        public MetricWeights[] GetMetricWeights(ExpansionPieces expansionPieces)
+        public MetricWeights[] GetMetricWeights(GameType expansionPieces)
         {
 
             // Start with the weights for the base game type
-            if (!MetricWeightSet.TryGetValue(ExpansionPieces.None, out MetricWeights[] result))
+            if (!MetricWeightSet.TryGetValue(GameType.Base, out MetricWeights[]? result))
             {
                 // No base game type, start with nulls
                 result = new MetricWeights[2];
             }
 
-            if (expansionPieces != ExpansionPieces.None)
+            if (expansionPieces != GameType.Base)
             {
                 // Try to get weights specific to this game type
-                if (MetricWeightSet.TryGetValue(expansionPieces, out MetricWeights[] mw))
+                if (MetricWeightSet.TryGetValue(expansionPieces, out MetricWeights[]? mw))
                 {
                     result[0] = mw[0] ?? result[0];
                     result[1] = mw[1] ?? result[1];
@@ -384,52 +363,43 @@ namespace Mzinga.Engine
             return result;
         }
 
-        private void SetInitialTranspositionTable(ExpansionPieces expansionPieces, TranspositionTable transpositionTable)
+        public GameAI GetGameAI(GameType gameType)
         {
-            InitialTranspositionTables[expansionPieces] = transpositionTable;
-        }
-
-        public TranspositionTable GetInitialTranspositionTable(ExpansionPieces expansionPieces)
-        {
-            if (!InitialTranspositionTables.TryGetValue(expansionPieces, out TranspositionTable result))
-            {
-                result = null;
-            }
-
-            return result;
-        }
-
-        public GameAI GetGameAI(ExpansionPieces expansionPieces)
-        {
-            MetricWeights[] mw = GetMetricWeights(expansionPieces);
+            MetricWeights[] mw = GetMetricWeights(gameType);
 
             return new GameAI(new GameAIConfig()
             {
                 StartMetricWeights = mw[0],
                 EndMetricWeights = mw[0] ?? mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
-                TranspositionTableSizeMB = TranspositionTableSizeMB,
-                InitialTranspositionTable = GetInitialTranspositionTable(expansionPieces),
+                TranspositionTableSizeMB = TranspositionTableSizeMB
             });
         }
 
-        public static GameEngineConfig GetDefaultEngineConfig()
+        public static EngineConfig GetDefaultEngineConfig()
         {
-            foreach (string resourceName in Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceNames())
+            var assembly = Assembly.GetAssembly(typeof(EngineConfig));
+            if (assembly is not null)
             {
-                if (resourceName.EndsWith("DefaultEngineConfig.xml"))
+                foreach (string resourceName in assembly.GetManifestResourceNames())
                 {
-                    using Stream inputStream = Assembly.GetAssembly(typeof(GameEngineConfig)).GetManifestResourceStream(resourceName);
-                    return new GameEngineConfig(inputStream);
+                    if (resourceName.EndsWith("DefaultEngineConfig.xml"))
+                    {
+                        using Stream? inputStream = assembly.GetManifestResourceStream(resourceName);
+                        if (inputStream is not null)
+                        {
+                            return new EngineConfig(inputStream);
+                        }
+                    }
                 }
             }
 
-            return null;
+            throw new Exception("Unable to load embedded DefaultEngineConfig.xml.");
         }
 
-        public GameEngineConfig GetOptionsClone()
+        public EngineConfig GetOptionsClone()
         {
-            GameEngineConfig clone = new GameEngineConfig()
+            EngineConfig clone = new EngineConfig()
             {
                 TranspositionTableSizeMB = TranspositionTableSizeMB,
                 _maxHelperThreads = _maxHelperThreads,
@@ -441,18 +411,13 @@ namespace Mzinga.Engine
             return clone;
         }
 
-        public void CopyOptionsFrom(GameEngineConfig other)
+        public void CopyOptionsFrom(EngineConfig other)
         {
             TranspositionTableSizeMB = other.TranspositionTableSizeMB;
             _maxHelperThreads = other._maxHelperThreads;
             PonderDuringIdle = other.PonderDuringIdle;
             MaxBranchingFactor = other.MaxBranchingFactor;
             ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
-        }
-
-        private static string GetVersion()
-        {
-            return Assembly.GetAssembly(typeof(GameEngineConfig)).GetName().Version.ToString();
         }
 
         #endregion
@@ -485,6 +450,5 @@ namespace Mzinga.Engine
         None                      = 0x0,
         BasicOptions              = 0x1,
         MetricWeights             = 0x2,
-        InitialTranspositionTable = 0x4,
     }
 }

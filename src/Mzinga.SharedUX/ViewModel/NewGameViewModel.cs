@@ -72,7 +72,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return EnumUtils.IsEnabled(BugType.Mosquito, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+                return AppVM.EngineWrapper.EngineCapabilities.Mosquito;
             }
         }
 
@@ -80,20 +80,13 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return (Settings.ExpansionPieces & ExpansionPieces.Mosquito) == ExpansionPieces.Mosquito;
+                return Enums.BugTypeIsEnabledForGameType(BugType.Mosquito, Settings.GameType);
             }
             set
             {
                 try
                 {
-                    if (EnableMosquito && value)
-                    {
-                        Settings.ExpansionPieces |= ExpansionPieces.Mosquito;
-                    }
-                    else
-                    {
-                        Settings.ExpansionPieces &= ~ExpansionPieces.Mosquito; 
-                    }
+                    Settings.GameType = Enums.EnableBugType(BugType.Mosquito, Settings.GameType, EnableMosquito && value);
                     RaisePropertyChanged(nameof(IncludeMosquito));
                 }
                 catch (Exception ex)
@@ -107,7 +100,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return EnumUtils.IsEnabled(BugType.Ladybug, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+                return AppVM.EngineWrapper.EngineCapabilities.Ladybug;
             }
         }
 
@@ -115,20 +108,13 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return (Settings.ExpansionPieces & ExpansionPieces.Ladybug) == ExpansionPieces.Ladybug;
+                return Enums.BugTypeIsEnabledForGameType(BugType.Ladybug, Settings.GameType);
             }
             set
             {
                 try
                 {
-                    if (EnableLadybug && value)
-                    {
-                        Settings.ExpansionPieces |= ExpansionPieces.Ladybug;
-                    }
-                    else
-                    {
-                        Settings.ExpansionPieces &= ~ExpansionPieces.Ladybug;
-                    }
+                    Settings.GameType = Enums.EnableBugType(BugType.Ladybug, Settings.GameType, EnableLadybug && value);
                     RaisePropertyChanged(nameof(IncludeLadybug));
                 }
                 catch (Exception ex)
@@ -142,7 +128,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return EnumUtils.IsEnabled(BugType.Pillbug, AppVM.EngineWrapper.EngineCapabilities.ExpansionPieces);
+                return AppVM.EngineWrapper.EngineCapabilities.Pillbug;
             }
         }
 
@@ -150,20 +136,13 @@ namespace Mzinga.SharedUX.ViewModel
         {
             get
             {
-                return (Settings.ExpansionPieces & ExpansionPieces.Pillbug) == ExpansionPieces.Pillbug;
+                return Enums.BugTypeIsEnabledForGameType(BugType.Pillbug, Settings.GameType);
             }
             set
             {
                 try
                 {
-                    if (EnablePillbug && value)
-                    {
-                        Settings.ExpansionPieces |= ExpansionPieces.Pillbug;
-                    }
-                    else
-                    {
-                        Settings.ExpansionPieces &= ~ExpansionPieces.Pillbug;
-                    }
+                    Settings.GameType = Enums.EnableBugType(BugType.Pillbug, Settings.GameType, EnablePillbug && value);
                     RaisePropertyChanged(nameof(IncludePillbug));
                 }
                 catch (Exception ex)

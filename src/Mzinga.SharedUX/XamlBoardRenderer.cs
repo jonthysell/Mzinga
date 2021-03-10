@@ -174,10 +174,10 @@ namespace Mzinga.SharedUX
                 double boardCanvasWidth = BoardCanvas.Bounds.Width;
                 double boardCanvasHeight = BoardCanvas.Bounds.Height;
 
-                Dictionary<int, List<Piece>> piecesInPlay = GetPiecesOnBoard(board, out int numPieces, out int maxStack);
+                var piecesInPlay = GetPiecesOnBoard(board, out int numPieces, out int maxStack);
 
-                int whiteHandCount = board.WhiteHand.Count();
-                int blackHandCount = board.BlackHand.Count();
+                int whiteHandCount = board.GetWhiteHand().Count();
+                int blackHandCount = board.GetBlackHand().Count();
 
                 int verticalPiecesMin = 3 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
                 int horizontalPiecesMin = 2 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
@@ -187,11 +187,11 @@ namespace Mzinga.SharedUX
                 WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
                 BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
 
-                Position lastMoveStart = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.OriginalPosition;
-                Position lastMoveEnd = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Move?.Position;
+                Position? lastMoveStart = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Source;
+                Position? lastMoveEnd = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Destination;
 
                 PieceName selectedPieceName = MainViewModel.AppVM.EngineWrapper.TargetPiece;
-                Position targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
+                Position? targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
 
                 MoveSet validMoves = MainViewModel.AppVM.EngineWrapper.ValidMoves;
 
@@ -202,25 +202,26 @@ namespace Mzinga.SharedUX
                 {
                     if (piecesInPlay.ContainsKey(stack))
                     {
-                        foreach (Piece piece in piecesInPlay[stack])
+                        foreach (var tuple in piecesInPlay[stack])
                         {
-                            Position position = piece.Position;
+                            var pieceName = tuple.Item1;
+                            var position = tuple.Item2;
 
-                            if (piece.PieceName == selectedPieceName && null != targetPosition)
+                            if (pieceName == selectedPieceName && targetPosition.HasValue)
                             {
-                                position = targetPosition;
+                                position = targetPosition.Value;
                             }
 
                             Point center = GetPoint(position, size, hexOrientation, true);
 
-                            HexType hexType = (piece.Color == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
+                            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
                             Shape hex = GetHex(center, size, hexType, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
-                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == piece.PieceName));
+                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
 
-                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
 
                             BoardCanvas.Children.Add(hexText);
 
@@ -233,14 +234,14 @@ namespace Mzinga.SharedUX
                 Dictionary<BugType, Stack<Canvas>> pieceCanvasesByBugType = new Dictionary<BugType, Stack<Canvas>>();
 
                 // Draw the pieces in white's hand
-                foreach (PieceName pieceName in board.WhiteHand)
+                foreach (PieceName pieceName in board.GetWhiteHand())
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        BugType bugType = EnumUtils.GetBugType(pieceName);
+                        BugType bugType = Enums.GetBugType(pieceName);
 
                         bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
-                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
                         {
@@ -256,14 +257,14 @@ namespace Mzinga.SharedUX
                 pieceCanvasesByBugType.Clear();
 
                 // Draw the pieces in black's hand
-                foreach (PieceName pieceName in board.BlackHand)
+                foreach (PieceName pieceName in board.GetBlackHand())
                 {
                     if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
                     {
-                        BugType bugType = EnumUtils.GetBugType(pieceName);
+                        BugType bugType = Enums.GetBugType(pieceName);
 
                         bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
-                        Canvas pieceCanvas = GetPieceInHandCanvas(new Piece(pieceName, board.GetPiecePosition(pieceName)), size, hexOrientation, disabled);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
                         {
@@ -280,9 +281,9 @@ namespace Mzinga.SharedUX
                 if (MainViewModel.AppVM.ViewerConfig.HighlightLastMovePlayed)
                 {
                     // Highlight the lastMove start position
-                    if (null != lastMoveStart)
+                    if (lastMoveStart.HasValue)
                     {
-                        Point center = GetPoint(lastMoveStart, size, hexOrientation, true);
+                        Point center = GetPoint(lastMoveStart.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
@@ -292,9 +293,9 @@ namespace Mzinga.SharedUX
                     }
 
                     // Highlight the lastMove end position
-                    if (null != lastMoveEnd)
+                    if (lastMoveEnd.HasValue)
                     {
-                        Point center = GetPoint(lastMoveEnd, size, hexOrientation, true);
+                        Point center = GetPoint(lastMoveEnd.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
@@ -309,12 +310,12 @@ namespace Mzinga.SharedUX
                 {
                     if (selectedPieceName != PieceName.INVALID)
                     {
-                        Position selectedPiecePosition = board.GetPiecePosition(selectedPieceName);
+                        Position selectedPiecePosition = board.GetPosition(selectedPieceName);
 
-                        if (null != selectedPiecePosition)
+                        if (selectedPiecePosition != Position.NullPosition)
                         {
                             Point center = GetPoint(selectedPiecePosition, size, hexOrientation, true);
-
+                            
                             Shape hex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
                             BoardCanvas.Children.Add(hex);
 
@@ -333,7 +334,7 @@ namespace Mzinga.SharedUX
                         {
                             if (validMove.PieceName == selectedPieceName)
                             {
-                                Point center = GetPoint(validMove.Position, size, hexOrientation);
+                                Point center = GetPoint(validMove.Destination, size, hexOrientation);
 
                                 Shape hex = GetHex(center, size, HexType.ValidMove, hexOrientation);
                                 BoardCanvas.Children.Add(hex);
@@ -348,9 +349,9 @@ namespace Mzinga.SharedUX
                 // Highlight the target position
                 if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
                 {
-                    if (null != targetPosition)
+                    if (targetPosition.HasValue)
                     {
-                        Point center = GetPoint(targetPosition, size, hexOrientation, true);
+                        Point center = GetPoint(targetPosition.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.SelectedMove, hexOrientation);
                         BoardCanvas.Children.Add(hex);
@@ -424,11 +425,6 @@ namespace Mzinga.SharedUX
 
         private Point GetPoint(Position position, double size, HexOrientation hexOrientation, bool stackShift = false)
         {
-            if (null == position)
-            {
-                throw new ArgumentNullException(nameof(position));
-            }
-
             if (size <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
@@ -446,7 +442,7 @@ namespace Mzinga.SharedUX
             return new Point(x, y);
         }
 
-        private static Dictionary<int, List<Piece>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
+        private static Dictionary<int, List<Tuple<PieceName, Position>>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
         {
             if (null == board)
             {
@@ -456,54 +452,54 @@ namespace Mzinga.SharedUX
             numPieces = 0;
             maxStack = -1;
 
-            Dictionary<int, List<Piece>> pieces = new Dictionary<int, List<Piece>>
+            Dictionary<int, List<Tuple<PieceName, Position>>> pieces = new Dictionary<int, List<Tuple<PieceName, Position>>>
             {
-                [0] = new List<Piece>()
+                [0] = new List<Tuple<PieceName, Position>>()
             };
 
             PieceName targetPieceName = MainViewModel.AppVM.EngineWrapper.TargetPiece;
-            Position targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
+            Position? targetPosition = MainViewModel.AppVM.EngineWrapper.TargetPosition;
 
             bool targetPieceInPlay = false;
 
             // Add pieces already on the board
-            foreach (PieceName pieceName in board.PiecesInPlay)
+            foreach (PieceName pieceName in board.GetPiecesInPlay())
             {
-                Position position = board.GetPiecePosition(pieceName);
+                Position position = board.GetPosition(pieceName);
 
                 if (pieceName == targetPieceName)
                 {
-                    if (null != targetPosition)
+                    if (targetPosition.HasValue)
                     {
-                        position = targetPosition;
+                        position = targetPosition.Value;
                     }
                     targetPieceInPlay = true;
                 }
 
-                int stack = (int)position.Stack;
+                int stack = position.Stack;
                 maxStack = Math.Max(maxStack, stack);
 
                 if (!pieces.ContainsKey(stack))
                 {
-                    pieces[stack] = new List<Piece>();
+                    pieces[stack] = new List<Tuple<PieceName, Position>>();
                 }
 
-                pieces[stack].Add(new Piece(pieceName, position));
+                pieces[stack].Add(new Tuple<PieceName, Position>(pieceName, position));
                 numPieces++;
             }
 
             // Add piece being placed on the board
-            if (!targetPieceInPlay && null != targetPosition)
+            if (!targetPieceInPlay && targetPosition.HasValue)
             {
-                int stack = (int)targetPosition.Stack;
+                int stack = targetPosition.Value.Stack;
                 maxStack = Math.Max(maxStack, stack);
 
                 if (!pieces.ContainsKey(stack))
                 {
-                    pieces[stack] = new List<Piece>();
+                    pieces[stack] = new List<Tuple<PieceName, Position>>();
                 }
 
-                pieces[stack].Add(new Piece(targetPieceName, targetPosition));
+                pieces[stack].Add(new Tuple<PieceName, Position>(targetPieceName, targetPosition.Value));
                 numPieces++;
             }
 
@@ -595,10 +591,10 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create text
-            string text = EnumUtils.GetShortName(pieceName).Substring(1);
+            string text = pieceName.ToString().Substring(1);
             TextBlock bugText = new TextBlock
             {
                 Text = MainViewModel.ViewerConfig.AddPieceNumbers ? text : text.TrimEnd('1', '2', '3'),
@@ -628,12 +624,12 @@ namespace Mzinga.SharedUX
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)EnumUtils.GetBugType(pieceName)] : (EnumUtils.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create bug
             Path bugPath = new Path()
             {
-                Data = Geometry.Parse(BugPathGeometries[(int)EnumUtils.GetBugType(pieceName)]),
+                Data = Geometry.Parse(BugPathGeometries[(int)Enums.GetBugType(pieceName)]),
                 Stretch = Stretch.Uniform,
                 Fill = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -664,7 +660,7 @@ namespace Mzinga.SharedUX
                         VerticalAlignment = VerticalAlignment.Center,
                         FontFamily = new FontFamily("Arial Black"),
                         FontSize = size * 0.5,
-                        Foreground = EnumUtils.GetColor(pieceName) == PlayerColor.White ? WhiteBrush : BlackBrush,
+                        Foreground = Enums.GetColor(pieceName) == PlayerColor.White ? WhiteBrush : BlackBrush,
                     };
 
                     Ellipse bugTextEllipse = new Ellipse()
@@ -717,8 +713,9 @@ namespace Mzinga.SharedUX
 
         private void DrawHand(StackPanel handPanel, Dictionary<BugType, Stack<Canvas>> pieceCanvases)
         {
-            foreach (BugType bugType in EnumUtils.BugTypes)
+            for (int bt = 0; bt < (int)BugType.NumBugTypes; bt++)
             {
+                var bugType = (BugType)bt;
                 if (pieceCanvases.ContainsKey(bugType))
                 {
                     if (MainViewModel.ViewerConfig.StackPiecesInHand)
@@ -754,14 +751,14 @@ namespace Mzinga.SharedUX
             }
         }
 
-        private Canvas GetPieceInHandCanvas(Piece piece, double size, HexOrientation hexOrientation, bool disabled)
+        private Canvas GetPieceInHandCanvas(PieceName pieceName, double size, HexOrientation hexOrientation, bool disabled)
         {
             Point center = new Point(size, size);
 
-            HexType hexType = (piece.Color == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
+            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
             Shape hex = GetHex(center, size, hexType, hexOrientation);
-            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, piece.PieceName, disabled) : GetPieceGraphics(center, size, piece.PieceName, disabled);
+            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
 
             Canvas pieceCanvas = new Canvas
             {
@@ -769,14 +766,14 @@ namespace Mzinga.SharedUX
                 Width = size * 2,
                 Margin = new Thickness(PieceCanvasMargin),
                 Background = new SolidColorBrush(Colors.Transparent),
-                Name = EnumUtils.GetShortName(piece.PieceName)
+                Name = pieceName.ToString()
             };
 
             pieceCanvas.Children.Add(hex);
             pieceCanvas.Children.Add(hexText);
 
             // Add highlight if the piece is selected
-            if (MainViewModel.AppVM.EngineWrapper.TargetPiece == piece.PieceName)
+            if (MainViewModel.AppVM.EngineWrapper.TargetPiece == pieceName)
             {
                 Shape highlightHex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
                 pieceCanvas.Children.Add(highlightHex);
@@ -793,7 +790,7 @@ namespace Mzinga.SharedUX
             {
                 if (e.InitialPressMouseButton == MouseButton.Left)
                 {
-                    PieceName clickedPiece = EnumUtils.ParseShortName(pieceCanvas.Name);
+                    PieceName clickedPiece = Enum.Parse<PieceName>(pieceCanvas.Name);
                     MainViewModel.PieceClick(clickedPiece);
                     e.Handled = true;
                 }

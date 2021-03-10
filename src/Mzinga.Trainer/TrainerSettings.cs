@@ -249,7 +249,7 @@ namespace Mzinga.Trainer
         }
         private TimeSpan? _battleTimeLimit = null;
 
-        public ExpansionPieces GameType { get; set; } = ExpansionPieces.None;
+        public GameType GameType = GameType.Base;
 
         public string TargetProfilePath
         {
@@ -277,26 +277,5 @@ namespace Mzinga.Trainer
         public bool AllGameTypes { get; set; } = false;
 
         public bool ProvisionalFirst { get; set; } = true;
-
-        public int InitialTableDepth
-        {
-            get
-            {
-                return _initialTableDepth;
-            }
-            set
-            {
-                if (value < _initialTableDepth && value != MinInitialTableDepth)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value));
-                }
-                _initialTableDepth = value;
-            }
-        }
-        private int _initialTableDepth = MinInitialTableDepth;
-
-        public const int MinInitialTableDepth = 0;
-        public const int MaxInitialTableDepth = -1;
-
     }
 }

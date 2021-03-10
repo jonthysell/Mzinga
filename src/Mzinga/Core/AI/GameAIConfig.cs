@@ -7,8 +7,8 @@ namespace Mzinga.Core.AI
 {
     public class GameAIConfig
     {
-        public MetricWeights StartMetricWeights = null;
-        public MetricWeights EndMetricWeights = null;
+        public MetricWeights? StartMetricWeights = null;
+        public MetricWeights? EndMetricWeights = null;
 
         public int? MaxBranchingFactor
         {
@@ -43,7 +43,5 @@ namespace Mzinga.Core.AI
             }
         }
         private int? _transpositionTableSizeMB = null;
-
-        public TranspositionTable InitialTranspositionTable = null;
     }
 }

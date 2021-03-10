@@ -12,7 +12,7 @@ namespace Mzinga.SharedUX
     {
         #region Mandatory Tags
 
-        public ExpansionPieces GameType { get; private set; } = ExpansionPieces.None;
+        public GameType GameType { get; private set; } = GameType.Base;
 
         public string Event { get; private set; } = ""; // Event name
         public string Site { get; private set; } = ""; // City, Region COUNTRY
@@ -61,7 +61,7 @@ namespace Mzinga.SharedUX
             White = "";
             Black = "";
 
-            GameType = ExpansionPieces.None;
+            GameType = GameType.Base;
             Result = BoardState.NotStarted;
 
             _optionalTags.Clear();
@@ -89,7 +89,7 @@ namespace Mzinga.SharedUX
                 case "Black":
                     return Black;
                 case "GameType":
-                    return EnumUtils.GetExpansionPiecesString(GameType);
+                    return Enums.GetGameTypeString(GameType);
                 case "Result":
                     return Result.ToString();
             }
@@ -132,7 +132,8 @@ namespace Mzinga.SharedUX
                     Black = value;
                     break;
                 case "GameType":
-                    GameType = EnumUtils.ParseExpansionPieces(value);
+                    _ = Enums.TryParse(value, out GameType result);
+                    GameType = result;
                     break;
                 case "Result":
                     Result = (BoardState)Enum.Parse(typeof(BoardState), value);

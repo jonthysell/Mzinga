@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
-    public class ZobristHash
+    class ZobristHash
     {
         public ulong Value { get; private set; }
 
         private static ulong _next = 1;
-        private static readonly ulong _hashPartByTurnColor = 0;
-        private static readonly ulong[] _hashPartByLastMovedPiece = new ulong[EnumUtils.NumPieceNames];
-        private static readonly Dictionary<Position, ulong>[] _hashPartByPosition = new Dictionary<Position, ulong>[EnumUtils.NumPieceNames];
+        private static readonly ulong _hashPartByTurnColor;
+        private static readonly ulong[] _hashPartByLastMovedPiece = new ulong[(int)PieceName.NumPieceNames];
+        private static readonly ulong[,,,] _hashPartByPosition = new ulong[(int)PieceName.NumPieceNames, Position.BoardSize, Position.BoardSize, Position.BoardStackSize + 1];
 
         public ZobristHash()
         {
@@ -21,7 +21,7 @@ namespace Mzinga.Core
 
         public void TogglePiece(PieceName pieceName, Position position)
         {
-            Value ^= _hashPartByPosition[(int)pieceName][position];
+            Value ^= _hashPartByPosition[(int)pieceName, (Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack + 1];
         }
 
         public void ToggleLastMovedPiece(PieceName pieceName)
@@ -47,15 +47,17 @@ namespace Mzinga.Core
                 _hashPartByLastMovedPiece[i] = Rand64();
             }
 
-            IEnumerable<Position> uniquePositions = Position.GetUniquePositions(NumUniquePositions);
-
-            for (int i = 0; i < _hashPartByPosition.Length; i++)
+            for (int pn = 0; pn < _hashPartByPosition.GetLength(0); pn++)
             {
-                _hashPartByPosition[i] = new Dictionary<Position, ulong>();
-
-                foreach (Position pos in uniquePositions)
+                for (int q = 0; q < _hashPartByPosition.GetLength(1); q++)
                 {
-                    _hashPartByPosition[i].Add(pos, Rand64());
+                    for (int r = 0; r < _hashPartByPosition.GetLength(2); r++)
+                    {
+                        for (int s = 0; s < _hashPartByPosition.GetLength(3); s++)
+                        {
+                            _hashPartByPosition[pn, q, r, s] = Rand64();
+                        }
+                    }
                 }
             }
         }
@@ -67,7 +69,5 @@ namespace Mzinga.Core
         }
 
         public const long EmptyBoard = 0;
-
-        private const int NumUniquePositions = (int)Position.MaxStack * EnumUtils.NumPieceNames * EnumUtils.NumPieceNames;
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,47 +12,42 @@ using Mzinga.Core.AI;
 
 namespace Mzinga.Engine
 {
-    public class GameEngine
+    public class Engine
     {
         public string ID { get; private set; }
         public ConsoleOut ConsoleOut { get; private set; }
-        public GameEngineConfig Config { get; private set; }
+        public EngineConfig Config { get; private set; }
 
-        public GameEngineConfig DefaultConfig { get; private set; }
+        public EngineConfig DefaultConfig { get; private set; }
 
         public bool ExitRequested { get; private set; }
 
-        public event EventHandler StartAsyncCommand;
-        public event EventHandler EndAsyncCommand;
+        public event EventHandler? StartAsyncCommand;
+        public event EventHandler? EndAsyncCommand;
 
-        private GameBoard _gameBoard;
+        private Board? _board;
 
-        private GameAI _gameAI;
+        private GameAI? _gameAI;
 
-        private CancellationTokenSource _asyncCommandCTS = null;
+        private CancellationTokenSource? _asyncCommandCTS = null;
 
-        private Task _ponderTask = null;
-        private CancellationTokenSource _ponderCTS = null;
+        private Task? _ponderTask = null;
+        private CancellationTokenSource? _ponderCTS = null;
         private volatile bool _isPondering = false;
 
-        public GameEngine(string id, GameEngineConfig config, ConsoleOut consoleOut)
+        public Engine(string id, EngineConfig config, ConsoleOut consoleOut)
         {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
             ID = id;
-            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config = config;
             DefaultConfig = config.GetOptionsClone();
-            ConsoleOut = consoleOut ?? throw new ArgumentNullException(nameof(consoleOut));
+            ConsoleOut = consoleOut;
 
             ExitRequested = false;
         }
 
         private void InitAI()
         {
-            _gameAI = Config.GetGameAI(_gameBoard.ExpansionPieces);
+            _gameAI = Config.GetGameAI(_board?.GameType ?? GameType.INVALID);
             _gameAI.BestMoveFound += OnBestMoveFound;
 
             ResetAI(false);
@@ -59,7 +55,7 @@ namespace Mzinga.Engine
 
         private void ResetAI(bool resetCaches)
         {
-            if (null != _gameAI)
+            if (_gameAI is not null)
             {
                 if (resetCaches)
                 {
@@ -69,11 +65,11 @@ namespace Mzinga.Engine
             }
         }
 
-        private void OnBestMoveFound(object sender, BestMoveFoundEventArgs args)
+        private void OnBestMoveFound(object? sender, BestMoveFoundEventArgs args)
         {
-            if (null != _gameBoard && !_isPondering && Config.ReportIntermediateBestMoves)
+            if (_board is not null && !_isPondering && Config.ReportIntermediateBestMoves && _board.TryGetMoveString(args.Move, out string? moveStr))
             {
-                ConsoleOut("{0};{1};{2:0.00}", NotationUtils.ToBoardSpaceMoveString(_gameBoard, args.Move), args.Depth, args.Score);
+                ConsoleOut("{0};{1};{2:0.00}", moveStr ?? "", args.Depth, args.Score);
             }
         }
 
@@ -116,11 +112,11 @@ namespace Mzinga.Engine
                     case "newgame":
                         if (paramCount == 0)
                         {
-                            NewGame(ExpansionPieces.None);
+                            NewGame(GameType.Base);
                         }
-                        else if (EnumUtils.TryParseExpansionPieces(split[1], out ExpansionPieces expansionPieces))
+                        else if (Enums.TryParse(split[1], out GameType gameType))
                         {
-                            NewGame(expansionPieces);
+                            NewGame(gameType);
                         }
                         else
                         {
@@ -240,10 +236,13 @@ namespace Mzinga.Engine
         {
             ConsoleOut("err {0}", ex.Message.Replace("\r\n", " "));
 #if DEBUG
-            ConsoleOut(ex.StackTrace);
+            if (ex.StackTrace is not null)
+            {
+                ConsoleOut(ex.StackTrace);
+            }
 #endif
 
-            if (null != ex.InnerException)
+            if (ex.InnerException is not null)
             {
                 ErrorOut(ex.InnerException);
             }
@@ -255,7 +254,7 @@ namespace Mzinga.Engine
             ConsoleOut("Mosquito;Ladybug;Pillbug");
         }
 
-        private void Help(string command = null)
+        private void Help(string? command = null)
         {
             if (string.IsNullOrWhiteSpace(command))
             {
@@ -383,108 +382,95 @@ namespace Mzinga.Engine
             }
         }
 
-        private void NewGame(ExpansionPieces expansionPieces)
+        private void NewGame(GameType gameType)
         {
             StopPonder();
 
-            _gameBoard = new GameBoard(expansionPieces);
+            _board = new Board(gameType);
 
             InitAI();
 
-            ConsoleOut(_gameBoard.ToGameString());
+            ConsoleOut(_board.GetGameString());
         }
 
         private void NewGame(string gameString)
         {
-            if (!GameBoard.TryParseGameString(gameString, out GameBoard parsed))
-            {
-                parsed = new GameBoard(gameString);
-            }
+            Board parsed = Board.ParseGameString(gameString);
 
             StopPonder();
 
-            _gameBoard = parsed;
+            _board = parsed;
 
             InitAI();
 
-            ConsoleOut(_gameBoard.ToGameString());
+            ConsoleOut(_board.GetGameString());
         }
 
-        private void Play(string moveString)
+        private void Play(string moveStr)
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (_gameBoard.GameIsOver)
+            if (_board.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            Move move = null;
-            try
+            if (!_board.TryParseMove(moveStr, out Move move, out string moveString))
             {
-                move = NotationUtils.ParseMoveString(_gameBoard, moveString);
-            }
-            catch (Exception)
-            {
-                throw new InvalidMoveException(move);
+                throw new InvalidMoveException(move, $"Unable to parse move \"{moveStr}\".");
             }
 
-            NotationUtils.TryNormalizeBoardSpaceMoveString(moveString, out moveString);
-
-            _gameBoard.Play(move, moveString);
+            _board.Play(move, moveString);
 
             StopPonder();
 
-            ConsoleOut(_gameBoard.ToGameString());
+            ConsoleOut(_board.GetGameString());
         }
 
         private void Pass()
         {
-            if (null == _gameBoard)
-            {
-                throw new NoBoardException();
-            }
-
-            if (_gameBoard.GameIsOver)
-            {
-                throw new GameIsOverException();
-            }
-
-            _gameBoard.Pass();
-
-            StopPonder();
-
-            ConsoleOut(_gameBoard.ToGameString());
+            Play(Move.PassString);
         }
 
         private void ValidMoves()
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (_gameBoard.GameIsOver)
+            if (_board.GameIsOver)
             {
                 throw new GameIsOverException();
             }
 
-            MoveSet validMoves = _gameBoard.GetValidMoves();
+            var validMoves = _board.GetValidMoves();
 
-            ConsoleOut(NotationUtils.ToBoardSpaceMoveStringList(_gameBoard, validMoves));
+            var sb = new StringBuilder();
+            bool first = true;
+            foreach (var validMove in validMoves)
+            {
+                if (_board.TryGetMoveString(validMove, out string? result))
+                {
+                    sb.Append(first ? result : $";{result}");
+                }
+                first = false;
+            }
+
+            ConsoleOut(sb.ToString());
         }
 
         private void BestMove()
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (_gameBoard.GameIsOver)
+            if (_board.GameIsOver)
             {
                 throw new GameIsOverException();
             }
@@ -493,27 +479,30 @@ namespace Mzinga.Engine
 
             CancellationToken token = OnStartAsyncCommand();
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, Config.MaxHelperThreads, token);
-            task.Wait();
-
-            if (null == task.Result)
+            if (_gameAI is not null)
             {
-                throw new Exception("Null move returned!");
-            }
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), Config.MaxHelperThreads, token);
+                task.Wait();
 
-            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
+                if (!_board.TryGetMoveString(task.Result, out string result))
+                {
+                    throw new Exception("Invalid best move returned!");
+                }
+
+                ConsoleOut(result);
+            }
 
             OnEndAsyncCommand();
         }
 
         private void BestMove(int maxDepth)
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (_gameBoard.GameIsOver)
+            if (_board.GameIsOver)
             {
                 throw new GameIsOverException();
             }
@@ -522,27 +511,30 @@ namespace Mzinga.Engine
 
             CancellationToken token = OnStartAsyncCommand();
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard.Clone(), maxDepth, Config.MaxHelperThreads, token);
-            task.Wait();
-
-            if (null == task.Result)
+            if (_gameAI is not null)
             {
-                throw new Exception("Null move returned!");
-            }
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxDepth, Config.MaxHelperThreads, token);
+                task.Wait();
 
-            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
+                if (!_board.TryGetMoveString(task.Result, out string result))
+                {
+                    throw new Exception("Invalid best move returned!");
+                }
+
+                ConsoleOut(result);
+            }
 
             OnEndAsyncCommand();
         }
 
         private void BestMove(TimeSpan maxTime)
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (_gameBoard.GameIsOver)
+            if (_board.GameIsOver)
             {
                 throw new GameIsOverException();
             }
@@ -553,30 +545,33 @@ namespace Mzinga.Engine
 
             if (maxTime < TimeSpan.MaxValue)
             {
-                _asyncCommandCTS.CancelAfter(maxTime);
+                _asyncCommandCTS?.CancelAfter(maxTime);
             }
 
-            Task<Move> task = _gameAI.GetBestMoveAsync(_gameBoard, maxTime, Config.MaxHelperThreads, token);
-            task.Wait();
-
-            if (null == task.Result)
+            if (_gameAI is not null)
             {
-                throw new Exception("Null move returned!");
-            }
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxTime, Config.MaxHelperThreads, token);
+                task.Wait();
 
-            ConsoleOut(NotationUtils.ToBoardSpaceMoveString(_gameBoard, task.Result));
+                if (!_board.TryGetMoveString(task.Result, out string result))
+                {
+                    throw new Exception("Invalid best move returned!");
+                }
+
+                ConsoleOut(result);
+            }
 
             OnEndAsyncCommand();
         }
 
         private void Undo(int moves = 1)
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
 
-            if (moves < 1 || moves > _gameBoard.BoardHistory.Count)
+            if (moves < 1 || moves > _board.CurrentTurn)
             {
                 throw new UndoInvalidNumberOfMovesException(moves);
             }
@@ -585,10 +580,10 @@ namespace Mzinga.Engine
 
             for (int i = 0; i < moves; i++)
             {
-                _gameBoard.UndoLastMove();
+                _board.TryUndoLastMove();
             }
 
-            ConsoleOut(_gameBoard.ToGameString());
+            ConsoleOut(_board.GetGameString());
         }
 
         private void OptionsList()
@@ -711,7 +706,7 @@ namespace Mzinga.Engine
 
         private void Perft(int maxDepth = Int32.MaxValue)
         {
-            if (null == _gameBoard)
+            if (_board is null)
             {
                 throw new NoBoardException();
             }
@@ -728,7 +723,7 @@ namespace Mzinga.Engine
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = _gameBoard.CalculatePerftAsync(depth, token);
+                Task<long?> task = _board.CalculatePerftAsync(depth, token);
                 task.Wait();
                 sw.Stop();
 
@@ -745,10 +740,10 @@ namespace Mzinga.Engine
 
         private void StartPonder()
         {
-            if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && null != _gameBoard && _gameBoard.GameInProgress)
+            if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && _board is not null && _board.GameInProgress && _gameAI is not null)
             {
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_gameBoard.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
+                _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_board.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
                 _isPondering = true;
             }
@@ -758,8 +753,8 @@ namespace Mzinga.Engine
         {
             if (_isPondering)
             {
-                _ponderCTS.Cancel();
-                _ponderTask.Wait();
+                _ponderCTS?.Cancel();
+                _ponderTask?.Wait();
 
                 _ponderCTS = null;
                 _ponderTask = null;
@@ -772,7 +767,7 @@ namespace Mzinga.Engine
         {
             StopPonder();
 
-            _gameBoard = null;
+            _board = null;
             ExitRequested = true;
         }
 
@@ -792,7 +787,7 @@ namespace Mzinga.Engine
         {
             _asyncCommandCTS = new CancellationTokenSource();
 
-            StartAsyncCommand?.Invoke(this, null);
+            StartAsyncCommand?.Invoke(this, EventArgs.Empty);
 
             return _asyncCommandCTS.Token;
         }
@@ -801,7 +796,7 @@ namespace Mzinga.Engine
         {
             _asyncCommandCTS = null;
 
-            EndAsyncCommand?.Invoke(this, null);
+            EndAsyncCommand?.Invoke(this, EventArgs.Empty);
         }
     }
 

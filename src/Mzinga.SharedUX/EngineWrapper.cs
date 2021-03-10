@@ -17,11 +17,11 @@ namespace Mzinga.SharedUX
 
         public GameSettings CurrentGameSettings { get; private set; }
 
-        public GameBoard Board
+        public Board Board
         {
             get
             {
-                return CurrentGameSettings?.CurrentGameBoard;
+                return CurrentGameSettings?.CurrentBoard;
             }
             private set
             {
@@ -31,16 +31,16 @@ namespace Mzinga.SharedUX
                     CurrentGameSettings = new GameSettings() { WhitePlayerType = PlayerType.Human, BlackPlayerType = PlayerType.Human };
                 }
 
-                CurrentGameSettings.CurrentGameBoard = value;
+                CurrentGameSettings.CurrentBoard = value;
                 OnBoardUpdate();
             }
         }
 
-        public GameBoard ReviewBoard
+        public Board ReviewBoard
         {
             get
             {
-                return CurrentGameSettings?.GameRecording?.GameBoard;
+                return CurrentGameSettings?.GameRecording?.Board;
             }
         }
 
@@ -98,8 +98,8 @@ namespace Mzinga.SharedUX
             get
             {
                 return (null != Board &&
-                        ((Board.CurrentTurnColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
-                         (Board.CurrentTurnColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
+                        ((Board.CurrentColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
+                         (Board.CurrentColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
             }
         }
 
@@ -108,8 +108,8 @@ namespace Mzinga.SharedUX
             get
             {
                 return (GameInProgress &&
-                        ((Board.CurrentTurnColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
-                         (Board.CurrentTurnColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)));
+                        ((Board.CurrentColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.EngineAI) ||
+                         (Board.CurrentColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.EngineAI)));
             }
         }
 
@@ -133,7 +133,7 @@ namespace Mzinga.SharedUX
         }
         private PieceName _targetPiece = PieceName.INVALID;
 
-        public Position TargetPosition
+        public Position? TargetPosition
         {
             get
             {
@@ -141,7 +141,7 @@ namespace Mzinga.SharedUX
             }
             set
             {
-                Position oldValue = _targetPosition;
+                var oldValue = _targetPosition;
 
                 _targetPosition = value;
 
@@ -151,15 +151,15 @@ namespace Mzinga.SharedUX
                 }
             }
         }
-        private Position _targetPosition = null;
+        private Position? _targetPosition = null;
 
-        public Move TargetMove { get; private set; }
+        public Move? TargetMove { get; private set; }
 
         public bool CanPlayTargetMove
         {
             get
             {
-                return CanPlayMove(TargetMove) && !TargetMove.IsPass && CurrentGameSettings.GameMode == GameMode.Play;
+                return CanPlayMove(TargetMove) && TargetMove != Move.PassMove && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -167,7 +167,7 @@ namespace Mzinga.SharedUX
         {
             get
             {
-                return GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.Pass) && CurrentGameSettings.GameMode == GameMode.Play;
+                return GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.PassMove) && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -332,7 +332,7 @@ namespace Mzinga.SharedUX
         {
             CurrentGameSettings = settings ?? throw new ArgumentNullException(nameof(settings));
 
-            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, EnumUtils.GetExpansionPiecesString(CurrentGameSettings.ExpansionPieces));
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, Enums.GetGameTypeString(CurrentGameSettings.GameType));
         }
 
         public void NewGame(GameSettings settings, string gameString)
@@ -356,7 +356,7 @@ namespace Mzinga.SharedUX
                 GameMode = GameMode.Review,
             };
 
-            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, ReviewBoard.ToGameString());
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, ReviewBoard.GetGameString());
         }
 
         public void PlayTargetMove()
@@ -371,13 +371,13 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please select a valid piece and destination first.");
             }
 
-            if (TargetMove.IsPass)
+            if (TargetMove == Move.PassMove)
             {
                 Pass();
             }
             else
             {
-                SendCommand("play {0}", NotationUtils.ToBoardSpaceMoveString(Board, TargetMove));
+                SendCommand("play {0}", Board.GetMoveString(TargetMove.Value));
             }
         }
 
@@ -424,7 +424,7 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please switch the current game to review mode first.");
             }
 
-            SendCommand("newgame {0}", (new GameBoard(CurrentGameSettings.ExpansionPieces)).ToGameString());
+            SendCommand("newgame {0}", (new Board(CurrentGameSettings.GameType)).GetGameString());
         }
 
         public void MoveBack()
@@ -458,7 +458,7 @@ namespace Mzinga.SharedUX
                 throw new Exception("Please switch the current game to review mode first.");
             }
 
-            SendCommand("newgame {0}", ReviewBoard.ToGameString());
+            SendCommand("newgame {0}", ReviewBoard.GetGameString());
         }
 
         public void MoveToMoveNumber(int moveNum)
@@ -478,15 +478,15 @@ namespace Mzinga.SharedUX
             }
             else
             {
-                GameBoard newGame = new GameBoard(ReviewBoard.ExpansionPieces);
+                Board newGame = new Board(ReviewBoard.GameType);
 
                 for (int i = 0; i < moveNum; i++)
                 {
                     BoardHistoryItem item = ReviewBoard.BoardHistory[i];
-                    newGame.TrustedPlay(item.Move, item.MoveString);
+                    newGame.Play(item.Move, item.MoveString);
                 }
 
-                SendCommand("newgame {0}", newGame.ToGameString());
+                SendCommand("newgame {0}", newGame.GetGameString());
             }
         }
 
@@ -718,10 +718,10 @@ namespace Mzinga.SharedUX
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !string.IsNullOrWhiteSpace(firstLine) ? GameBoard.ParseGameString(firstLine, true) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? Board.ParseGameString(firstLine) : null;
                     break;
                 case EngineCommand.ValidMoves:
-                    ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? NotationUtils.ParseMoveStringList(Board, firstLine) : null;
+                    ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? MoveSet.ParseMoveList(Board, firstLine) : null;
                     break;
                 case EngineCommand.BestMove:
                     // Update the target move (and potentially auto-play it)
@@ -752,10 +752,13 @@ namespace Mzinga.SharedUX
         {
             try
             {
-                Move bestMove = NotationUtils.ParseMoveString(Board, line.Split(';')[0]);
+                if (!Board.TryParseMove(line.Split(';')[0], out Move bestMove, out string _))
+                {
+                    throw new Exception($"Unable to parse '{line}'");
+                }
 
                 TargetPiece = bestMove.PieceName;
-                TargetPosition = bestMove.Position;
+                TargetPosition = bestMove.Destination;
                 TargetMove = bestMove;
             }
             catch (Exception)
@@ -763,15 +766,15 @@ namespace Mzinga.SharedUX
                 TargetPiece = PieceName.INVALID;
             }
 
-            if (tryToPlay && CurrentTurnIsEngineAI && CurrentGameSettings.GameMode == GameMode.Play && null != TargetMove)
+            if (tryToPlay && CurrentTurnIsEngineAI && CurrentGameSettings.GameMode == GameMode.Play && TargetMove.HasValue)
             {
-                if (TargetMove.IsPass)
+                if (TargetMove == Move.PassMove)
                 {
                     SendCommandInternal("pass");
                 }
                 else
                 {
-                    SendCommandInternal("play {0}", NotationUtils.ToBoardSpaceMoveString(Board, TargetMove));
+                    SendCommandInternal("play {0}", Board.GetMoveString(TargetMove.Value));
                 }
             }
         }
@@ -780,14 +783,14 @@ namespace Mzinga.SharedUX
         {
             Position position = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
-            return (null != Board) ? Board.GetPieceOnTop(position) : PieceName.INVALID;
+            return (null != Board) ? Board.GetPieceOnTopAt(position) : PieceName.INVALID;
         }
 
         public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius, HexOrientation hexOrientation)
         {
             Position bottomPosition = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
-            PieceName topPiece = (null != Board) ? Board.GetPieceOnTop(bottomPosition) : PieceName.INVALID;
+            PieceName topPiece = (null != Board) ? Board.GetPieceOnTopAt(bottomPosition) : PieceName.INVALID;
 
             if (topPiece == PieceName.INVALID)
             {
@@ -797,13 +800,13 @@ namespace Mzinga.SharedUX
             else
             {
                 // Piece present, return position on top of the piece
-                return Board.GetPiecePosition(topPiece).GetAbove();
+                return Board.GetPosition(topPiece).GetAbove();
             }
         }
 
-        public bool CanPlayMove(Move move)
+        public bool CanPlayMove(Move? move)
         {
-            return (GameInProgress && CurrentTurnIsHuman && null != move && null != ValidMoves && ValidMoves.Contains(move));
+            return (GameInProgress && CurrentTurnIsHuman && move.HasValue && null != ValidMoves && ValidMoves.Contains(move.Value));
         }
 
         private void OnIsIdleUpdate()
@@ -856,9 +859,9 @@ namespace Mzinga.SharedUX
         private void OnTargetPositionUpdate()
         {
             TargetMove = null;
-            if (TargetPiece != PieceName.INVALID && null != TargetPosition)
+            if (TargetPiece != PieceName.INVALID && TargetPosition.HasValue)
             {
-                TargetMove = new Move(TargetPiece, TargetPosition);
+                TargetMove = new Move(TargetPiece, Board.GetPosition(TargetPiece), TargetPosition.Value);
             }
 
             TargetPositionUpdated?.Invoke(this, null);

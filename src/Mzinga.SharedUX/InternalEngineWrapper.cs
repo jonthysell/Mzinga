@@ -11,49 +11,49 @@ namespace Mzinga.SharedUX
     public class InternalEngineWrapper : EngineWrapper
     {
         private readonly string _id;
-        private GameEngine _gameEngine;
+        private Engine.Engine _engine;
 
-        public GameEngineConfig GameEngineConfig { get; private set; }
+        public EngineConfig EngineConfig { get; private set; }
 
-        public InternalEngineWrapper(string id, GameEngineConfig gameEngineConfig) : base()
+        public InternalEngineWrapper(string id, EngineConfig gameEngineConfig) : base()
         {
             _id = !string.IsNullOrWhiteSpace(id) ? id.Trim() : throw new ArgumentNullException(nameof(id));
-            GameEngineConfig = gameEngineConfig ?? throw new ArgumentNullException(nameof(gameEngineConfig));
+            EngineConfig = gameEngineConfig ?? throw new ArgumentNullException(nameof(gameEngineConfig));
         }
 
         public override void StartEngine()
         {
             IsIdle = false;
 
-            _gameEngine = new GameEngine(_id, GameEngineConfig, (format, args) =>
+            _engine = new Engine.Engine(_id, EngineConfig, (format, args) =>
             {
                 OnEngineOutput(string.Format(format, args));
             });
 
-            _gameEngine.ParseCommand("info");
+            _engine.ParseCommand("info");
         }
 
         public override void StopEngine()
         {
-            _gameEngine.TryCancelAsyncCommand();
-            _gameEngine.ParseCommand("exit");
-            _gameEngine = null;
+            _engine.TryCancelAsyncCommand();
+            _engine.ParseCommand("exit");
+            _engine = null;
         }
 
         protected override void OnEngineInput(string command)
         {
             Task.Run(() =>
             {
-                lock (_gameEngine)
+                lock (_engine)
                 {
-                    _gameEngine.ParseCommand(command);
+                    _engine.ParseCommand(command);
                 }
             });
         }
 
         protected override void OnCancelCommand()
         {
-            _gameEngine.TryCancelAsyncCommand();
+            _engine.TryCancelAsyncCommand();
         }
     }
 }

@@ -131,7 +131,7 @@ namespace Mzinga.SharedUX.ViewModel
         {
             _standardTags = new ObservableCollection<ObservableGameMetadataTag>
             {
-                new ObservableGameMetadataStringTag("GameType", EnumUtils.GetExpansionPiecesString(_originalMetadata.GameType)) { CanEdit = false },
+                new ObservableGameMetadataStringTag("GameType", Enums.GetGameTypeString(_originalMetadata.GameType)) { CanEdit = false },
 
                 new ObservableGameMetadataStringTag("Date", _originalMetadata.Date),
                 new ObservableGameMetadataStringTag("Event", _originalMetadata.Event),

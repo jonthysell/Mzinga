@@ -127,7 +127,7 @@ namespace Mzinga.Trainer
             LastUpdatedTimestamp = lastUpdatedTimestamp;
         }
 
-        public void UpdateRecord(int rating, GameResult result, ExpansionPieces expansionPieces)
+        public void UpdateRecord(int rating, GameResult result, GameType expansionPieces)
         {
             if (rating < EloUtils.MinRating)
             {
@@ -152,7 +152,7 @@ namespace Mzinga.Trainer
             Update();
         }
 
-        public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights, ExpansionPieces expansionPieces)
+        public void UpdateMetricWeights(MetricWeights startMetricWeights, MetricWeights endMetricWeights, GameType expansionPieces)
         {
             StartMetricWeights = startMetricWeights ?? throw new ArgumentNullException(nameof(startMetricWeights));
             EndMetricWeights = endMetricWeights ?? throw new ArgumentNullException(nameof(endMetricWeights));
@@ -215,7 +215,7 @@ namespace Mzinga.Trainer
             for (int i = 0; i < Records.Length; i++)
             {
                 writer.WriteStartElement("Record");
-                writer.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString((ExpansionPieces)i));
+                writer.WriteAttributeString("GameType", Enums.GetGameTypeString((GameType)i));
                 writer.WriteAttributeString("EloRating", Records[i].EloRating.ToString());
                 writer.WriteAttributeString("Wins", Records[i].Wins.ToString());
                 writer.WriteAttributeString("Losses", Records[i].Losses.ToString());
@@ -292,13 +292,13 @@ namespace Mzinga.Trainer
                                 break;
                             case "Record":
                                 {
-                                    if (EnumUtils.TryParseExpansionPieces(reader["GameType"], out ExpansionPieces ep))
+                                    if (Enums.TryParse(reader["GameType"], out GameType gameType))
                                     {
-                                        _ = int.TryParse(reader["EloRating"], out records[(int)ep].EloRating);
-                                        _ = int.TryParse(reader["Wins"], out records[(int)ep].Wins);
-                                        _ = int.TryParse(reader["Losses"], out records[(int)ep].Losses);
-                                        _ = int.TryParse(reader["Draws"], out records[(int)ep].Draws);
-                                        _ = int.TryParse(reader["AutoTrains"], out records[(int)ep].AutoTrains);
+                                        _ = int.TryParse(reader["EloRating"], out records[(int)gameType].EloRating);
+                                        _ = int.TryParse(reader["Wins"], out records[(int)gameType].Wins);
+                                        _ = int.TryParse(reader["Losses"], out records[(int)gameType].Losses);
+                                        _ = int.TryParse(reader["Draws"], out records[(int)gameType].Draws);
+                                        _ = int.TryParse(reader["AutoTrains"], out records[(int)gameType].AutoTrains);
                                     }
                                 }
                                 break;
@@ -440,7 +440,7 @@ namespace Mzinga.Trainer
 
         public static ProfileRecord[] CreateRecords()
         {
-            ProfileRecord[] records = new ProfileRecord[EnumUtils.NumGameTypes];
+            ProfileRecord[] records = new ProfileRecord[(int)GameType.NumGameTypes];
             for (int i = 0; i < records.Length; i++)
             {
                 records[i] = new ProfileRecord();

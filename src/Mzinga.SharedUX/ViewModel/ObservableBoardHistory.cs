@@ -77,7 +77,7 @@ namespace Mzinga.SharedUX.ViewModel
                 BoardHistoryItem item = _boardHistory[i];
 
                 string countString = (i + 1).ToString().PadLeft(countWidth) + ". ";
-                string moveString = AppVM.ViewerConfig.NotationType == NotationType.BoardSpace ? NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString) : item.ToString();
+                string moveString = AppVM.ViewerConfig.NotationType == NotationType.BoardSpace ? item.MoveString : item.ToString();
                 
                 bool isActive = i < _activeBoardHistory.Count;
                 bool isLastMove = i + 1 == _activeBoardHistory.Count;

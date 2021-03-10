@@ -8,6 +8,8 @@
     <RootNamespace>Mzinga.Perft</RootNamespace>
   </PropertyGroup>
 
-  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Mzinga\Mzinga.csproj" />
+  </ItemGroup>
 
 </Project>

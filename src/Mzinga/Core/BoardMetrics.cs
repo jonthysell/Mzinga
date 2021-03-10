@@ -18,7 +18,7 @@ namespace Mzinga.Core
             }
         }
 
-        private readonly PieceMetrics[] _pieceMetrics = new PieceMetrics[EnumUtils.NumPieceNames];
+        private readonly PieceMetrics[] _pieceMetrics = new PieceMetrics[(int)PieceName.NumPieceNames];
 
         public BoardMetrics()
         {

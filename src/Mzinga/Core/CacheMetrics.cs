@@ -6,51 +6,21 @@ using System.Threading;
 
 namespace Mzinga.Core
 {
-    public class CacheMetrics
+    class CacheMetrics
     {
-        public int Hits
-        {
-            get
-            {
-                return _hits;
-            }
-        }
-        private int _hits = 0;
+        public int Hits => _hits;
+        private volatile int _hits = 0;
 
-        public int Misses
-        {
-            get
-            {
-                return _misses;
-            }
-        }
-        private int _misses = 0;
+        public int Misses => _misses;
+        private volatile int _misses = 0;
 
-        public int Stores
-        {
-            get
-            {
-                return _stores;
-            }
-        }
-        private int _stores = 0;
+        public int Stores => _stores;
+        private volatile int _stores = 0;
 
-        public int Updates
-        {
-            get
-            {
-                return _updates;
-            }
-        }
-        private int _updates = 0;
+        public int Updates => _updates;
+        private volatile int _updates = 0;
 
-        public double HitRatio
-        {
-            get
-            {
-                return Hits / (double)Math.Max(Hits + Misses, 1);
-            }
-        }
+        public double HitRatio => Hits / (double)Math.Max(Hits + Misses, 1);
 
         public CacheMetrics() { }
 

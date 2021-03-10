@@ -375,7 +375,7 @@ namespace Mzinga.SharedUX.ViewModel
                         ViewerConfig newConfig = new ViewerConfig()
                         {
                             FirstRun = Config.FirstRun,
-                            InternalGameEngineConfig = Config.InternalGameEngineConfig
+                            InternalEngineConfig = Config.InternalEngineConfig
                         };
                         Config = newConfig;
 

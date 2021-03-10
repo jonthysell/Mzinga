@@ -5,13 +5,13 @@ using System;
 
 namespace Mzinga.Core.AI
 {
-    internal class EvaluatedMove : IEquatable<EvaluatedMove>, IComparable<EvaluatedMove>
+    class EvaluatedMove : IEquatable<EvaluatedMove>, IComparable<EvaluatedMove>
     {
-        public Move Move { get; private set; }
+        public readonly Move Move;
 
-        public double ScoreAfterMove { get; private set; }
+        public readonly double ScoreAfterMove;
 
-        public int Depth { get; private set; }
+        public readonly int Depth;
 
         public EvaluatedMove(Move move, double scoreAfterMove = UnevaluatedMoveScore, int depth = 0)
         {
@@ -20,14 +20,19 @@ namespace Mzinga.Core.AI
             Depth = depth;
         }
 
-        public int CompareTo(EvaluatedMove evaluatedMove)
+        public int CompareTo(EvaluatedMove? evaluatedMove)
         {
+            if (evaluatedMove is null)
+            {
+                return 1;
+            }
+
             return evaluatedMove.ScoreAfterMove.CompareTo(ScoreAfterMove);
         }
 
-        public bool Equals(EvaluatedMove evaluatedMove)
+        public bool Equals(EvaluatedMove? evaluatedMove)
         {
-            if (null == evaluatedMove)
+            if (evaluatedMove is null)
             {
                 return false;
             }
@@ -35,9 +40,9 @@ namespace Mzinga.Core.AI
             return Depth == evaluatedMove.Depth && ScoreAfterMove == evaluatedMove.ScoreAfterMove && Move == evaluatedMove.Move;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            return Equals(obj as EvaluatedMove);
+            return obj is EvaluatedMove move && this == move;
         }
 
         public override int GetHashCode()
@@ -45,7 +50,7 @@ namespace Mzinga.Core.AI
             return HashCode.Combine(Move, ScoreAfterMove, Depth);
         }
 
-        public static bool operator ==(EvaluatedMove a, EvaluatedMove b)
+        public static bool operator ==(EvaluatedMove? a, EvaluatedMove? b)
         {
             if (a is null)
             {
@@ -55,7 +60,7 @@ namespace Mzinga.Core.AI
             return a.Equals(b);
         }
 
-        public static bool operator !=(EvaluatedMove a, EvaluatedMove b)
+        public static bool operator !=(EvaluatedMove? a, EvaluatedMove? b)
         {
             return !(a == b);
         }

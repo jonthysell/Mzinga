@@ -66,7 +66,7 @@ namespace Mzinga.Viewer.Views
         {
             try
             {
-                if (null != MainViewModel.AppVM.EngineExceptionOnStart)
+                if (MainViewModel.AppVM.EngineExceptionOnStart is not null)
                 {
                     throw new Exception("Unable to start the external engine so used the internal one instead.", MainViewModel.AppVM.EngineExceptionOnStart);
                 }

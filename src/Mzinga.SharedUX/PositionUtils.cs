@@ -17,7 +17,7 @@ namespace Mzinga.SharedUX
             }
             else if (double.IsInfinity(cursorX) || double.IsInfinity(cursorY) || hexRadius == 0) // No hexes on board
             {
-                return Position.Origin;
+                return Position.OriginPosition;
             }
 
             // Convert cursor to axial
@@ -51,7 +51,7 @@ namespace Mzinga.SharedUX
                 rz = -rx - ry;
             }
 
-            return new Position((int)rx, (int)ry, (int)rz, 0);
+            return new Position((int)rx, (int)rz, 0);
         }
     }
 }

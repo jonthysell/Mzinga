@@ -29,8 +29,8 @@ namespace Mzinga.Test
 
             for (int i = 0; i < iterations; i++)
             {
-                GameBoard gb = new GameBoard();
-                GameAI ai = GetTestGameAI(gb.ExpansionPieces);
+                var gb = new Board();
+                GameAI ai = GetTestGameAI(gb.GameType);
 
                 Stopwatch sw = Stopwatch.StartNew();
                 _ = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
@@ -49,12 +49,12 @@ namespace Mzinga.Test
             TimeSpan sum = TimeSpan.Zero;
             int iterations = 100;
 
-            GameBoard original = GetBoardOnFifthTurn();
+            var original = GetBoardOnFifthTurn();
 
             for (int i = 0; i < iterations; i++)
             {
-                GameBoard gb = original.Clone();
-                GameAI ai = GetTestGameAI(gb.ExpansionPieces);
+                var gb = original.Clone();
+                GameAI ai = GetTestGameAI(gb.GameType);
 
                 Stopwatch sw = Stopwatch.StartNew();
                 _ = ai.GetBestMove(gb, 2, PerfTestMaxHelperThreads);
@@ -70,8 +70,8 @@ namespace Mzinga.Test
         [TestCategory("Performance")]
         public void GameAI_FirstTurnBestMoveByTimePerfTest()
         {
-            GameBoard gb = new GameBoard();
-            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
+            var gb = new Board();
+            GameAI ai = GetTestGameAI(gb.GameType);
 
             int maxDepth = 0;
 
@@ -89,8 +89,8 @@ namespace Mzinga.Test
         [TestCategory("Performance")]
         public void GameAI_FifthTurnBestMoveByTimePerfTest()
         {
-            GameBoard gb = GetBoardOnFifthTurn();
-            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
+            var gb = GetBoardOnFifthTurn();
+            GameAI ai = GetTestGameAI(gb.GameType);
 
             int maxDepth = 0;
 
@@ -116,27 +116,27 @@ namespace Mzinga.Test
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_BlockWinningMoveIsBestMoveTest.csv");
         }
 
-        private static GameBoard GetBoardOnFifthTurn()
+        private static Board GetBoardOnFifthTurn()
         {
-            GameBoard gb = new GameBoard();
-            GameAI ai = GetTestGameAI(gb.ExpansionPieces);
+            var gb = new Board();
+            GameAI ai = GetTestGameAI(gb.GameType);
 
             while (gb.CurrentPlayerTurn < 5)
             {
-                gb.Play(ai.GetBestMove(gb, 1, TestMaxHelperThreads));
+                gb.TryPlayMove(ai.GetBestMove(gb, 1, TestMaxHelperThreads), "");
             }
 
             return gb;
         }
 
-        public static GameAI GetTestGameAI(ExpansionPieces expansionPieces)
+        public static GameAI GetTestGameAI(GameType gameType)
         {
-            return TestUtils.DefaultGameEngineConfig.GetGameAI(expansionPieces);
+            return TestUtils.DefaultGameEngineConfig.GetGameAI(gameType);
         }
 
         private class GameAIBestMoveTestCase : ITestCase
         {
-            public GameBoard Board;
+            public Board Board;
             public int MaxDepth;
 
             public Move ExpectedBestMove;
@@ -144,7 +144,7 @@ namespace Mzinga.Test
 
             public void Execute()
             {
-                GameAI ai = GetTestGameAI(Board.ExpansionPieces);
+                GameAI ai = GetTestGameAI(Board.GameType);
                 ActualBestMove = ai.GetBestMove(Board, MaxDepth, TestMaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove);
             }
@@ -160,9 +160,9 @@ namespace Mzinga.Test
 
                 string[] vals = s.Split('\t');
 
-                Board = new GameBoard(vals[0]);
+                Assert.IsTrue(Board.TryParseGameString(vals[0], out Board));
                 MaxDepth = int.Parse(vals[1]);
-                ExpectedBestMove = new Move(vals[2]);
+               Assert.IsTrue(Board.TryParseMove(vals[2], out ExpectedBestMove, out string _));
             }
         }
 

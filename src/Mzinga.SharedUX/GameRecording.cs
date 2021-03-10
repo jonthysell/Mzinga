@@ -14,7 +14,7 @@ namespace Mzinga.SharedUX
 {
     public class GameRecording
     {
-        public GameBoard GameBoard { get; private set; }
+        public Board Board { get; private set; }
 
         public GameMetadata Metadata { get; private set; }
 
@@ -22,9 +22,9 @@ namespace Mzinga.SharedUX
 
         public string FileName { get; set; } = null;
 
-        public GameRecording(GameBoard gameBoard, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
+        public GameRecording(Board board, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
         {
-            GameBoard = gameBoard?.Clone() ?? throw new ArgumentNullException(nameof(gameBoard));
+            Board = board?.Clone() ?? throw new ArgumentNullException(nameof(board));
 
             GameRecordingSource = gameRecordingSource;
 
@@ -35,8 +35,8 @@ namespace Mzinga.SharedUX
             else
             {
                 Metadata = new GameMetadata();
-                Metadata.SetTag("GameType", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces));
-                Metadata.SetTag("Result", gameBoard.BoardState.ToString());
+                Metadata.SetTag("GameType", Enums.GetGameTypeString(board.GameType));
+                Metadata.SetTag("Result", board.BoardState.ToString());
             }
         }
 
@@ -49,7 +49,7 @@ namespace Mzinga.SharedUX
 
             using StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII);
             // Write Mandatory Tags
-            sw.WriteLine(GetPGNTag("GameType", EnumUtils.GetExpansionPiecesString(Metadata.GameType)));
+            sw.WriteLine(GetPGNTag("GameType", Enums.GetGameTypeString(Metadata.GameType)));
 
             sw.WriteLine(GetPGNTag("Date", Metadata.Date));
             sw.WriteLine(GetPGNTag("Event", Metadata.Event));
@@ -66,7 +66,7 @@ namespace Mzinga.SharedUX
                 sw.WriteLine(GetPGNTag(tag.Key, tag.Value));
             }
 
-            if (GameBoard.BoardHistory.Count > 0)
+            if (Board.BoardHistory.Count > 0)
             {
                 sw.WriteLine();
 
@@ -74,9 +74,9 @@ namespace Mzinga.SharedUX
 
                 // Write Moves
                 int count = 1;
-                foreach (BoardHistoryItem item in GameBoard.BoardHistory)
+                foreach (BoardHistoryItem item in Board.BoardHistory)
                 {
-                    sw.WriteLine("{0}. {1}", count, NotationUtils.NormalizeBoardSpaceMoveString(item.MoveString));
+                    sw.WriteLine("{0}. {1}", count, item.MoveString);
                     WritePGNMoveCommentary(sw, count);
 
                     count++;
@@ -84,7 +84,7 @@ namespace Mzinga.SharedUX
             }
 
             // Write Result
-            if (EnumUtils.GameIsOver(Metadata.Result))
+            if (Enums.GameIsOver(Metadata.Result))
             {
                 sw.WriteLine();
                 sw.WriteLine(Metadata.Result.ToString());
@@ -123,7 +123,7 @@ namespace Mzinga.SharedUX
             using (StreamReader sr = new StreamReader(inputStream, Encoding.ASCII))
             {
                 string line = null;
-                while ((line = sr.ReadLine()) != null)
+                while ((line = sr.ReadLine()) is not null)
                 {
                     line = line.Trim();
 
@@ -177,21 +177,19 @@ namespace Mzinga.SharedUX
                 }
             }
 
-            GameBoard gameBoard = new GameBoard(metadata.GameType);
+            Board board = new Board(metadata.GameType);
 
-            foreach (string moveString in moveList)
+            foreach (string inputMoveStr in moveList)
             {
-                Move move = null;
-                try
+                if (!board.TryParseMove(inputMoveStr, out Move move, out string moveStr))
                 {
-                    move = NotationUtils.ParseMoveString(gameBoard, moveString);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
+                    throw new Exception($"Unable to parse '{inputMoveStr}'.");
                 }
 
-                gameBoard.TrustedPlay(move, moveString);
+                if (!board.TryPlayMove(move, moveStr))
+                {
+                    throw new Exception($"Unable to play '{inputMoveStr}'.");
+                }
             }
 
             // Set result
@@ -201,10 +199,10 @@ namespace Mzinga.SharedUX
             }
             else
             {
-                metadata.SetTag("Result", gameBoard.BoardState.ToString());
+                metadata.SetTag("Result", board.BoardState.ToString());
             }
 
-            return new GameRecording(gameBoard, GameRecordingSource.PGN, metadata)
+            return new GameRecording(board, GameRecordingSource.PGN, metadata)
             {
                 FileName = fileName?.Trim()
             };
@@ -240,7 +238,7 @@ namespace Mzinga.SharedUX
             using (StreamReader sr = new StreamReader(inputStream))
             {
                 string line = null;
-                while ((line = sr.ReadLine()) != null)
+                while ((line = sr.ReadLine()) is not null)
                 {
                     line = line.Trim();
                     if (!string.IsNullOrWhiteSpace(line))
@@ -249,7 +247,7 @@ namespace Mzinga.SharedUX
                         Match m = null;
                         if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
                         {
-                            metadata.SetTag("GameType", m.Groups[1].Value.ToUpper().Replace("HIVE", EnumUtils.NoExpansionsString).Replace("-", "+"));
+                            metadata.SetTag("GameType", m.Groups[1].Value.ToUpper().Replace("HIVE", GameType.Base.ToString()).Replace("-", "+"));
                         }
                         else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
                         {
@@ -362,7 +360,7 @@ namespace Mzinga.SharedUX
                         }
                         else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\]")).Success)
                         {
-                            moveList.Add(NotationUtils.BoardSpacePass);
+                            moveList.Add(Move.PassString);
 
                             lastMoveCompleted = false;
                         }
@@ -379,21 +377,19 @@ namespace Mzinga.SharedUX
                 }
             }
 
-            GameBoard gameBoard = new GameBoard(metadata.GameType);
+            Board board = new Board(metadata.GameType);
 
-            foreach (string moveString in moveList)
+            foreach (string inputMoveStr in moveList)
             {
-                Move move = null;
-                try
+                if (!board.TryParseMove(inputMoveStr, out Move move, out string moveStr))
                 {
-                    move = NotationUtils.ParseMoveString(gameBoard, moveString);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format("Unable to parse '{0}'.", moveString), ex);
+                    throw new Exception($"Unable to parse '{inputMoveStr}'.");
                 }
 
-                gameBoard.TrustedPlay(move, NotationUtils.NormalizeBoardSpaceMoveString(moveString));
+                if (!board.TryPlayMove(move, moveStr))
+                {
+                    throw new Exception($"Unable to play '{inputMoveStr}'.");
+                }
             }
 
             // Set result
@@ -415,10 +411,10 @@ namespace Mzinga.SharedUX
             }
             else
             {
-                metadata.SetTag("Result", gameBoard.BoardState.ToString());
+                metadata.SetTag("Result", board.BoardState.ToString());
             }
 
-            return new GameRecording(gameBoard, GameRecordingSource.SGF, metadata)
+            return new GameRecording(board, GameRecordingSource.SGF, metadata)
             {
                 FileName = fileName?.Trim()
             };

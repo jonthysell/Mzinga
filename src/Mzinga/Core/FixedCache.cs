@@ -37,17 +37,17 @@ namespace Mzinga.Core
         }
 
 #if DEBUG
-        public CacheMetrics Metrics { get; private set; } = new CacheMetrics();
+        internal readonly CacheMetrics Metrics = new CacheMetrics();
 #endif
 
         private readonly Dictionary<TKey, FixedCacheEntry<TKey, TEntry>> _dict;
-        private readonly LinkedList<TKey> _list;
+        private readonly LinkedList<TKey> _list = new LinkedList<TKey>();
 
-        private readonly FixedCacheReplaceEntryPredicate<TEntry> _replaceEntryPredicate;
+        private readonly FixedCacheReplaceEntryPredicate<TEntry>? _replaceEntryPredicate;
 
         private readonly object _storeLock = new object();
 
-        public FixedCache(int capacity = DefaultCapacity, FixedCacheReplaceEntryPredicate<TEntry> replaceEntryPredicate = null)
+        public FixedCache(int capacity = DefaultCapacity, FixedCacheReplaceEntryPredicate<TEntry>? replaceEntryPredicate = null)
         {
             if (capacity <= 0)
             {
@@ -59,22 +59,24 @@ namespace Mzinga.Core
             _replaceEntryPredicate = replaceEntryPredicate;
 
             _dict = new Dictionary<TKey, FixedCacheEntry<TKey, TEntry>>(Capacity);
-            _list = new LinkedList<TKey>();
         }
 
         public void Store(TKey key, TEntry newEntry)
         {
             lock (_storeLock)
             {
-                if (!_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry> existingEntry))
+                if (!_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? existingEntry))
                 {
                     // New entry
                     if (Count == Capacity)
                     {
                         // Make space
-                        TKey first = _list.First.Value;
-                        _dict.Remove(first);
-                        _list.RemoveFirst();
+                        if (_list.First is not null)
+                        {
+                            TKey first = _list.First.Value;
+                            _dict.Remove(first);
+                            _list.RemoveFirst();
+                        }
                     }
 
                     // Add
@@ -86,7 +88,7 @@ namespace Mzinga.Core
                 else
                 {
                     // Existing entry
-                    if (null == _replaceEntryPredicate || _replaceEntryPredicate(existingEntry.Entry, newEntry))
+                    if (_replaceEntryPredicate is null || _replaceEntryPredicate(existingEntry.Entry, newEntry))
                     {
                         // Replace
                         _list.Remove(existingEntry.ListNode);
@@ -104,18 +106,14 @@ namespace Mzinga.Core
         {
             LinkedListNode<TKey> listNode = _list.AddLast(key);
 
-            FixedCacheEntry<TKey, TEntry> wrappedEntry = new FixedCacheEntry<TKey, TEntry>
-            {
-                ListNode = listNode,
-                Entry = newEntry,
-            };
+            FixedCacheEntry<TKey, TEntry> wrappedEntry = new FixedCacheEntry<TKey, TEntry>(listNode, newEntry);
 
             _dict[key] = wrappedEntry;
         }
 
-        public bool TryLookup(TKey key, out TEntry entry)
+        public bool TryLookup(TKey key, out TEntry? entry)
         {
-            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry> wrappedEntry))
+            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry))
             {
                 entry = wrappedEntry.Entry;
 #if DEBUG
@@ -155,6 +153,12 @@ namespace Mzinga.Core
         {
             public LinkedListNode<TK> ListNode;
             public TE Entry;
+
+            public FixedCacheEntry(LinkedListNode<TK> listNode, TE entry)
+            {
+                ListNode = listNode;
+                Entry = entry;
+            }
         }
     }
 }

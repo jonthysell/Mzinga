@@ -8,12 +8,9 @@ namespace Mzinga.Core.AI
 {
     public class MetricWeights
     {
-        private readonly double[] _bugTypeWeights;
+        private readonly double[] _bugTypeWeights = new double[(int)BugType.NumBugTypes * NumBugTypeWeights];
 
-        public MetricWeights()
-        {
-            _bugTypeWeights = new double[EnumUtils.NumBugTypes * NumBugTypeWeights];
-        }
+        public MetricWeights() { }
 
         public double Get(BugType bugType, BugTypeWeight bugTypeWeight)
         {
@@ -29,11 +26,6 @@ namespace Mzinga.Core.AI
 
         public void CopyFrom(MetricWeights source)
         {
-            if (null == source)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
             Array.Copy(source._bugTypeWeights, _bugTypeWeights, source._bugTypeWeights.Length);
         }
 
@@ -85,11 +77,6 @@ namespace Mzinga.Core.AI
 
         public void Add(MetricWeights a)
         {
-            if (null == a)
-            {
-                throw new ArgumentNullException(nameof(a));
-            }
-
             for (int i = 0; i < _bugTypeWeights.Length; i++)
             {
                 _bugTypeWeights[i] += a._bugTypeWeights[i];
@@ -106,11 +93,6 @@ namespace Mzinga.Core.AI
 
         public static MetricWeights ReadMetricWeightsXml(XmlReader xmlReader)
         {
-            if (null == xmlReader)
-            {
-                throw new ArgumentNullException(nameof(xmlReader));
-            }
-
             MetricWeights mw = new MetricWeights();
 
             while (xmlReader.Read())
@@ -130,23 +112,18 @@ namespace Mzinga.Core.AI
             return mw;
         }
 
-        public void WriteMetricWeightsXml(XmlWriter xmlWriter, string name = "MetricWeights", ExpansionPieces? gameType = null)
+        public void WriteMetricWeightsXml(XmlWriter xmlWriter, string name = "MetricWeights", GameType? gameType = null)
         {
-            if (null == xmlWriter)
-            {
-                throw new ArgumentNullException(nameof(xmlWriter));
-            }
-
             xmlWriter.WriteStartElement(name);
 
             if (gameType.HasValue)
             {
-                xmlWriter.WriteAttributeString("GameType", EnumUtils.GetExpansionPiecesString(gameType.Value));
+                xmlWriter.WriteAttributeString("GameType", Enums.GetGameTypeString(gameType.Value));
             }
 
             IterateOverWeights((bugType, bugTypeWeight) =>
             {
-                if (!gameType.HasValue || EnumUtils.IsEnabled(bugType, gameType.Value))
+                if (!gameType.HasValue || Enums.BugTypeIsEnabledForGameType(bugType, gameType.Value))
                 {
                     string key = GetKeyName(bugType, bugTypeWeight);
                     double value = Get(bugType, bugTypeWeight);
@@ -194,12 +171,7 @@ namespace Mzinga.Core.AI
 
         public static void IterateOverWeights(Action<BugType, BugTypeWeight> action)
         {
-            if (null == action)
-            {
-                throw new ArgumentNullException(nameof(action));
-            }
-
-            for (int bugTypeInt = 0; bugTypeInt < EnumUtils.NumBugTypes; bugTypeInt++)
+            for (int bugTypeInt = 0; bugTypeInt < (int)BugType.NumBugTypes; bugTypeInt++)
             {
                 BugType bugType = (BugType)bugTypeInt;
                 for (int bugTypeWeightInt = 0; bugTypeWeightInt < NumBugTypeWeights; bugTypeWeightInt++)

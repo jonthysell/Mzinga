@@ -1,3 +1,2 @@
 ﻿# Enemy will win in one move, so block it (2 ply)
-Base;InProgress;White[12];WQ[0,-1,1];WB1[0,1,-1,1];WG1[0,0,0];BQ[1,1,-2];BS1[1,-1,0];BG1[0,1,-1];BG2[0,2,-2];BA1[-1,-1,2];BA2[1,-2,1];BA3[-1,0,1]	2	WB1[0,2,-2,1]
-Base;InProgress;Black[12];WQ[-1,0,1];WB1[-2,2,0];WG1[0,0,0];WG2[-1,4,-3];WA1[-2,3,-1];WA2[-1,3,-2];WA3[0,2,-2];BQ[-1,2,-1];BS1[1,2,-3];BG1[0,1,-1];BG2[-1,-1,2];BG3[-1,-2,3]	2	BS1[-1,5,-4]
+Base;InProgress;White[14];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wB1 /wS1;bB1 bS1\;wB1 wS1;bB1 bS1;wB1 wQ;bB1 -bQ;wS1 bQ\;bS1 -wB1;wS1 bS1\;bA1 bQ-;wS1 bQ\;bA1 bS1\;wS1 bA1\;bA2 \bQ;wS1 -bS1;bA2 \wB1;wS1 bA2/;bQ bB1/;wB1 bB1;bQ wS1\;wS1 wB1-;bA3 bA1\	2	wS1 bA3-

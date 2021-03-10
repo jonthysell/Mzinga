@@ -27,7 +27,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        public GameEngineConfig InternalGameEngineConfig { get; private set; } = GameEngineConfig.GetDefaultEngineConfig(); // This should be the only place we load the config in the Viewer
+        public EngineConfig InternalEngineConfig { get; private set; } = EngineConfig.GetDefaultEngineConfig(); // This should be the only place we load the config in the Viewer
 
         public string ViewerConfigPath { get; private set; }
 
@@ -65,7 +65,7 @@ namespace Mzinga.Viewer
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Avalonia.Threading.Dispatcher.UIThread.Post(action); },
                 TextToClipboard = TextToClipboard,
-                InternalGameEngineConfig = InternalGameEngineConfig, // Should be the unmodified defaults
+                InternalEngineConfig = InternalEngineConfig, // Should be the unmodified defaults
             };
 
             if (parameters.ViewerConfig.EngineType == EngineType.CommandLine)
@@ -107,7 +107,7 @@ namespace Mzinga.Viewer
             using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
             ViewerConfig viewerConfig = new ViewerConfig()
             {
-                InternalGameEngineConfig = InternalGameEngineConfig.GetOptionsClone() // Create clone to store user values
+                InternalEngineConfig = InternalEngineConfig.GetOptionsClone() // Create clone to store user values
             };
 
             try
@@ -122,7 +122,7 @@ namespace Mzinga.Viewer
         private void SaveConfig()
         {
             using FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create);
-            AppVM.ViewerConfig.InternalGameEngineConfig.CopyOptionsFrom(InternalGameEngineConfig.GetOptionsClone()); // Repopulate with current engine values
+            AppVM.ViewerConfig.InternalEngineConfig.CopyOptionsFrom(InternalEngineConfig.GetOptionsClone()); // Repopulate with current engine values
             AppVM.ViewerConfig.SaveConfig(outputStream);
         }
 

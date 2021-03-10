@@ -70,9 +70,6 @@ namespace Mzinga.Trainer
                         case Command.ExportAI:
                             t.ExportAI();
                             break;
-                        case Command.BuildInitialTables:
-                            t.BuildInitialTables();
-                            break;
                         default:
                             ShowHelp();
                             break;
@@ -104,7 +101,7 @@ namespace Mzinga.Trainer
 
             Console.ForegroundColor = oldColor;
 
-            if (null != ex.InnerException)
+            if (ex.InnerException is not null)
             {
                 PrintException(ex.InnerException);
             }
@@ -172,7 +169,6 @@ namespace Mzinga.Trainer
             Console.WriteLine("-TopCount              The number of profiles to return when calling top");
             Console.WriteLine("-AllGameTypes          Run the specifcied command through every game type");
             Console.WriteLine("-ProvisionalFirst      Prioritize battles with at least one provisional profile");
-            Console.WriteLine("-InitialTableDepth     The ply depth to play to build initial tables");
             Console.WriteLine();
         }
 
@@ -241,10 +237,6 @@ namespace Mzinga.Trainer
                 case "ea":
                 case "exportai":
                     cmd = Command.ExportAI;
-                    break;
-                case "bit":
-                case "buildinitialtables":
-                    cmd = Command.BuildInitialTables;
                     break;
             }
 
@@ -355,7 +347,7 @@ namespace Mzinga.Trainer
                         break;
                     case "gt":
                     case "gametype":
-                        trainerSettings.GameType = EnumUtils.ParseExpansionPieces(args[++i]);
+                        _ = Enums.TryParse(args[++i], out trainerSettings.GameType);
                         break;
                     case "tpp":
                     case "targetprofilepath":
@@ -380,10 +372,6 @@ namespace Mzinga.Trainer
                     case "provisionalfirst":
                     case "pf":
                         trainerSettings.ProvisionalFirst = bool.Parse(args[++i]);
-                        break;
-                    case "itd":
-                    case "initialtabledepth":
-                        trainerSettings.InitialTableDepth = int.Parse(args[++i]);
                         break;
                     default:
                         throw new Exception(string.Format("Unknown parameter: {0}", args[i]));
@@ -410,6 +398,5 @@ namespace Mzinga.Trainer
         Top,
         MergeTop,
         ExportAI,
-        BuildInitialTables,
     }
 }

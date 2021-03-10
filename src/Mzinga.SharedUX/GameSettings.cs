@@ -13,7 +13,7 @@ namespace Mzinga.SharedUX
 
         public PlayerType BlackPlayerType { get; set; } = PlayerType.EngineAI;
 
-        public ExpansionPieces ExpansionPieces
+        public GameType GameType
         {
             get
             {
@@ -21,7 +21,7 @@ namespace Mzinga.SharedUX
             }
             set
             {
-                Metadata.SetTag("GameType", EnumUtils.GetExpansionPiecesString(value));
+                Metadata.SetTag("GameType", Enums.GetGameTypeString(value));
             }
         }
 
@@ -87,24 +87,24 @@ namespace Mzinga.SharedUX
 
         public GameRecording GameRecording { get; private set; }
 
-        public GameBoard CurrentGameBoard
+        public Board CurrentBoard
         {
             get
             {
-                return _currentGameBoard;
+                return _currentBoard;
             }
             set
             {
-                _currentGameBoard = value ?? throw new ArgumentNullException(nameof(value));
+                _currentBoard = value ?? throw new ArgumentNullException(nameof(value));
 
                 if (GameMode == GameMode.Play)
                 {
-                    GameRecording = new GameRecording(CurrentGameBoard, GameRecordingSource.Game, GameRecording.Metadata);
-                    Metadata.SetTag("Result", CurrentGameBoard.BoardState.ToString());
+                    GameRecording = new GameRecording(CurrentBoard, GameRecordingSource.Game, GameRecording.Metadata);
+                    Metadata.SetTag("Result", CurrentBoard.BoardState.ToString());
                 }
             }
         }
-        private GameBoard _currentGameBoard;
+        private Board _currentBoard;
 
         public GameMetadata Metadata
         {
@@ -118,30 +118,30 @@ namespace Mzinga.SharedUX
 
         public GameSettings()
         {
-            GameRecording = new GameRecording(new GameBoard(), GameRecordingSource.Game);
-            _currentGameBoard = GameRecording.GameBoard.Clone();
+            GameRecording = new GameRecording(new Board(), GameRecordingSource.Game);
+            _currentBoard = GameRecording.Board.Clone();
         }
 
         public GameSettings(GameRecording gameRecording)
         {
             GameRecording = gameRecording ?? throw new ArgumentNullException(nameof(gameRecording));
-            _currentGameBoard = GameRecording.GameBoard.Clone();
+            _currentBoard = GameRecording.Board.Clone();
         }
 
-        public GameSettings(GameBoard gameBoard, GameMetadata metadata = null)
+        public GameSettings(Board board, GameMetadata metadata = null)
         {
-            if (null == gameBoard)
+            if (null == board)
             {
-                throw new ArgumentNullException(nameof(gameBoard));
+                throw new ArgumentNullException(nameof(board));
             }
 
-            GameRecording = new GameRecording(gameBoard, GameRecordingSource.Game, metadata);
-            _currentGameBoard = GameRecording.GameBoard.Clone();
+            GameRecording = new GameRecording(board, GameRecordingSource.Game, metadata);
+            _currentBoard = GameRecording.Board.Clone();
         }
 
         public GameSettings Clone()
         {
-            GameSettings clone = new GameSettings(CurrentGameBoard, Metadata)
+            GameSettings clone = new GameSettings(CurrentBoard, Metadata)
             {
                 WhitePlayerType = WhitePlayerType,
                 BlackPlayerType = BlackPlayerType,
@@ -159,7 +159,7 @@ namespace Mzinga.SharedUX
 
         public static GameSettings CreateNewFromExisting(GameSettings source)
         {
-            GameSettings clone = new GameSettings(new GameBoard(source.ExpansionPieces))
+            GameSettings clone = new GameSettings(new Board(source.GameType))
             {
                 WhitePlayerType = source.WhitePlayerType,
                 BlackPlayerType = source.BlackPlayerType,
