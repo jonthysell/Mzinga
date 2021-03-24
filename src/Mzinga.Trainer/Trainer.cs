@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1108,14 +1107,12 @@ namespace Mzinga.Trainer
 
             EngineConfig config = EngineConfig.GetDefaultEngineConfig();
 
-            string version = Assembly.GetEntryAssembly().GetName().Version.ToString();
-
             for (int i = 0; i < (int)GameType.NumGameTypes; i++)
             {
                 GameType gameType = (GameType)i;
 
-                Guid id = Guid.Parse(string.Format("00000000-0000-0000-0000-{0}{1}", version.Replace(".", ""), i));
-                string name = string.Format("Mzinga v{0} ({1})", version, Enums.GetGameTypeString(gameType));
+                Guid id = ToGuid(AppInfo.LongVersion + (ulong)i);
+                string name = string.Format("Mzinga v{0} ({1})", AppInfo.Version, Enums.GetGameTypeString(gameType));
 
                 Profile p = new Profile(id, name, config.MetricWeightSet[gameType][0], config.MetricWeightSet[gameType][1]);
 
@@ -1126,6 +1123,13 @@ namespace Mzinga.Trainer
             }
 
             Log("ExportAI end.");
+        }
+
+        private static Guid ToGuid(ulong value)
+        {
+            byte[] guidData = new byte[16];
+            Array.Copy(BitConverter.GetBytes(value), guidData, 8);
+            return new Guid(guidData);
         }
 
         private static List<Profile> LoadProfiles(string path)

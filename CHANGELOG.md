@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Trainer: Fixed bug with exportai command and new version numbers
+
 ## v0.10.3 ##
 
 * Viewer: Remove deprecated "Mzinga" notation type
