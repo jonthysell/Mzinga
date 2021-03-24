@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.10.3 ##
 
 * Viewer: Remove deprecated "Mzinga" notation type
 
