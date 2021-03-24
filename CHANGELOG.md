@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.10.2 ##
 
 * Core: FastCore refactor to simplify code and to improve build and runtime performance
 
