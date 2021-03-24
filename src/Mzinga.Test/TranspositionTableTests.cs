@@ -91,7 +91,7 @@ namespace Mzinga.Test
                 Depth = 0,
                 Type = TranspositionTableEntryType.Exact,
                 Value = 0,
-                BestMove = new Move(PieceName.WhiteSoldierAnt1, new Position(0, 0, 0, 0))
+                BestMove = Move.PassMove,
             };
             return te;
         }

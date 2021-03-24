@@ -366,3 +366,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+launchSettings.json

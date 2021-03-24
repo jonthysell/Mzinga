@@ -11,7 +11,7 @@ namespace Mzinga.Engine
     {
         static string ID => $"{AppInfo.Name} v{AppInfo.Version}";
 
-        private static GameEngine _engine;
+        private static Engine _engine;
 
         private static volatile bool _interceptCancel = false;
 
@@ -21,9 +21,9 @@ namespace Mzinga.Engine
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            GameEngineConfig config = LoadConfig(null != args && args.Length > 0 ? args[0] : null);
+            EngineConfig config = LoadConfig(null != args && args.Length > 0 ? args[0] : null);
 
-            _engine = new GameEngine(ID, config, PrintLine);
+            _engine = new Engine(ID, config, PrintLine);
             _engine.ParseCommand("info");
 
             if (AppInfo.IsWindows)
@@ -86,29 +86,29 @@ namespace Mzinga.Engine
             Console.Out.WriteLine(format, arg);
         }
 
-        static GameEngineConfig LoadConfig(string configPath)
+        static EngineConfig LoadConfig(string configPath)
         {
 
             // Try loading specified file
-            if (!TryLoadConfig(configPath, out GameEngineConfig result))
+            if (!TryLoadConfig(configPath, out EngineConfig result))
             {
                 // Try loading default file
                 if (!TryLoadConfig(DefaultEngineConfigFileName, out result))
                 {
                     // Load default from embedded resource
-                    result = GameEngineConfig.GetDefaultEngineConfig();
+                    result = EngineConfig.GetDefaultEngineConfig();
                 }
             }
 
             return result;
         }
 
-        private static bool TryLoadConfig(string configPath, out GameEngineConfig result)
+        private static bool TryLoadConfig(string configPath, out EngineConfig result)
         {
             try
             {
                 using FileStream fs = new FileStream(configPath, FileMode.Open);
-                result = new GameEngineConfig(fs);
+                result = new EngineConfig(fs);
                 return true;
             }
             catch (Exception) { }

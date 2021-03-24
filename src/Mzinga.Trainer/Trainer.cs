@@ -291,7 +291,7 @@ namespace Mzinga.Trainer
             }
 
             // Create Game
-            GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
+            Board board = new Board(TrainerSettings.GameType);
 
             // Create AIs
             GameAI whiteAI = new GameAI(new GameAIConfig()
@@ -303,7 +303,7 @@ namespace Mzinga.Trainer
 
             if (TrainerSettings.FindPuzzleCandidates)
             {
-                whiteAI.BestMoveFound += GetPuzzleCandidateHandler(gameBoard);
+                whiteAI.BestMoveFound += GetPuzzleCandidateHandler(board);
             }
 
             GameAI blackAI = new GameAI(new GameAIConfig()
@@ -315,12 +315,12 @@ namespace Mzinga.Trainer
 
             if (TrainerSettings.FindPuzzleCandidates)
             {
-                blackAI.BestMoveFound += GetPuzzleCandidateHandler(gameBoard);
+                blackAI.BestMoveFound += GetPuzzleCandidateHandler(board);
             }
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
 
-            Log("Battle start {0} {1} vs. {2}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), ToString(whiteProfile, gameBoard.ExpansionPieces), ToString(blackProfile, gameBoard.ExpansionPieces));
+            Log("Battle start {0} {1} vs. {2}.", Enums.GetGameTypeString(board.GameType), ToString(whiteProfile, board.GameType), ToString(blackProfile, board.GameType));
 
             DateTime battleStart = DateTime.Now;
             List<ulong> boardKeys = new List<ulong>();
@@ -328,9 +328,9 @@ namespace Mzinga.Trainer
             try
             {
                 // Play Game
-                while (gameBoard.GameInProgress)
+                while (board.GameInProgress)
                 {
-                    boardKeys.Add(gameBoard.ZobristKey);
+                    boardKeys.Add(board.ZobristKey);
 
                     if (boardKeys.Count >= 6)
                     {
@@ -349,8 +349,8 @@ namespace Mzinga.Trainer
                         break;
                     }
 
-                    Move move = GetBestMove(gameBoard, gameBoard.CurrentTurnColor == PlayerColor.White ? whiteAI : blackAI);
-                    gameBoard.Play(move);
+                    Move move = GetBestMove(board, board.CurrentColor == PlayerColor.White ? whiteAI : blackAI);
+                    board.Play(move, board.GetMoveString(move));
                 }
             }
             catch (Exception ex)
@@ -358,7 +358,7 @@ namespace Mzinga.Trainer
                 Log("Battle interrupted with exception: {0}", ex.Message);
             }
 
-            BoardState boardState = gameBoard.GameInProgress ? BoardState.Draw : gameBoard.BoardState;
+            BoardState boardState = board.GameInProgress ? BoardState.Draw : board.BoardState;
 
             // Load Results
             double whiteScore = 0.0;
@@ -392,7 +392,7 @@ namespace Mzinga.Trainer
 
             lock (whiteProfile)
             {
-                whiteRating = whiteProfile.Records[(int)gameBoard.ExpansionPieces].EloRating;
+                whiteRating = whiteProfile.Records[(int)board.GameType].EloRating;
                 whiteK = IsProvisional(whiteProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
             }
 
@@ -401,7 +401,7 @@ namespace Mzinga.Trainer
 
             lock (blackProfile)
             {
-                blackRating = blackProfile.Records[(int)gameBoard.ExpansionPieces].EloRating;
+                blackRating = blackProfile.Records[(int)board.GameType].EloRating;
                 blackK = IsProvisional(blackProfile) ? EloUtils.ProvisionalK : EloUtils.DefaultK;
             }
 
@@ -415,28 +415,28 @@ namespace Mzinga.Trainer
 
             lock (whiteProfile)
             {
-                whiteProfile.UpdateRecord(whiteEndRating, whiteResult, gameBoard.ExpansionPieces);
+                whiteProfile.UpdateRecord(whiteEndRating, whiteResult, board.GameType);
             }
 
             lock (blackProfile)
             {
-                blackProfile.UpdateRecord(blackEndRating, blackResult, gameBoard.ExpansionPieces);
+                blackProfile.UpdateRecord(blackEndRating, blackResult, board.GameType);
             }
 
             // Output Results
-            Log("Battle end {0} {1} {2} vs. {3}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), boardState, ToString(whiteProfile, gameBoard.ExpansionPieces), ToString(blackProfile, gameBoard.ExpansionPieces));
+            Log("Battle end {0} {1} {2} vs. {3}.", Enums.GetGameTypeString(board.GameType), boardState, ToString(whiteProfile, board.GameType), ToString(blackProfile, board.GameType));
 
             return boardState;
         }
 
-        private Move GetBestMove(GameBoard gameBoard, GameAI ai)
+        private Move GetBestMove(Board board, GameAI ai)
         {
             if (TrainerSettings.MaxDepth >= 0)
             {
-                return ai.GetBestMove(gameBoard, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads);
+                return ai.GetBestMove(board, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads);
             }
 
-            return ai.GetBestMove(gameBoard, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads);
+            return ai.GetBestMove(board, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads);
         }
 
         public void Cull()
@@ -542,7 +542,7 @@ namespace Mzinga.Trainer
             List<Profile> profiles = LoadProfiles(path);
             profiles = profiles.OrderByDescending(profile => profile.Records[(int)TrainerSettings.GameType].EloRating).ToList();
 
-            string resultFile = Path.Combine(path, string.Format("analyze{0}.csv", EnumUtils.GetExpansionPiecesString(TrainerSettings.GameType)));
+            string resultFile = Path.Combine(path, string.Format("analyze{0}.csv", Enums.GetGameTypeString(TrainerSettings.GameType)));
 
             using (StreamWriter sw = new StreamWriter(resultFile))
             {
@@ -926,7 +926,7 @@ namespace Mzinga.Trainer
 
             Log("Tournament end, elapsed time: {0}.", ToString(DateTime.Now - tournamentStart));
 
-            if (currentTier.Length == 1 && null != currentTier[0])
+            if (currentTier.Length == 1 && currentTier[0] is not null)
             {
                 Profile winner = currentTier[0];
                 Log("Tournament Winner: {0}", ToString(winner));
@@ -972,28 +972,28 @@ namespace Mzinga.Trainer
             while (TrainerSettings.MaxBattles == TrainerSettings.MaxMaxBattles || battleCount < TrainerSettings.MaxBattles)
             {
                 // Create Game
-                GameBoard gameBoard = new GameBoard(TrainerSettings.GameType);
+                Board board = new Board(TrainerSettings.GameType);
 
                 EventHandler<BestMoveFoundEventArgs> puzzleCandidateHandler = null;
 
                 if (TrainerSettings.FindPuzzleCandidates)
                 {
-                    puzzleCandidateHandler = GetPuzzleCandidateHandler(gameBoard);
+                    puzzleCandidateHandler = GetPuzzleCandidateHandler(board);
                     gameAI.BestMoveFound += puzzleCandidateHandler;
                 }
 
-                Log("AutoTrain battle {0} {1} start.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1);
+                Log("AutoTrain battle {0} {1} start.", Enums.GetGameTypeString(board.GameType), battleCount + 1);
 
                 try
                 {
                     CancellationTokenSource cts = new CancellationTokenSource();
                     cts.CancelAfter(TrainerSettings.BattleTimeLimit);
 
-                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(gameBoard, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token) : gameAI.TreeStrapAsync(gameBoard, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token);
+                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(board, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token) : gameAI.TreeStrapAsync(board, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token);
                     treeStrapTask.Wait();
 
                     // Update profile with final MetricWeights
-                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights, gameBoard.ExpansionPieces);
+                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights, board.GameType);
 
                     // Write profile
                     using (FileStream fs = new FileStream(path, FileMode.Create))
@@ -1001,15 +1001,15 @@ namespace Mzinga.Trainer
                         profile.WriteXml(fs);
                     }
 
-                    Log("AutoTrain battle {0} {1} end {2};{3}[{4}].", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1, gameBoard.BoardState.ToString(), gameBoard.CurrentTurnColor.ToString(), gameBoard.CurrentPlayerTurn);
+                    Log("AutoTrain battle {0} {1} end {2};{3}[{4}].", Enums.GetGameTypeString(board.GameType), battleCount + 1, board.BoardState.ToString(), board.CurrentColor.ToString(), board.CurrentPlayerTurn);
                 }
                 catch (Exception ex)
                 {
-                    Log("AutoTrain battle {0} {1} interrupted with exception {2}.", EnumUtils.GetExpansionPiecesString(gameBoard.ExpansionPieces), battleCount + 1, ex.Message);
+                    Log("AutoTrain battle {0} {1} interrupted with exception {2}.", Enums.GetGameTypeString(board.GameType), battleCount + 1, ex.Message);
                 }
                 finally
                 {
-                    if (null != puzzleCandidateHandler)
+                    if (puzzleCandidateHandler is not null)
                     {
                         gameAI.BestMoveFound -= puzzleCandidateHandler;
                     }
@@ -1038,11 +1038,11 @@ namespace Mzinga.Trainer
 
             List<Profile> profiles = LoadProfiles(path);
 
-            ExpansionPieces gameType = TrainerSettings.GameType;
+            GameType gameType = TrainerSettings.GameType;
 
             foreach (Profile profile in profiles.OrderByDescending(profile => profile.Records[(int)gameType].EloRating).Take(TrainerSettings.TopCount))
             {
-                Log("Top {0}: {1}", EnumUtils.GetExpansionPiecesString(gameType), ToString(profile, gameType));
+                Log("Top {0}: {1}", Enums.GetGameTypeString(gameType), ToString(profile, gameType));
             }
 
             Log("Top end.");
@@ -1075,13 +1075,13 @@ namespace Mzinga.Trainer
 
             using (XmlWriter xw = XmlWriter.Create(resultFile, settings))
             {
-                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+                for (int i = 0; i < (int)GameType.NumGameTypes; i++)
                 {
-                    ExpansionPieces gameType = (ExpansionPieces)i;
+                    GameType gameType = (GameType)i;
 
                     Profile topProfile = profiles.OrderByDescending(profile => profile.Records[i].EloRating).First();
 
-                    Log("Adding {0} for {1}", ToString(topProfile, gameType), EnumUtils.GetExpansionPiecesString(gameType));
+                    Log("Adding {0} for {1}", ToString(topProfile, gameType), Enums.GetGameTypeString(gameType));
 
                     topProfile.StartMetricWeights.WriteMetricWeightsXml(xw, "StartMetricWeights", gameType);
                     topProfile.EndMetricWeights.WriteMetricWeightsXml(xw, "EndMetricWeights", gameType);
@@ -1106,16 +1106,16 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
             Log("ExportAI start.");
 
-            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultEngineConfig();
+            EngineConfig config = EngineConfig.GetDefaultEngineConfig();
 
             string version = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-            for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+            for (int i = 0; i < (int)GameType.NumGameTypes; i++)
             {
-                ExpansionPieces gameType = (ExpansionPieces)i;
+                GameType gameType = (GameType)i;
 
                 Guid id = Guid.Parse(string.Format("00000000-0000-0000-0000-{0}{1}", version.Replace(".", ""), i));
-                string name = string.Format("Mzinga v{0} ({1})", version, EnumUtils.GetExpansionPiecesString(gameType));
+                string name = string.Format("Mzinga v{0} ({1})", version, Enums.GetGameTypeString(gameType));
 
                 Profile p = new Profile(id, name, config.MetricWeightSet[gameType][0], config.MetricWeightSet[gameType][1]);
 
@@ -1126,114 +1126,6 @@ namespace Mzinga.Trainer
             }
 
             Log("ExportAI end.");
-        }
-
-        public void BuildInitialTables()
-        {
-            BuildInitialTables(TrainerSettings.ProfilesPath);
-        }
-
-        public void BuildInitialTables(string path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
-            StartTime = DateTime.Now;
-            Log("BuildInitialTables start.");
-
-            GameEngineConfig config = Engine.GameEngineConfig.GetDefaultEngineConfig();
-
-            string resultFile = Path.Combine(path, "initialtables.txt");
-
-            XmlWriterSettings settings = new XmlWriterSettings
-            {
-                Indent = true,
-                ConformanceLevel = ConformanceLevel.Fragment,
-            };
-
-            using (XmlWriter xw = XmlWriter.Create(resultFile, settings))
-            {
-                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
-                {
-                    ExpansionPieces gameType = (ExpansionPieces)i;
-
-                    Log("Building {0} initial table.", EnumUtils.GetExpansionPiecesString(gameType));
-
-                    // Creating initial table to save results
-
-                    TranspositionTable initialTable = new TranspositionTable(TrainerSettings.TransTableSize * 1024 * 1024);
-
-                    // Creating board and AI
-
-                    GameBoard gameBoard = new GameBoard(gameType);
-
-                    MetricWeights[] mw = config.GetMetricWeights(gameType);
-
-                    GameAI gameAI = new GameAI(new GameAIConfig()
-                    {
-                        StartMetricWeights = mw[0],
-                        EndMetricWeights = mw[0] ?? mw[1],
-                        MaxBranchingFactor = config.MaxBranchingFactor,
-                        TranspositionTableSizeMB = TrainerSettings.TransTableSize,
-                        InitialTranspositionTable =  null,
-                    });
-
-                    ulong currentKey = gameBoard.ZobristKey;
-
-                    gameAI.BestMoveFound += (sender, args) =>
-                    {
-                        // When best moves are found that meet the criteria, save their entries into the initial table
-                        if (args.Depth >= TrainerSettings.MaxDepth && gameAI.TranspositionTable.TryLookup(currentKey, out TranspositionTableEntry entry))
-                        {
-                            lock (initialTable)
-                            {
-                                initialTable.Store(currentKey, new TranspositionTableEntry()
-                                {
-                                    Type = entry.Type,
-                                    Value = entry.Value,
-                                    Depth = entry.Depth,
-                                    BestMove = entry.BestMove,
-                                });
-                            }
-                        }
-                    };
-
-                    // Run search from every possible board position
-                    CancellationTokenSource cts = new CancellationTokenSource();
-                    Task searchTask = Task.Factory.StartNew(async () =>
-                    {
-                        await gameBoard.ForEachBoardPosition(TrainerSettings.InitialTableDepth == TrainerSettings.MaxInitialTableDepth ? int.MaxValue : TrainerSettings.InitialTableDepth, () =>
-                        {
-                            currentKey = gameBoard.ZobristKey;
-                            GetBestMove(gameBoard, gameAI);
-                        }, cts.Token);
-                    });
-
-                    Task progressTask = Task.Factory.StartNew(async () =>
-                    {
-                        while (!cts.Token.IsCancellationRequested)
-                        {
-                            lock (initialTable)
-                            {
-                                Log("Initial {0} table has {1} entries.", EnumUtils.GetExpansionPiecesString(gameType), initialTable.Count);
-                            }
-                            await Task.Delay(TimeSpan.FromMinutes(1.0));
-                        }
-                    });
-
-                    searchTask.Wait(cts.Token);
-                    cts.Cancel();
-                    progressTask.Wait();
-
-                    Log("Saving {0} initial table ({1} entries).", EnumUtils.GetExpansionPiecesString(gameType), initialTable.Count);
-
-                    initialTable.WriteTranspositionTableXml(xw, "InitialTranspositionTable", gameType);
-                }
-            }
-
-            Log("BuildInitialTables end.");
         }
 
         private static List<Profile> LoadProfiles(string path)
@@ -1319,9 +1211,9 @@ namespace Mzinga.Trainer
             }
             else
             {
-                for (int i = 0; i < EnumUtils.NumGameTypes; i++)
+                for (int i = 0; i < (int)GameType.NumGameTypes; i++)
                 {
-                    TrainerSettings.GameType = (ExpansionPieces)i;
+                    TrainerSettings.GameType = (GameType)i;
                     action();
                 }
             }
@@ -1369,13 +1261,13 @@ namespace Mzinga.Trainer
             }
         }
 
-        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(GameBoard gameBoard)
+        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(Board board)
         {
             return (sender, args) =>
             {
-                if (IsPuzzleCandidate(args))
+                if (IsPuzzleCandidate(args) && board.TryGetMoveString(args.Move, out string moveStr))
                 {
-                    Log("Puzzle Candidate: {0} {1} {2}", gameBoard.ToGameString(), args.Depth, NotationUtils.ToBoardSpaceMoveString(gameBoard, args.Move));
+                    Log("Puzzle Candidate: {0} {1} {2}", board.GetGameString(), args.Depth, moveStr);
                 }
             };
         }
@@ -1395,7 +1287,7 @@ namespace Mzinga.Trainer
             return ToString(profile, TrainerSettings.GameType);
         }
 
-        private string ToString(Profile profile, ExpansionPieces gameType)
+        private string ToString(Profile profile, GameType gameType)
         {
             if (null == profile)
             {

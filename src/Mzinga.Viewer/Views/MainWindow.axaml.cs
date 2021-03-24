@@ -11,8 +11,8 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 
-using Mzinga.SharedUX;
-using Mzinga.SharedUX.ViewModel;
+using Mzinga.Viewer;
+using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
@@ -66,7 +66,7 @@ namespace Mzinga.Viewer.Views
         {
             try
             {
-                if (null != MainViewModel.AppVM.EngineExceptionOnStart)
+                if (MainViewModel.AppVM.EngineExceptionOnStart is not null)
                 {
                     throw new Exception("Unable to start the external engine so used the internal one instead.", MainViewModel.AppVM.EngineExceptionOnStart);
                 }

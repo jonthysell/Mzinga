@@ -15,165 +15,373 @@ namespace Mzinga.Test
         [TestMethod]
         public void Board_NewTest()
         {
-            Board b = new Board();
+            var b = new Board();
             Assert.IsNotNull(b);
         }
 
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_InHandTest()
         {
-            MockBoard b = new MockBoard();
+            Board b = new Board();
 
-            VerifyCanMoveWithoutBreakingHive(b, PieceName.WhiteSpider1, true);
+            VerifyCanMoveWithoutBreakingHive(b, PieceName.wS1, true);
         }
 
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_OnlyPieceInPlayTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[1];WS1[0,0,0]");
+            Board b = Board.ParseGameString("Base;InProgress;Black[1];wS1");
 
-            VerifyCanMoveWithoutBreakingHive(b, PieceName.WhiteSpider1, true);
+            VerifyCanMoveWithoutBreakingHive(b, PieceName.wS1, true);
         }
 
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_ClosedCircleTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+            Board b = Board.ParseGameString(@"Base;InProgress;Black[5];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/;bA1 bQ\;wG1 /wQ;bA1 \bQ;wG1 -bA1");
 
-            foreach (PieceName pieceName in b.PiecesInPlay)
+            for (int pn = 0; pn < (int)PieceName.NumPieceNames; pn++)
             {
-                VerifyCanMoveWithoutBreakingHive(b, pieceName, true);
+                var pieceName = (PieceName)pn;
+                if (b.PieceInPlay(pieceName))
+                {
+                    VerifyCanMoveWithoutBreakingHive(b, pieceName, true);
+                }
             }
         }
 
         [TestMethod]
         public void Board_CanMoveWithoutBreakingHive_OpenCircleTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            Board b = Board.ParseGameString(@"Base;InProgress;Black[3];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/");
 
-            foreach (PieceName pieceName in b.PiecesInPlay)
+            for (int pn = 0; pn < (int)PieceName.NumPieceNames; pn++)
             {
-                VerifyCanMoveWithoutBreakingHive(b, pieceName, pieceName == PieceName.WhiteGrasshopper1 || pieceName == PieceName.BlackQueenBee);
+                var pieceName = (PieceName)pn;
+                if (b.PieceInPlay(pieceName))
+                {
+                    VerifyCanMoveWithoutBreakingHive(b, pieceName, pieceName == PieceName.wG1 || pieceName == PieceName.bQ);
+                }
             }
         }
 
         [TestMethod]
         public void Board_IsOneHive_NewGameTest()
         {
-            MockBoard b = new MockBoard();
+            Board b = new Board();
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_OnePieceTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[1];WS1[0,0,0]");
+            Board b = Board.ParseGameString("Base;InProgress;Black[1];wS1");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_ClosedCircleTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[4];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1];BG1[-2,2,0]");
+            Board b = Board.ParseGameString(@"Base;InProgress;Black[5];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/;bA1 bQ\;wG1 /wQ;bA1 \bQ;wG1 -bA1");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_OpenCircleTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            Board b = Board.ParseGameString(@"Base;InProgress;Black[3];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/");
             Assert.IsTrue(b.IsOneHive());
         }
 
         [TestMethod]
         public void Board_IsOneHive_TwoHivesTest()
         {
-            MockBoard b = new MockBoard("Base;InProgress;Black[3];WQ[-1,0,1];WS1[0,0,0];WG1[-2,1,1];BQ[-1,2,-1];BS1[0,1,-1]");
+            Board b = Board.ParseGameString(@"Base;InProgress;Black[3];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/");
             Assert.IsTrue(b.IsOneHive());
 
-            b.MovePiece(b.GetPiece(PieceName.WhiteSpider1), null);
+            b.SetPosition(PieceName.wS1, Position.NullPosition, false);
             Assert.IsFalse(b.IsOneHive());
         }
 
         [TestMethod]
-        public void Board_GetValidMoves_BeetleStackTest()
+        public void Board_NewBoardValidMovesTest()
         {
-            VerifyValidMoves("Base;InProgress;White[5];WQ[1,-1,0];WS1[0,0,0];WB1[0,0,0,1];BQ[1,1,-2];BS1[0,1,-1];BB1[0,1,-1,1]",
-                "WQ[1,0,-1];WQ[0,-1,1];WS2[2,-1,-1];WS2[2,-2,0];WS2[1,-2,1];WS2[0,-1,1];WS2[-1,0,1];WB1[0,1,-1,2];WB1[1,0,-1];WB1[1,-1,0,1];WB1[0,-1,1];WB1[-1,0,1];WB1[-1,1,0];WB2[2,-1,-1];WB2[2,-2,0];WB2[1,-2,1];WB2[0,-1,1];WB2[-1,0,1];WG1[2,-1,-1];WG1[2,-2,0];WG1[1,-2,1];WG1[0,-1,1];WG1[-1,0,1];WA1[2,-1,-1];WA1[2,-2,0];WA1[1,-2,1];WA1[0,-1,1];WA1[-1,0,1]");
+            var b = new Board();
+            Assert.IsNotNull(b);
+
+            int numBaseBugsWithoutQueen = (int)BugType.NumBugTypes - 4;
+
+            MoveSet validMoves = b.GetValidMoves();
+            Assert.IsNotNull(validMoves);
+            Assert.AreEqual(numBaseBugsWithoutQueen, validMoves.Count);
+
+            b.Play(new Move(PieceName.wS1, Position.NullPosition, Position.OriginPosition));
+
+            validMoves = b.GetValidMoves();
+            Assert.IsNotNull(validMoves);
+            Assert.AreEqual(numBaseBugsWithoutQueen * (int)Direction.NumDirections, validMoves.Count);
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesTest()
+        {
+            var b = new Board();
+            Assert.IsNotNull(b);
+
+            b.Play(new Move(PieceName.wS1, Position.NullPosition, Position.OriginPosition));
+            b.Play(new Move(PieceName.bS1, Position.NullPosition, Position.OriginPosition.GetNeighborAt(Direction.Up)));
+
+            MoveSet validMoves = b.GetValidMoves();
+            Assert.IsNotNull(validMoves);
+        }
+
+        [TestMethod]
+        public void Board_QueenMustPlayByFourthMoveValidMovesTest()
+        {
+            var b = new Board();
+            Assert.IsNotNull(b);
+
+            // Turn 1
+            b.Play(new Move(PieceName.wS1, Position.NullPosition, Position.OriginPosition));
+            b.Play(new Move(PieceName.bS1, Position.NullPosition, Position.OriginPosition.GetNeighborAt(Direction.Up)));
+
+            // Turn 2
+            b.Play(new Move(PieceName.wS2, Position.NullPosition, Position.OriginPosition.GetNeighborAt(Direction.Down)));
+            b.Play(new Move(PieceName.bS2, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 2)));
+
+            // Turn 3
+            b.Play(new Move(PieceName.wA1, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Down, 2)));
+            b.Play(new Move(PieceName.bA1, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 3)));
+
+            // Turn 4
+            MoveSet validMoves = b.GetValidMoves();
+            Assert.IsNotNull(validMoves);
+            Assert.AreEqual(7, validMoves.Count);
+
+            foreach (Move move in validMoves)
+            {
+                Assert.AreEqual(PieceName.wQ, move.PieceName);
+            }
+        }
+
+        [TestMethod]
+        public void Board_CanCommitSuicideTest()
+        {
+            var b = new Board();
+            Assert.IsNotNull(b);
+
+            // Turn 1
+            b.Play(new Move(PieceName.wS1, Position.NullPosition, Position.OriginPosition));
+            b.Play(new Move(PieceName.bS1, Position.NullPosition, Position.OriginPosition.GetNeighborAt(Direction.Up)));
+
+            // Turn 2
+            b.Play(new Move(PieceName.wQ, Position.NullPosition, Position.OriginPosition.GetNeighborAt(Direction.Down)));
+            b.Play(new Move(PieceName.bQ, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 2)));
+
+            // Turn 3
+            b.Play(new Move(PieceName.wS2, Position.NullPosition, b.GetPosition(PieceName.wQ).GetNeighborAt(Direction.UpLeft)));
+            b.Play(new Move(PieceName.bS2, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 3)));
+
+            // Turn 4
+            b.Play(new Move(PieceName.wA1, Position.NullPosition, b.GetPosition(PieceName.wQ).GetNeighborAt(Direction.UpRight)));
+            b.Play(new Move(PieceName.bA1, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 4)));
+
+            // Turn 5
+            b.Play(new Move(PieceName.wA2, Position.NullPosition, b.GetPosition(PieceName.wQ).GetNeighborAt(Direction.DownLeft)));
+            b.Play(new Move(PieceName.bA2, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 5)));
+
+            // Turn 6
+            b.Play(new Move(PieceName.wA3, Position.NullPosition, b.GetPosition(PieceName.wQ).GetNeighborAt(Direction.DownRight)));
+            b.Play(new Move(PieceName.bA3, Position.NullPosition, StraightLine(Position.OriginPosition, Direction.Up, 6)));
+
+            // Turn 7
+            b.Play(new Move(PieceName.wB1, Position.NullPosition, b.GetPosition(PieceName.wQ).GetNeighborAt(Direction.Down)));
+
+            Assert.AreEqual(BoardState.BlackWins, b.BoardState);
+
+            MoveSet validMoves = b.GetValidMoves();
+            Assert.IsNotNull(validMoves);
+            Assert.AreEqual(0, validMoves.Count);
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForQueenBeeTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForQueenBeeTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForSpiderTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForSpiderTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForBeetleTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForBeetleTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForGrasshopperTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForGrasshopperTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForSoldierAntTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForSoldierAntTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForMosquitoTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForMosquitoTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForLadybugTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForLadybugTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_ValidMovesForPillbugTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesForPillbugTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_InvalidMovesByRuleTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardInvalidMoveTestCase>("Board_InvalidMovesByRuleTest.csv");
         }
 
         [TestMethod]
         [TestCategory("Performance")]
-        public void Board_ValidMoves_PerfTest()
+        public void Board_NewGamePerftTest()
         {
-            TimeSpan sum = TimeSpan.Zero;
-            int iterations = 10000;
-
-            for (int i = 0; i < iterations; i++)
+            long[] expectedNodes = new long[]
             {
-                Board b = new Board("Base;InProgress;White[13];WQ[1,0,-1];WS1[0,0,0];WS2[2,-1,-1];WB1[0,1,-1];WB2[2,-2,0];WG1[3,-1,-2];WG2[4,-2,-2];WG3[5,-2,-3];WA1[3,0,-3];WA2[6,-2,-4];WA3[5,-3,-2];BQ[-2,1,1];BS1[-1,1,0];BS2[-3,2,1];BB1[-1,0,1];BB2[-3,3,0];BG1[-4,2,2];BG2[-5,3,2];BG3[-6,3,3];BA1[-4,1,3];BA2[-7,3,4];BA3[-6,4,2]");
+                1, 4, 96, 1440, // Confirmed
+                21600, 516240, 12219480, // Unconfirmed
+            };
+
+            for (int depth = 0; depth < expectedNodes.Length; depth++)
+            {
+                Board board = new Board();
 
                 Stopwatch sw = Stopwatch.StartNew();
-                _ = b.GetValidMoves();
+                long actualNodes = board.CalculatePerft(depth);
                 sw.Stop();
 
-                sum += sw.Elapsed;
+                Assert.AreEqual(expectedNodes[depth], actualNodes, string.Format("Failed at depth {0}.", depth));
+                Trace.WriteLine(string.Format("{0,-9} = {1,16:#,##0} in {2,16:#,##0} ms. {3,8:#,##0.0} KN/s", string.Format("perft({0})", depth), actualNodes, sw.ElapsedMilliseconds, Math.Round(actualNodes / (double)sw.ElapsedMilliseconds, 1)));
             }
-
-            Trace.WriteLine(string.Format("Average Ticks: {0}", sum.Ticks / iterations));
         }
 
-        private static void VerifyCanMoveWithoutBreakingHive(MockBoard board, PieceName pieceName, bool canMoveExpected)
+        private static void VerifyCanMoveWithoutBreakingHive(Board board, PieceName pieceName, bool canMoveExpected)
         {
-            Assert.IsNotNull(board);
-
-            Piece piece = board.GetPiece(pieceName);
-            Assert.IsNotNull(piece);
-
-            bool canMoveActual = board.CanMoveWithoutBreakingHive(piece);
+            bool canMoveActual = board.CanMoveWithoutBreakingHive(pieceName);
             Assert.AreEqual(canMoveExpected, canMoveActual);
         }
 
-        private static void VerifyValidMoves(string boardString, string expectedMovesString)
+        private static Position StraightLine(Position start, Direction direction, int length)
         {
-            Board board = new Board(boardString);
-            Assert.IsNotNull(board);
+            if (length <= 0)
+            {
+                throw new ArgumentNullException(nameof(length));
+            }
 
-            MoveSet expectedMoves = new MoveSet(expectedMovesString);
-            Assert.IsNotNull(expectedMoves);
+            var pos = start;
 
-            VerifyValidMoves(board, expectedMoves);
+            for (int i = 0; i < length; i++)
+            {
+                pos = pos.GetNeighborAt(direction);
+            }
+
+            return pos;
         }
 
-        private static void VerifyValidMoves(Board board, MoveSet expectedMoves)
+        private class BoardValidMoveTestCase : ITestCase
         {
-            Assert.IsNotNull(board);
-            Assert.IsNotNull(expectedMoves);
+            public Board Board;
 
-            MoveSet actualMoves = board.GetValidMoves();
-            TestUtils.AssertHaveEqualChildren(expectedMoves, actualMoves);
+            public string[] ValidMoveStrings;
+            public Move[] ValidMoves;
+
+            public void Execute()
+            {
+                Trace.TraceInformation($"Current Board: {Board.GetGameString()}");
+                for (int i = 0; i < ValidMoveStrings.Length; i++)
+                {
+                    Trace.TraceInformation($"Playing: {ValidMoveStrings[i]}");
+                    Board.Play(ValidMoves[i]);
+                    _ = Board.TryUndoLastMove();
+                }
+            }
+
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException(nameof(s));
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                Board = Board.ParseGameString(vals[0]);
+
+                ValidMoveStrings = vals[1].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                ValidMoves = new Move[ValidMoveStrings.Length];
+
+                for (int i = 0; i < ValidMoveStrings.Length; i++)
+                {
+                    _ = Board.TryParseMove(ValidMoveStrings[i], out ValidMoves[i], out ValidMoveStrings[i]);
+                }
+            }
         }
-    }
 
-    public class MockBoard : Board
-    {
-        public MockBoard(ExpansionPieces expansionPieces = ExpansionPieces.None) : base(expansionPieces) { }
-
-        public MockBoard(string boardString) : base(boardString) { }
-
-        public new Piece GetPiece(PieceName pieceName)
+        private class BoardInvalidMoveTestCase : ITestCase
         {
-            return base.GetPiece(pieceName);
-        }
+            public Board Board;
+            
+            public string InvalidMoveString;
+            public Move InvalidMove;
 
-        public new bool CanMoveWithoutBreakingHive(Piece targetPiece)
-        {
-            return base.CanMoveWithoutBreakingHive(targetPiece);
-        }
+            public void Execute()
+            {
+                try
+                {
+                    Trace.TraceInformation($"Current Board: {Board.GetGameString()}");
+                    Trace.TraceInformation($"Playing: {InvalidMoveString}");
+                    Board.Play(InvalidMove);
+                    Assert.Fail();
+                }
+                catch (InvalidMoveException ex)
+                {
+                    Trace.TraceInformation($"Invalid move reason: {ex.Message}");
+                    Assert.AreEqual(InvalidMove, ex.Move);
+                }
+            }
 
-        public new void MovePiece(Piece piece, Position newPosition)
-        {
-            base.MovePiece(piece, newPosition);
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException(nameof(s));
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                Board = Board.ParseGameString(vals[0]);
+                _ = Board.TryParseMove(vals[1], out InvalidMove, out InvalidMoveString);
+            }
         }
     }
 }

@@ -23,6 +23,8 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
-  <Import Project="..\Mzinga.Shared\Mzinga.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\Mzinga\Mzinga.csproj" />
+  </ItemGroup>
 
 </Project>

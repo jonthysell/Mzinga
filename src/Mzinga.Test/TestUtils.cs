@@ -147,14 +147,14 @@ namespace Mzinga.Test
             "\t \t",
         };
 
-        public static GameEngineConfig DefaultGameEngineConfig
+        public static EngineConfig DefaultGameEngineConfig
         {
             get
             {
-                return _defaultGameEngineConfig ??= GameEngineConfig.GetDefaultEngineConfig();
+                return _defaultGameEngineConfig ??= EngineConfig.GetDefaultEngineConfig();
             }
         }
-        private static GameEngineConfig _defaultGameEngineConfig;
+        private static EngineConfig _defaultGameEngineConfig;
     }
 
     public interface ITestCase
