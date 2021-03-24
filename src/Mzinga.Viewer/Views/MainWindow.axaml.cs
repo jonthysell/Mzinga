@@ -11,8 +11,8 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 
-using Mzinga.SharedUX;
-using Mzinga.SharedUX.ViewModel;
+using Mzinga.Viewer;
+using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {

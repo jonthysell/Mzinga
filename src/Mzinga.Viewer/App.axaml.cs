@@ -12,8 +12,8 @@ using Avalonia.Styling;
 
 using Mzinga.Engine;
 
-using Mzinga.SharedUX;
-using Mzinga.SharedUX.ViewModel;
+using Mzinga.Viewer;
+using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer
 {

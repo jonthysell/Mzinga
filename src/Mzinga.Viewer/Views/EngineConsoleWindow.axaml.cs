@@ -8,7 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 
-using Mzinga.SharedUX.ViewModel;
+using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {

@@ -12,7 +12,7 @@ namespace Mzinga
 {
     public class AppInfo
     {
-        public static Assembly Assembly => _assembly ??= Assembly.GetExecutingAssembly();
+        public static Assembly Assembly => _assembly ??= Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
         private static Assembly? _assembly = null;
 
         public static string Name => _name ??= Assembly.GetName().Name ?? nameof(Name);

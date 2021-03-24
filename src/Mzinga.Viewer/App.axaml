@@ -1,12 +1,12 @@
 <Application Name="MzingaViewer"
              x:Class="Mzinga.Viewer.App"
              xmlns="https://github.com/avaloniaui"
-             xmlns:shared="clr-namespace:Mzinga.SharedUX"
+             xmlns:viewer="clr-namespace:Mzinga.Viewer"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
-        <shared:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
-        <shared:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
-        <shared:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
+        <viewer:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
+        <viewer:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
+        <viewer:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
     </Application.Resources>
     <Application.Styles>
         <StyleInclude Source="avares://Avalonia.Themes.Fluent/FluentLight.xaml" />

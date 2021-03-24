@@ -13,8 +13,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 
 using GalaSoft.MvvmLight.Messaging;
 
-using Mzinga.SharedUX;
-using Mzinga.SharedUX.ViewModel;
+using Mzinga.Viewer;
+using Mzinga.Viewer.ViewModels;
 
 using Mzinga.Viewer.Views;
 

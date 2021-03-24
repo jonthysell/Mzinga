@@ -14,7 +14,7 @@
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:Mzinga.SharedUX.ViewModel"
+        xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <NativeMenu.Menu>
         <NativeMenu>
@@ -250,19 +250,19 @@
                             Name="BlackHandStackPanel"
                             Orientation="Vertical"
                             VerticalAlignment="Stretch" />
-                <DockPanel Grid.Column="3"
+                <DockPanel Classes="GroupBox"
+                           Grid.Column="3"
                            Grid.Row="0"
-                           Classes="GroupBox"
                            IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
-                    <Label Content="History"
-                           DockPanel.Dock="Top"
-                           Classes="Header" />
+                    <Label Classes="Header"
+                           Content="History"
+                           DockPanel.Dock="Top" />
                     <ListBox Items="{Binding BoardHistory.Items}"
-                             VerticalAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
                              SelectionMode="Single"
+                             VerticalAlignment="Stretch"
                              Width="140">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -281,20 +281,20 @@
                         </ListBox.ContextMenu>
                     </ListBox>
                 </DockPanel>
-                <DockPanel Grid.Column="4"
+                <DockPanel Classes="GroupBox"
+                           Grid.Column="4"
                            Grid.Row="0"
-                           Classes="GroupBox"
                            IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
-                    <Label Content="Commentary"
-                           DockPanel.Dock="Top"
-                           Classes="Header" />
+                    <Label Classes="Header"
+                           Content="Commentary"
+                           DockPanel.Dock="Top" />
                     <TextBox AcceptsReturn="True"
-                             VerticalContentAlignment="Top"
-                             VerticalAlignment="Stretch"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              Text="{Binding CurrentMoveCommentary}"
                              TextWrapping="Wrap"
+                             VerticalAlignment="Stretch"
+                             VerticalContentAlignment="Top"
                              Width="140" />
                 </DockPanel>
                 <Grid Grid.Column="0"
