@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Core: FastCore refactor to simplify code and to improve build and runtime performance
+
 ## v0.10.1 ##
 
 * Core: Fixed missing valid Spider moves
