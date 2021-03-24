@@ -255,7 +255,7 @@ namespace Mzinga.Viewer.ViewModels
                 string move = "";
                 if (null != AppVM.EngineWrapper.TargetMove)
                 {
-                    move = ViewerConfig.NotationType == NotationType.BoardSpace ? Board.GetMoveString(AppVM.EngineWrapper.TargetMove.Value) : AppVM.EngineWrapper.TargetMove.ToString();
+                    move = Board.GetMoveString(AppVM.EngineWrapper.TargetMove.Value);
                 }
                 else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {

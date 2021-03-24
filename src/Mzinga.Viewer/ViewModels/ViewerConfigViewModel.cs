@@ -79,19 +79,6 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
-        public NotationType NotationType
-        {
-            get
-            {
-                return Config.NotationType;
-            }
-            set
-            {
-                Config.NotationType = value;
-                RaisePropertyChanged(nameof(NotationType));
-            }
-        }
-
         public PieceStyle PieceStyle
         {
             get
@@ -307,9 +294,6 @@ namespace Mzinga.Viewer.ViewModels
                             case nameof(HexOrientation):
                                 HexOrientation = (HexOrientation)Enum.Parse(typeof(HexOrientation), split[1]);
                                 break;
-                            case nameof(NotationType):
-                                NotationType = (NotationType)Enum.Parse(typeof(NotationType), split[1]);
-                                break;
                             case nameof(PieceStyle):
                                 PieceStyle = (PieceStyle)Enum.Parse(typeof(PieceStyle), split[1]);
                                 break;
@@ -383,7 +367,6 @@ namespace Mzinga.Viewer.ViewModels
                         RaisePropertyChanged(nameof(EngineCommandLine));
                         RaisePropertyChanged(nameof(VisualTheme));
                         RaisePropertyChanged(nameof(HexOrientation));
-                        RaisePropertyChanged(nameof(NotationType));
                         RaisePropertyChanged(nameof(PieceStyle));
                         RaisePropertyChanged(nameof(PieceColors));
                         RaisePropertyChanged(nameof(DisablePiecesInHandWithNoMoves));

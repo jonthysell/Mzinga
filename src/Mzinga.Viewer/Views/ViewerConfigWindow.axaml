@@ -33,23 +33,6 @@
                                     Width="400">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
-                                       Content="Notation"
-                                       DockPanel.Dock="Top" />
-                                <StackPanel>
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="NotationType.BoardSpace"
-                                                 Content="BoardSpace (Default)"
-                                                 GroupName="NotationType"
-                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=BoardSpace}" />
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="NotationType.Mzinga"
-                                                 Content="Mzinga"
-                                                 GroupName="NotationType"
-                                                 IsChecked="{Binding Path=NotationType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Mzinga}" />
-                                </StackPanel>
-                            </DockPanel>
-                            <DockPanel Classes="GroupBox">
-                                <Label Classes="Header"
                                        Content="Moves"
                                        DockPanel.Dock="Top" />
                                 <StackPanel>

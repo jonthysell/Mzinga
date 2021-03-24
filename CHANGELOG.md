@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Viewer: Remove deprecated "Mzinga" notation type
+
 ## v0.10.2 ##
 
 * Core: FastCore refactor to simplify code and to improve build and runtime performance

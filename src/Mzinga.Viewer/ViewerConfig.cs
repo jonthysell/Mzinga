@@ -54,8 +54,6 @@ namespace Mzinga.Viewer
 
         public HexOrientation HexOrientation { get; set; } = HexOrientation.PointyTop;
 
-        public NotationType NotationType { get; set; } = NotationType.BoardSpace;
-
         public PieceStyle PieceStyle { get; set; } = PieceStyle.Graphical;
 
         public bool PieceColors { get; set; } = true;
@@ -117,9 +115,6 @@ namespace Mzinga.Viewer
                             break;
                         case "HexOrientation":
                             HexOrientation = ParseEnumValue(reader.ReadElementContentAsString(), HexOrientation);
-                            break;
-                        case "NotationType":
-                            NotationType = ParseEnumValue(reader.ReadElementContentAsString(), NotationType);
                             break;
                         case "PieceStyle":
                             PieceStyle = ParseEnumValue(reader.ReadElementContentAsString(), PieceStyle);
@@ -214,7 +209,6 @@ namespace Mzinga.Viewer
             writer.WriteElementString("EngineCommandLine", EngineCommandLine);
             writer.WriteElementString("VisualTheme", VisualTheme.ToString());
             writer.WriteElementString("HexOrientation", HexOrientation.ToString());
-            writer.WriteElementString("NotationType", NotationType.ToString());
             writer.WriteElementString("PieceStyle", PieceStyle.ToString());
             writer.WriteElementString("PieceColors", PieceColors.ToString());
             writer.WriteElementString("DisablePiecesInHandWithNoMoves", DisablePiecesInHandWithNoMoves.ToString());
@@ -246,7 +240,6 @@ namespace Mzinga.Viewer
 
                 VisualTheme = VisualTheme,
                 HexOrientation = HexOrientation,
-                NotationType = NotationType,
 
                 PieceStyle = PieceStyle,
                 PieceColors = PieceColors,
@@ -290,7 +283,6 @@ namespace Mzinga.Viewer
 
             VisualTheme = config.VisualTheme;
             HexOrientation = config.HexOrientation;
-            NotationType = config.NotationType;
 
             PieceStyle = config.PieceStyle;
             PieceColors = config.PieceColors;
@@ -332,12 +324,6 @@ namespace Mzinga.Viewer
     {
         PointyTop,
         FlatTop,
-    }
-
-    public enum NotationType
-    {
-        BoardSpace,
-        Mzinga,
     }
 
     public enum EngineType
