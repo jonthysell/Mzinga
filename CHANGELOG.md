@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.10.5 ##
 
 * Viewer: Fixed issues loading SGF files
 
