@@ -453,10 +453,8 @@ namespace Mzinga.Engine
             bool first = true;
             foreach (var validMove in validMoves)
             {
-                if (_board.TryGetMoveString(validMove, out string? result))
-                {
-                    sb.Append(first ? result : $";{result}");
-                }
+                string moveStr = _board.GetMoveString(validMove);
+                sb.Append(first ? moveStr : $";{moveStr}");
                 first = false;
             }
 
