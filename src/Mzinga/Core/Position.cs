@@ -64,6 +64,6 @@ namespace Mzinga.Core
         public static bool operator !=(Position lhs, Position rhs) => !(lhs == rhs);
 
         public const int BoardSize = 128;
-        public const int BoardStackSize = 5;
+        public const int BoardStackSize = 6;
     }
 }

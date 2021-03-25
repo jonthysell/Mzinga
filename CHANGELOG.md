@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Viewer: Fixed issues loading SGF files
+
 ## v0.10.4 ##
 
 * Core: Fixed a bug with generating the correct move notation

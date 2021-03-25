@@ -247,7 +247,12 @@ namespace Mzinga.Viewer
                         Match m = null;
                         if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
                         {
-                            metadata.SetTag("GameType", m.Groups[1].Value.ToUpper().Replace("HIVE", GameType.Base.ToString()).Replace("-", "+"));
+                            var gameType = GameType.Base;
+                            var split = m.Groups[1].Value.ToUpper().Split("-");
+                            gameType = Enums.EnableBugType(BugType.Mosquito, gameType, split.Length > 1 && split[1].Contains('M'));
+                            gameType = Enums.EnableBugType(BugType.Ladybug, gameType, split.Length > 1 && split[1].Contains('L'));
+                            gameType = Enums.EnableBugType(BugType.Pillbug, gameType, split.Length > 1 && split[1].Contains('P'));
+                            metadata.SetTag("GameType", Enums.GetGameTypeString(gameType));
                         }
                         else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
                         {
@@ -310,13 +315,13 @@ namespace Mzinga.Viewer
                             string backupPos = m.Groups[^2].Value;
 
                             // Remove unnecessary numbers
-                            movingPiece = movingPiece.Replace("m1", "m").Replace("l1", "l").Replace("p1", "p");
-                            destination = destination.Replace("m1", "m").Replace("l1", "l").Replace("p1", "p");
+                            movingPiece = movingPiece.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
+                            destination = destination.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
 
                             // Add missing color indicator
-                            if (movingPiece == "b1" || movingPiece == "b2" || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
+                            if (movingPiece.Equals("b1", StringComparison.InvariantCultureIgnoreCase) || movingPiece.Equals("b2", StringComparison.InvariantCultureIgnoreCase) || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
                             {
-                                movingPiece = (whiteTurn ? "w" : "b") + movingPiece;
+                                movingPiece = (whiteTurn ? "w" : "b") + movingPiece.ToUpperInvariant();
                             }
 
                             // Fix missing destination
