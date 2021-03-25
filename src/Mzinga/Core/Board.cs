@@ -333,12 +333,13 @@ namespace Mzinga.Core
             }
             else
             {
+                SetPosition(move.PieceName, Position.NullPosition, false);
                 for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                 {
                     Position neighborPosition = move.Destination.GetNeighborAt((Direction)dir);
                     PieceName neighbor = GetPieceOnTopAt(in neighborPosition);
 
-                    if (neighbor != PieceName.INVALID && neighbor != move.PieceName)
+                    if (neighbor != PieceName.INVALID)
                     {
                         endPiece = neighbor.ToString();
                         switch (dir)
@@ -365,6 +366,7 @@ namespace Mzinga.Core
                         break;
                     }
                 }
+                SetPosition(move.PieceName, move.Source, false);
             }
 
             if (endPiece != "")

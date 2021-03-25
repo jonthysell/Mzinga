@@ -168,12 +168,12 @@ namespace Mzinga.Test
         {
             Dictionary<Direction, Position> originNeighbors = new Dictionary<Direction, Position>
             {
-                { Direction.Up, new Position(0, 1, 0) },
-                { Direction.UpRight, new Position(1, 0, 0) },
-                { Direction.DownRight, new Position(1, -1, 0) },
-                { Direction.Down, new Position(0, -1, 0) },
-                { Direction.DownLeft, new Position(-1, 0, 0) },
-                { Direction.UpLeft, new Position(-1, 1, 0) }
+                { Direction.Up, new Position(0, -1, 0) },
+                { Direction.UpRight, new Position(1, -1, 0) },
+                { Direction.DownRight, new Position(1, 0, 0) },
+                { Direction.Down, new Position(0, 1, 0) },
+                { Direction.DownLeft, new Position(-1, 1, 0) },
+                { Direction.UpLeft, new Position(-1, 0, 0) }
             };
 
             return originNeighbors;

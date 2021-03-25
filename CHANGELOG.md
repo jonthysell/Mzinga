@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Fixed a bug with generating the correct move notation
 * Trainer: Fixed bug with exportai command and new version numbers
 * Trainer: Added GameString output to exceptions during battle
 
