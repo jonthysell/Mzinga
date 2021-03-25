@@ -354,7 +354,7 @@ namespace Mzinga.Trainer
             }
             catch (Exception ex)
             {
-                Log("Battle interrupted with exception: {0}", ex.Message);
+                Log("Battle interrupted with exception: '{0}', GameString: '{1}'", ex.Message, board.GetGameString());
             }
 
             BoardState boardState = board.GameInProgress ? BoardState.Draw : board.BoardState;

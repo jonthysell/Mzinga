@@ -3,6 +3,7 @@
 ## next ##
 
 * Trainer: Fixed bug with exportai command and new version numbers
+* Trainer: Added GameString output to exceptions during battle
 
 ## v0.10.3 ##
 
