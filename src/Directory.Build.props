@@ -6,7 +6,7 @@
     <Copyright>Copyright © 2015-2021 Jon Thysell</Copyright>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/jonthysell/Mzinga</RepositoryUrl>
-    <Version>0.10.3</Version>
+    <Version>0.10.4</Version>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>

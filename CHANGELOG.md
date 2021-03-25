@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.10.4 ##
 
 * Core: Fixed a bug with generating the correct move notation
 * Engine: Fixed a bug that didn't output every valid move
