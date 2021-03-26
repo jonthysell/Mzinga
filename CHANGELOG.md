@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Core: Simplified QueenBee valid moves for better performance
+
 ## v0.10.6 ##
 
 * Core: Fix issues with LastPieceMoved which cause the AI to try to play invalid moves

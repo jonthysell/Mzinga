@@ -883,7 +883,22 @@ namespace Mzinga.Core
 
         private void GetValidQueenBeeMoves(PieceName pieceName, MoveSet moveSet)
         {
-            GetValidSlides(pieceName, moveSet, 1);
+            var piecePosition = GetPosition(pieceName);
+            for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
+            {
+                if (!HasPieceAt(in piecePosition, (Direction)slideDirection))
+                {
+                    // Slide position is open
+                    var left = Enums.LeftOf((Direction)slideDirection);
+                    var right = Enums.RightOf((Direction)slideDirection);
+
+                    if (HasPieceAt(in piecePosition, right) != HasPieceAt(in piecePosition, left))
+                    {
+                        // Can slide into slide position
+                        moveSet.Add(new Move(pieceName, piecePosition, piecePosition.GetNeighborAt((Direction)slideDirection)));
+                    }
+                }
+            }
         }
 
         private void GetValidSpiderMoves(PieceName pieceName, MoveSet moveSet)
@@ -1097,7 +1112,7 @@ namespace Mzinga.Core
 
         private void GetValidPillbugBasicMoves(PieceName pieceName, MoveSet moveSet)
         {
-            GetValidSlides(pieceName, moveSet, 1);
+            GetValidQueenBeeMoves(pieceName, moveSet);
         }
 
         private void GetValidPillbugSpecialMoves(PieceName pieceName, MoveSet moveSet)
@@ -1279,9 +1294,9 @@ namespace Mzinga.Core
             return true;
         }
 
-        public Position GetPosition(PieceName pieceName)
+        public ref Position GetPosition(PieceName pieceName)
         {
-            return m_piecePositions[(int)pieceName];
+            return ref m_piecePositions[(int)pieceName];
         }
 
         internal void SetPosition(PieceName pieceName, Position position, bool updateZobrist)
