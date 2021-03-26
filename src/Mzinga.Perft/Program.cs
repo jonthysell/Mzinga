@@ -77,13 +77,13 @@ namespace Mzinga.Perft
             {
                 for (int i = 0; i < args.Length; i++)
                 {
-                    if (Enums.TryParse(args[i], out GameType gameType))
-                    {
-                        GameType = gameType;
-                    }
-                    else if (uint.TryParse(args[i], out uint maxDepth))
+                    if (uint.TryParse(args[i], out uint maxDepth))
                     {
                         MaxDepth = maxDepth;
+                    }
+                    else if (Enums.TryParse(args[i], out GameType gameType))
+                    {
+                        GameType = gameType;
                     }
                     else if (args[i].Equals("-mt", StringComparison.InvariantCultureIgnoreCase))
                     {
