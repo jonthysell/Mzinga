@@ -259,6 +259,54 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
+        public void Board_Base_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_Base_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseM_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseM_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseL_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseL_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseP_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseP_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseML_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseML_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseMP_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseMP_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseLP_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseLP_PerftTest.csv");
+        }
+
+        [TestMethod]
+        public void Board_BaseMLP_PerftTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardPerftTestCase>("Board_BaseMLP_PerftTest.csv");
+        }
+
+        [TestMethod]
         [TestCategory("Performance")]
         public void Board_NewGamePerftTest()
         {
@@ -381,6 +429,38 @@ namespace Mzinga.Test
 
                 Board = Board.ParseGameString(vals[0]);
                 _ = Board.TryParseMove(vals[1], out InvalidMove, out InvalidMoveString);
+            }
+        }
+
+        private class BoardPerftTestCase : ITestCase
+        {
+            public Board Board;
+
+            public int Depth;
+            public long NodeCount;
+
+            public void Execute()
+            {
+                Trace.TraceInformation($"Current Board: {Board.GetGameString()}");
+                var actualNodeCount = Board.CalculatePerft(Depth);
+                Assert.AreEqual(NodeCount, actualNodeCount);
+            }
+
+            public void Parse(string s)
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    throw new ArgumentNullException(nameof(s));
+                }
+
+                s = s.Trim();
+
+                string[] vals = s.Split('\t');
+
+                Board = Board.ParseGameString(vals[0]);
+
+                Depth = int.Parse(vals[1]);
+                NodeCount = long.Parse(vals[2]);
             }
         }
     }

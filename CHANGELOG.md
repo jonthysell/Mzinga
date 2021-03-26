@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Simplified QueenBee valid moves for better performance
+* Test: Added more Perft tests to catch move generator regressions
 
 ## v0.10.6 ##
 
