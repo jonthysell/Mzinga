@@ -439,10 +439,17 @@ namespace Mzinga.Test
             public int Depth;
             public long NodeCount;
 
+            public const int MaxDepth = 6;
+
             public void Execute()
             {
                 Trace.TraceInformation($"Current Board: {Board.GetGameString()}");
-                var actualNodeCount = Board.CalculatePerft(Depth);
+                if (Depth > MaxDepth)
+                {
+                    Trace.TraceInformation($"Skipping slow test (Depth = {Depth})");
+                    return;
+                }
+                var actualNodeCount = Board.ParallelPerft(Depth, Environment.ProcessorCount / 2);
                 Assert.AreEqual(NodeCount, actualNodeCount);
             }
 
