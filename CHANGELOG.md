@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## v0.10.6 ##
+
+* Core: Fix issues with LastPieceMoved which cause the AI to try to play invalid moves
+
 ## v0.10.5 ##
 
 * Viewer: Fixed issues loading SGF files

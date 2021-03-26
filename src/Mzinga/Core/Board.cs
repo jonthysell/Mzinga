@@ -40,6 +40,9 @@ namespace Mzinga.Core
                     // Turn has changed
                     _zobristHash.ToggleTurn();
                 }
+
+                ResetState();
+                ResetCaches();
             }
         }
         private int _currentTurn = 0;
@@ -60,18 +63,14 @@ namespace Mzinga.Core
             }
             protected set
             {
-                // Only update when Pillbug is enabled
-                if (Enums.BugTypeIsEnabledForGameType(BugType.Pillbug, GameType))
+                PieceName old = _lastPieceMoved;
+
+                _lastPieceMoved = value;
+
+                if (old != value)
                 {
-                    PieceName old = _lastPieceMoved;
-
-                    _lastPieceMoved = value;
-
-                    if (old != value)
-                    {
-                        _zobristHash.ToggleLastMovedPiece(old);
-                        _zobristHash.ToggleLastMovedPiece(value);
-                    }
+                    _zobristHash.ToggleLastMovedPiece(old);
+                    _zobristHash.ToggleLastMovedPiece(value);
                 }
             }
         }
@@ -299,10 +298,8 @@ namespace Mzinga.Core
 
                 BoardHistory.UndoLast();
 
+                LastPieceMoved = BoardHistory.LastMove?.PieceName ?? PieceName.INVALID;
                 CurrentTurn--;
-
-                ResetState();
-                ResetCaches();
 
                 return true;
             }
@@ -607,9 +604,6 @@ namespace Mzinga.Core
                 PositionSet? enemyQueenNeighbors = _cachedEnemyQueenNeighbors;
                 _cachedEnemyQueenNeighbors = null;
 
-                PieceName lastPieceMoved = _lastPieceMoved;
-                _lastPieceMoved = PieceName.INVALID;
-
                 // Spoof going to the next turn to get the opponent's metrics
                 CurrentTurn++;
                 moveSet.Clear();
@@ -617,7 +611,6 @@ namespace Mzinga.Core
                 CurrentTurn--;
 
                 // Returned, so reload saved valid moves/placements into cache
-                _lastPieceMoved = lastPieceMoved;
                 _cachedEnemyQueenNeighbors = enemyQueenNeighbors;
                 //m_cachedValidPlacements = validPlacements;
             }
@@ -1248,9 +1241,6 @@ namespace Mzinga.Core
 
             CurrentTurn++;
             LastPieceMoved = move.PieceName;
-
-            ResetState();
-            ResetCaches();
         }
 
         private bool PlacingPieceInOrder(PieceName pieceName)
