@@ -16,7 +16,7 @@ namespace Mzinga.Core.AI
                 throw new ArgumentOutOfRangeException(nameof(sizeInBytes));
             }
 
-            return 1 + (int)Math.Round(FillFactor * sizeInBytes / EntrySizeInBytes);
+            return 1 + (int)Math.Round(DefaultFillFactor * sizeInBytes / EntrySizeInBytes);
         }
 
         private static bool TranspostionTableReplaceEntryPredicate(TranspositionTableEntry existingEntry, TranspositionTableEntry entry)
@@ -24,16 +24,9 @@ namespace Mzinga.Core.AI
             return entry.Depth > existingEntry.Depth;
         }
 
-        private static readonly long EntrySizeInBytes = (4 * sizeof(ulong)) // Key size x4
-                                                        + IntPtr.Size // Wrapped entry pointer
-                                                        + IntPtr.Size // Wrapped entry, LinkedList node pointer
-                                                        + IntPtr.Size // Wrapped entry, entry pointer
-                                                        + (4 * IntPtr.Size) // LinkedList node,list,next,previous pointers
-                                                        + TranspositionTableEntry.SizeInBytes; // Entry object
+        private static readonly long EntrySizeInBytes = EstimateSizeInBytes(sizeof(ulong), TranspositionTableEntry.SizeInBytes);
 
         public const long DefaultSizeInBytes = 32 * 1024 * 1024;
-
-        private const double FillFactor = 0.95; // To leave room for unaccounted overhead and unused dictionary capcacity
     }
 
     public class TranspositionTableEntry
@@ -43,7 +36,7 @@ namespace Mzinga.Core.AI
         public int Depth;
         public Move? BestMove;
 
-        public static readonly long SizeInBytes = sizeof(TranspositionTableEntryType) // Type
+        public static readonly int SizeInBytes = sizeof(TranspositionTableEntryType) // Type
                                                   + sizeof(double) // Value
                                                   + sizeof(int) // Depth
                                                   + IntPtr.Size // BestMove pointer

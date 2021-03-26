@@ -138,6 +138,18 @@ namespace Mzinga.Core
 #endif
         }
 
+        public const double DefaultFillFactor = 0.95; // To leave room for unaccounted overhead and unused dictionary capcacity
+
+        public static int EstimateSizeInBytes(int keySize, int entrySize)
+        {
+            return (4 * keySize) // Key size x4
+                   + IntPtr.Size // Wrapped entry pointer
+                   + IntPtr.Size // Wrapped entry, LinkedList node pointer
+                   + IntPtr.Size // Wrapped entry, entry pointer
+                   + (4 * IntPtr.Size) // LinkedList node,list,next,previous pointers
+                   + entrySize; // Entry object
+        }
+
         public override string ToString()
         {
 #if DEBUG

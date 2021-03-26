@@ -24,10 +24,9 @@ namespace Mzinga.Core.AI
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
 
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
-        private const int BoardScoreCacheSize = 262144;
+        private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
 
-        private readonly FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>(ValidMovesCacheSize);
-        private const int ValidMovesCacheSize = 65536;
+        private readonly FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>();
 
         public GameAI()
         {
