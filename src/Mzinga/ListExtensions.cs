@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Mzinga.Core.AI
+namespace Mzinga
 {
     static class ListExtensions
     {
