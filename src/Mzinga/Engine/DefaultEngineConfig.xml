@@ -6,141 +6,60 @@
     <PonderDuringIdle>SingleThreaded</PonderDuringIdle>
     <ReportIntermediateBestMoves>False</ReportIntermediateBestMoves>
     <StartMetricWeights GameType="Base">
-      <QueenBee.InPlayWeight>54046.864080121806</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-37332.785466553534</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>1019.3959930344854</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-86649.280986725527</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>-55127.105683646507</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>58898.580482532132</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-16192.660977691314</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-290382.06319810508</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-123410.42088480575</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>2176.8883703719571</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>154994.0091435248</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>116223.40333504909</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>-123407.22919112143</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>18776.1460868664</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-671713.31282657769</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>34979.687968426835</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>-16.113394695267008</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>10062.453218718034</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-119195.07335083014</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-607117.23853398242</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-23642.804838927641</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>7474.1391707694047</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-47190.906916301617</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>2783.1267248621307</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>68277.7254594643</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>1700.8854262808509</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-41084.02074540998</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-4208.5767797230428</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>191859.19891478022</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-75195.223980880226</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>10.164603217840101</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>-18780.034269998076</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>-404.84481356538743</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-26567.288102871822</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-86881.2618657483</SoldierAnt.EnemyNeighborWeight>
-    </StartMetricWeights>
-    <EndMetricWeights GameType="Base">
-      <QueenBee.InPlayWeight>17974.230594391371</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-82774.851738301033</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>41679.123425725367</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>138219.49352136225</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>125167.4404228778</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-381600.12615119433</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-508134.79384860891</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>120710.68388856297</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-7703.6375543688755</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>20538.935964253629</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>149003.98014308626</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>-23212.783426855829</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>32305.029465246025</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>51958.810388550817</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-2779.8960908108197</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>-30308.854138266419</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>15479.010059825576</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>131507.39671816962</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-2427.0202994891665</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>34845.429064717042</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>59145.266201744191</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>134014.00586540034</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-57876.021551186226</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>29768.704531650135</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>95122.5012339548</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>1027.4296591887417</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>22657.94897013544</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>34079.250995545568</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>1317.1778466573821</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-58632.3697641871</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>-18788.093620904765</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>54502.7599256545</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>-78.291941588286434</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>10620.838130643404</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>34779.414239284073</SoldierAnt.EnemyNeighborWeight>
-    </EndMetricWeights>
-    <StartMetricWeights GameType="Base+M">
-      <QueenBee.InPlayWeight>73744.134488834243</QueenBee.InPlayWeight>
+      <QueenBee.InPlayWeight>73744.13448883424</QueenBee.InPlayWeight>
       <QueenBee.IsPinnedWeight>-29196.233686249612</QueenBee.IsPinnedWeight>
       <QueenBee.IsCoveredWeight>-29620.073215634777</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-8534.6027120316357</QueenBee.NoisyMoveWeight>
+      <QueenBee.NoisyMoveWeight>-8534.602712031636</QueenBee.NoisyMoveWeight>
       <QueenBee.QuietMoveWeight>-102354.66397299136</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-192564.40770450581</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-430579.19546651532</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-58800.098598990648</Spider.InPlayWeight>
+      <QueenBee.FriendlyNeighborWeight>-192564.4077045058</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-430579.1954665153</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-58800.09859899065</Spider.InPlayWeight>
       <Spider.IsPinnedWeight>-42025.47920783623</Spider.IsPinnedWeight>
       <Spider.IsCoveredWeight>21363.592841427104</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>87465.672316329728</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>31816.994246760481</Spider.QuietMoveWeight>
+      <Spider.NoisyMoveWeight>87465.67231632973</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>31816.99424676048</Spider.QuietMoveWeight>
       <Spider.FriendlyNeighborWeight>-48419.667005231</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-48595.523917015977</Spider.EnemyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-48595.52391701598</Spider.EnemyNeighborWeight>
       <Beetle.InPlayWeight>-117364.4401271847</Beetle.InPlayWeight>
       <Beetle.IsPinnedWeight>43797.6464186607</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>3014.4072331737511</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>6365.8157118371246</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-59163.698853955233</Beetle.QuietMoveWeight>
+      <Beetle.IsCoveredWeight>3014.407233173751</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>6365.815711837125</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-59163.69885395523</Beetle.QuietMoveWeight>
       <Beetle.FriendlyNeighborWeight>-128923.81005336253</Beetle.FriendlyNeighborWeight>
       <Beetle.EnemyNeighborWeight>-15260.937264095142</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>-48777.448951033759</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-36872.121296408513</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>3009.4217415519561</Grasshopper.IsCoveredWeight>
+      <Grasshopper.InPlayWeight>-48777.44895103376</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-36872.12129640851</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>3009.421741551956</Grasshopper.IsCoveredWeight>
       <Grasshopper.NoisyMoveWeight>81224.0034595018</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>28972.279764247611</Grasshopper.QuietMoveWeight>
+      <Grasshopper.QuietMoveWeight>28972.27976424761</Grasshopper.QuietMoveWeight>
       <Grasshopper.FriendlyNeighborWeight>-49649.84978282162</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-62047.510471730078</Grasshopper.EnemyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-62047.51047173008</Grasshopper.EnemyNeighborWeight>
       <SoldierAnt.InPlayWeight>115811.5605736838</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-36235.667362656321</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsPinnedWeight>-36235.66736265632</SoldierAnt.IsPinnedWeight>
       <SoldierAnt.IsCoveredWeight>149.35004099327256</SoldierAnt.IsCoveredWeight>
       <SoldierAnt.NoisyMoveWeight>9940.42396915917</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>882.65314962830519</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>42531.509909523149</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.QuietMoveWeight>882.6531496283052</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>42531.50990952315</SoldierAnt.FriendlyNeighborWeight>
       <SoldierAnt.EnemyNeighborWeight>-151024.074809899</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>51521.140554352773</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>11476.262365602346</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>-4947.44358761967</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>44271.4473294817</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>-6455.161891675697</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>131736.01773864884</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>29274.2186252158</Mosquito.EnemyNeighborWeight>
     </StartMetricWeights>
-    <EndMetricWeights GameType="Base+M">
+    <EndMetricWeights GameType="Base">
       <QueenBee.InPlayWeight>18115.539052860153</QueenBee.InPlayWeight>
       <QueenBee.IsPinnedWeight>-66199.6173320722</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-23111.444041530871</QueenBee.IsCoveredWeight>
+      <QueenBee.IsCoveredWeight>-23111.44404153087</QueenBee.IsCoveredWeight>
       <QueenBee.NoisyMoveWeight>13210.685432126858</QueenBee.NoisyMoveWeight>
       <QueenBee.QuietMoveWeight>131203.16439605763</QueenBee.QuietMoveWeight>
       <QueenBee.FriendlyNeighborWeight>-159170.81740827145</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-597126.25346344663</QueenBee.EnemyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-597126.2534634466</QueenBee.EnemyNeighborWeight>
       <Spider.InPlayWeight>-11525.684294496963</Spider.InPlayWeight>
       <Spider.IsPinnedWeight>-30223.589052574305</Spider.IsPinnedWeight>
       <Spider.IsCoveredWeight>2513.1708431003594</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>90299.248428526247</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>-9864.8756064758836</Spider.QuietMoveWeight>
+      <Spider.NoisyMoveWeight>90299.24842852625</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>-9864.875606475884</Spider.QuietMoveWeight>
       <Spider.FriendlyNeighborWeight>-26212.354385318748</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-54031.723786808543</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-42166.391617371592</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>-4926.1246400062328</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>-2254.4435454592972</Beetle.IsCoveredWeight>
+      <Spider.EnemyNeighborWeight>-54031.72378680854</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-42166.39161737159</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>-4926.124640006233</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>-2254.443545459297</Beetle.IsCoveredWeight>
       <Beetle.NoisyMoveWeight>77951.0933679477</Beetle.NoisyMoveWeight>
       <Beetle.QuietMoveWeight>16447.42172618274</Beetle.QuietMoveWeight>
       <Beetle.FriendlyNeighborWeight>-23929.212233832408</Beetle.FriendlyNeighborWeight>
@@ -149,232 +68,219 @@
       <Grasshopper.IsPinnedWeight>-21409.252219509297</Grasshopper.IsPinnedWeight>
       <Grasshopper.IsCoveredWeight>10495.028816032793</Grasshopper.IsCoveredWeight>
       <Grasshopper.NoisyMoveWeight>127506.68764739338</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>-787.89166745152693</Grasshopper.QuietMoveWeight>
+      <Grasshopper.QuietMoveWeight>-787.8916674515269</Grasshopper.QuietMoveWeight>
       <Grasshopper.FriendlyNeighborWeight>9761.841076214625</Grasshopper.FriendlyNeighborWeight>
       <Grasshopper.EnemyNeighborWeight>-90987.0643034688</Grasshopper.EnemyNeighborWeight>
       <SoldierAnt.InPlayWeight>18236.113561614082</SoldierAnt.InPlayWeight>
       <SoldierAnt.IsPinnedWeight>-27073.293403117685</SoldierAnt.IsPinnedWeight>
       <SoldierAnt.IsCoveredWeight>-3012.9607149798244</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>60318.847365918853</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.NoisyMoveWeight>60318.84736591885</SoldierAnt.NoisyMoveWeight>
       <SoldierAnt.QuietMoveWeight>304.91655599098794</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-32869.168870878559</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-32869.16887087856</SoldierAnt.FriendlyNeighborWeight>
       <SoldierAnt.EnemyNeighborWeight>-68114.3090708631</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>9930.1418677086112</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-1272.9827485769902</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>1476.9935305325521</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>48569.394605340276</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>-1498.9432106356437</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>-44134.835925970328</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>-22297.601874350898</Mosquito.EnemyNeighborWeight>
+    </EndMetricWeights>
+    <StartMetricWeights GameType="Base+M">
+      <QueenBee.InPlayWeight>44025.769694136165</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>-32087.434148091943</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>13230.876467768621</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-71324.71815411157</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>-22672.282036496385</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>50715.57425179189</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>2377.695102152572</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-295150.3332871849</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>-114579.97136508045</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>-669.3013957401016</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>59572.847935511236</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>118323.99243508503</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>-96751.264591693</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>32424.991746940377</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-702961.2407867853</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>51256.58503540413</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>1544.105725825908</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>-95124.75262240117</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-100742.82897739472</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-615922.6507895486</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-25553.431418798384</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1423.8777910988522</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-30111.561269744874</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>3055.166066011124</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>-29939.225468732675</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>18229.092330252803</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-47618.34526836263</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-7591.145821787116</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>195451.64759227313</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>-55025.37563179427</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>-10047.061974384733</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>-27970.144893996603</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>-4515.703403434668</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>5580.983187048517</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-95659.25431974982</SoldierAnt.EnemyNeighborWeight>
+      <Mosquito.InPlayWeight>207651.36385553927</Mosquito.InPlayWeight>
+      <Mosquito.IsPinnedWeight>-6027.579145889122</Mosquito.IsPinnedWeight>
+      <Mosquito.IsCoveredWeight>-685.5253227164313</Mosquito.IsCoveredWeight>
+      <Mosquito.NoisyMoveWeight>9223.566212316673</Mosquito.NoisyMoveWeight>
+      <Mosquito.QuietMoveWeight>-2313.0846840949184</Mosquito.QuietMoveWeight>
+      <Mosquito.FriendlyNeighborWeight>-11211.234719448341</Mosquito.FriendlyNeighborWeight>
+      <Mosquito.EnemyNeighborWeight>-4301.59957921546</Mosquito.EnemyNeighborWeight>
+    </StartMetricWeights>
+    <EndMetricWeights GameType="Base+M">
+      <QueenBee.InPlayWeight>14033.028124029419</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>-69905.6872807278</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>47517.92238211153</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>157902.3544083577</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>140065.98580015491</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-399891.51142300287</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-513995.66609889467</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>136961.29392903828</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>1222.2518042648858</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>4905.204067420018</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>81809.1834058235</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>-32791.8654709268</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>20095.937230006384</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>54074.30716268457</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>17404.46418219946</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>-28174.027846785502</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>23575.813583195282</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>57356.32553967469</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>40868.6055184447</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>44511.462299130355</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>35390.7759756092</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>140049.3960479146</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-49248.19401263225</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>26404.94987849297</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>36706.48799074912</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>9354.01348970062</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>24115.804632854124</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>37253.27640489333</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>5825.856191289076</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>-46313.77964906533</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>-17397.987995191867</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>58858.85325156692</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>-1089.0697277270526</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>7790.9200341956475</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>49136.38535104242</SoldierAnt.EnemyNeighborWeight>
+      <Mosquito.InPlayWeight>55809.66377199584</Mosquito.InPlayWeight>
+      <Mosquito.IsPinnedWeight>-35493.229593215474</Mosquito.IsPinnedWeight>
+      <Mosquito.IsCoveredWeight>-5014.740865011831</Mosquito.IsCoveredWeight>
+      <Mosquito.NoisyMoveWeight>19519.602426496705</Mosquito.NoisyMoveWeight>
+      <Mosquito.QuietMoveWeight>7471.820946874983</Mosquito.QuietMoveWeight>
+      <Mosquito.FriendlyNeighborWeight>16747.30223376033</Mosquito.FriendlyNeighborWeight>
+      <Mosquito.EnemyNeighborWeight>52679.09793876361</Mosquito.EnemyNeighborWeight>
     </EndMetricWeights>
     <StartMetricWeights GameType="Base+L">
-      <QueenBee.InPlayWeight>63558.424116300164</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-16068.975008474492</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-10847.567653899931</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-27548.363843068229</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>-58684.539953994012</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>6083.8163053412582</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-16777.906712227239</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-78668.571112901438</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-40182.83585644461</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>3522.4688484300345</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>96533.760806393242</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>24696.290745248069</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>-38936.630811627729</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-23840.635072629706</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-292118.48269342358</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>42682.09004360313</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>4481.1788458262208</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>17665.014704305027</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-30118.546365364382</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-330519.22361689981</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-15571.384868146333</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>-62143.667095283883</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-37382.758164338331</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>7376.7071386644275</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>81774.277112401774</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>4185.8871770234136</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-46514.16457826511</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-29599.124484381024</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>150335.73123164993</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-54347.584005878518</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>2181.3845855769014</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>-12190.782082844375</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>-2768.31388448452</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-24781.768062011586</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-124949.7080146349</SoldierAnt.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>2403.5193930400983</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>2403.5193930400983</Ladybug.IsPinnedWeight>
-      <Ladybug.QuietMoveWeight>-11221.051806351792</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>2385.4588234124367</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>1410.332157926724</Ladybug.EnemyNeighborWeight>
+      <QueenBee.InPlayWeight>44025.769694136165</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>-32087.434148091943</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>13230.876467768621</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-71324.71815411157</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>-22672.282036496385</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>50715.57425179189</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>2377.695102152572</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-295150.3332871849</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>-114579.97136508045</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>-669.3013957401016</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>59572.847935511236</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>118323.99243508503</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>-96751.264591693</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>32424.991746940377</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-702961.2407867853</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>51256.58503540413</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>1544.105725825908</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>-95124.75262240117</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-100742.82897739472</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-615922.6507895486</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-25553.431418798384</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1423.8777910988522</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-30111.561269744874</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>3055.166066011124</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>-29939.225468732675</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>18229.092330252803</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-47618.34526836263</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-7591.145821787116</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>195451.64759227313</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>-55025.37563179427</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>-10047.061974384733</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>-27970.144893996603</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>-4515.703403434668</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>5580.983187048517</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-95659.25431974982</SoldierAnt.EnemyNeighborWeight>
+      <Ladybug.InPlayWeight>152169.14073061128</Ladybug.InPlayWeight>
+      <Ladybug.IsPinnedWeight>-22876.718483590434</Ladybug.IsPinnedWeight>
+      <Ladybug.IsCoveredWeight>302.85494154701433</Ladybug.IsCoveredWeight>
+      <Ladybug.NoisyMoveWeight>14544.02666143861</Ladybug.NoisyMoveWeight>
+      <Ladybug.QuietMoveWeight>-14397.20463577205</Ladybug.QuietMoveWeight>
+      <Ladybug.FriendlyNeighborWeight>8297.442449822847</Ladybug.FriendlyNeighborWeight>
+      <Ladybug.EnemyNeighborWeight>50018.72477308101</Ladybug.EnemyNeighborWeight>
     </StartMetricWeights>
     <EndMetricWeights GameType="Base+L">
-      <QueenBee.InPlayWeight>13432.951885680534</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-129954.41883899852</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-20359.393475776742</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>72291.279470980546</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>95774.84135111222</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-317466.59939896787</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-538148.83427047916</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>25435.882238354585</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-46539.050968797987</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>7318.0624455331526</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>139756.22020687832</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>-20695.847798165196</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>21040.378412891179</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>47143.13584635398</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-47942.307877620369</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>-48021.26522496219</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>9325.20680229596</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>142117.44307757894</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>11689.302089549319</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>36462.79568546643</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>63931.690177184442</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>62698.372814220929</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-82598.030838865525</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>24024.225201639405</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>105510.87832342245</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>-12497.189426607009</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>13656.02929100097</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>24316.040387962978</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>132380.04004659085</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-51035.8531595224</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>-1515.3280863367781</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>53866.8750489757</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>4129.4372159666527</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>14307.125782953061</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>21240.126963001589</SoldierAnt.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>428.12039119292518</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>428.12039119292518</Ladybug.IsPinnedWeight>
-      <Ladybug.QuietMoveWeight>-2037.2972162731394</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>426.07017642756523</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>250.78083497266459</Ladybug.EnemyNeighborWeight>
-    </EndMetricWeights>
-    <StartMetricWeights GameType="Base+ML">
-      <QueenBee.InPlayWeight>63558.424116300164</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-16068.975008474492</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-10847.567653899931</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-27548.363843068229</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>-58684.539953994012</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>6083.8163053412582</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-16777.906712227239</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-78668.571112901438</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-40182.83585644461</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>3522.4688484300345</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>96533.760806393242</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>24696.290745248069</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>-38936.630811627729</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-23840.635072629706</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-292118.48269342358</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>42682.09004360313</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>4481.1788458262208</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>17665.014704305027</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-30118.546365364382</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-330519.22361689981</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-15571.384868146333</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>-62143.667095283883</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-37382.758164338331</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>7376.7071386644275</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>81774.277112401774</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>4185.8871770234136</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-46514.16457826511</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-29599.124484381024</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>150335.73123164993</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-54347.584005878518</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>2181.3845855769014</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>-12190.782082844375</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>-2768.31388448452</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-24781.768062011586</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-124949.7080146349</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>147014.737145555</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-2891.0586433755066</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>274.477890120718</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>7418.8160739939394</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>-2217.07900807487</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>5877.3745145712792</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>12195.859568176549</Mosquito.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>2403.5193930400983</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>2403.5193930400983</Ladybug.IsPinnedWeight>
-      <Ladybug.QuietMoveWeight>-11221.051806351792</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>2385.4588234124367</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>1410.332157926724</Ladybug.EnemyNeighborWeight>
-    </StartMetricWeights>
-    <EndMetricWeights GameType="Base+ML">
-      <QueenBee.InPlayWeight>13432.951885680534</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-129954.41883899852</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-20359.393475776742</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>72291.279470980546</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>95774.84135111222</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-317466.59939896787</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-538148.83427047916</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>25435.882238354585</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-46539.050968797987</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>7318.0624455331526</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>139756.22020687832</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>-20695.847798165196</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>21040.378412891179</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>47143.13584635398</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-47942.307877620369</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>-48021.26522496219</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>9325.20680229596</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>142117.44307757894</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>11689.302089549319</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>36462.79568546643</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>63931.690177184442</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>62698.372814220929</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-82598.030838865525</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>24024.225201639405</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>105510.87832342245</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>-12497.189426607009</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>13656.02929100097</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>24316.040387962978</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>132380.04004659085</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-51035.8531595224</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>-1515.3280863367781</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>53866.8750489757</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>4129.4372159666527</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>14307.125782953061</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>21240.126963001589</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>35702.098965012</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-47853.255501389671</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>-5471.6583403421873</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>34855.368897836735</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>3658.3069258791934</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>9198.5492110289524</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>20205.426928489276</Mosquito.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>428.12039119292518</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>428.12039119292518</Ladybug.IsPinnedWeight>
-      <Ladybug.QuietMoveWeight>-2037.2972162731394</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>426.07017642756523</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>250.78083497266459</Ladybug.EnemyNeighborWeight>
+      <QueenBee.InPlayWeight>14033.028124029419</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>-69905.6872807278</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>47517.92238211153</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>157902.3544083577</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>140065.98580015491</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-399891.51142300287</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-513995.66609889467</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>136961.29392903828</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>1222.2518042648858</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>4905.204067420018</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>81809.1834058235</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>-32791.8654709268</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>20095.937230006384</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>54074.30716268457</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>17404.46418219946</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>-28174.027846785502</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>23575.813583195282</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>57356.32553967469</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>40868.6055184447</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>44511.462299130355</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>35390.7759756092</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>140049.3960479146</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-49248.19401263225</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>26404.94987849297</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>36706.48799074912</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>9354.01348970062</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>24115.804632854124</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>37253.27640489333</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>5825.856191289076</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>-46313.77964906533</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>-17397.987995191867</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>58858.85325156692</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>-1089.0697277270526</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>7790.9200341956475</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>49136.38535104242</SoldierAnt.EnemyNeighborWeight>
+      <Ladybug.InPlayWeight>165320.61169126155</Ladybug.InPlayWeight>
+      <Ladybug.IsPinnedWeight>-117407.8935403125</Ladybug.IsPinnedWeight>
+      <Ladybug.IsCoveredWeight>17360.862922660937</Ladybug.IsCoveredWeight>
+      <Ladybug.NoisyMoveWeight>2997.469688615837</Ladybug.NoisyMoveWeight>
+      <Ladybug.QuietMoveWeight>4901.630838860477</Ladybug.QuietMoveWeight>
+      <Ladybug.FriendlyNeighborWeight>-12710.864475982771</Ladybug.FriendlyNeighborWeight>
+      <Ladybug.EnemyNeighborWeight>9549.030343828945</Ladybug.EnemyNeighborWeight>
     </EndMetricWeights>
     <StartMetricWeights GameType="Base+P">
       <QueenBee.InPlayWeight>-8748.0100406638</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>742.90592017629922</QueenBee.IsPinnedWeight>
+      <QueenBee.IsPinnedWeight>742.9059201762992</QueenBee.IsPinnedWeight>
       <QueenBee.IsCoveredWeight>-18323.517380239115</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-595.05482224976242</QueenBee.NoisyMoveWeight>
+      <QueenBee.NoisyMoveWeight>-595.0548222497624</QueenBee.NoisyMoveWeight>
       <QueenBee.QuietMoveWeight>3735.500825134869</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-69474.111182303124</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-781093.80078189727</QueenBee.EnemyNeighborWeight>
+      <QueenBee.FriendlyNeighborWeight>-69474.11118230312</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-781093.8007818973</QueenBee.EnemyNeighborWeight>
       <Spider.InPlayWeight>-185501.55544959707</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>6306.6974694193568</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>2128.6171897470258</Spider.IsCoveredWeight>
+      <Spider.IsPinnedWeight>6306.697469419357</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>2128.617189747026</Spider.IsCoveredWeight>
       <Spider.NoisyMoveWeight>10134.129497899397</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>396.48438641838391</Spider.QuietMoveWeight>
+      <Spider.QuietMoveWeight>396.4843864183839</Spider.QuietMoveWeight>
       <Spider.FriendlyNeighborWeight>20336.508083120345</Spider.FriendlyNeighborWeight>
       <Spider.EnemyNeighborWeight>-479.3603327770598</Spider.EnemyNeighborWeight>
       <Beetle.InPlayWeight>-503.09769142398426</Beetle.InPlayWeight>
       <Beetle.IsPinnedWeight>13723.442209393314</Beetle.IsPinnedWeight>
       <Beetle.IsCoveredWeight>2829.6206817716125</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>698.71889988901364</Beetle.NoisyMoveWeight>
+      <Beetle.NoisyMoveWeight>698.7188998890136</Beetle.NoisyMoveWeight>
       <Beetle.QuietMoveWeight>-134.10565456647012</Beetle.QuietMoveWeight>
       <Beetle.FriendlyNeighborWeight>-12558.284275898128</Beetle.FriendlyNeighborWeight>
       <Beetle.EnemyNeighborWeight>-1999.7214957816175</Beetle.EnemyNeighborWeight>
       <Grasshopper.InPlayWeight>2041.3924094534482</Grasshopper.InPlayWeight>
       <Grasshopper.IsPinnedWeight>-4353.043701786597</Grasshopper.IsPinnedWeight>
       <Grasshopper.IsCoveredWeight>12513.168464904775</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>457.40091078653842</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.NoisyMoveWeight>457.4009107865384</Grasshopper.NoisyMoveWeight>
       <Grasshopper.QuietMoveWeight>10430.430160261429</Grasshopper.QuietMoveWeight>
       <Grasshopper.FriendlyNeighborWeight>-1955.2300783082103</Grasshopper.FriendlyNeighborWeight>
       <Grasshopper.EnemyNeighborWeight>-534.067179710123</Grasshopper.EnemyNeighborWeight>
@@ -383,379 +289,425 @@
       <SoldierAnt.IsCoveredWeight>1353.7005587260128</SoldierAnt.IsCoveredWeight>
       <SoldierAnt.NoisyMoveWeight>485.23260225334764</SoldierAnt.NoisyMoveWeight>
       <SoldierAnt.QuietMoveWeight>7821.64197889109</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-4793.0432785783669</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-51187.343495210691</SoldierAnt.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>-206.54781406363119</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>321658.29441728379</Pillbug.IsPinnedWeight>
-      <Pillbug.IsCoveredWeight>727.98845010305945</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>-30353.474905396481</Pillbug.NoisyMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-4793.043278578367</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-51187.34349521069</SoldierAnt.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-206.5478140636312</Pillbug.InPlayWeight>
+      <Pillbug.IsPinnedWeight>321658.2944172838</Pillbug.IsPinnedWeight>
+      <Pillbug.IsCoveredWeight>727.9884501030594</Pillbug.IsCoveredWeight>
+      <Pillbug.NoisyMoveWeight>-30353.47490539648</Pillbug.NoisyMoveWeight>
       <Pillbug.QuietMoveWeight>-4721.5913874428425</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>4835.1476492376987</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.FriendlyNeighborWeight>4835.147649237699</Pillbug.FriendlyNeighborWeight>
       <Pillbug.EnemyNeighborWeight>44929.765023024556</Pillbug.EnemyNeighborWeight>
     </StartMetricWeights>
     <EndMetricWeights GameType="Base+P">
       <QueenBee.InPlayWeight>-10532.635391220048</QueenBee.InPlayWeight>
       <QueenBee.IsPinnedWeight>2264.0484122093294</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-47921.924101667872</QueenBee.IsCoveredWeight>
+      <QueenBee.IsCoveredWeight>-47921.92410166787</QueenBee.IsCoveredWeight>
       <QueenBee.NoisyMoveWeight>-4915.133572569669</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>7131.7482120337227</QueenBee.QuietMoveWeight>
+      <QueenBee.QuietMoveWeight>7131.748212033723</QueenBee.QuietMoveWeight>
       <QueenBee.FriendlyNeighborWeight>-143170.437837971</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-405461.23541163339</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-8441.6976144937835</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>5428.9722821265823</Spider.IsPinnedWeight>
+      <QueenBee.EnemyNeighborWeight>-405461.2354116334</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-8441.697614493783</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>5428.972282126582</Spider.IsPinnedWeight>
       <Spider.IsCoveredWeight>2006.8142444480063</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>88967.412776183672</Spider.NoisyMoveWeight>
+      <Spider.NoisyMoveWeight>88967.41277618367</Spider.NoisyMoveWeight>
       <Spider.QuietMoveWeight>1833.0521510172302</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>677.69848857012721</Spider.FriendlyNeighborWeight>
+      <Spider.FriendlyNeighborWeight>677.6984885701272</Spider.FriendlyNeighborWeight>
       <Spider.EnemyNeighborWeight>-21085.406896373464</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-7641.0203924036941</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>6457.6001567164858</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>5977.7251892275726</Beetle.IsCoveredWeight>
+      <Beetle.InPlayWeight>-7641.020392403694</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>6457.600156716486</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>5977.725189227573</Beetle.IsCoveredWeight>
       <Beetle.NoisyMoveWeight>1675.302550729494</Beetle.NoisyMoveWeight>
       <Beetle.QuietMoveWeight>-160.31913768229748</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-4069.5830886442668</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-559.04704806745644</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>2897.6530408344888</Grasshopper.InPlayWeight>
+      <Beetle.FriendlyNeighborWeight>-4069.583088644267</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-559.0470480674564</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>2897.653040834489</Grasshopper.InPlayWeight>
       <Grasshopper.IsPinnedWeight>-14014.838606764246</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>2015.2440771724369</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>6524.0200834794714</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.IsCoveredWeight>2015.2440771724368</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>6524.020083479471</Grasshopper.NoisyMoveWeight>
       <Grasshopper.QuietMoveWeight>34191.1495416305</Grasshopper.QuietMoveWeight>
       <Grasshopper.FriendlyNeighborWeight>-1063.8132477141896</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-397.18844493109219</Grasshopper.EnemyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-397.1884449310922</Grasshopper.EnemyNeighborWeight>
       <SoldierAnt.InPlayWeight>117461.15826911696</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>7044.9416338737938</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>212.76592499362951</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>684.63895359861658</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.IsPinnedWeight>7044.941633873794</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>212.7659249936295</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>684.6389535986166</SoldierAnt.NoisyMoveWeight>
       <SoldierAnt.QuietMoveWeight>4844.257939648317</SoldierAnt.QuietMoveWeight>
       <SoldierAnt.FriendlyNeighborWeight>-175.84815812254453</SoldierAnt.FriendlyNeighborWeight>
       <SoldierAnt.EnemyNeighborWeight>-14767.8474612564</SoldierAnt.EnemyNeighborWeight>
       <Pillbug.InPlayWeight>-8313.88974419674</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>38673.973849618618</Pillbug.IsPinnedWeight>
+      <Pillbug.IsPinnedWeight>38673.97384961862</Pillbug.IsPinnedWeight>
       <Pillbug.IsCoveredWeight>222.23756756526225</Pillbug.IsCoveredWeight>
       <Pillbug.NoisyMoveWeight>-13070.606991504526</Pillbug.NoisyMoveWeight>
       <Pillbug.QuietMoveWeight>-1156.6141556723287</Pillbug.QuietMoveWeight>
       <Pillbug.FriendlyNeighborWeight>11675.0719761247</Pillbug.FriendlyNeighborWeight>
-      <Pillbug.EnemyNeighborWeight>613.20695251393215</Pillbug.EnemyNeighborWeight>
+      <Pillbug.EnemyNeighborWeight>613.2069525139322</Pillbug.EnemyNeighborWeight>
+    </EndMetricWeights>
+    <StartMetricWeights GameType="Base+ML">
+      <QueenBee.InPlayWeight>-8748.0100406638</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>742.9059201762992</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-18323.517380239115</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-595.0548222497624</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>3735.500825134869</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-69474.11118230312</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-781093.8007818973</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-185501.55544959707</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>6306.697469419357</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>2128.617189747026</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>10134.129497899397</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>396.4843864183839</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>20336.508083120345</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-479.3603327770598</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-503.09769142398426</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>13723.442209393314</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>2829.6206817716125</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>698.7188998890136</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-134.10565456647012</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-12558.284275898128</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-1999.7214957816175</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>2041.3924094534482</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-4353.043701786597</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>12513.168464904775</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>457.4009107865384</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>10430.430160261429</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-1955.2300783082103</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-534.067179710123</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>11180.730575384123</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>2382.6214227603596</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>1353.7005587260128</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>485.23260225334764</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>7821.64197889109</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-4793.043278578367</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-51187.34349521069</SoldierAnt.EnemyNeighborWeight>
+    </StartMetricWeights>
+    <EndMetricWeights GameType="Base+ML">
+      <QueenBee.InPlayWeight>-10532.635391220048</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>2264.0484122093294</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-47921.92410166787</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-4915.133572569669</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>7131.748212033723</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-143170.437837971</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-405461.2354116334</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-8441.697614493783</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>5428.972282126582</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>2006.8142444480063</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>88967.41277618367</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>1833.0521510172302</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>677.6984885701272</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-21085.406896373464</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-7641.020392403694</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>6457.600156716486</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>5977.725189227573</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>1675.302550729494</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-160.31913768229748</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-4069.583088644267</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-559.0470480674564</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>2897.653040834489</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-14014.838606764246</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>2015.2440771724368</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>6524.020083479471</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>34191.1495416305</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-1063.8132477141896</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-397.1884449310922</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>117461.15826911696</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>7044.941633873794</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>212.7659249936295</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>684.6389535986166</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>4844.257939648317</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-175.84815812254453</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-14767.8474612564</SoldierAnt.EnemyNeighborWeight>
     </EndMetricWeights>
     <StartMetricWeights GameType="Base+MP">
-      <QueenBee.InPlayWeight>-3297.6854103771279</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>154.69556363860323</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-1105.4290600961085</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-6425.8687528479077</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>8190.15422280396</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-183786.96023078603</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-842784.13670560555</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-5808.4047782077769</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>16573.316637234206</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>2791.495025909865</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>8496.4630947130045</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>1620.16107482649</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>6396.192572459111</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-4691.2949638435248</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-2346.5223481475491</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>4001.1926065003618</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>1110.4623994966855</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>782.0201923060614</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-72.961921113729019</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-10000.370651108489</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-124.51247737787428</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>114.4331414763552</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-19617.425890168495</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>16776.682313994461</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>1126.2544341692051</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>5867.7641247638539</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-439.82304406099291</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-1810.1038902815149</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>8057.6933087808911</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>631.24190271135171</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>235.6900966186077</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>174.534647707968</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>15296.016603805656</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-4544.9608153168147</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-8420.3855703813424</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>44496.974177782766</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-5847.2610022692252</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>-22034.277281763374</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>-606.063616651303</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>506.40423419663136</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>53392.327370439678</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>-218.3402483504567</Mosquito.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>-1853.3502941969382</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>64884.335215454455</Pillbug.IsPinnedWeight>
-      <Pillbug.IsCoveredWeight>466.99595383472189</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>-2429.6612309796783</Pillbug.NoisyMoveWeight>
-      <Pillbug.QuietMoveWeight>-7731.4067546853421</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>5665.1939358343443</Pillbug.FriendlyNeighborWeight>
-      <Pillbug.EnemyNeighborWeight>7974.2773794459317</Pillbug.EnemyNeighborWeight>
-    </StartMetricWeights>
-    <EndMetricWeights GameType="Base+MP">
-      <QueenBee.InPlayWeight>-2897.3174583535133</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>4281.1768807729641</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-10532.504151526047</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-4760.1347218681822</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>1660.5413914664596</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-263952.72966926417</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-507049.6907477965</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-3283.6912818323563</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>29431.780841578675</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>18867.598597509437</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>168302.77094311683</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>3485.7837079214605</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>321.86563982125045</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-3800.4293324326018</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-3786.8971246714596</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>1669.6927489342802</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>4181.26235841499</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>4589.4738727955528</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-321.627981639517</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-848.49456913307722</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-1389.5111237907727</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>1084.2706694992371</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-1237.3946395389648</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>797.44525233623062</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>22232.738126157426</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>14160.8636164854</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-551.40313036382065</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-822.41817088274126</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>11793.847154577328</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>9639.79049720487</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>39.506614322039212</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>299.53728399137333</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>2175.7425217656732</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-307.08104662801696</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-13391.193515644816</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>528.02056756383547</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-6938.43146282435</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>-34948.253303363272</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>-3284.6766017014338</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>1143.6987911993231</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>116601.3299454988</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>-4180.916215139875</Mosquito.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>-10319.988990535712</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>123575.58631937616</Pillbug.IsPinnedWeight>
-      <Pillbug.IsCoveredWeight>2603.994189972278</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>-32687.92375457142</Pillbug.NoisyMoveWeight>
-      <Pillbug.QuietMoveWeight>-4457.8560280914089</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>2069.1195966478067</Pillbug.FriendlyNeighborWeight>
-      <Pillbug.EnemyNeighborWeight>748.295344292237</Pillbug.EnemyNeighborWeight>
-    </EndMetricWeights>
-    <StartMetricWeights GameType="Base+LP">
-      <QueenBee.InPlayWeight>-40.153216303837148</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>610.97895075626616</QueenBee.IsPinnedWeight>
+      <QueenBee.InPlayWeight>-40.15321630383715</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>610.9789507562662</QueenBee.IsPinnedWeight>
       <QueenBee.IsCoveredWeight>-5674.59263891028</QueenBee.IsCoveredWeight>
       <QueenBee.NoisyMoveWeight>-2808.2626792403066</QueenBee.NoisyMoveWeight>
       <QueenBee.QuietMoveWeight>1929.9229459301355</QueenBee.QuietMoveWeight>
       <QueenBee.FriendlyNeighborWeight>-12430.738003855466</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-551100.58177923807</QueenBee.EnemyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-551100.5817792381</QueenBee.EnemyNeighborWeight>
       <Spider.InPlayWeight>-3887.7405420869973</Spider.InPlayWeight>
       <Spider.IsPinnedWeight>359.14243440936156</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>9474.6786133811875</Spider.IsCoveredWeight>
+      <Spider.IsCoveredWeight>9474.678613381187</Spider.IsCoveredWeight>
       <Spider.NoisyMoveWeight>33481.440576184796</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>409.64540080853749</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>8691.8457485279432</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-4123.4819244684459</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-389.28263096412559</Beetle.InPlayWeight>
+      <Spider.QuietMoveWeight>409.6454008085375</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>8691.845748527943</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4123.481924468446</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-389.2826309641256</Beetle.InPlayWeight>
       <Beetle.IsPinnedWeight>2330.2292617753806</Beetle.IsPinnedWeight>
       <Beetle.IsCoveredWeight>291.81429233582105</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>373.50369124554521</Beetle.NoisyMoveWeight>
+      <Beetle.NoisyMoveWeight>373.5036912455452</Beetle.NoisyMoveWeight>
       <Beetle.QuietMoveWeight>-140.81443239182374</Beetle.QuietMoveWeight>
       <Beetle.FriendlyNeighborWeight>-1534.0126553536838</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-563.87864266483155</Beetle.EnemyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-563.8786426648315</Beetle.EnemyNeighborWeight>
       <Grasshopper.InPlayWeight>1837.7984128716746</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-1511.2642017184719</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>7985.6770680441459</Grasshopper.IsCoveredWeight>
+      <Grasshopper.IsPinnedWeight>-1511.264201718472</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>7985.677068044146</Grasshopper.IsCoveredWeight>
       <Grasshopper.NoisyMoveWeight>2634.5126999716863</Grasshopper.NoisyMoveWeight>
       <Grasshopper.QuietMoveWeight>6470.0637036309745</Grasshopper.QuietMoveWeight>
       <Grasshopper.FriendlyNeighborWeight>-469.68839421426</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>-87.224607244345577</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>964.03000110112794</SoldierAnt.InPlayWeight>
+      <Grasshopper.EnemyNeighborWeight>-87.22460724434558</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>964.0300011011279</SoldierAnt.InPlayWeight>
       <SoldierAnt.IsPinnedWeight>175.6665871537962</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>56.040178223990623</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>657.91603676351326</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>3377.9485379561411</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-143.15204315400681</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.IsCoveredWeight>56.04017822399062</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>657.9160367635133</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>3377.948537956141</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-143.1520431540068</SoldierAnt.FriendlyNeighborWeight>
       <SoldierAnt.EnemyNeighborWeight>-15089.737560052967</SoldierAnt.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>-4494.0371804430461</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>-5543.12988753058</Ladybug.IsPinnedWeight>
-      <Ladybug.IsCoveredWeight>-567.96641260987792</Ladybug.IsCoveredWeight>
-      <Ladybug.NoisyMoveWeight>-95.676747616653486</Ladybug.NoisyMoveWeight>
-      <Ladybug.QuietMoveWeight>1006.6760051760265</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>1601.0593338368017</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>-4767.6021347950746</Ladybug.EnemyNeighborWeight>
       <Pillbug.InPlayWeight>-132.83136994606377</Pillbug.InPlayWeight>
       <Pillbug.IsPinnedWeight>2332.632711454025</Pillbug.IsPinnedWeight>
       <Pillbug.IsCoveredWeight>262.02233309887845</Pillbug.IsCoveredWeight>
       <Pillbug.NoisyMoveWeight>-14579.795464712264</Pillbug.NoisyMoveWeight>
       <Pillbug.QuietMoveWeight>-438.80886290190915</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>5272.8956927438276</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.FriendlyNeighborWeight>5272.895692743828</Pillbug.FriendlyNeighborWeight>
       <Pillbug.EnemyNeighborWeight>24231.790822530354</Pillbug.EnemyNeighborWeight>
     </StartMetricWeights>
-    <EndMetricWeights GameType="Base+LP">
-      <QueenBee.InPlayWeight>-634.65278474028742</QueenBee.InPlayWeight>
+    <EndMetricWeights GameType="Base+MP">
+      <QueenBee.InPlayWeight>-634.6527847402874</QueenBee.InPlayWeight>
       <QueenBee.IsPinnedWeight>481.41268922135947</QueenBee.IsPinnedWeight>
       <QueenBee.IsCoveredWeight>-8415.082960626818</QueenBee.IsCoveredWeight>
       <QueenBee.NoisyMoveWeight>-3212.88665098636</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>3127.2380057913738</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-43910.264143116037</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-836696.35101766139</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-517.37655833931728</Spider.InPlayWeight>
+      <QueenBee.QuietMoveWeight>3127.238005791374</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-43910.26414311604</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-836696.3510176614</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-517.3765583393173</Spider.InPlayWeight>
       <Spider.IsPinnedWeight>3772.7986007031973</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>6536.1486117759168</Spider.IsCoveredWeight>
+      <Spider.IsCoveredWeight>6536.148611775917</Spider.IsCoveredWeight>
       <Spider.NoisyMoveWeight>1208.9182506671361</Spider.NoisyMoveWeight>
       <Spider.QuietMoveWeight>467.41658672731666</Spider.QuietMoveWeight>
       <Spider.FriendlyNeighborWeight>424.07816269671395</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>-4447.4178933048233</Spider.EnemyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4447.417893304823</Spider.EnemyNeighborWeight>
       <Beetle.InPlayWeight>-375.4156787267363</Beetle.InPlayWeight>
       <Beetle.IsPinnedWeight>3093.3743629769797</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>1034.9061639467459</Beetle.IsCoveredWeight>
+      <Beetle.IsCoveredWeight>1034.906163946746</Beetle.IsCoveredWeight>
       <Beetle.NoisyMoveWeight>1043.5422287508188</Beetle.NoisyMoveWeight>
       <Beetle.QuietMoveWeight>-4.224191747554161</Beetle.QuietMoveWeight>
       <Beetle.FriendlyNeighborWeight>-2481.1065452633457</Beetle.FriendlyNeighborWeight>
       <Beetle.EnemyNeighborWeight>-3182.3616057616873</Beetle.EnemyNeighborWeight>
       <Grasshopper.InPlayWeight>1339.6666594818976</Grasshopper.InPlayWeight>
       <Grasshopper.IsPinnedWeight>-7529.900830571094</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>6760.5345593442253</Grasshopper.IsCoveredWeight>
+      <Grasshopper.IsCoveredWeight>6760.534559344225</Grasshopper.IsCoveredWeight>
       <Grasshopper.NoisyMoveWeight>1908.9337443072639</Grasshopper.NoisyMoveWeight>
       <Grasshopper.QuietMoveWeight>3239.4680707144103</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-233.89712278753271</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.FriendlyNeighborWeight>-233.8971227875327</Grasshopper.FriendlyNeighborWeight>
       <Grasshopper.EnemyNeighborWeight>-239.98918017892527</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>671.03440067783231</SoldierAnt.InPlayWeight>
+      <SoldierAnt.InPlayWeight>671.0344006778323</SoldierAnt.InPlayWeight>
       <SoldierAnt.IsPinnedWeight>282.21889966186285</SoldierAnt.IsPinnedWeight>
       <SoldierAnt.IsCoveredWeight>14.877242101803317</SoldierAnt.IsCoveredWeight>
       <SoldierAnt.NoisyMoveWeight>11.66327868332238</SoldierAnt.NoisyMoveWeight>
       <SoldierAnt.QuietMoveWeight>1349.1294820601884</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-335.16805516879913</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-335.1680551687991</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-15922.43975018982</SoldierAnt.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-37.18978451307027</Pillbug.InPlayWeight>
+      <Pillbug.IsPinnedWeight>8668.689955627633</Pillbug.IsPinnedWeight>
+      <Pillbug.IsCoveredWeight>346.37077208393526</Pillbug.IsCoveredWeight>
+      <Pillbug.NoisyMoveWeight>-6798.948422870605</Pillbug.NoisyMoveWeight>
+      <Pillbug.QuietMoveWeight>-289.18602165130346</Pillbug.QuietMoveWeight>
+      <Pillbug.FriendlyNeighborWeight>2205.7209194401785</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.EnemyNeighborWeight>1024.5092727747576</Pillbug.EnemyNeighborWeight>
+    </EndMetricWeights>
+    <StartMetricWeights GameType="Base+LP">
+      <QueenBee.InPlayWeight>-40.15321630383715</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>610.9789507562662</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-5674.59263891028</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-2808.2626792403066</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>1929.9229459301355</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-12430.738003855466</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-551100.5817792381</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-3887.7405420869973</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>359.14243440936156</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>9474.678613381187</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>33481.440576184796</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>409.6454008085375</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>8691.845748527943</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4123.481924468446</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-389.2826309641256</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>2330.2292617753806</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>291.81429233582105</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>373.5036912455452</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-140.81443239182374</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-1534.0126553536838</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-563.8786426648315</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1837.7984128716746</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-1511.264201718472</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>7985.677068044146</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>2634.5126999716863</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>6470.0637036309745</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-469.68839421426</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-87.22460724434558</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>964.0300011011279</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>175.6665871537962</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>56.04017822399062</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>657.9160367635133</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>3377.948537956141</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-143.1520431540068</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-15089.737560052967</SoldierAnt.EnemyNeighborWeight>
+      <Ladybug.InPlayWeight>-4494.037180443046</Ladybug.InPlayWeight>
+      <Ladybug.IsPinnedWeight>-5543.12988753058</Ladybug.IsPinnedWeight>
+      <Ladybug.IsCoveredWeight>-567.9664126098779</Ladybug.IsCoveredWeight>
+      <Ladybug.NoisyMoveWeight>-95.67674761665349</Ladybug.NoisyMoveWeight>
+      <Ladybug.QuietMoveWeight>1006.6760051760265</Ladybug.QuietMoveWeight>
+      <Ladybug.FriendlyNeighborWeight>1601.0593338368017</Ladybug.FriendlyNeighborWeight>
+      <Ladybug.EnemyNeighborWeight>-4767.602134795075</Ladybug.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-132.83136994606377</Pillbug.InPlayWeight>
+      <Pillbug.IsPinnedWeight>2332.632711454025</Pillbug.IsPinnedWeight>
+      <Pillbug.IsCoveredWeight>262.02233309887845</Pillbug.IsCoveredWeight>
+      <Pillbug.NoisyMoveWeight>-14579.795464712264</Pillbug.NoisyMoveWeight>
+      <Pillbug.QuietMoveWeight>-438.80886290190915</Pillbug.QuietMoveWeight>
+      <Pillbug.FriendlyNeighborWeight>5272.895692743828</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.EnemyNeighborWeight>24231.790822530354</Pillbug.EnemyNeighborWeight>
+    </StartMetricWeights>
+    <EndMetricWeights GameType="Base+LP">
+      <QueenBee.InPlayWeight>-634.6527847402874</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>481.41268922135947</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-8415.082960626818</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-3212.88665098636</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>3127.238005791374</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-43910.26414311604</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-836696.3510176614</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-517.3765583393173</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>3772.7986007031973</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>6536.148611775917</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>1208.9182506671361</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>467.41658672731666</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>424.07816269671395</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4447.417893304823</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-375.4156787267363</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>3093.3743629769797</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>1034.906163946746</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>1043.5422287508188</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-4.224191747554161</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-2481.1065452633457</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-3182.3616057616873</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1339.6666594818976</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-7529.900830571094</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>6760.534559344225</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>1908.9337443072639</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>3239.4680707144103</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-233.8971227875327</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-239.98918017892527</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>671.0344006778323</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>282.21889966186285</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>14.877242101803317</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>11.66327868332238</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>1349.1294820601884</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-335.1680551687991</SoldierAnt.FriendlyNeighborWeight>
       <SoldierAnt.EnemyNeighborWeight>-15922.43975018982</SoldierAnt.EnemyNeighborWeight>
       <Ladybug.InPlayWeight>-491.140000996503</Ladybug.InPlayWeight>
       <Ladybug.IsPinnedWeight>-1819.5021969538686</Ladybug.IsPinnedWeight>
       <Ladybug.IsCoveredWeight>-1728.171823086986</Ladybug.IsCoveredWeight>
       <Ladybug.NoisyMoveWeight>-425.10017332778483</Ladybug.NoisyMoveWeight>
-      <Ladybug.QuietMoveWeight>2532.5514332997968</Ladybug.QuietMoveWeight>
+      <Ladybug.QuietMoveWeight>2532.551433299797</Ladybug.QuietMoveWeight>
       <Ladybug.FriendlyNeighborWeight>9471.299551139904</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>-813.33862146594061</Ladybug.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>-37.189784513070272</Pillbug.InPlayWeight>
+      <Ladybug.EnemyNeighborWeight>-813.3386214659406</Ladybug.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-37.18978451307027</Pillbug.InPlayWeight>
       <Pillbug.IsPinnedWeight>8668.689955627633</Pillbug.IsPinnedWeight>
       <Pillbug.IsCoveredWeight>346.37077208393526</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>-6798.9484228706051</Pillbug.NoisyMoveWeight>
+      <Pillbug.NoisyMoveWeight>-6798.948422870605</Pillbug.NoisyMoveWeight>
       <Pillbug.QuietMoveWeight>-289.18602165130346</Pillbug.QuietMoveWeight>
       <Pillbug.FriendlyNeighborWeight>2205.7209194401785</Pillbug.FriendlyNeighborWeight>
       <Pillbug.EnemyNeighborWeight>1024.5092727747576</Pillbug.EnemyNeighborWeight>
     </EndMetricWeights>
     <StartMetricWeights GameType="Base+MLP">
-      <QueenBee.InPlayWeight>47034.705284283686</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-1299.3991652883026</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-2669.1928126372277</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>-55662.723081990407</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>-38648.096573109171</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-186332.6373806225</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-419146.16159089725</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>-63340.412906000536</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-30708.0803632806</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>13166.498340290942</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>125194.23178628468</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>63424.790048124487</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>-23148.979240986824</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>5337.0924052034325</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-137876.69831729116</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>70863.8732311342</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>470.83836705110321</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>-1528.6696233206797</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-110453.96326732528</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>-121349.2102510345</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>-23360.226802730678</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>-1012.8728431917037</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-31711.618347397449</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>2841.5272795078918</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>2951.4032669604371</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>69394.223753929662</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>-56161.893067634941</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>694.89369515226622</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>143902.40598592532</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-27881.940777256925</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>1188.749217040337</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>-1865.117965059424</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>1523.3514169599157</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-16453.765580204774</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>-91035.172436898458</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>166111.97759300718</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-6794.2190306216244</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>-882.39868472178875</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>7099.2229299465826</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>-4421.1089714192076</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>65586.416348561426</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>43327.709509940294</Mosquito.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>-35097.410267844018</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>-38761.749983930764</Ladybug.IsPinnedWeight>
-      <Ladybug.IsCoveredWeight>-1756.237604628298</Ladybug.IsCoveredWeight>
-      <Ladybug.NoisyMoveWeight>6207.6445894949584</Ladybug.NoisyMoveWeight>
-      <Ladybug.QuietMoveWeight>4066.7055101837996</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>-11979.593433642536</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>2070.5520767861481</Ladybug.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>-7549.4775370743619</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>2627.2712825371068</Pillbug.IsPinnedWeight>
-      <Pillbug.IsCoveredWeight>-4.6158031086926163</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>-17112.853662862108</Pillbug.NoisyMoveWeight>
-      <Pillbug.QuietMoveWeight>-1762.0343061818824</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>1779.1103645430176</Pillbug.FriendlyNeighborWeight>
-      <Pillbug.EnemyNeighborWeight>15711.121587210604</Pillbug.EnemyNeighborWeight>
+      <QueenBee.InPlayWeight>-40.15321630383715</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>610.9789507562662</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-5674.59263891028</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-2808.2626792403066</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>1929.9229459301355</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-12430.738003855466</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-551100.5817792381</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-3887.7405420869973</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>359.14243440936156</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>9474.678613381187</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>33481.440576184796</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>409.6454008085375</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>8691.845748527943</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4123.481924468446</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-389.2826309641256</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>2330.2292617753806</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>291.81429233582105</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>373.5036912455452</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-140.81443239182374</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-1534.0126553536838</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-563.8786426648315</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1837.7984128716746</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-1511.264201718472</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>7985.677068044146</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>2634.5126999716863</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>6470.0637036309745</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-469.68839421426</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-87.22460724434558</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>964.0300011011279</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>175.6665871537962</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>56.04017822399062</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>657.9160367635133</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>3377.948537956141</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-143.1520431540068</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-15089.737560052967</SoldierAnt.EnemyNeighborWeight>
+      <Ladybug.InPlayWeight>-4494.037180443046</Ladybug.InPlayWeight>
+      <Ladybug.IsPinnedWeight>-5543.12988753058</Ladybug.IsPinnedWeight>
+      <Ladybug.IsCoveredWeight>-567.9664126098779</Ladybug.IsCoveredWeight>
+      <Ladybug.NoisyMoveWeight>-95.67674761665349</Ladybug.NoisyMoveWeight>
+      <Ladybug.QuietMoveWeight>1006.6760051760265</Ladybug.QuietMoveWeight>
+      <Ladybug.FriendlyNeighborWeight>1601.0593338368017</Ladybug.FriendlyNeighborWeight>
+      <Ladybug.EnemyNeighborWeight>-4767.602134795075</Ladybug.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-132.83136994606377</Pillbug.InPlayWeight>
+      <Pillbug.IsPinnedWeight>2332.632711454025</Pillbug.IsPinnedWeight>
+      <Pillbug.IsCoveredWeight>262.02233309887845</Pillbug.IsCoveredWeight>
+      <Pillbug.NoisyMoveWeight>-14579.795464712264</Pillbug.NoisyMoveWeight>
+      <Pillbug.QuietMoveWeight>-438.80886290190915</Pillbug.QuietMoveWeight>
+      <Pillbug.FriendlyNeighborWeight>5272.895692743828</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.EnemyNeighborWeight>24231.790822530354</Pillbug.EnemyNeighborWeight>
     </StartMetricWeights>
     <EndMetricWeights GameType="Base+MLP">
-      <QueenBee.InPlayWeight>4003.2001645801492</QueenBee.InPlayWeight>
-      <QueenBee.IsPinnedWeight>-23685.234297865376</QueenBee.IsPinnedWeight>
-      <QueenBee.IsCoveredWeight>-13644.576217839827</QueenBee.IsCoveredWeight>
-      <QueenBee.NoisyMoveWeight>6371.6736714426224</QueenBee.NoisyMoveWeight>
-      <QueenBee.QuietMoveWeight>124095.2186083909</QueenBee.QuietMoveWeight>
-      <QueenBee.FriendlyNeighborWeight>-256748.34705393005</QueenBee.FriendlyNeighborWeight>
-      <QueenBee.EnemyNeighborWeight>-755821.99877711106</QueenBee.EnemyNeighborWeight>
-      <Spider.InPlayWeight>222.73011425246654</Spider.InPlayWeight>
-      <Spider.IsPinnedWeight>-5879.7177326795818</Spider.IsPinnedWeight>
-      <Spider.IsCoveredWeight>6.5890667252560453</Spider.IsCoveredWeight>
-      <Spider.NoisyMoveWeight>34119.046686867536</Spider.NoisyMoveWeight>
-      <Spider.QuietMoveWeight>-7951.6869620747366</Spider.QuietMoveWeight>
-      <Spider.FriendlyNeighborWeight>440.47424711442437</Spider.FriendlyNeighborWeight>
-      <Spider.EnemyNeighborWeight>37567.076132761918</Spider.EnemyNeighborWeight>
-      <Beetle.InPlayWeight>-67999.961978536463</Beetle.InPlayWeight>
-      <Beetle.IsPinnedWeight>2505.4939401609386</Beetle.IsPinnedWeight>
-      <Beetle.IsCoveredWeight>-14023.174904063506</Beetle.IsCoveredWeight>
-      <Beetle.NoisyMoveWeight>6220.0822675296095</Beetle.NoisyMoveWeight>
-      <Beetle.QuietMoveWeight>-6176.9147529820248</Beetle.QuietMoveWeight>
-      <Beetle.FriendlyNeighborWeight>12650.428267323941</Beetle.FriendlyNeighborWeight>
-      <Beetle.EnemyNeighborWeight>21721.494445336572</Beetle.EnemyNeighborWeight>
-      <Grasshopper.InPlayWeight>26090.536378383051</Grasshopper.InPlayWeight>
-      <Grasshopper.IsPinnedWeight>-8419.3922624171955</Grasshopper.IsPinnedWeight>
-      <Grasshopper.IsCoveredWeight>10985.012209746206</Grasshopper.IsCoveredWeight>
-      <Grasshopper.NoisyMoveWeight>18020.607534051855</Grasshopper.NoisyMoveWeight>
-      <Grasshopper.QuietMoveWeight>-1721.1297764929752</Grasshopper.QuietMoveWeight>
-      <Grasshopper.FriendlyNeighborWeight>5799.1455565507922</Grasshopper.FriendlyNeighborWeight>
-      <Grasshopper.EnemyNeighborWeight>47696.767416287985</Grasshopper.EnemyNeighborWeight>
-      <SoldierAnt.InPlayWeight>38051.1178188649</SoldierAnt.InPlayWeight>
-      <SoldierAnt.IsPinnedWeight>-21081.311866821958</SoldierAnt.IsPinnedWeight>
-      <SoldierAnt.IsCoveredWeight>1304.2694335796514</SoldierAnt.IsCoveredWeight>
-      <SoldierAnt.NoisyMoveWeight>21322.409004601042</SoldierAnt.NoisyMoveWeight>
-      <SoldierAnt.QuietMoveWeight>-961.43276945465675</SoldierAnt.QuietMoveWeight>
-      <SoldierAnt.FriendlyNeighborWeight>-796.05021579914467</SoldierAnt.FriendlyNeighborWeight>
-      <SoldierAnt.EnemyNeighborWeight>47992.771372726515</SoldierAnt.EnemyNeighborWeight>
-      <Mosquito.InPlayWeight>47857.458968434643</Mosquito.InPlayWeight>
-      <Mosquito.IsPinnedWeight>-12025.600717508354</Mosquito.IsPinnedWeight>
-      <Mosquito.IsCoveredWeight>2616.224069811346</Mosquito.IsCoveredWeight>
-      <Mosquito.NoisyMoveWeight>13021.897878567928</Mosquito.NoisyMoveWeight>
-      <Mosquito.QuietMoveWeight>668.30569063588916</Mosquito.QuietMoveWeight>
-      <Mosquito.FriendlyNeighborWeight>306.76112793337114</Mosquito.FriendlyNeighborWeight>
-      <Mosquito.EnemyNeighborWeight>23717.2617927785</Mosquito.EnemyNeighborWeight>
-      <Ladybug.InPlayWeight>22583.682123986931</Ladybug.InPlayWeight>
-      <Ladybug.IsPinnedWeight>-56189.7180922671</Ladybug.IsPinnedWeight>
-      <Ladybug.IsCoveredWeight>3397.5610061212192</Ladybug.IsCoveredWeight>
-      <Ladybug.NoisyMoveWeight>24083.558902846144</Ladybug.NoisyMoveWeight>
-      <Ladybug.QuietMoveWeight>523.55897952097064</Ladybug.QuietMoveWeight>
-      <Ladybug.FriendlyNeighborWeight>57879.073981381931</Ladybug.FriendlyNeighborWeight>
-      <Ladybug.EnemyNeighborWeight>12450.107223164992</Ladybug.EnemyNeighborWeight>
-      <Pillbug.InPlayWeight>8380.9021593403068</Pillbug.InPlayWeight>
-      <Pillbug.IsPinnedWeight>-3190.3598833314636</Pillbug.IsPinnedWeight>
-      <Pillbug.IsCoveredWeight>-556.93035777941839</Pillbug.IsCoveredWeight>
-      <Pillbug.NoisyMoveWeight>551.62836556447519</Pillbug.NoisyMoveWeight>
-      <Pillbug.QuietMoveWeight>-1191.30038667527</Pillbug.QuietMoveWeight>
-      <Pillbug.FriendlyNeighborWeight>722.197604811424</Pillbug.FriendlyNeighborWeight>
-      <Pillbug.EnemyNeighborWeight>51605.21317328867</Pillbug.EnemyNeighborWeight>
+      <QueenBee.InPlayWeight>-634.6527847402874</QueenBee.InPlayWeight>
+      <QueenBee.IsPinnedWeight>481.41268922135947</QueenBee.IsPinnedWeight>
+      <QueenBee.IsCoveredWeight>-8415.082960626818</QueenBee.IsCoveredWeight>
+      <QueenBee.NoisyMoveWeight>-3212.88665098636</QueenBee.NoisyMoveWeight>
+      <QueenBee.QuietMoveWeight>3127.238005791374</QueenBee.QuietMoveWeight>
+      <QueenBee.FriendlyNeighborWeight>-43910.26414311604</QueenBee.FriendlyNeighborWeight>
+      <QueenBee.EnemyNeighborWeight>-836696.3510176614</QueenBee.EnemyNeighborWeight>
+      <Spider.InPlayWeight>-517.3765583393173</Spider.InPlayWeight>
+      <Spider.IsPinnedWeight>3772.7986007031973</Spider.IsPinnedWeight>
+      <Spider.IsCoveredWeight>6536.148611775917</Spider.IsCoveredWeight>
+      <Spider.NoisyMoveWeight>1208.9182506671361</Spider.NoisyMoveWeight>
+      <Spider.QuietMoveWeight>467.41658672731666</Spider.QuietMoveWeight>
+      <Spider.FriendlyNeighborWeight>424.07816269671395</Spider.FriendlyNeighborWeight>
+      <Spider.EnemyNeighborWeight>-4447.417893304823</Spider.EnemyNeighborWeight>
+      <Beetle.InPlayWeight>-375.4156787267363</Beetle.InPlayWeight>
+      <Beetle.IsPinnedWeight>3093.3743629769797</Beetle.IsPinnedWeight>
+      <Beetle.IsCoveredWeight>1034.906163946746</Beetle.IsCoveredWeight>
+      <Beetle.NoisyMoveWeight>1043.5422287508188</Beetle.NoisyMoveWeight>
+      <Beetle.QuietMoveWeight>-4.224191747554161</Beetle.QuietMoveWeight>
+      <Beetle.FriendlyNeighborWeight>-2481.1065452633457</Beetle.FriendlyNeighborWeight>
+      <Beetle.EnemyNeighborWeight>-3182.3616057616873</Beetle.EnemyNeighborWeight>
+      <Grasshopper.InPlayWeight>1339.6666594818976</Grasshopper.InPlayWeight>
+      <Grasshopper.IsPinnedWeight>-7529.900830571094</Grasshopper.IsPinnedWeight>
+      <Grasshopper.IsCoveredWeight>6760.534559344225</Grasshopper.IsCoveredWeight>
+      <Grasshopper.NoisyMoveWeight>1908.9337443072639</Grasshopper.NoisyMoveWeight>
+      <Grasshopper.QuietMoveWeight>3239.4680707144103</Grasshopper.QuietMoveWeight>
+      <Grasshopper.FriendlyNeighborWeight>-233.8971227875327</Grasshopper.FriendlyNeighborWeight>
+      <Grasshopper.EnemyNeighborWeight>-239.98918017892527</Grasshopper.EnemyNeighborWeight>
+      <SoldierAnt.InPlayWeight>671.0344006778323</SoldierAnt.InPlayWeight>
+      <SoldierAnt.IsPinnedWeight>282.21889966186285</SoldierAnt.IsPinnedWeight>
+      <SoldierAnt.IsCoveredWeight>14.877242101803317</SoldierAnt.IsCoveredWeight>
+      <SoldierAnt.NoisyMoveWeight>11.66327868332238</SoldierAnt.NoisyMoveWeight>
+      <SoldierAnt.QuietMoveWeight>1349.1294820601884</SoldierAnt.QuietMoveWeight>
+      <SoldierAnt.FriendlyNeighborWeight>-335.1680551687991</SoldierAnt.FriendlyNeighborWeight>
+      <SoldierAnt.EnemyNeighborWeight>-15922.43975018982</SoldierAnt.EnemyNeighborWeight>
+      <Ladybug.InPlayWeight>-491.140000996503</Ladybug.InPlayWeight>
+      <Ladybug.IsPinnedWeight>-1819.5021969538686</Ladybug.IsPinnedWeight>
+      <Ladybug.IsCoveredWeight>-1728.171823086986</Ladybug.IsCoveredWeight>
+      <Ladybug.NoisyMoveWeight>-425.10017332778483</Ladybug.NoisyMoveWeight>
+      <Ladybug.QuietMoveWeight>2532.551433299797</Ladybug.QuietMoveWeight>
+      <Ladybug.FriendlyNeighborWeight>9471.299551139904</Ladybug.FriendlyNeighborWeight>
+      <Ladybug.EnemyNeighborWeight>-813.3386214659406</Ladybug.EnemyNeighborWeight>
+      <Pillbug.InPlayWeight>-37.18978451307027</Pillbug.InPlayWeight>
+      <Pillbug.IsPinnedWeight>8668.689955627633</Pillbug.IsPinnedWeight>
+      <Pillbug.IsCoveredWeight>346.37077208393526</Pillbug.IsCoveredWeight>
+      <Pillbug.NoisyMoveWeight>-6798.948422870605</Pillbug.NoisyMoveWeight>
+      <Pillbug.QuietMoveWeight>-289.18602165130346</Pillbug.QuietMoveWeight>
+      <Pillbug.FriendlyNeighborWeight>2205.7209194401785</Pillbug.FriendlyNeighborWeight>
+      <Pillbug.EnemyNeighborWeight>1024.5092727747576</Pillbug.EnemyNeighborWeight>
     </EndMetricWeights>
   </GameAI>
 </MzingaEngine>
