@@ -5,6 +5,7 @@
 * Core: Simplified QueenBee valid moves for better performance
 * Core: Fixed wasteful memory usage by GameAI caches
 * Perft: Fixed bug with parsing CLI arguments
+* Viewer: Fixed bug with missing Play/Review mode menu
 * Test: Added more Perft tests to catch move generator regressions
 
 ## v0.10.6 ##

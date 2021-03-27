@@ -131,7 +131,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                return null != AppVM.EngineWrapper.CurrentGameSettings && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+                return null == AppVM.EngineWrapper.CurrentGameSettings || AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
