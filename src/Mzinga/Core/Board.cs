@@ -535,6 +535,16 @@ namespace Mzinga.Core
             return nodes;
         }
 
+        public long ParallelPerft(int depth, int maxThreads)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            Task<long?> task = ParallelPerftAsync(depth, maxThreads, cts.Token);
+            task.Wait();
+
+            return task.Result ?? 0;
+        }
+
         public async Task<long?> ParallelPerftAsync(int depth, int maxThreads, CancellationToken token)
         {
             if (depth == 0)
@@ -884,6 +894,7 @@ namespace Mzinga.Core
         private void GetValidQueenBeeMoves(PieceName pieceName, MoveSet moveSet)
         {
             var piecePosition = GetPosition(pieceName);
+            SetPosition(pieceName, Position.NullPosition, false);
             for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
             {
                 if (!HasPieceAt(in piecePosition, (Direction)slideDirection))
@@ -899,6 +910,7 @@ namespace Mzinga.Core
                     }
                 }
             }
+            SetPosition(pieceName, piecePosition, false);
         }
 
         private void GetValidSpiderMoves(PieceName pieceName, MoveSet moveSet)
