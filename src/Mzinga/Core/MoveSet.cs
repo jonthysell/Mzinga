@@ -2,12 +2,23 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Mzinga.Core
 {
-    public class MoveSet : HashSet<Move>
+    public class MoveSet : IReadOnlyCollection<Move>
     {
+        private readonly List<Move> _moves = new List<Move>(32);
+
+        public int Count => _moves.Count;
+
+        public bool Contains(Move move)
+        {
+            return _moves.Contains(move);
+        }
+
         public bool Contains(PieceName pieceName)
         {
             foreach (var item in this)
@@ -19,6 +30,36 @@ namespace Mzinga.Core
             }
 
             return false;
+        }
+        
+        internal bool Add(Move move)
+        {
+            if (_moves.Contains(move))
+            {
+                return false;
+            }
+
+            _moves.Add(move);
+            return true;
+        }
+
+        internal void FastAdd(Move move)
+        {
+            _moves.Add(move);
+        }
+
+        internal void Clear()
+        {
+            _moves.Clear();
+        }
+
+        internal void ValidateSet()
+        {
+            var set = _moves.ToHashSet();
+            if (set.Count != Count)
+            {
+                throw new Exception("MoveSet contains duplicates.");
+            }
         }
 
         public static MoveSet ParseMoveList(Board board, string moveList, string separator = ";")
@@ -33,6 +74,16 @@ namespace Mzinga.Core
                 moves.Add(move);
             }
             return moves;
+        }
+
+        public IEnumerator<Move> GetEnumerator()
+        {
+            return _moves.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _moves.GetEnumerator();
         }
     }
 }

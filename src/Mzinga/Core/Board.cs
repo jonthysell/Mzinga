@@ -173,9 +173,13 @@ namespace Mzinga.Core
 
                 if (validMoves.Count == 0)
                 {
-                    validMoves.Add(Move.PassMove);
+                    validMoves.FastAdd(Move.PassMove);
                 }
             }
+
+#if DEBUG
+            validMoves.ValidateSet();
+#endif
 
             return validMoves;
         }
@@ -744,7 +748,7 @@ namespace Mzinga.Core
                     // First turn by white
                     if (pieceName != PieceName.wQ)
                     {
-                        moveSet.Add(new Move(pieceName, m_piecePositions[pieceIndex], Position.OriginPosition));
+                        moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], Position.OriginPosition));
                     }
                 }
                 else if (CurrentTurn == 1)
@@ -755,7 +759,7 @@ namespace Mzinga.Core
                         CalculateValidPlacements();
                         foreach (var placement in m_cachedValidPlacements)
                         {
-                            moveSet.Add(new Move(pieceName, m_piecePositions[pieceIndex], placement));
+                            moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], placement));
                         }
                     }
                 }
@@ -769,7 +773,7 @@ namespace Mzinga.Core
                         CalculateValidPlacements();
                         foreach (var placement in m_cachedValidPlacements)
                         {
-                            moveSet.Add(new Move(pieceName, m_piecePositions[pieceIndex], placement));
+                            moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], placement));
                         }
                     }
                 }
@@ -923,7 +927,7 @@ namespace Mzinga.Core
             {
                 if (CanSlideToPositionInExactRange(pieceName, move.Destination, 3))
                 {
-                    moveSet.Add(move);
+                    moveSet.FastAdd(move);
                 }
             }
         }
@@ -997,7 +1001,7 @@ namespace Mzinga.Core
                 if (distance > 0)
                 {
                     // Can only move if there's at least one piece in the way
-                    moveSet.Add(new Move(pieceName, startingPosition, landingPosition));
+                    moveSet.FastAdd(new Move(pieceName, startingPosition, landingPosition));
                 }
             }
         }
