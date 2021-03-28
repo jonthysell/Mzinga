@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.10.7 ##
 
 * Core: Simplified QueenBee valid moves for better performance
 * Core: Fixed wasteful memory usage by GameAI caches
