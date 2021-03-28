@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Core: Fixed casing of Move.PassString
+
 ## v0.10.7 ##
 
 * Core: Simplified QueenBee valid moves for better performance

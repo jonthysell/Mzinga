@@ -189,6 +189,6 @@ namespace Mzinga.Core
             return false;
         }
 
-        public const string PassString = "PASS";
+        public const string PassString = "pass";
     }
 }
