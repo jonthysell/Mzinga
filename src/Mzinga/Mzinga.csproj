@@ -5,6 +5,7 @@
     <AssemblyName>Mzinga</AssemblyName>
     <RootNamespace>Mzinga</RootNamespace>
     <Nullable>enable</Nullable>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
