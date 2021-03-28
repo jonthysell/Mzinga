@@ -4,6 +4,8 @@
 
 * Core: Simplified QueenBee valid moves for better performance
 * Core: Fixed wasteful memory usage by GameAI caches
+* Core: MoveSet reimplemented with FastAdd to improve performance
+* Core: Updated DefaultEngineConfig.xml with latest mergetop results
 * Perft: Fixed bug with parsing CLI arguments
 * Viewer: Fixed bug with missing Play/Review mode menu
 * Test: Added more Perft tests to catch move generator regressions
@@ -19,7 +21,6 @@
 ## v0.10.4 ##
 
 * Core: Fixed a bug with generating the correct move notation
-* Core: MoveSet reimplemented with FastAdd to improve performance
 * Engine: Fixed a bug that didn't output every valid move
 * Trainer: Fixed bug with exportai command and new version numbers
 * Trainer: Added GameString output to exceptions during battle
