@@ -20,10 +20,17 @@ if ($Clean -and (Test-Path "$OutputRoot\$TargetOutputDirectory")) {
 }
 
 Write-Host "Build release..."
-
-dotnet msbuild $BuildArgs.Split() -restore -p:Configuration=Release -p:PublishDir="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$ProjectPath"
-Copy-Item "README.md" -Destination "$OutputRoot\$TargetOutputDirectory\ReadMe.txt"
-Copy-Item "scripts\Licenses.txt" -Destination "$OutputRoot\$TargetOutputDirectory\Licenses.txt"
-Copy-Item "CHANGELOG.md" -Destination "$OutputRoot\$TargetOutputDirectory\ChangeLog.txt"
-
-Set-Location -Path "$StartingLocation"
+try
+{
+    dotnet msbuild $BuildArgs.Split() -restore -p:Configuration=Release -p:PublishDir="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$ProjectPath"
+    if (!$?) {
+    	throw 'Build failed!'
+    }
+    Copy-Item "README.md" -Destination "$OutputRoot\$TargetOutputDirectory\ReadMe.txt"
+    Copy-Item "scripts\Licenses.txt" -Destination "$OutputRoot\$TargetOutputDirectory\Licenses.txt"
+    Copy-Item "CHANGELOG.md" -Destination "$OutputRoot\$TargetOutputDirectory\ChangeLog.txt"
+}
+finally
+{
+    Set-Location -Path "$StartingLocation"
+}

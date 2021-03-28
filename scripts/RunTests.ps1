@@ -11,7 +11,14 @@ $StartingLocation = Get-Location
 Set-Location -Path $RepoRoot
 
 Write-Host "Testing $TestProject..."
-
-dotnet test $TestArgs.Split() "$ProjectPath"
-
-Set-Location -Path "$StartingLocation"
+try
+{
+    dotnet test $TestArgs.Split() "$ProjectPath"
+    if (!$?) {
+        throw 'Tests failed!'
+    }
+}
+finally
+{
+    Set-Location -Path "$StartingLocation"
+}
