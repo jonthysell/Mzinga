@@ -395,7 +395,7 @@ namespace Mzinga.Engine
 
         private void NewGame(string gameString)
         {
-            Board parsed = Board.ParseGameString(gameString);
+            Board parsed = Board.ParseGameString(gameString, false);
 
             StopPonder();
 

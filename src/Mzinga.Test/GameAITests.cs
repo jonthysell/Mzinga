@@ -160,9 +160,9 @@ namespace Mzinga.Test
 
                 string[] vals = s.Split('\t');
 
-                Assert.IsTrue(Board.TryParseGameString(vals[0], out Board));
+                Assert.IsTrue(Board.TryParseGameString(vals[0], false, out Board));
                 MaxDepth = int.Parse(vals[1]);
-               Assert.IsTrue(Board.TryParseMove(vals[2], out ExpectedBestMove, out string _));
+                Assert.IsTrue(Board.TryParseMove(vals[2], out ExpectedBestMove, out string _));
             }
         }
 

@@ -718,7 +718,7 @@ namespace Mzinga.Viewer
                 case EngineCommand.Play:
                 case EngineCommand.Pass:
                 case EngineCommand.Undo:
-                    Board = !string.IsNullOrWhiteSpace(firstLine) ? Board.ParseGameString(firstLine) : null;
+                    Board = !string.IsNullOrWhiteSpace(firstLine) ? Board.ParseGameString(firstLine, true) : null;
                     break;
                 case EngineCommand.ValidMoves:
                     ValidMoves = !string.IsNullOrWhiteSpace(firstLine) ? MoveSet.ParseMoveList(Board, firstLine) : null;

@@ -93,7 +93,7 @@ namespace Mzinga.Core
 
         private readonly ZobristHash _zobristHash = new ZobristHash();
 
-        public static Board ParseGameString(string gameStr)
+        public static Board ParseGameString(string gameStr, bool trustedPlay = false)
         {
             var split = gameStr.Split(';');
 
@@ -103,20 +103,29 @@ namespace Mzinga.Core
 
             for (int i = 3; i < split.Length; i++)
             {
-                if (!board.TryParseMove(split[i], out Move move, out string parsedMoveString) || !board.TryPlayMove(move, parsedMoveString))
+                if (!board.TryParseMove(split[i], out Move move, out string parsedMoveString))
                 {
-                    throw new ArgumentException("Unable to parse GameString.", nameof(gameStr));
+                    throw new ArgumentException($"Unable to parse '{split[i]}' in GameString.", nameof(gameStr));
+                }
+
+                if (trustedPlay)
+                {
+                    board.TrustedPlay(move, parsedMoveString);
+                }
+                else if (!board.TryPlayMove(move, parsedMoveString))
+                {
+                    throw new ArgumentException($"Unable to play '{split[i]}' in GameString.", nameof(gameStr));
                 }
             }
 
             return board;
         }
 
-        public static bool TryParseGameString(string gameStr, out Board? board)
+        public static bool TryParseGameString(string gameStr, bool trustedPlay, out Board? board)
         {
             try
             {
-                board = ParseGameString(gameStr);
+                board = ParseGameString(gameStr, trustedPlay);
                 return true;
             }
             catch (Exception) { }
