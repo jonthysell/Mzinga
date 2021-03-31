@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Fixed casing of Move.PassString
+* Viewer: allow parsing game strings from Engine output even if Mzinga thinks the moves are invalid
 
 ## v0.10.7 ##
 
