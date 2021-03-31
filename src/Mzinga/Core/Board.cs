@@ -169,7 +169,7 @@ namespace Mzinga.Core
             return sb.ToString();
         }
 
-        public MoveSet GetValidMoves()
+        internal MoveSet GetValidMoves()
         {
             var validMoves = new MoveSet();
 
