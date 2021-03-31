@@ -78,18 +78,18 @@ namespace Mzinga.Core
 
         public ulong ZobristKey => _zobristHash.Value;
 
-        private readonly Position[] m_piecePositions = new Position[(int)PieceName.NumPieceNames];
-        private readonly PieceName[,,] m_pieceGrid = new PieceName[Position.BoardSize, Position.BoardSize, Position.BoardStackSize];
+        private readonly Position[] _piecePositions = new Position[(int)PieceName.NumPieceNames];
+        private readonly PieceName[,,] _pieceGrid = new PieceName[Position.BoardSize, Position.BoardSize, Position.BoardStackSize];
 
-        private bool m_cachedValidPlacementsReady = false;
-        private readonly PositionSet m_cachedValidPlacements = new PositionSet();
+        private bool _cachedValidPlacementsReady = false;
+        private readonly PositionSet _cachedValidPlacements = new PositionSet();
 
-        private readonly PositionSet m_visitedPositions = new PositionSet();
+        private readonly PositionSet _visitedPositions = new PositionSet();
         
         private PositionSet? _cachedEnemyQueenNeighbors = null;
 
-        private readonly bool[] m_partOfHive = new bool[(int)PieceName.NumPieceNames];
-        private readonly Queue<PieceName> m_piecesToLookAt = new Queue<PieceName>((int)PieceName.NumPieceNames);
+        private readonly bool[] _partOfHive = new bool[(int)PieceName.NumPieceNames];
+        private readonly Queue<PieceName> _piecesToLookAt = new Queue<PieceName>((int)PieceName.NumPieceNames);
 
         private readonly ZobristHash _zobristHash = new ZobristHash();
 
@@ -140,16 +140,16 @@ namespace Mzinga.Core
 
             for (int pn = 0; pn < (int)PieceName.NumPieceNames; pn++)
             {
-                m_piecePositions[pn] = Position.NullPosition;
+                _piecePositions[pn] = Position.NullPosition;
             }
 
-            for (int q = 0; q < m_pieceGrid.GetLength(0); q++)
+            for (int q = 0; q < _pieceGrid.GetLength(0); q++)
             {
-                for (int r = 0; r < m_pieceGrid.GetLength(1); r++)
+                for (int r = 0; r < _pieceGrid.GetLength(1); r++)
                 {
-                    for (int stack = 0; stack < m_pieceGrid.GetLength(2); stack++)
+                    for (int stack = 0; stack < _pieceGrid.GetLength(2); stack++)
                     {
-                        m_pieceGrid[q, r, stack] = PieceName.INVALID;
+                        _pieceGrid[q, r, stack] = PieceName.INVALID;
                     }
                 }
             }
@@ -412,13 +412,13 @@ namespace Mzinga.Core
                     return true;
                 }
 
-                Position source = m_piecePositions[(int)startPiece];
+                Position source = _piecePositions[(int)startPiece];
 
                 Position destination = Position.OriginPosition;
 
                 if (endPiece != PieceName.INVALID)
                 {
-                    Position targetPosition = m_piecePositions[(int)endPiece];
+                    Position targetPosition = _piecePositions[(int)endPiece];
 
                     if (beforeSeperator != '\0')
                     {
@@ -620,10 +620,7 @@ namespace Mzinga.Core
                 var moveSet = new MoveSet();   
                 SetCurrentPlayerMetrics(boardMetrics, moveSet);
 
-                // Save off current valid placements since we'll be returning to it
-                //PositionSet? validPlacements = m_cachedValidPlacements;
-                //m_cachedValidPlacements = null;
-
+                // Save off cache objects until return
                 PositionSet? enemyQueenNeighbors = _cachedEnemyQueenNeighbors;
                 _cachedEnemyQueenNeighbors = null;
 
@@ -633,9 +630,8 @@ namespace Mzinga.Core
                 SetCurrentPlayerMetrics(boardMetrics, moveSet);
                 CurrentTurn--;
 
-                // Returned, so reload saved valid moves/placements into cache
+                // Returned, so reload saved cached objects
                 _cachedEnemyQueenNeighbors = enemyQueenNeighbors;
-                //m_cachedValidPlacements = validPlacements;
             }
 
             return boardMetrics;
@@ -681,7 +677,6 @@ namespace Mzinga.Core
                         {
                             // Check if the current player's mosquito can move it
                             isPinned = !mosquitoCanMove;
-
                         }
                         else if (Enums.GetBugType(pieceName) == BugType.Mosquito)
                         {
@@ -729,7 +724,6 @@ namespace Mzinga.Core
                 }
 
                 return false;
-
             }
 
             return true;
@@ -757,7 +751,7 @@ namespace Mzinga.Core
                     // First turn by white
                     if (pieceName != PieceName.wQ)
                     {
-                        moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], Position.OriginPosition));
+                        moveSet.FastAdd(new Move(pieceName, _piecePositions[pieceIndex], Position.OriginPosition));
                     }
                 }
                 else if (CurrentTurn == 1)
@@ -766,9 +760,9 @@ namespace Mzinga.Core
                     if (pieceName != PieceName.bQ)
                     {
                         CalculateValidPlacements();
-                        foreach (var placement in m_cachedValidPlacements)
+                        foreach (var placement in _cachedValidPlacements)
                         {
-                            moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], placement));
+                            moveSet.FastAdd(new Move(pieceName, _piecePositions[pieceIndex], placement));
                         }
                     }
                 }
@@ -780,9 +774,9 @@ namespace Mzinga.Core
                           (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && Enums.GetBugType(pieceName) == BugType.QueenBee)))))
                     {
                         CalculateValidPlacements();
-                        foreach (var placement in m_cachedValidPlacements)
+                        foreach (var placement in _cachedValidPlacements)
                         {
-                            moveSet.FastAdd(new Move(pieceName, m_piecePositions[pieceIndex], placement));
+                            moveSet.FastAdd(new Move(pieceName, _piecePositions[pieceIndex], placement));
                         }
                     }
                 }
@@ -840,67 +834,60 @@ namespace Mzinga.Core
 
         private void CalculateValidPlacements()
         {
-            if (!m_cachedValidPlacementsReady)
+            if (!_cachedValidPlacementsReady)
             {
-                m_cachedValidPlacements.Clear();
+                _cachedValidPlacements.Clear();
 
                 if (CurrentTurn == 0)
                 {
-                    m_cachedValidPlacements.Add(Position.OriginPosition);
+                    _cachedValidPlacements.Add(Position.OriginPosition);
                 }
                 else if (CurrentTurn == 1)
                 {
                     for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                     {
-                        m_cachedValidPlacements.Add(Position.OriginPosition.GetNeighborAt((Direction)dir));
+                        _cachedValidPlacements.Add(Position.OriginPosition.GetNeighborAt((Direction)dir));
                     }
                 }
                 else
                 {
-                    //m_visitedPositions.Clear();
-
                     for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
                     {
                         var pieceName = (PieceName)pn;
 
                         if (PieceIsOnTop(pieceName))
                         {
-                            var bottomPosition = m_piecePositions[pn].GetBottom();
-                            //if (m_visitedPositions.Add(bottomPosition))
+                            var bottomPosition = _piecePositions[pn].GetBottom();
+                            for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                             {
-                                for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
+                                var neighbor = bottomPosition.GetNeighborAt((Direction)dir);
+
+                                if (!HasPieceAt(in neighbor))
                                 {
-                                    var neighbor = bottomPosition.GetNeighborAt((Direction)dir);
+                                    // Neighboring position is a potential, verify its neighbors are empty or same color
 
-                                    if (/*!m_visitedPositions.Contains(neighbor) &&*/ !HasPieceAt(in neighbor))
+                                    bool validPlacement = true;
+                                    for (int dir2 = 0; dir2 < (int)Direction.NumDirections; dir2++)
                                     {
-                                        //m_visitedPositions.Add(neighbor);
-
-                                        // Neighboring position is a potential, verify its neighbors are empty or same color
-
-                                        bool validPlacement = true;
-                                        for (int dir2 = 0; dir2 < (int)Direction.NumDirections; dir2++)
+                                        var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
+                                        var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
+                                        if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
                                         {
-                                            var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
-                                            var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
-                                            if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
-                                            {
-                                                validPlacement = false;
-                                                break;
-                                            }
+                                            validPlacement = false;
+                                            break;
                                         }
+                                    }
 
-                                        if (validPlacement)
-                                        {
-                                            m_cachedValidPlacements.Add(neighbor);
-                                        }
+                                    if (validPlacement)
+                                    {
+                                        _cachedValidPlacements.Add(neighbor);
                                     }
                                 }
                             }
                         }
                     }
                 }
-                m_cachedValidPlacementsReady = true;
+                _cachedValidPlacementsReady = true;
             }
         }
 
@@ -946,25 +933,25 @@ namespace Mzinga.Core
             // Look in all directions
             for (int direction = 0; direction < (int)Direction.NumDirections; direction++)
             {
-                var newPosition = m_piecePositions[(int)pieceName].GetNeighborAt((Direction)direction);
+                var newPosition = _piecePositions[(int)pieceName].GetNeighborAt((Direction)direction);
 
                 var topNeighbor = GetPieceOnTopAt(in newPosition);
 
                 // Get positions to left and right or direction we're heading
                 var leftOfTarget = Enums.LeftOf((Direction)direction);
                 var rightOfTarget = Enums.RightOf((Direction)direction);
-                var leftNeighborPosition = m_piecePositions[(int)pieceName].GetNeighborAt(leftOfTarget);
-                var rightNeighborPosition = m_piecePositions[(int)pieceName].GetNeighborAt(rightOfTarget);
+                var leftNeighborPosition = _piecePositions[(int)pieceName].GetNeighborAt(leftOfTarget);
+                var rightNeighborPosition = _piecePositions[(int)pieceName].GetNeighborAt(rightOfTarget);
 
                 var topLeftNeighbor = GetPieceOnTopAt(in leftNeighborPosition);
                 var topRightNeighbor = GetPieceOnTopAt(in rightNeighborPosition);
 
                 // At least one neighbor is present
-                uint currentHeight = (uint)(m_piecePositions[(int)pieceName].Stack + 1);
-                uint destinationHeight = (uint)(topNeighbor != PieceName.INVALID ? m_piecePositions[(int)topNeighbor].Stack + 1 : 0);
+                uint currentHeight = (uint)(_piecePositions[(int)pieceName].Stack + 1);
+                uint destinationHeight = (uint)(topNeighbor != PieceName.INVALID ? _piecePositions[(int)topNeighbor].Stack + 1 : 0);
 
-                uint topLeftNeighborHeight = (uint)(topLeftNeighbor != PieceName.INVALID ? m_piecePositions[(int)topLeftNeighbor].Stack + 1 : 0);
-                uint topRightNeighborHeight = (uint)(topRightNeighbor != PieceName.INVALID ? m_piecePositions[(int)topRightNeighbor].Stack + 1 : 0);
+                uint topLeftNeighborHeight = (uint)(topLeftNeighbor != PieceName.INVALID ? _piecePositions[(int)topLeftNeighbor].Stack + 1 : 0);
+                uint topRightNeighborHeight = (uint)(topRightNeighbor != PieceName.INVALID ? _piecePositions[(int)topRightNeighbor].Stack + 1 : 0);
 
                 // "Take-off" beetle
                 currentHeight--;
@@ -974,17 +961,7 @@ namespace Mzinga.Core
                     // Logic from http://boardgamegeek.com/wiki/page/Hive_FAQ#toc9
                     if (!(destinationHeight < topLeftNeighborHeight && destinationHeight < topRightNeighborHeight && currentHeight < topLeftNeighborHeight && currentHeight < topRightNeighborHeight))
                     {
-                        var targetMove = new Move
-                        (
-                            pieceName,
-                            m_piecePositions[(int)pieceName],
-                            new Position
-                            (
-                                newPosition.Q,
-                                newPosition.R,
-                                (int)destinationHeight
-                            )
-                        );
+                        var targetMove = new Move(pieceName, _piecePositions[(int)pieceName], new Position(newPosition.Q, newPosition.R, (int)destinationHeight));
                         moveSet.Add(targetMove);
                     }
                 }
@@ -993,7 +970,7 @@ namespace Mzinga.Core
 
         private void GetValidGrasshopperMoves(PieceName pieceName, MoveSet moveSet)
         {
-            var startingPosition = m_piecePositions[(int)pieceName];
+            var startingPosition = _piecePositions[(int)pieceName];
 
             for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
             {
@@ -1182,10 +1159,10 @@ namespace Mzinga.Core
 
         private void GetValidSlides(PieceName pieceName, MoveSet moveSet, int maxRange)
         {
-            var startingPosition = m_piecePositions[(int)pieceName];
+            var startingPosition = _piecePositions[(int)pieceName];
 
-            m_visitedPositions.Clear();
-            m_visitedPositions.Add(startingPosition);
+            _visitedPositions.Clear();
+            _visitedPositions.Add(startingPosition);
 
             SetPosition(pieceName, Position.NullPosition, false);
             GetValidSlides(pieceName, moveSet, startingPosition, startingPosition, 0, maxRange);
@@ -1200,7 +1177,7 @@ namespace Mzinga.Core
                 {
                     var slidePosition = currentPosition.GetNeighborAt((Direction)slideDirection);
 
-                    if (!m_visitedPositions.Contains(slidePosition) && !HasPieceAt(in slidePosition))
+                    if (!_visitedPositions.Contains(slidePosition) && !HasPieceAt(in slidePosition))
                     {
                         // Slide position is open
 
@@ -1214,7 +1191,7 @@ namespace Mzinga.Core
 
                             if (moveSet.Add(move))
                             {
-                                m_visitedPositions.Add(slidePosition);
+                                _visitedPositions.Add(slidePosition);
                                 GetValidSlides(pieceName, moveSet, startingPosition, slidePosition, currentRange + 1, maxRange);
                             }
                         }
@@ -1225,7 +1202,7 @@ namespace Mzinga.Core
 
         private bool CanSlideToPositionInExactRange(PieceName pieceName, Position targetPosition, int targetRange)
         {
-            Position startingPosition = m_piecePositions[(int)pieceName];
+            Position startingPosition = _piecePositions[(int)pieceName];
 
             SetPosition(pieceName, Position.NullPosition, false);
             bool result = CanSlideToPositionInExactRange(pieceName, targetPosition, Position.NullPosition, startingPosition, 0, targetRange);
@@ -1321,7 +1298,7 @@ namespace Mzinga.Core
 
         public ref Position GetPosition(PieceName pieceName)
         {
-            return ref m_piecePositions[(int)pieceName];
+            return ref _piecePositions[(int)pieceName];
         }
 
         internal void SetPosition(PieceName pieceName, Position position, bool updateZobrist)
@@ -1335,10 +1312,10 @@ namespace Mzinga.Core
                     _zobristHash.TogglePiece(pieceName, oldPosition);
                 }
 
-                m_pieceGrid[(Position.BoardSize / 2) + oldPosition.Q, (Position.BoardSize / 2) + oldPosition.R, oldPosition.Stack] = PieceName.INVALID;
+                _pieceGrid[(Position.BoardSize / 2) + oldPosition.Q, (Position.BoardSize / 2) + oldPosition.R, oldPosition.Stack] = PieceName.INVALID;
             }
 
-            m_piecePositions[(int)pieceName] = position;
+            _piecePositions[(int)pieceName] = position;
 
             if (position.Stack >= 0)
             {
@@ -1347,18 +1324,18 @@ namespace Mzinga.Core
                     _zobristHash.TogglePiece(pieceName, position);
                 }
 
-                m_pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack] = pieceName;
+                _pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack] = pieceName;
             }
         }
 
         private PieceName GetPieceAt(in Position position)
         {
-            return m_pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack];
+            return _pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack];
         }
 
         private PieceName GetPieceAt(in Position position, Direction direction)
         {
-            return m_pieceGrid[(Position.BoardSize / 2) + position.Q + Position.NeighborDeltas[(int)direction][0], (Position.BoardSize / 2) + position.R + Position.NeighborDeltas[(int)direction][1], position.Stack + Position.NeighborDeltas[(int)direction][2]];
+            return _pieceGrid[(Position.BoardSize / 2) + position.Q + Position.NeighborDeltas[(int)direction][0], (Position.BoardSize / 2) + position.R + Position.NeighborDeltas[(int)direction][1], position.Stack + Position.NeighborDeltas[(int)direction][2]];
         }
 
         public PieceName GetPieceOnTopAt(in Position position)
@@ -1367,7 +1344,7 @@ namespace Mzinga.Core
 
             for (int stack = 0; stack < Position.BoardStackSize; stack++)
             {
-                var pieceName = m_pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, stack];
+                var pieceName = _pieceGrid[(Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, stack];
                 if (pieceName == PieceName.INVALID)
                 {
                     break;
@@ -1390,30 +1367,30 @@ namespace Mzinga.Core
 
         public bool PieceInHand(PieceName pieceName)
         {
-            return (m_piecePositions[(int)pieceName].Stack < 0);
+            return (_piecePositions[(int)pieceName].Stack < 0);
         }
 
         public bool PieceInPlay(PieceName pieceName)
         {
-            return (m_piecePositions[(int)pieceName].Stack >= 0);
+            return (_piecePositions[(int)pieceName].Stack >= 0);
         }
 
         private bool PieceIsOnTop(PieceName pieceName)
         {
-            return PieceInPlay(pieceName) && !HasPieceAt(in m_piecePositions[(int)pieceName], Direction.Above);
+            return PieceInPlay(pieceName) && !HasPieceAt(in _piecePositions[(int)pieceName], Direction.Above);
         }
 
         internal bool CanMoveWithoutBreakingHive(PieceName pieceName)
         {
             int pieceIndex = (int)pieceName;
-            if (m_piecePositions[pieceIndex].Stack == 0)
+            if (_piecePositions[pieceIndex].Stack == 0)
             {
                 // Try edge heurestic
                 int edges = 0;
                 bool? lastHasPiece = null;
                 for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                 {
-                    bool hasPiece = HasPieceAt(in m_piecePositions[pieceIndex], (Direction)dir);
+                    bool hasPiece = HasPieceAt(in _piecePositions[pieceIndex], (Direction)dir);
                     if (lastHasPiece.HasValue && lastHasPiece.Value != hasPiece)
                     {
                         edges++;
@@ -1430,7 +1407,7 @@ namespace Mzinga.Core
                     return true;
                 }
 
-                var startingPosition = m_piecePositions[pieceIndex];
+                var startingPosition = _piecePositions[pieceIndex];
 
                 // Temporarily remove piece from board
                 SetPosition(pieceName, Position.NullPosition, false);
@@ -1456,17 +1433,17 @@ namespace Mzinga.Core
             {
                 if (PieceInHand((PieceName)pn))
                 {
-                    m_partOfHive[pn] = true;
+                    _partOfHive[pn] = true;
                     piecesVisited++;
                 }
                 else
                 {
-                    m_partOfHive[pn] = false;
-                    if (startingPiece == PieceName.INVALID && m_piecePositions[pn].Stack == 0)
+                    _partOfHive[pn] = false;
+                    if (startingPiece == PieceName.INVALID && _piecePositions[pn].Stack == 0)
                     {
                         // Save off a starting piece on the bottom
                         startingPiece = (PieceName)pn;
-                        m_partOfHive[pn] = true;
+                        _partOfHive[pn] = true;
                         piecesVisited++;
                     }
                 }
@@ -1475,22 +1452,22 @@ namespace Mzinga.Core
             // There is at least one piece on the board
             if (startingPiece != PieceName.INVALID && piecesVisited < (int)PieceName.NumPieceNames)
             {
-                m_piecesToLookAt.Enqueue(startingPiece);
+                _piecesToLookAt.Enqueue(startingPiece);
 
-                while (m_piecesToLookAt.Count > 0)
+                while (_piecesToLookAt.Count > 0)
                 {
-                    var currentPiece = m_piecesToLookAt.Dequeue();
+                    var currentPiece = _piecesToLookAt.Dequeue();
 
-                    var currentPosition = m_piecePositions[(int)currentPiece];
+                    var currentPosition = _piecePositions[(int)currentPiece];
 
                     // Check all pieces at this stack level
                     for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                     {
                         var neighborPiece = GetPieceAt(in currentPosition, (Direction)dir);
-                        if (neighborPiece != PieceName.INVALID && !m_partOfHive[(int)neighborPiece])
+                        if (neighborPiece != PieceName.INVALID && !_partOfHive[(int)neighborPiece])
                         {
-                            m_piecesToLookAt.Enqueue(neighborPiece);
-                            m_partOfHive[(int)neighborPiece] = true;
+                            _piecesToLookAt.Enqueue(neighborPiece);
+                            _partOfHive[(int)neighborPiece] = true;
                             piecesVisited++;
                         }
                     }
@@ -1499,9 +1476,9 @@ namespace Mzinga.Core
                     var pieceAbove = GetPieceAt(in currentPosition, Direction.Above);
                     while (PieceName.INVALID != pieceAbove)
                     {
-                        m_partOfHive[(int)pieceAbove] = true;
+                        _partOfHive[(int)pieceAbove] = true;
                         piecesVisited++;
-                        pieceAbove = GetPieceAt(in m_piecePositions[(int)pieceAbove], Direction.Above);
+                        pieceAbove = GetPieceAt(in _piecePositions[(int)pieceAbove], Direction.Above);
                     }
                 }
             }
@@ -1525,7 +1502,7 @@ namespace Mzinga.Core
 
                 for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                 {
-                    var neighbor = GetPieceAt(in m_piecePositions[(int)pieceName], (Direction)dir);
+                    var neighbor = GetPieceAt(in _piecePositions[(int)pieceName], (Direction)dir);
                     if (neighbor != PieceName.INVALID)
                     {
                         if (pieceColor == Enums.GetColor(neighbor))
@@ -1568,7 +1545,7 @@ namespace Mzinga.Core
 
         private void ResetCaches()
         {
-            m_cachedValidPlacementsReady = false;
+            _cachedValidPlacementsReady = false;
             _cachedEnemyQueenNeighbors = null;
         }
     }
