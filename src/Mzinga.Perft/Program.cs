@@ -14,6 +14,7 @@ namespace Mzinga.Perft
     public class Program
     {
         static GameType GameType = GameType.Base;
+        static Board Board = null;
         static uint MaxDepth = uint.MaxValue;
         static bool MultiThreaded = false;
 
@@ -85,6 +86,11 @@ namespace Mzinga.Perft
                     {
                         GameType = gameType;
                     }
+                    else if (Board.TryParseGameString(args[i], false, out Board board))
+                    {
+                        GameType = board.GameType;
+                        Board = board;
+                    }
                     else if (args[i].Equals("-mt", StringComparison.InvariantCultureIgnoreCase))
                     {
                         MultiThreaded = true;
@@ -97,7 +103,10 @@ namespace Mzinga.Perft
         {
             CancellationToken token = PerftCTS.Token;
 
-            var board = new Board(GameType);
+            var board = Board ?? new Board(GameType);
+
+            Console.WriteLine($"GameString: \"{board.GetGameString()}\"");
+            Console.WriteLine();
 
             for (int depth = 0; depth <= MaxDepth; depth++)
             {
