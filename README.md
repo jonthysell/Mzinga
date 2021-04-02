@@ -1,3 +1,5 @@
+![Mzinga Banner](./.github/banner.png)
+
 # Mzinga #
 
 [![CI Build](https://github.com/jonthysell/Mzinga/actions/workflows/ci.yml/badge.svg)](https://github.com/jonthysell/Mzinga/actions/workflows/ci.yml)

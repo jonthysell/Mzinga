@@ -2,9 +2,10 @@
 
 ## next ##
 
+* New icon
 * Core: Fixed casing of Move.PassString
 * Viewer: allow parsing game strings from Engine output even if Mzinga thinks the moves are invalid
-* Perft: Allow passing in starting GameString 
+* Perft: Allow passing in starting GameString
 
 ## v0.10.7 ##
 
