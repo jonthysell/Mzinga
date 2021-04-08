@@ -132,7 +132,6 @@ namespace Mzinga.Trainer
             Console.WriteLine("top                    List the top profiles for each GameType");
             Console.WriteLine("mergetop               Merge the top profiles from each GameType");
             Console.WriteLine("exportai               Export the current engine AI as profiles");
-            Console.WriteLine("buildinitialtables     Build and export InitialTranspositionTable");
 
             Console.WriteLine();
 
