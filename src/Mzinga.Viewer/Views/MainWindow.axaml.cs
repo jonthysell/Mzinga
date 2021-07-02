@@ -81,7 +81,7 @@ namespace Mzinga.Viewer.Views
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            //EngineConsoleWindow.Instance.Close();
+            EngineConsoleWindow.Instance?.Close();
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)

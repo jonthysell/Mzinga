@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using System;
-using System.ComponentModel;
 using System.IO;
 
 using Avalonia;
@@ -12,7 +11,6 @@ using Avalonia.Styling;
 
 using Mzinga.Engine;
 
-using Mzinga.Viewer;
 using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer
@@ -56,7 +54,7 @@ namespace Mzinga.Viewer
         {
             MessageHandlers.RegisterMessageHandlers(this);
 
-            ViewerConfigPath = e.Args.Length > 0 && !string.IsNullOrWhiteSpace(e.Args[0]) ? e.Args[0] : DefaultViewerConfigFileName;
+            ViewerConfigPath = e.Args.Length > 0 && !string.IsNullOrWhiteSpace(e.Args[0]) ? e.Args[0] : GetDefaultViewerConfigFileName();
 
             AppViewModelParameters parameters = new AppViewModelParameters()
             {
@@ -104,7 +102,6 @@ namespace Mzinga.Viewer
 
         private ViewerConfig LoadConfig()
         {
-            using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
             ViewerConfig viewerConfig = new ViewerConfig()
             {
                 InternalEngineConfig = InternalEngineConfig.GetOptionsClone() // Create clone to store user values
@@ -112,6 +109,7 @@ namespace Mzinga.Viewer
 
             try
             {
+                using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
                 viewerConfig.LoadConfig(inputStream);
             }
             catch (Exception) { }
@@ -121,9 +119,13 @@ namespace Mzinga.Viewer
 
         private void SaveConfig()
         {
-            using FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create);
-            AppVM.ViewerConfig.InternalEngineConfig.CopyOptionsFrom(InternalEngineConfig.GetOptionsClone()); // Repopulate with current engine values
-            AppVM.ViewerConfig.SaveConfig(outputStream);
+            try
+            {
+                using FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create);
+                AppVM.ViewerConfig.InternalEngineConfig.CopyOptionsFrom(InternalEngineConfig.GetOptionsClone()); // Repopulate with current engine values
+                AppVM.ViewerConfig.SaveConfig(outputStream);
+            }
+            catch (Exception) { }
         }
 
         private void TextToClipboard(string text)
@@ -131,6 +133,13 @@ namespace Mzinga.Viewer
             Clipboard.SetTextAsync(text);
         }
 
-        private const string DefaultViewerConfigFileName = "MzingaViewerConfig.xml";
+        private string GetDefaultViewerConfigFileName()
+        {
+#if WINSTORE
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mzinga", "MzingaViewerConfig.xml");
+#else
+            return "MzingaViewerConfig.xml";
+#endif
+        }
     }
 }

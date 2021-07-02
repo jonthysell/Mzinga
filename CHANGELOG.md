@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Added Mzinga.Viewer.Package project
+
 ## v0.10.8 ##
 
 * New icon

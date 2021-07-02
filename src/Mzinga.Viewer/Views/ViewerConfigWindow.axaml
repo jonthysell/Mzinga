@@ -204,7 +204,8 @@
                                               IsChecked="{Binding PlaySoundEffects}"
                                               IsEnabled="False" />
                                     <CheckBox Content="Check for updates on start"
-                                              IsChecked="{Binding CheckUpdateOnStart}" />
+                                              IsChecked="{Binding CheckUpdateOnStart}"
+                                              IsVisible="{Binding AppVM.CheckForUpdatesEnabled}" />
                                 </StackPanel>
                             </DockPanel>
                         </StackPanel>
