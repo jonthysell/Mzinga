@@ -168,9 +168,10 @@
                               Header="_Mzinga Website" />
                     <MenuItem Command="{Binding LaunchHiveWebsite}"
                               Header="_Hive Website" />
-                    <Separator />
+                    <Separator IsVisible="{Binding CheckForUpdatesEnabled}" />
                     <MenuItem Command="{Binding CheckForUpdatesAsync}"
-                              Header="_Check for Updates" />
+                              Header="_Check for Updates"
+                              IsVisible="{Binding CheckForUpdatesEnabled}" />
                     <Separator />
                     <MenuItem Command="{Binding ShowLicenses}"
                               Header="_About MzingaViewer" />

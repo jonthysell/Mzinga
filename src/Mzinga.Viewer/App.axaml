@@ -97,7 +97,8 @@
                             Header="Hive Website" />
             <NativeMenuItemSeperator />
             <NativeMenuItem Command="{Binding CheckForUpdatesAsync}"
-                            Header="Check for Updates" />
+                            Header="Check for Updates"
+                            IsEnabled="{Binding CheckForUpdatesEnabled}" />
             <NativeMenuItemSeperator />
             <NativeMenuItem Command="{Binding ShowLicenses}"
                             Header="About MzingaViewer" />

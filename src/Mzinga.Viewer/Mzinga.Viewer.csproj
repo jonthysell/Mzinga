@@ -8,6 +8,11 @@
     <RootNamespace>Mzinga.Viewer</RootNamespace>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
     <DefineConstants>TRACE</DefineConstants>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Platform)' != 'AnyCPU' ">
+    <DefineConstants>TRACE;WINSTORE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">

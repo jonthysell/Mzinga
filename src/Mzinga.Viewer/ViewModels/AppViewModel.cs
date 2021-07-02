@@ -118,6 +118,11 @@ namespace Mzinga.Viewer.ViewModels
         }
         private RelayCommand _launchMzingaWebsite;
 
+#if WINSTORE
+        public bool CheckForUpdatesEnabled => false;
+#else
+        public bool CheckForUpdatesEnabled => true;
+#endif
         public RelayCommand CheckForUpdatesAsync
         {
             get
@@ -142,7 +147,7 @@ namespace Mzinga.Viewer.ViewModels
         }
         private RelayCommand _checkForUpdatesAsync;
 
-        #endregion
+#endregion
 
         public static void Init(AppViewModelParameters parameters)
         {

@@ -970,6 +970,9 @@ namespace Mzinga.Viewer.ViewModels
         public static RelayCommand LaunchHiveWebsite => AppVM.LaunchHiveWebsite;
 
         public static RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
+
+        public static bool CheckForUpdatesEnabled => AppVM.CheckForUpdatesEnabled;
+
         public static RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
 
         #endregion
@@ -1118,7 +1121,7 @@ namespace Mzinga.Viewer.ViewModels
                         FirstRun();
                     }
 
-                    if (ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
+                    if (AppVM.CheckForUpdatesEnabled && ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
                     {
                         await UpdateUtils.UpdateCheckAsync(true, false);
                     }
@@ -1144,17 +1147,24 @@ namespace Mzinga.Viewer.ViewModels
                 // Turn off first-run so it doesn't run next time
                 ViewerConfig.FirstRun = false;
 
-                Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, $"Welcome to {AppInfo.Name}!", $"Would you like to check for updates when {AppInfo.Name} starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
+                if (!AppVM.CheckForUpdatesEnabled)
                 {
-                    try
+                    Messenger.Default.Send(new InformationMessage($"Welcome to {AppInfo.Name}!"));
+                }
+                else
+                {
+                    Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, $"Welcome to {AppInfo.Name}!", $"Would you like to check for updates when {AppInfo.Name} starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
                     {
-                        ViewerConfig.CheckUpdateOnStart = enableAutoUpdate;
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                }));
+                        try
+                        {
+                            ViewerConfig.CheckUpdateOnStart = enableAutoUpdate;
+                        }
+                        catch (Exception ex)
+                        {
+                            ExceptionUtils.HandleException(ex);
+                        }
+                    }));
+                }
             });
         }
 
