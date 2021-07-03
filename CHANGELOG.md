@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Fix MacOS bundle for MzingaViewer
 * Added Mzinga.Viewer.Package project
 
 ## v0.10.8 ##

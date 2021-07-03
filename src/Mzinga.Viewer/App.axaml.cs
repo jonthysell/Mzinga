@@ -136,10 +136,14 @@ namespace Mzinga.Viewer
         private string GetDefaultViewerConfigFileName()
         {
 #if WINSTORE
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mzinga", "MzingaViewerConfig.xml");
+            // Only safe place is within the redirected AppData folder
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mzinga", ViewerConfigFileName);
 #else
-            return "MzingaViewerConfig.xml";
+            return Path.Combine(AppInfo.IsMacOS ? AppContext.BaseDirectory : Environment.CurrentDirectory, ViewerConfigFileName);
 #endif
         }
+
+
+        private const string ViewerConfigFileName = "MzingaViewerConfig.xml";
     }
 }
