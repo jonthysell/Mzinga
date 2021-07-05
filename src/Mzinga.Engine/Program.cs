@@ -89,15 +89,11 @@ namespace Mzinga.Engine
         static EngineConfig LoadConfig(string configPath)
         {
 
-            // Try loading specified file
+            // Try loading specified config file
             if (!TryLoadConfig(configPath, out EngineConfig result))
             {
-                // Try loading default file
-                if (!TryLoadConfig(DefaultEngineConfigFileName, out result))
-                {
-                    // Load default from embedded resource
-                    result = EngineConfig.GetDefaultEngineConfig();
-                }
+                // Load default from embedded resource
+                result = EngineConfig.GetDefaultEngineConfig();
             }
 
             return result;

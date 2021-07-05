@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Engine: No longer search for default config file
 * Viewer: Fix MacOS bundle for MzingaViewer
 * Added Mzinga.Viewer.Package project
 
