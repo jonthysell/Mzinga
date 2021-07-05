@@ -6,7 +6,7 @@
 # Remove everything except the app bundle
 Get-Childitem "$PSScriptRoot\..\bld\$Product.$Target\" -Exclude "MzingaViewer.app" | Remove-Item -Recurse
 
-& "$PSScriptRoot\Build.ps1" -Product $Product -Target $Target -Clean $False -BuildArgs "-t:Publish -p:RuntimeIdentifier=osx-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true"
+& "$PSScriptRoot\Build.ps1" -Product $Product -Target $Target -Clean $False -BuildArgs "-t:Publish -p:RuntimeIdentifier=osx-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true -p:TrimMode=link"
 
 # Remove unbundled MzingaViewer
 Remove-Item "$PSScriptRoot\..\bld\$Product.$Target\MzingaViewer"

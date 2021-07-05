@@ -5,6 +5,7 @@
 * Engine: No longer search for default config file
 * Viewer: Fix MacOS bundle for MzingaViewer
 * Added Mzinga.Viewer.Package project
+* Reduced binary sizes with TrimMode=link
 
 ## v0.10.8 ##
 
