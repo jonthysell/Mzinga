@@ -18,7 +18,7 @@ namespace Mzinga.Viewer
 
         public CLIEngineWrapper(string engineCommand) : base()
         {
-            if (string.IsNullOrWhiteSpace("engineCommand"))
+            if (string.IsNullOrWhiteSpace(engineCommand))
             {
                 throw new ArgumentNullException(nameof(engineCommand));
             }
@@ -50,6 +50,11 @@ namespace Mzinga.Viewer
             _process.StartInfo.FileName = programName;
             _process.StartInfo.Arguments = arguments;
 
+#if WINSTORE
+            // Can't expect relative paths when packaged, so do nothing
+#else
+            _process.StartInfo.WorkingDirectory = AppInfo.IsMacOS && AppContext.BaseDirectory.EndsWith(".app/Contents/MacOS/") ? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../")) : AppInfo.EntryAssemblyPath;
+#endif
             _process.StartInfo.UseShellExecute = false;
             _process.StartInfo.CreateNoWindow = true;
             _process.StartInfo.RedirectStandardInput = true;
@@ -93,12 +98,13 @@ namespace Mzinga.Viewer
             catch (Exception) { }
             finally
             {
-                if (!_process.HasExited)
+                try
                 {
                     _process.Kill(true);
                 }
-                _process.Close();
-                _writer.Close();
+                catch (Exception) { }
+                _process?.Close();
+                _writer?.Close();
             }
         }
 

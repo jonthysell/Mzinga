@@ -66,11 +66,6 @@ namespace Mzinga.Viewer
                 InternalEngineConfig = InternalEngineConfig, // Should be the unmodified defaults
             };
 
-            if (parameters.ViewerConfig.EngineType == EngineType.CommandLine)
-            {
-                parameters.EngineWrapper = new CLIEngineWrapper(parameters.ViewerConfig.EngineCommandLine);
-            }
-
             AppViewModel.Init(parameters);
             DataContext = AppVM;
 
@@ -139,10 +134,9 @@ namespace Mzinga.Viewer
             // Only safe place is within the redirected AppData folder
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mzinga", ViewerConfigFileName);
 #else
-            return Path.Combine(AppInfo.IsMacOS ? AppContext.BaseDirectory : Environment.CurrentDirectory, ViewerConfigFileName);
+            return Path.Combine(AppInfo.IsMacOS && AppContext.BaseDirectory.EndsWith(".app/Contents/MacOS/") ? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../")) : AppInfo.EntryAssemblyPath, ViewerConfigFileName);
 #endif
         }
-
 
         private const string ViewerConfigFileName = "MzingaViewerConfig.xml";
     }

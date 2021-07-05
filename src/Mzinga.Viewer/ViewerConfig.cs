@@ -20,22 +20,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        public EngineType EngineType
-        {
-            get
-            {
-                return _engineType;
-            }
-            set
-            {
-                _engineType = value;
-                if (_engineType == EngineType.CommandLine && string.IsNullOrWhiteSpace(EngineCommandLine))
-                {
-                    EngineCommandLine = MzingaEngineCommandLine;
-                }
-            }
-        }
-        private EngineType _engineType = EngineType.Internal;
+        public EngineType EngineType { get; set; } = EngineType.Internal;
 
         public string EngineCommandLine
         {
@@ -45,10 +30,10 @@ namespace Mzinga.Viewer
             }
             set
             {
-                _engineCommandLine = string.IsNullOrWhiteSpace(value) ? MzingaEngineCommandLine : value.Trim();
+                _engineCommandLine = value?.Trim();
             }
         }
-        private string _engineCommandLine = MzingaEngineCommandLine;
+        private string _engineCommandLine = "";
 
         public VisualTheme VisualTheme { get; set; } = VisualTheme.Light;
 
@@ -310,8 +295,6 @@ namespace Mzinga.Viewer
 
             InternalEngineConfig = config.InternalEngineConfig;
         }
-
-        private const string MzingaEngineCommandLine = "./MzingaEngine";
     }
 
     public enum VisualTheme

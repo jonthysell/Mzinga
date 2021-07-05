@@ -2,8 +2,9 @@
 
 ## next ##
 
-* Engine: Fixed bug where loading default config looked in working directory, not app entrypoint
+* Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint
 * Viewer: Fix MacOS bundle for MzingaViewer
+* Viewer: Fixed issues with launching CLI engines
 * Added Mzinga.Viewer.Package project
 * Reduced binary sizes with TrimMode=link
 

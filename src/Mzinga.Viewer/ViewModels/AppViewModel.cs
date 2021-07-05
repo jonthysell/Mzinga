@@ -174,18 +174,21 @@ namespace Mzinga.Viewer.ViewModels
             ViewerConfig = parameters.ViewerConfig;
             DoOnUIThread = parameters.DoOnUIThread;
             TextToClipboard = parameters.TextToClipboard;
-            EngineWrapper = parameters.EngineWrapper;
             InternalEngineConfig = parameters.InternalEngineConfig;
 
-            try
+            if (ViewerConfig.EngineType == EngineType.CommandLine)
             {
-                EngineWrapper?.StartEngine();
-            }
-            catch (Exception ex)
-            {
-                EngineWrapper?.StopEngine();
-                EngineWrapper = null;
-                EngineExceptionOnStart = ex;
+                try
+                {
+                    EngineWrapper = new CLIEngineWrapper(ViewerConfig.EngineCommandLine);
+                    EngineWrapper.StartEngine();
+                }
+                catch (Exception ex)
+                {
+                    EngineWrapper?.StopEngine();
+                    EngineWrapper = null;
+                    EngineExceptionOnStart = ex;
+                }
             }
 
             if (null == EngineWrapper)
@@ -248,8 +251,6 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
         private TextToClipboard _textToClipboard;
-
-        public EngineWrapper EngineWrapper;
 
         public EngineConfig InternalEngineConfig;
     }
