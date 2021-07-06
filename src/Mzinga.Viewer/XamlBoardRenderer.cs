@@ -199,43 +199,6 @@ namespace Mzinga.Viewer
 
                 HexOrientation hexOrientation = MainViewModel.ViewerConfig.HexOrientation;
 
-                // Draw the pieces in play
-                z++;
-                for (int stack = 0; stack <= maxStack; stack++)
-                {
-                    if (piecesInPlay.ContainsKey(stack))
-                    {
-                        foreach (var tuple in piecesInPlay[stack])
-                        {
-                            var pieceName = tuple.Item1;
-                            var position = tuple.Item2;
-
-                            if (pieceName == selectedPieceName && targetPosition.HasValue)
-                            {
-                                position = targetPosition.Value;
-                            }
-
-                            Point center = GetPoint(position, size, hexOrientation, true);
-
-                            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
-
-                            Shape hex = GetHex(center, size, hexType, hexOrientation);
-                            hex.ZIndex = z;
-                            BoardCanvas.Children.Add(hex);
-
-                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
-
-                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
-                            hexText.ZIndex = z + 1;
-                            BoardCanvas.Children.Add(hexText);
-
-                            minPoint = Min(center, size, minPoint);
-                            maxPoint = Max(center, size, maxPoint);
-                        }
-                        z += 2;
-                    }
-                }
-
                 Dictionary<BugType, Stack<Canvas>> pieceCanvasesByBugType = new Dictionary<BugType, Stack<Canvas>>();
 
                 // Draw the pieces in white's hand
@@ -281,6 +244,43 @@ namespace Mzinga.Viewer
                 }
 
                 DrawHand(BlackHandStackPanel, pieceCanvasesByBugType);
+
+                // Draw the pieces in play
+                z++;
+                for (int stack = 0; stack <= maxStack; stack++)
+                {
+                    if (piecesInPlay.ContainsKey(stack))
+                    {
+                        foreach (var tuple in piecesInPlay[stack])
+                        {
+                            var pieceName = tuple.Item1;
+                            var position = tuple.Item2;
+
+                            if (pieceName == selectedPieceName && targetPosition.HasValue)
+                            {
+                                position = targetPosition.Value;
+                            }
+
+                            Point center = GetPoint(position, size, hexOrientation, true);
+
+                            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
+
+                            Shape hex = GetHex(center, size, hexType, hexOrientation);
+                            hex.ZIndex = z;
+                            BoardCanvas.Children.Add(hex);
+
+                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+
+                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
+                            hexText.ZIndex = z + 1;
+                            BoardCanvas.Children.Add(hexText);
+
+                            minPoint = Min(center, size, minPoint);
+                            maxPoint = Max(center, size, maxPoint);
+                        }
+                        z += 2;
+                    }
+                }
 
                 // Highlight last move played
                 if (MainViewModel.AppVM.ViewerConfig.HighlightLastMovePlayed)
@@ -399,15 +399,6 @@ namespace Mzinga.Viewer
                     foreach (var child in BoardCanvas.Children)
                     {
                         child.RenderTransform = translate;
-                        //if (child is Border hexLabel) // Hex labels
-                        //{
-                        //    Canvas.SetLeft(hexLabel, Canvas.GetLeft(hexLabel) + offsetX);
-                        //    Canvas.SetTop(hexLabel, Canvas.GetTop(hexLabel) + offsetY);
-                        //}
-                        //else if (child is Shape hex) // Hexes
-                        //{
-                        //    hex.RenderTransform = translate;
-                        //}
                     }
 
                     CanvasOffsetX = offsetX;
