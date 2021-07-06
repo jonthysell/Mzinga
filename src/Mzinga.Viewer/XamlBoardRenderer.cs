@@ -166,6 +166,8 @@ namespace Mzinga.Viewer
             CanvasOffsetX = 0.0;
             CanvasOffsetX = 0.0;
 
+            int z = BoardCanvas.ZIndex;
+
             if (null != board)
             {
                 Point minPoint = new Point(double.MaxValue, double.MaxValue);
@@ -198,6 +200,7 @@ namespace Mzinga.Viewer
                 HexOrientation hexOrientation = MainViewModel.ViewerConfig.HexOrientation;
 
                 // Draw the pieces in play
+                z++;
                 for (int stack = 0; stack <= maxStack; stack++)
                 {
                     if (piecesInPlay.ContainsKey(stack))
@@ -217,17 +220,19 @@ namespace Mzinga.Viewer
                             HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
                             Shape hex = GetHex(center, size, hexType, hexOrientation);
+                            hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
 
                             bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
 
                             var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
-
+                            hexText.ZIndex = z + 1;
                             BoardCanvas.Children.Add(hexText);
 
                             minPoint = Min(center, size, minPoint);
                             maxPoint = Max(center, size, maxPoint);
                         }
+                        z += 2;
                     }
                 }
 
@@ -280,12 +285,14 @@ namespace Mzinga.Viewer
                 // Highlight last move played
                 if (MainViewModel.AppVM.ViewerConfig.HighlightLastMovePlayed)
                 {
+                    z++;
                     // Highlight the lastMove start position
                     if (lastMoveStart.HasValue)
                     {
                         Point center = GetPoint(lastMoveStart.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -298,6 +305,7 @@ namespace Mzinga.Viewer
                         Point center = GetPoint(lastMoveEnd.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -308,6 +316,7 @@ namespace Mzinga.Viewer
                 // Highlight the selected piece
                 if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
                 {
+                    z++;
                     if (selectedPieceName != PieceName.INVALID)
                     {
                         Position selectedPiecePosition = board.GetPosition(selectedPieceName);
@@ -317,6 +326,7 @@ namespace Mzinga.Viewer
                             Point center = GetPoint(selectedPiecePosition, size, hexOrientation, true);
                             
                             Shape hex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
+                            hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
 
                             minPoint = Min(center, size, minPoint);
@@ -328,6 +338,7 @@ namespace Mzinga.Viewer
                 // Draw the valid moves for that piece
                 if (MainViewModel.AppVM.ViewerConfig.HighlightValidMoves)
                 {
+                    z++;
                     if (selectedPieceName != PieceName.INVALID && null != validMoves)
                     {
                         foreach (Move validMove in validMoves)
@@ -337,6 +348,7 @@ namespace Mzinga.Viewer
                                 Point center = GetPoint(validMove.Destination, size, hexOrientation);
 
                                 Shape hex = GetHex(center, size, HexType.ValidMove, hexOrientation);
+                                hex.ZIndex = z;
                                 BoardCanvas.Children.Add(hex);
 
                                 minPoint = Min(center, size, minPoint);
@@ -349,11 +361,13 @@ namespace Mzinga.Viewer
                 // Highlight the target position
                 if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
                 {
+                    z++;
                     if (targetPosition.HasValue)
                     {
                         Point center = GetPoint(targetPosition.Value, size, hexOrientation, true);
 
                         Shape hex = GetHex(center, size, HexType.SelectedMove, hexOrientation);
+                        hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
                         minPoint = Min(center, size, minPoint);
@@ -384,15 +398,16 @@ namespace Mzinga.Viewer
 
                     foreach (var child in BoardCanvas.Children)
                     {
-                        if (child is Border hexLabel) // Hex labels
-                        {
-                            Canvas.SetLeft(hexLabel, Canvas.GetLeft(hexLabel) + offsetX);
-                            Canvas.SetTop(hexLabel, Canvas.GetTop(hexLabel) + offsetY);
-                        }
-                        else if (child is Shape hex) // Hexes
-                        {
-                            hex.RenderTransform = translate;
-                        }
+                        child.RenderTransform = translate;
+                        //if (child is Border hexLabel) // Hex labels
+                        //{
+                        //    Canvas.SetLeft(hexLabel, Canvas.GetLeft(hexLabel) + offsetX);
+                        //    Canvas.SetTop(hexLabel, Canvas.GetTop(hexLabel) + offsetY);
+                        //}
+                        //else if (child is Shape hex) // Hexes
+                        //{
+                        //    hex.RenderTransform = translate;
+                        //}
                     }
 
                     CanvasOffsetX = offsetX;
