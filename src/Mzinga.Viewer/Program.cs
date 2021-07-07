@@ -24,8 +24,7 @@ namespace Mzinga.Viewer
         {
             return AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace()
-                .With(new AvaloniaNativePlatformOptions { UseGpu = false });
+                .LogToTrace();
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

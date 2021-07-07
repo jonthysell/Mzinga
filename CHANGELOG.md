@@ -3,6 +3,7 @@
 ## next ##
 
 * Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint
+* Viewer: Enable GPU rendering to improve performance
 * Viewer: Fix MacOS bundle for MzingaViewer
 * Viewer: Fixed issues with launching CLI engines
 * Viewer: Update Avalonia to 0.10.6
