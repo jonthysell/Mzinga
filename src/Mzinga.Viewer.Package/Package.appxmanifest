@@ -7,12 +7,12 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="457fa547-1798-4153-a58b-19424179d602"
-    Publisher="CN=Jon Thysell"
-    Version="0.10.8.0" />
+    Name="32728JonThysell.MzingaViewer"
+    Publisher="CN=3E953986-6DBE-4C0E-B918-B1BB3B0F02EF"
+    Version="0.11.0.0" />
 
   <Properties>
-    <DisplayName>Mzinga.Viewer.Package</DisplayName>
+    <DisplayName>MzingaViewer</DisplayName>
     <PublisherDisplayName>Jon Thysell</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>

@@ -4,7 +4,7 @@ env:
   BuildDir: ./bld
   ScriptDir: ./scripts
   Product: Mzinga
-  Prerelease: true
+  Prerelease: false
 
 on:
   push:

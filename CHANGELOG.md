@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.0 ##
 
 * Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint
 * Viewer: Enable GPU rendering to improve performance
