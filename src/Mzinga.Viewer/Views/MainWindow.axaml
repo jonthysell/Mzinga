@@ -74,9 +74,11 @@
                 <NativeMenuItem.Menu>
                     <NativeMenu>
                         <NativeMenuItem Command="{Binding ToggleShowBoardHistory}"
-                                        Header="Show Board History" />
+                                        Header="Show Board History"
+                                        IsChecked="{Binding ShowBoardHistory}" />
                         <NativeMenuItem Command="{Binding ToggleShowMoveCommentary}"
-                                        Header="Show Move Commentary" />
+                                        Header="Show Move Commentary"
+                                        IsChecked="{Binding ShowMoveCommentary}" />
                         <NativeMenuItemSeperator />
                         <NativeMenuItem Command="{Binding ShowViewerConfig}"
                                         Gesture="Cmd+Shift+V"
@@ -147,14 +149,20 @@
                               Header="Show Board _History">
                         <MenuItem.Icon>
                             <CheckBox IsChecked="{Binding ShowBoardHistory}"
-                                      IsHitTestVisible="False" />
+                                      IsHitTestVisible="False"
+                                      Margin="0"
+                                      Padding="0"
+                                      Width="32" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Command="{Binding ToggleShowMoveCommentary}"
                               Header="Show Move _Commentary">
                         <MenuItem.Icon>
                             <CheckBox IsChecked="{Binding ShowMoveCommentary}"
-                                      IsHitTestVisible="False" />
+                                      IsHitTestVisible="False"
+                                      Margin="0"
+                                      Padding="0"
+                                      Width="32" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator />

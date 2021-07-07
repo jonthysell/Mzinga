@@ -5,6 +5,7 @@
 * Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint
 * Viewer: Fix MacOS bundle for MzingaViewer
 * Viewer: Fixed issues with launching CLI engines
+* Viewer: Update Avalonia to 0.10.6
 * Added Mzinga.Viewer.Package project
 * Reduced binary sizes with TrimMode=link
 
