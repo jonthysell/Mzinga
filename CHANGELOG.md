@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Viewer: Fixed bug with creating folder to save config
+
 ## v0.11.0 ##
 
 * Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint

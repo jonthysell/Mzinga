@@ -104,7 +104,7 @@ namespace Mzinga.Viewer
 
             try
             {
-                using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.OpenOrCreate);
+                using FileStream inputStream = new FileStream(ViewerConfigPath, FileMode.Open);
                 viewerConfig.LoadConfig(inputStream);
             }
             catch (Exception) { }
@@ -116,6 +116,7 @@ namespace Mzinga.Viewer
         {
             try
             {
+                Directory.CreateDirectory(Path.GetDirectoryName(ViewerConfigPath));
                 using FileStream outputStream = new FileStream(ViewerConfigPath, FileMode.Create);
                 AppVM.ViewerConfig.InternalEngineConfig.CopyOptionsFrom(InternalEngineConfig.GetOptionsClone()); // Repopulate with current engine values
                 AppVM.ViewerConfig.SaveConfig(outputStream);
