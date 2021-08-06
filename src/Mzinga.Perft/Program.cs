@@ -111,7 +111,7 @@ namespace Mzinga.Perft
             for (int depth = 0; depth <= MaxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = MultiThreaded ? board.ParallelPerftAsync(depth, Environment.ProcessorCount / 2, token) : board.CalculatePerftAsync(depth, token);
+                Task<long?> task = MultiThreaded ? board.ParallelPerftAsync(depth, token) : board.CalculatePerftAsync(depth, token);
                 task.Wait();
                 sw.Stop();
 

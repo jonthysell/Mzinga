@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Perft: Improve multi-threaded performance
+
 ## v0.11.1 ##
 
 * Viewer: Fixed bug with creating folder to save config

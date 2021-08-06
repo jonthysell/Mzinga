@@ -548,17 +548,17 @@ namespace Mzinga.Core
             return nodes;
         }
 
-        public long ParallelPerft(int depth, int maxThreads)
+        public long ParallelPerft(int depth)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
 
-            Task<long?> task = ParallelPerftAsync(depth, maxThreads, cts.Token);
+            Task<long?> task = ParallelPerftAsync(depth, cts.Token);
             task.Wait();
 
             return task.Result ?? 0;
         }
 
-        public async Task<long?> ParallelPerftAsync(int depth, int maxThreads, CancellationToken token)
+        public async Task<long?> ParallelPerftAsync(int depth, CancellationToken token)
         {
             if (depth == 0)
             {
@@ -572,39 +572,39 @@ namespace Mzinga.Core
                 return validMoves.Count;
             }
 
-            long? nodes = await Task.Run(() =>
+            long nodes = 0;
+
+            await Task.Run(() =>
             {
-                ParallelOptions po = new ParallelOptions
+                var tasks = new Task[validMoves.Count];
+                int i = 0;
+                foreach (var move in validMoves)
                 {
-                    MaxDegreeOfParallelism = Math.Max(1, maxThreads)
-                };
-
-                long n = 0;
-                ParallelLoopResult loopResult = Parallel.ForEach(validMoves, po, async (move, state) =>
-                {
-                    if (token.IsCancellationRequested)
+                    tasks[i] = Task.Factory.StartNew(async () =>
                     {
-                        state.Stop();
-                        return;
-                    }
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
 
-                    var clone = Clone();
-                    clone.TrustedPlay(move);
-                    long? value = await clone.CalculatePerftAsync(depth - 1, token);
+                        var clone = Clone();
+                        clone.TrustedPlay(move);
 
-                    if (!value.HasValue)
-                    {
-                        state.Stop();
-                        return;
-                    }
+                        long? value = await clone.CalculatePerftAsync(depth - 1, token);
 
-                    Interlocked.Add(ref n, value.Value);
-                });
+                        if (!value.HasValue)
+                        {
+                            return;
+                        }
 
-                return loopResult.IsCompleted && !token.IsCancellationRequested ? (long?)n : null;
+                        Interlocked.Add(ref nodes, value.Value);
+                    });
+                    i++;
+                }
+                Task.WaitAll(tasks);
             });
 
-            return nodes;
+            return token.IsCancellationRequested ? null : nodes;
         }
 
         public BoardMetrics GetBoardMetrics()

@@ -449,7 +449,7 @@ namespace Mzinga.Test
                     Trace.TraceInformation($"Skipping slow test (Depth = {Depth})");
                     return;
                 }
-                var actualNodeCount = Board.ParallelPerft(Depth, Environment.ProcessorCount / 2);
+                var actualNodeCount = Board.ParallelPerft(Depth);
                 Assert.AreEqual(NodeCount, actualNodeCount);
             }
 
