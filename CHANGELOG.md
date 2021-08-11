@@ -3,6 +3,7 @@
 ## next ##
 
 * Perft: Improve multi-threaded performance
+* Perft: Reduced memory allocations
 
 ## v0.11.1 ##
 

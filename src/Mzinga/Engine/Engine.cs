@@ -721,7 +721,7 @@ namespace Mzinga.Engine
             for (int depth = 0; depth <= maxDepth; depth++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Task<long?> task = _board.CalculatePerftAsync(depth, token);
+                Task<long?> task = _board.CalculatePerftAsync(depth, token).AsTask();
                 task.Wait();
                 sw.Stop();
 

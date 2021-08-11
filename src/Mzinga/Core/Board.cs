@@ -498,13 +498,13 @@ namespace Mzinga.Core
         {
             CancellationTokenSource cts = new CancellationTokenSource();
 
-            Task<long?> task = CalculatePerftAsync(depth, cts.Token);
+            Task<long?> task = CalculatePerftAsync(depth, cts.Token).AsTask();
             task.Wait();
 
             return task.Result ?? 0;
         }
 
-        public async Task<long?> CalculatePerftAsync(int depth, CancellationToken token)
+        public async ValueTask<long?> CalculatePerftAsync(int depth, CancellationToken token)
         {
             if (depth == 0)
             {
@@ -602,7 +602,7 @@ namespace Mzinga.Core
                     i++;
                 }
                 Task.WaitAll(tasks);
-            });
+            }, token);
 
             return token.IsCancellationRequested ? null : nodes;
         }
