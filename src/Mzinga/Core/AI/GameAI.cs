@@ -348,7 +348,7 @@ namespace Mzinga.Core.AI
                 for (int i = 0; i < helperThreads.Length; i++)
                 {
                     Board clone = board.Clone();
-                    helperThreads[i] = Task.Factory.StartNew(async () =>
+                    helperThreads[i] = Task.Run(async () =>
                     {
                         await PrincipalVariationSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, (OrderType)(2 - (i % 2)), tokenSource.Token);
                     });

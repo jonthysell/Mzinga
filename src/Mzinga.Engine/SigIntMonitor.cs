@@ -22,7 +22,7 @@ namespace Mzinga.Engine
         public void Start()
         {
             _cts = new CancellationTokenSource();
-            _task = Task.Factory.StartNew(async () =>
+            _task = Task.Run(async () =>
             {
                 UnixSignal signal = new UnixSignal(Signum.SIGINT);
                 while (!_cts.IsCancellationRequested)

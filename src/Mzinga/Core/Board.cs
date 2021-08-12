@@ -580,7 +580,7 @@ namespace Mzinga.Core
                 int i = 0;
                 foreach (var move in validMoves)
                 {
-                    tasks[i] = Task.Factory.StartNew(async () =>
+                    tasks[i] = Task.Run(async () =>
                     {
                         if (token.IsCancellationRequested)
                         {

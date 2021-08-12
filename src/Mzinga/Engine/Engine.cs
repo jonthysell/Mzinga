@@ -741,7 +741,7 @@ namespace Mzinga.Engine
             if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && _board is not null && _board.GameInProgress && _gameAI is not null)
             {
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Factory.StartNew(async () => await _gameAI.GetBestMoveAsync(_board.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
+                _ponderTask = Task.Run(async () => await _gameAI.GetBestMoveAsync(_board.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
                 _isPondering = true;
             }

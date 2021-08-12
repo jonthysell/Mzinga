@@ -1107,7 +1107,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public void OnLoaded()
         {
-            Task.Factory.StartNew(async () =>
+            Task.Run(async () =>
             {
                 try
                 {
