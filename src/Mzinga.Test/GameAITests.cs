@@ -105,6 +105,22 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
+        [TestCategory("Performance")]
+        public void GameAI_DifferentHelperThreadsTest()
+        {
+            var gb = Board.ParseGameString(@"Base;InProgress;Black[17];wA1;bA1 wA1-;wA2 -wA1;bA2 bA1\;wQ \wA1;bQ bA2/;wA2 /bA2;bA3 \bQ;wA3 wA2\;bA3 wA3-;wG1 /wA2;bG1 bQ/;wQ -wA1;bA3 wA3\;wG1 bG1/;bS1 -bG1;wS1 /wA2;bS1 \wQ;wS1 bA3\;bG2 bG1\;wG2 -wA2;bS2 -bS1;wG2 bA2\;bG2 bS2\;wA2 \bS2;bB1 /bG2;wA2 -bS2;bB1 bG2\;wA2 wG2\;bS2 \wA1;wA2 \bA1;bB1 wQ\;wA2 bS2/");
+
+            for (int maxHelpers = 0; maxHelpers < Environment.ProcessorCount / 2; maxHelpers++)
+            {
+                GameAI ai = GetTestGameAI(gb.GameType);
+                Stopwatch sw = Stopwatch.StartNew();
+                _ = ai.GetBestMove(gb, int.MaxValue, maxHelpers);
+                sw.Stop();
+                Trace.WriteLine($"{maxHelpers}: {sw.ElapsedMilliseconds}ms");
+            }
+        }
+
+        [TestMethod]
         public void GameAI_WinningMoveIsBestMoveTest()
         {
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_WinningMoveIsBestMoveTest.csv");
@@ -146,7 +162,7 @@ namespace Mzinga.Test
             {
                 GameAI ai = GetTestGameAI(Board.GameType);
                 ActualBestMove = ai.GetBestMove(Board, MaxDepth, TestMaxHelperThreads);
-                Assert.AreEqual(ExpectedBestMove, ActualBestMove);
+                Assert.AreEqual(ExpectedBestMove, ActualBestMove, $"Expected: {Board.GetMoveString(ExpectedBestMove)}, Actual: {Board.GetMoveString(ActualBestMove)}.");
             }
 
             public void Parse(string s)

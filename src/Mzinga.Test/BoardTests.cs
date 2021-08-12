@@ -412,7 +412,7 @@ namespace Mzinga.Test
                 catch (InvalidMoveException ex)
                 {
                     Trace.TraceInformation($"Invalid move reason: {ex.Message}");
-                    Assert.AreEqual(InvalidMove, ex.Move);
+                    Assert.AreEqual(InvalidMove, ex.Move, $"Expected: {Board.GetMoveString(InvalidMove)}, Actual: {Board.GetMoveString(ex.Move)}.");
                 }
             }
 

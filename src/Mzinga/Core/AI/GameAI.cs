@@ -182,10 +182,10 @@ namespace Mzinga.Core.AI
             {
                 // Start LazySMP helper threads
                 CancellationTokenSource helperCTS = new CancellationTokenSource();
-                Task[]? helperThreads = StartHelperThreads(board, depth, bestMoveParams.MaxHelperThreads, helperCTS);
+                Task[]? helperThreads = StartHelperThreads(board, depth, movesToEvaluate, bestMoveParams.MaxHelperThreads, helperCTS);
 
                 // "Re-sort" moves to evaluate based on the next iteration
-                movesToEvaluate = await EvaluateMovesToDepthAsync(board, depth, movesToEvaluate, token);
+                movesToEvaluate = await EvaluateMovesToDepthAsync(board, depth, movesToEvaluate, OrderType.Default, token);
 
                 // End LazySMP helper threads
                 EndHelperThreads(helperThreads, helperCTS);
@@ -223,7 +223,7 @@ namespace Mzinga.Core.AI
             return movesToEvaluate;
         }
 
-        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, CancellationToken token)
+        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, OrderType orderType, CancellationToken token)
         {
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
@@ -255,7 +255,7 @@ namespace Mzinga.Core.AI
                 if (firstMove)
                 {
                     // Full window search
-                    value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, OrderType.Default, token);
+                    value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
                     updateAlpha = true;
                     firstMove = false;
                 }
@@ -266,7 +266,7 @@ namespace Mzinga.Core.AI
                     if (value.HasValue && value > alpha && value < beta)
                     {
                         // Research with full window
-                        value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, OrderType.Default, token);
+                        value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
                         updateAlpha = true;
                     }
                 }
@@ -336,7 +336,7 @@ namespace Mzinga.Core.AI
 
         #region Threading support
 
-        private Task[]? StartHelperThreads(Board board, int depth, int threads, CancellationTokenSource tokenSource)
+        private Task[]? StartHelperThreads(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
         {
             Task[]? helperThreads = null;
 
@@ -350,7 +350,7 @@ namespace Mzinga.Core.AI
                     Board clone = board.Clone();
                     helperThreads[i] = Task.Run(async () =>
                     {
-                        await PrincipalVariationSearchAsync(clone, depth + i % 2, double.NegativeInfinity, double.PositiveInfinity, color, (OrderType)(2 - (i % 2)), tokenSource.Token);
+                        await EvaluateMovesToDepthAsync(clone, depth + i % 2, movesToEvaluate, (OrderType)(2 - (i % 2)), tokenSource.Token);
                     });
                 }
             }
