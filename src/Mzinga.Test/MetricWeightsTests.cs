@@ -22,8 +22,8 @@ namespace Mzinga.Test
         {
             MetricWeights mw = new MetricWeights();
             Assert.IsNotNull(mw);
-            _ = mw.GetNormalized();
-            Assert.IsNotNull(mw);
+            var normalized = mw.GetNormalized();
+            Assert.IsNotNull(normalized);
         }
     }
 }
