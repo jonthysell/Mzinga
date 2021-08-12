@@ -6,6 +6,7 @@
 * Perft: Reduced memory allocations
 * Core.AI: Reduced memory allocations
 * Core.AI: Improve helper thread performance
+* Test: Added Move parsing tests and fixed bugs
 
 ## v0.11.1 ##
 

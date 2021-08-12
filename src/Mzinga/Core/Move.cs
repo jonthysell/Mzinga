@@ -163,22 +163,15 @@ namespace Mzinga.Core
                 return true;
             }
 
-            if (Enum.TryParse(piece1Str, true, out startPiece))
+            if (Enum.TryParse(piece1Str, true, out startPiece) && startPiece != PieceName.INVALID)
             {
                 var piece2Str = piece2.ToString();
 
-                if (!Enum.TryParse(piece2Str, true, out endPiece) || endPiece == PieceName.INVALID)
+                if ((piece2Str == "" && beforeSeperator == '\0' && afterSeperator == '\0')
+                    || (Enum.TryParse(piece2Str, true, out endPiece) && endPiece != PieceName.INVALID))
                 {
-                    endPiece = PieceName.INVALID;
-                    beforeSeperator = '\0';
-                    afterSeperator = '\0';
+                    return true;
                 }
-                else if (beforeSeperator != '\0')
-                {
-                    afterSeperator = '\0';
-                }
-
-                return true;
             }
 
             isPass = false;

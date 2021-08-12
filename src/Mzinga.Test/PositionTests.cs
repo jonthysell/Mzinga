@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -177,18 +176,6 @@ namespace Mzinga.Test
             };
 
             return originNeighbors;
-        }
-
-        private static void AssertPositionsAreEqual(Position expected, Position actual)
-        {
-            Assert.IsNotNull(expected);
-            Assert.IsNotNull(actual);
-
-            Assert.AreEqual(expected, actual);
-
-            Assert.AreEqual(expected.Q, actual.Q);
-            Assert.AreEqual(expected.R, actual.R);
-            Assert.AreEqual(expected.Stack, actual.Stack);
         }
 
         private readonly int[][] _validCoordinates = new int[][]
