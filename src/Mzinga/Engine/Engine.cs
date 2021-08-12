@@ -479,7 +479,7 @@ namespace Mzinga.Engine
 
             if (_gameAI is not null)
             {
-                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), Config.MaxHelperThreads, token);
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), Config.MaxHelperThreads, token).AsTask();
                 task.Wait();
 
                 if (!_board.TryGetMoveString(task.Result, out string result))
@@ -511,7 +511,7 @@ namespace Mzinga.Engine
 
             if (_gameAI is not null)
             {
-                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxDepth, Config.MaxHelperThreads, token);
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxDepth, Config.MaxHelperThreads, token).AsTask();
                 task.Wait();
 
                 if (!_board.TryGetMoveString(task.Result, out string result))
@@ -548,7 +548,7 @@ namespace Mzinga.Engine
 
             if (_gameAI is not null)
             {
-                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxTime, Config.MaxHelperThreads, token);
+                Task<Move> task = _gameAI.GetBestMoveAsync(_board.Clone(), maxTime, Config.MaxHelperThreads, token).AsTask();
                 task.Wait();
 
                 if (!_board.TryGetMoveString(task.Result, out string result))

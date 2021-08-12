@@ -86,28 +86,28 @@ namespace Mzinga.Core.AI
                 cts.CancelAfter(maxTime);
             }
 
-            Task<Move> task = GetBestMoveAsync(board, maxDepth, maxTime, maxHelperThreads, cts.Token);
+            Task<Move> task = GetBestMoveAsync(board, maxDepth, maxTime, maxHelperThreads, cts.Token).AsTask();
             task.Wait();
 
             return task.Result;
         }
 
-        public async Task<Move> GetBestMoveAsync(Board board, int maxHelperThreads, CancellationToken token)
+        public async ValueTask<Move> GetBestMoveAsync(Board board, int maxHelperThreads, CancellationToken token)
         {
             return await GetBestMoveAsync(board, int.MaxValue, TimeSpan.MaxValue, maxHelperThreads, token);
         }
 
-        public async Task<Move> GetBestMoveAsync(Board board, int maxDepth, int maxHelperThreads, CancellationToken token)
+        public async ValueTask<Move> GetBestMoveAsync(Board board, int maxDepth, int maxHelperThreads, CancellationToken token)
         {
             return await GetBestMoveAsync(board, maxDepth, TimeSpan.MaxValue, maxHelperThreads, token);
         }
 
-        public async Task<Move> GetBestMoveAsync(Board board, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        public async ValueTask<Move> GetBestMoveAsync(Board board, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
             return await GetBestMoveAsync(board, int.MaxValue, maxTime, maxHelperThreads, token);
         }
 
-        private async Task<Move> GetBestMoveAsync(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        private async ValueTask<Move> GetBestMoveAsync(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
             if (maxDepth < 0)
             {
@@ -146,7 +146,7 @@ namespace Mzinga.Core.AI
             return bestMove.Move;
         }
 
-        private async Task<EvaluatedMoveCollection> EvaluateMovesAsync(Board board, BestMoveParams bestMoveParams, CancellationToken token)
+        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesAsync(Board board, BestMoveParams bestMoveParams, CancellationToken token)
         {
             EvaluatedMoveCollection movesToEvaluate = new EvaluatedMoveCollection();
 
@@ -223,7 +223,7 @@ namespace Mzinga.Core.AI
             return movesToEvaluate;
         }
 
-        private async Task<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, CancellationToken token)
+        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, CancellationToken token)
         {
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
@@ -371,7 +371,7 @@ namespace Mzinga.Core.AI
 
         #region Principal Variation Search
 
-        private async Task<double?> PrincipalVariationSearchAsync(Board board, int depth, double alpha, double beta, int color, OrderType orderType, CancellationToken token)
+        private async ValueTask<double?> PrincipalVariationSearchAsync(Board board, int depth, double alpha, double beta, int color, OrderType orderType, CancellationToken token)
         {
             double alphaOriginal = alpha;
 
@@ -568,7 +568,7 @@ namespace Mzinga.Core.AI
 
         #region Quiescence Search
 
-        private async Task<double?> QuiescenceSearchAsync(Board board, int depth, double alpha, double beta, int color, CancellationToken token)
+        private async ValueTask<double?> QuiescenceSearchAsync(Board board, int depth, double alpha, double beta, int color, CancellationToken token)
         {
             double bestValue = color * CalculateBoardScore(board);
 
@@ -698,17 +698,17 @@ namespace Mzinga.Core.AI
 
         // TreeStrap algorithms taken from http://papers.nips.cc/paper/3722-bootstrapping-from-game-tree-search.pdf
 
-        public async Task TreeStrapAsync(Board board, int maxDepth, int maxHelperThreads, CancellationToken token)
+        public async ValueTask TreeStrapAsync(Board board, int maxDepth, int maxHelperThreads, CancellationToken token)
         {
            await TreeStrapAsync(board, maxDepth, TimeSpan.MaxValue, maxHelperThreads, token);
         }
 
-        public async Task TreeStrapAsync(Board board, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        public async ValueTask TreeStrapAsync(Board board, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
             await TreeStrapAsync(board, int.MaxValue, maxTime, maxHelperThreads, token);
         }
 
-        private async Task TreeStrapAsync(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
+        private async ValueTask TreeStrapAsync(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
             if (null == board)
             {

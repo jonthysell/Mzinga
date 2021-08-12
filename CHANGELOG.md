@@ -4,6 +4,7 @@
 
 * Perft: Improve multi-threaded performance
 * Perft: Reduced memory allocations
+* Core.AI: Reduced memory allocations
 
 ## v0.11.1 ##
 

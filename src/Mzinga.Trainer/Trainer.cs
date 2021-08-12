@@ -988,7 +988,7 @@ namespace Mzinga.Trainer
                     CancellationTokenSource cts = new CancellationTokenSource();
                     cts.CancelAfter(TrainerSettings.BattleTimeLimit);
 
-                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(board, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token) : gameAI.TreeStrapAsync(board, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token);
+                    Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(board, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token).AsTask() : gameAI.TreeStrapAsync(board, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token).AsTask();
                     treeStrapTask.Wait();
 
                     // Update profile with final MetricWeights
