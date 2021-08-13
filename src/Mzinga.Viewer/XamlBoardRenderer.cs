@@ -287,7 +287,7 @@ namespace Mzinga.Viewer
                 {
                     z++;
                     // Highlight the lastMove start position
-                    if (lastMoveStart.HasValue)
+                    if (lastMoveStart.HasValue && lastMoveStart.Value.Stack >= 0)
                     {
                         Point center = GetPoint(lastMoveStart.Value, size, hexOrientation, true);
 

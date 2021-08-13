@@ -7,6 +7,7 @@
 * Core.AI: Reduced memory allocations
 * Core.AI: Improve helper thread performance
 * Core.AI: Add functionality to get Principal Variation
+* Viewer: Fixed bug where highlighting last move highlights origin when playing new piece
 * Test: Added Move parsing tests and fixed bugs
 
 ## v0.11.1 ##
