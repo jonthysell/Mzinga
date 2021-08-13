@@ -2,13 +2,13 @@
 
 ## next ##
 
+* Core.AI: Add functionality to get Principal Variation
+* Core.AI: Improve helper thread performance
+* Core.AI: Reduced memory allocations
 * Perft: Improve multi-threaded performance
 * Perft: Reduced memory allocations
-* Core.AI: Reduced memory allocations
-* Core.AI: Improve helper thread performance
-* Core.AI: Add functionality to get Principal Variation
-* Viewer: Fixed bug where highlighting last move highlights origin when playing new piece
 * Test: Added Move parsing tests and fixed bugs
+* Viewer: Fixed bug where highlighting last move highlights origin when playing new piece
 
 ## v0.11.1 ##
 
