@@ -1,3 +1,4 @@
 ﻿# Will win in one move (1 ply)
+Base;InProgress;White[15];wG1;bA1 -wG1;wQ wG1\;bA2 -bA1;wA1 wQ-;bA3 bA2\;wA2 wG1/;bQ \bA1;wA1 \bQ;bA2 wQ-;wA2 /bA3;bG1 bA2/;wA3 wA2\;bG1 wQ\;wA3 bQ/;bG2 bA2-;wA3 \wG1;bS1 bA2\;wG2 wA1/;bS1 /wQ;wG2 /wA1;bG3 /bS1;wB1 wG1/;bS2 bG2-;wS1 -wA1;bB1 bG3\;wS1 wG2\;bB2 \bG2	1	wA2 \wA3
 
 # Will win in two moves (3 ply)

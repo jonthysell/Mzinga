@@ -114,9 +114,9 @@ namespace Mzinga.Test
             {
                 GameAI ai = GetTestGameAI(gb.GameType);
                 Stopwatch sw = Stopwatch.StartNew();
-                _ = ai.GetBestMove(gb, TimeSpan.FromSeconds(10), maxHelpers);
+                var bestMove = ai.GetBestMove(gb, TimeSpan.FromSeconds(5), maxHelpers);
                 sw.Stop();
-                Trace.WriteLine($"{maxHelpers}: {sw.ElapsedMilliseconds}ms");
+                Trace.WriteLine($"{maxHelpers}: {sw.ElapsedMilliseconds}ms {gb.GetMoveString(bestMove)}");
             }
         }
 
