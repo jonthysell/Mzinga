@@ -67,9 +67,23 @@ namespace Mzinga.Engine
 
         private void OnBestMoveFound(object? sender, BestMoveFoundEventArgs args)
         {
-            if (_board is not null && !_isPondering && Config.ReportIntermediateBestMoves && _board.TryGetMoveString(args.Move, out string? moveStr))
+            if (_board is not null && !_isPondering && Config.ReportIntermediateBestMoves)
             {
-                ConsoleOut("{0};{1};{2:0.00}", moveStr ?? "", args.Depth, args.Score);
+                var sb = new StringBuilder();
+                sb.AppendJoin(';', _board.GetMoveString(args.Move), args.Depth, args.Score.ToString("0.00"));
+
+                if (args.PrincipalVariation.Count > 0)
+                {
+                    Board clone = _board.Clone();
+                    for (int i = 0; i < args.PrincipalVariation.Count; i++)
+                    {
+                        sb.Append(';');
+                        sb.Append(clone.GetMoveString(args.PrincipalVariation[i]));
+                        clone.TrustedPlay(args.PrincipalVariation[i]);
+                    }
+                }
+
+                ConsoleOut(sb.ToString());
             }
         }
 

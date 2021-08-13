@@ -141,7 +141,7 @@ namespace Mzinga.Core.AI
             EvaluatedMove bestMove = evaluatedMoves.BestMove ?? throw new Exception("No moves after evaluation!");
 
             // Make sure at least one move is reported
-            OnBestMoveFound(bestMoveParams, bestMove);
+            OnBestMoveFound(board, bestMoveParams, bestMove);
 
             return bestMove.Move;
         }
@@ -157,7 +157,7 @@ namespace Mzinga.Core.AI
             if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry is not null && tEntry.BestMove.HasValue)
             {
                 bestMove = new EvaluatedMove(tEntry.BestMove.Value, tEntry.Value, tEntry.Depth);
-                OnBestMoveFound(bestMoveParams, bestMove);
+                OnBestMoveFound(board, bestMoveParams, bestMove);
             }
 
             if (bestMove is not null && double.IsPositiveInfinity(bestMove.ScoreAfterMove))
@@ -193,7 +193,7 @@ namespace Mzinga.Core.AI
                 // Fire BestMoveFound for current depth
                 if (movesToEvaluate.BestMove is not null)
                 {
-                    OnBestMoveFound(bestMoveParams, movesToEvaluate.BestMove);
+                    OnBestMoveFound(board, bestMoveParams, movesToEvaluate.BestMove);
 
                     if (double.IsInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
                     {
@@ -223,7 +223,7 @@ namespace Mzinga.Core.AI
             return movesToEvaluate;
         }
 
-        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, OrderType orderType, CancellationToken token)
+        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IReadOnlyList<EvaluatedMove> movesToEvaluate, OrderType orderType, CancellationToken token)
         {
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
@@ -238,7 +238,7 @@ namespace Mzinga.Core.AI
 
             bool firstMove = true;
 
-            foreach (EvaluatedMove moveToEvaluate in movesToEvaluate)
+            foreach (EvaluatedMove moveToEvaluate in movesToEvaluate.GetEnumerableByOrderType(orderType))
             {
                 bool updateAlpha = false;
 
@@ -262,7 +262,7 @@ namespace Mzinga.Core.AI
                 else
                 {
                     // Null window search
-                    value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -alpha - double.Epsilon, -alpha, -color, OrderType.Default, token);
+                    value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -alpha - double.Epsilon, -alpha, -color, orderType, token);
                     if (value.HasValue && value > alpha && value < beta)
                     {
                         // Research with full window
@@ -323,11 +323,14 @@ namespace Mzinga.Core.AI
             return evaluatedMoves;
         }
 
-        private void OnBestMoveFound(BestMoveParams bestMoveParams, EvaluatedMove evaluatedMove)
+        private void OnBestMoveFound(Board board, BestMoveParams bestMoveParams, EvaluatedMove evaluatedMove)
         {
             if (evaluatedMove != bestMoveParams.BestMove)
             {
-                BestMoveFound?.Invoke(this, new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove));
+                if (BestMoveFound is not null)
+                {
+                    BestMoveFound.Invoke(this, new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove, GetPrincipalVariationFromTranspositionTable(board)));
+                }
                 bestMoveParams.BestMove = evaluatedMove;
             }
         }
@@ -336,7 +339,7 @@ namespace Mzinga.Core.AI
 
         #region Threading support
 
-        private Task[]? StartHelperThreads(Board board, int depth, IEnumerable<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
+        private Task[]? StartHelperThreads(Board board, int depth, IReadOnlyList<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
         {
             Task[]? helperThreads = null;
 
@@ -348,9 +351,12 @@ namespace Mzinga.Core.AI
                 for (int i = 0; i < helperThreads.Length; i++)
                 {
                     Board clone = board.Clone();
+                    int helperDepth = depth + (i / 2);
+                    OrderType orderType = (OrderType)(2 - (i % 2));
                     helperThreads[i] = Task.Run(async () =>
                     {
-                        await EvaluateMovesToDepthAsync(clone, depth + i % 2, movesToEvaluate, (OrderType)(2 - (i % 2)), tokenSource.Token);
+                        await EvaluateMovesToDepthAsync(clone, helperDepth, movesToEvaluate, orderType, tokenSource.Token);
+                        //await PrincipalVariationSearchAsync(clone, helperDepth, double.NegativeInfinity, double.PositiveInfinity, color, orderType, tokenSource.Token);
                     });
                 }
             }
@@ -487,6 +493,29 @@ namespace Mzinga.Core.AI
             }
 
             return bestValue;
+        }
+
+        public IReadOnlyList<Move> GetPrincipalVariationFromTranspositionTable(Board board)
+        {
+            List<Move> moves = new List<Move>();
+
+            Board clone = board.Clone();
+
+            while (clone.GameInProgress)
+            {
+                ulong key = clone.ZobristKey;
+
+                if (!TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) || tEntry is null || !tEntry.BestMove.HasValue)
+                {
+                    break;
+                }
+
+                var move = tEntry.BestMove.Value;
+                moves.Add(move);
+                clone.TrustedPlay(move);
+            }
+
+            return moves;
         }
 
         #endregion
@@ -898,12 +927,14 @@ namespace Mzinga.Core.AI
         public readonly Move Move;
         public readonly int Depth;
         public readonly double Score;
+        public readonly IReadOnlyList<Move> PrincipalVariation;
 
-        public BestMoveFoundEventArgs(Move move, int depth, double score)
+        public BestMoveFoundEventArgs(Move move, int depth, double score, IReadOnlyList<Move> principalVariation)
         {
             Move = move;
             Depth = depth;
             Score = score;
+            PrincipalVariation = principalVariation;
         }
     }
 }
