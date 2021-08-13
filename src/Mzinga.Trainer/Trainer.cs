@@ -300,9 +300,11 @@ namespace Mzinga.Trainer
                 TranspositionTableSizeMB = TrainerSettings.TransTableSize,
             });
 
+            Queue<PuzzleCandidate> puzzleCandidates = TrainerSettings.FindPuzzleCandidates ? new Queue<PuzzleCandidate>() : null;
+
             if (TrainerSettings.FindPuzzleCandidates)
             {
-                whiteAI.BestMoveFound += GetPuzzleCandidateHandler(board);
+                whiteAI.BestMoveFound += GetPuzzleCandidateHandler(board, puzzleCandidates);
             }
 
             GameAI blackAI = new GameAI(new GameAIConfig()
@@ -314,7 +316,7 @@ namespace Mzinga.Trainer
 
             if (TrainerSettings.FindPuzzleCandidates)
             {
-                blackAI.BestMoveFound += GetPuzzleCandidateHandler(board);
+                blackAI.BestMoveFound += GetPuzzleCandidateHandler(board, puzzleCandidates);
             }
 
             TimeSpan timeLimit = TrainerSettings.BattleTimeLimit;
@@ -424,6 +426,8 @@ namespace Mzinga.Trainer
 
             // Output Results
             Log("Battle end {0} {1} {2} vs. {3}.", Enums.GetGameTypeString(board.GameType), boardState, ToString(whiteProfile, board.GameType), ToString(blackProfile, board.GameType));
+
+            ProcessPuzzleCandidates(puzzleCandidates);
 
             return boardState;
         }
@@ -974,10 +978,12 @@ namespace Mzinga.Trainer
                 Board board = new Board(TrainerSettings.GameType);
 
                 EventHandler<BestMoveFoundEventArgs> puzzleCandidateHandler = null;
+                Queue<PuzzleCandidate> puzzleCandidates = null;
 
                 if (TrainerSettings.FindPuzzleCandidates)
                 {
-                    puzzleCandidateHandler = GetPuzzleCandidateHandler(board);
+                    puzzleCandidates = new Queue<PuzzleCandidate>();
+                    puzzleCandidateHandler = GetPuzzleCandidateHandler(board, puzzleCandidates);
                     gameAI.BestMoveFound += puzzleCandidateHandler;
                 }
 
@@ -1006,13 +1012,13 @@ namespace Mzinga.Trainer
                 {
                     Log("AutoTrain battle {0} {1} interrupted with exception {2}.", Enums.GetGameTypeString(board.GameType), battleCount + 1, ex.Message);
                 }
-                finally
+
+                if (puzzleCandidateHandler is not null)
                 {
-                    if (puzzleCandidateHandler is not null)
-                    {
-                        gameAI.BestMoveFound -= puzzleCandidateHandler;
-                    }
+                    gameAI.BestMoveFound -= puzzleCandidateHandler;
                 }
+
+                ProcessPuzzleCandidates(puzzleCandidates);
 
                 battleCount++;
             }
@@ -1265,20 +1271,29 @@ namespace Mzinga.Trainer
             }
         }
 
-        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(Board board)
+        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(Board board, Queue<PuzzleCandidate> puzzleCandidates)
         {
             return (sender, args) =>
             {
-                if (IsPuzzleCandidate(args) && board.TryGetMoveString(args.Move, out string moveStr))
+                if (PuzzleCandidate.IsPuzzleCandidate(args.Depth, args.Score))
                 {
-                    Log("Puzzle Candidate: {0} {1} {2}", board.GetGameString(), args.Depth, moveStr);
+                    puzzleCandidates.Enqueue(new PuzzleCandidate(board.Clone(), args.Move, args.Depth));
                 }
             };
         }
 
-        private static bool IsPuzzleCandidate(BestMoveFoundEventArgs args)
+        private void ProcessPuzzleCandidates(Queue<PuzzleCandidate> puzzleCandidates)
         {
-            return args.Depth % 2 == 1 && double.IsPositiveInfinity(args.Score);
+            if (puzzleCandidates is not null)
+            {
+                while (puzzleCandidates.TryDequeue(out PuzzleCandidate result))
+                {
+                    if (result.IsPuzzle())
+                    {
+                        Log("Puzzle Candidate: {0} {1} {2}", result.Board.GetGameString(), result.MaxDepth, result.Board.GetMoveString(result.BestMove));
+                    }
+                }
+            }
         }
 
         private static string ToString(TimeSpan ts)

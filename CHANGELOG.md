@@ -8,6 +8,7 @@
 * Perft: Improve multi-threaded performance
 * Perft: Reduced memory allocations
 * Test: Added Move parsing tests and fixed bugs
+* Trainer: Puzzle candidates are now validated as actual puzzles
 * Viewer: Fixed bug where highlighting last move highlights origin when playing new piece
 
 ## v0.11.1 ##
