@@ -215,7 +215,7 @@ namespace Mzinga.Viewer
             int spaceIndex = line.IndexOf(' ');
 
             string key = line.Substring(0, spaceIndex).Trim();
-            string value = line.Substring(spaceIndex).Replace("\"", "").Trim();
+            string value = line[spaceIndex..].Replace("\"", "").Trim();
             return new KeyValuePair<string, string>(key, value);
         }
 
