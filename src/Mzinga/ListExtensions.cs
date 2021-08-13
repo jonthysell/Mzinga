@@ -7,7 +7,7 @@ namespace Mzinga
 {
     static class ListExtensions
     {
-        public static IEnumerable<T> GetEnumerableByOrderType<T>(this List<T> items, OrderType orderType)
+        public static IEnumerable<T> GetEnumerableByOrderType<T>(this IReadOnlyList<T> items, OrderType orderType)
         {
             int i = orderType == OrderType.SkipOffset && items.Count > 1 ? 1 : 0;
 

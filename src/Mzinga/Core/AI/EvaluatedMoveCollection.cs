@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Mzinga.Core.AI
 {
-    class EvaluatedMoveCollection : IEnumerable<EvaluatedMove>
+    class EvaluatedMoveCollection : IReadOnlyList<EvaluatedMove>
     {
         public int Count => _evaluatedMoves.Count;
 
