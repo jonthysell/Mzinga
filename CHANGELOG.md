@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.2 ##
 
 * Core.AI: Add functionality to get Principal Variation
 * Core.AI: Improve helper thread performance
