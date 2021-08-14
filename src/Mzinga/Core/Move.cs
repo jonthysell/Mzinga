@@ -160,6 +160,10 @@ namespace Mzinga.Core
             if (string.Equals(piece1Str, PassString, StringComparison.InvariantCultureIgnoreCase))
             {
                 isPass = true;
+                startPiece = PieceName.INVALID;
+                beforeSeperator = '\0';
+                endPiece = PieceName.INVALID;
+                afterSeperator = '\0';
                 return true;
             }
 
