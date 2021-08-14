@@ -649,11 +649,11 @@ namespace Mzinga.Engine
 
             if (string.IsNullOrWhiteSpace(values))
             {
-                ConsoleOut(string.Format("{0};{1};{2};{3}", key, type, value, defaultValue));
+                ConsoleOut($"{key};{type};{value};{defaultValue}");
             }
             else
             {
-                ConsoleOut(string.Format("{0};{1};{2};{3};{4}", key, type, value, defaultValue, values));
+                ConsoleOut($"{key};{type};{value};{defaultValue};{values}");
             }
         }
 

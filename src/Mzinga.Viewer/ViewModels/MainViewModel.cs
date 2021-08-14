@@ -971,7 +971,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public static RelayCommand LaunchMzingaWebsite => AppVM.LaunchMzingaWebsite;
 
-        public static bool CheckForUpdatesEnabled => AppVM.CheckForUpdatesEnabled;
+        public static bool CheckForUpdatesEnabled => AppViewModel.CheckForUpdatesEnabled;
 
         public static RelayCommand CheckForUpdatesAsync => AppVM.CheckForUpdatesAsync;
 
@@ -1121,7 +1121,7 @@ namespace Mzinga.Viewer.ViewModels
                         FirstRun();
                     }
 
-                    if (AppVM.CheckForUpdatesEnabled && ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
+                    if (AppViewModel.CheckForUpdatesEnabled && ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
                     {
                         await UpdateUtils.UpdateCheckAsync(true, false);
                     }
@@ -1147,7 +1147,7 @@ namespace Mzinga.Viewer.ViewModels
                 // Turn off first-run so it doesn't run next time
                 ViewerConfig.FirstRun = false;
 
-                if (!AppVM.CheckForUpdatesEnabled)
+                if (!AppViewModel.CheckForUpdatesEnabled)
                 {
                     Messenger.Default.Send(new InformationMessage($"Welcome to {AppInfo.Name}!"));
                 }

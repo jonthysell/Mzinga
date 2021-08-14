@@ -66,7 +66,9 @@ namespace Mzinga.Core
         DownLeft = 4,
         UpLeft = 5,
         NumDirections = 6,
+#pragma warning disable CA1069 // Enums values should not be duplicated
         Above = 6,
+#pragma warning restore CA1069 // Enums values should not be duplicated
     };
 
     [DefaultValue(INVALID)]

@@ -1271,7 +1271,7 @@ namespace Mzinga.Trainer
             }
         }
 
-        private EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(Board board, Queue<PuzzleCandidate> puzzleCandidates)
+        private static EventHandler<BestMoveFoundEventArgs> GetPuzzleCandidateHandler(Board board, Queue<PuzzleCandidate> puzzleCandidates)
         {
             return (sender, args) =>
             {

@@ -129,7 +129,7 @@ namespace Mzinga.Viewer
             Clipboard.SetTextAsync(text);
         }
 
-        private string GetDefaultViewerConfigFileName()
+        private static string GetDefaultViewerConfigFileName()
         {
 #if WINSTORE
             // Only safe place is within the redirected AppData folder

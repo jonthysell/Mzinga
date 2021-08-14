@@ -121,7 +121,7 @@ namespace Mzinga.Viewer.ViewModels
 #if WINSTORE
         public bool CheckForUpdatesEnabled => false;
 #else
-        public bool CheckForUpdatesEnabled => true;
+        public static bool CheckForUpdatesEnabled => true;
 #endif
         public RelayCommand CheckForUpdatesAsync
         {
