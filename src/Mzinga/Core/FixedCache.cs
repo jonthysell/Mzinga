@@ -113,7 +113,7 @@ namespace Mzinga.Core
 
         public bool TryLookup(TKey key, out TEntry? entry)
         {
-            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry))
+            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry) && wrappedEntry is not null)
             {
                 entry = wrappedEntry.Entry;
 #if DEBUG

@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
+
 ## v0.11.2 ##
 
 * Core.AI: Add functionality to get Principal Variation
