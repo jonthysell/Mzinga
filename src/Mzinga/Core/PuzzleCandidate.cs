@@ -64,7 +64,7 @@ namespace Mzinga.Core
 
             var validMoves = Board.GetValidMoves();
 
-            if (depth == 1 && Board.CurrentColor != TargetColor)
+            if (Board.CurrentColor != TargetColor)
             {
                 // Every move should force a win for target player
                 foreach (var move in validMoves)
