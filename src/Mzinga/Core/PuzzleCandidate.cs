@@ -28,10 +28,10 @@ namespace Mzinga.Core
 
         public bool IsPuzzle()
         {
-            return IsTargetColorHasOneMoveThatCanForceWinPuzzle();
+            return IsOneBestMoveToForceWinPuzzle();
         }
 
-        private bool IsTargetColorHasOneMoveThatCanForceWinPuzzle()
+        public bool IsOneBestMoveToForceWinPuzzle()
         {
             var validMoves = Board.GetValidMoves();
 

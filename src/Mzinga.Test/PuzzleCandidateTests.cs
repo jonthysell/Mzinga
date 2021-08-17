@@ -12,12 +12,12 @@ namespace Mzinga.Test
     public class PuzzleCandidateTests
     {
         [TestMethod]
-        public void PuzzleCandidates_IsPuzzleTest()
+        public void PuzzleCandidates_IsOneBestMoveToForceWinPuzzleTest()
         {
-            TestUtils.LoadAndExecuteTestCases<PuzzleCandidateIsPuzzleTestCase>("PuzzleCandidate_IsPuzzleTest.csv");
+            TestUtils.LoadAndExecuteTestCases<PuzzleCandidateIsOneBestMoveToForceWinPuzzleTestCase>("PuzzleCandidate_IsOneBestMoveToForceWinPuzzleTest.csv");
         }
 
-        private class PuzzleCandidateIsPuzzleTestCase : ITestCase
+        private class PuzzleCandidateIsOneBestMoveToForceWinPuzzleTestCase : ITestCase
         {
             public Board Board;
             public int MaxDepth;
@@ -28,7 +28,7 @@ namespace Mzinga.Test
             {
                 var pc = new PuzzleCandidate(Board, BestMove, MaxDepth);
                 Assert.IsNotNull(pc);
-                Assert.IsTrue(pc.IsPuzzle());
+                Assert.IsTrue(pc.IsOneBestMoveToForceWinPuzzle());
             }
 
             public void Parse(string s)

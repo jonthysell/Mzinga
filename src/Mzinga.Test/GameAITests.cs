@@ -121,9 +121,9 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
-        public void GameAI_CanSolvePuzzlesTest()
+        public void GameAI_CanSolveOneBestMoveToForceWinPuzzleTest()
         {
-            TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("PuzzleCandidate_IsPuzzleTest.csv");
+            TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("PuzzleCandidate_IsOneBestMoveToForceWinPuzzleTest.csv");
         }
 
         [TestMethod]
