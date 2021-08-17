@@ -28,13 +28,18 @@ namespace Mzinga.Core
 
         public bool IsPuzzle()
         {
+            return IsTargetColorHasOneMoveThatCanForceWinPuzzle();
+        }
+
+        private bool IsTargetColorHasOneMoveThatCanForceWinPuzzle()
+        {
             var validMoves = Board.GetValidMoves();
 
             bool bestMoveWon = false;
             foreach (var move in validMoves)
             {
                 Board.TrustedPlay(move, Board.GetMoveString(move));
-                bool moveCanWin = TargetColorCanWin(MaxDepth - 1);
+                bool moveCanWin = TargetColorCanForceWin(MaxDepth - 1);
                 Board.TryUndoLastMove();
 
                 if (move == BestMove)
@@ -50,7 +55,7 @@ namespace Mzinga.Core
             return bestMoveWon;
         }
 
-        private bool TargetColorCanWin(int depth)
+        private bool TargetColorCanForceWin(int depth)
         {
             if (depth == 0)
             {
@@ -58,10 +63,30 @@ namespace Mzinga.Core
             }
 
             var validMoves = Board.GetValidMoves();
+
+            if (depth == 1 && Board.CurrentColor != TargetColor)
+            {
+                // Every move should force a win for target player
+                foreach (var move in validMoves)
+                {
+                    Board.TrustedPlay(move, Board.GetMoveString(move));
+                    bool moveWonForTargetPlayer = TargetColorCanForceWin(depth - 1);
+                    Board.TryUndoLastMove();
+
+                    if (!moveWonForTargetPlayer)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            // There should be at least one move that forces a win for the target player
             foreach (var move in validMoves)
             {
                 Board.TrustedPlay(move, Board.GetMoveString(move));
-                bool moveWonForTargetPlayer = TargetColorCanWin(depth - 1);
+                bool moveWonForTargetPlayer = TargetColorCanForceWin(depth - 1);
                 Board.TryUndoLastMove();
 
                 if (moveWonForTargetPlayer)
