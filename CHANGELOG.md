@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
+* Core: Fixed puzzle validation
 
 ## v0.11.2 ##
 
