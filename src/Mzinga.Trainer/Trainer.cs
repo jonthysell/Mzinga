@@ -356,7 +356,8 @@ namespace Mzinga.Trainer
             }
             catch (Exception ex)
             {
-                Log("Battle interrupted with exception: '{0}', GameString: '{1}'", ex.Message, board.GetGameString());
+                Log("Battle interrupted with exception. GameString: '{0}'", board.GetGameString());
+                LogException(ex);
             }
 
             BoardState boardState = board.GameInProgress ? BoardState.Draw : board.BoardState;
@@ -1010,7 +1011,8 @@ namespace Mzinga.Trainer
                 }
                 catch (Exception ex)
                 {
-                    Log("AutoTrain battle {0} {1} interrupted with exception {2}.", Enums.GetGameTypeString(board.GameType), battleCount + 1, ex.Message);
+                    Log("AutoTrain battle {0} {1} interrupted with exception. GameString: '{2}'", Enums.GetGameTypeString(board.GameType), battleCount + 1, board.GetGameString());
+                    LogException(ex);
                 }
 
                 if (puzzleCandidateHandler is not null)
@@ -1233,6 +1235,31 @@ namespace Mzinga.Trainer
         {
             TimeSpan elapsedTime = DateTime.Now - StartTime;
             Console.WriteLine(string.Format("{0} > {1}", ToString(elapsedTime), string.Format(format, args)));
+        }
+
+        private void LogException(Exception ex)
+        {
+            ConsoleColor oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            Console.WriteLine();
+            Console.Error.WriteLine("Exception: {0}", ex.Message);
+            Console.Error.WriteLine(ex.StackTrace);
+
+            Console.ForegroundColor = oldColor;
+
+            if (ex.InnerException is not null)
+            {
+                LogException(ex.InnerException);
+            }
+
+            if (ex is AggregateException aex)
+            {
+                foreach (var inner in aex.InnerExceptions)
+                {
+                    LogException(inner);
+                }
+            }
         }
 
         private static void GetProgress(DateTime startTime, int completed, int remaining, out double progress, out TimeSpan timeRemaining)

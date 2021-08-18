@@ -2,9 +2,10 @@
 
 ## next ##
 
-* Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
 * Core: Fixed puzzle validation
+* Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
 * Test: Added more puzzle tests
+* Trainer: Added better exception logging during battles
 
 ## v0.11.2 ##
 
