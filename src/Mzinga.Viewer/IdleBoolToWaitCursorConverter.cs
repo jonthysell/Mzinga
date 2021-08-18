@@ -13,7 +13,7 @@ namespace Mzinga.Viewer
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (null != value as bool?)
+            if ((value as bool?) is not null)
             {
                 if (!(bool)value)
                 {

@@ -120,7 +120,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public GameMetadataViewModel(GameMetadata metadata = null, Action<GameMetadata> callback = null)
         {
-            _originalMetadata =  null != metadata ? metadata.Clone() : new GameMetadata();
+            _originalMetadata = metadata is not null ? metadata.Clone() : new GameMetadata();
 
             LoadTags();
 
@@ -152,7 +152,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public void ProcessClose()
         {
-            if (null != Callback && Accepted)
+            if (Callback is not null && Accepted)
             {
                 GameMetadata metadata = new GameMetadata();
 

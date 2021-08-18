@@ -25,7 +25,7 @@ namespace Mzinga.Viewer
             }
             private set
             {
-                if (null == CurrentGameSettings)
+                if (CurrentGameSettings is null)
                 {
                     // Just in case
                     CurrentGameSettings = new GameSettings() { WhitePlayerType = PlayerType.Human, BlackPlayerType = PlayerType.Human };
@@ -81,7 +81,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return (null != Board && Board.GameInProgress);
+                return (Board is not null && Board.GameInProgress);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return (null != Board && Board.GameIsOver);
+                return (Board is not null && Board.GameIsOver);
             }
         }
 
@@ -97,7 +97,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return (null != Board &&
+                return (Board is not null &&
                         ((Board.CurrentColor == PlayerColor.White && CurrentGameSettings.WhitePlayerType == PlayerType.Human) ||
                          (Board.CurrentColor == PlayerColor.Black && CurrentGameSettings.BlackPlayerType == PlayerType.Human)));
             }
@@ -167,7 +167,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return GameInProgress && CurrentTurnIsHuman && null != ValidMoves && ValidMoves.Contains(Move.PassMove) && CurrentGameSettings.GameMode == GameMode.Play;
+                return GameInProgress && CurrentTurnIsHuman && ValidMoves is not null && ValidMoves.Contains(Move.PassMove) && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -175,7 +175,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return null != Board && CanUndoMoveCount > 0 && CurrentGameSettings.GameMode == GameMode.Play;
+                return Board is not null && CanUndoMoveCount > 0 && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -185,9 +185,9 @@ namespace Mzinga.Viewer
             {
                 int moves = 0;
 
-                int historyCount = null != Board ? Board.BoardHistory.Count : 0;
+                int historyCount = Board is not null ? Board.BoardHistory.Count : 0;
 
-                if (null != Board && historyCount > 0)
+                if (Board is not null && historyCount > 0)
                 {
                     if (CurrentGameSettings.WhitePlayerType == PlayerType.Human && CurrentGameSettings.BlackPlayerType == PlayerType.Human)
                     {
@@ -224,7 +224,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count > 0;
+                return CurrentGameSettings is not null && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count > 0;
             }
         }
 
@@ -232,7 +232,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return null != CurrentGameSettings && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count < ReviewBoard.BoardHistory.Count;
+                return CurrentGameSettings is not null && CurrentGameSettings.GameMode == GameMode.Review && Board.BoardHistory.Count < ReviewBoard.BoardHistory.Count;
             }
         }
 
@@ -240,7 +240,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return CurrentTurnIsHuman && GameInProgress && null != ValidMoves && ValidMoves.Count > 0;
+                return CurrentTurnIsHuman && GameInProgress && ValidMoves is not null && ValidMoves.Count > 0;
             }
         }
 
@@ -344,7 +344,7 @@ namespace Mzinga.Viewer
 
         public void LoadGame(GameRecording gameRecording)
         {
-            if (null == gameRecording)
+            if (gameRecording is null)
             {
                 throw new ArgumentNullException(nameof(gameRecording));
             }
@@ -366,7 +366,7 @@ namespace Mzinga.Viewer
                 throw new Exception("Please switch the current game to play mode first.");
             }
 
-            if (null == TargetMove)
+            if (TargetMove is null)
             {
                 throw new Exception("Please select a valid piece and destination first.");
             }
@@ -524,7 +524,7 @@ namespace Mzinga.Viewer
 
         public void OptionsSet(IDictionary<string, string> options)
         {
-            if (null == options)
+            if (options is null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
@@ -597,7 +597,7 @@ namespace Mzinga.Viewer
 
             _inputToProcess.Enqueue(command);
 
-            if (null != callback)
+            if (callback is not null)
             {
                 _commandCallbacks.Enqueue(callback);
             }
@@ -705,7 +705,7 @@ namespace Mzinga.Viewer
             string firstLine = "";
             string lastLine = "";
 
-            if (null != outputLines && outputLines.Length > 0)
+            if (outputLines is not null && outputLines.Length > 0)
             {
                 firstLine = outputLines[0];
                 lastLine = outputLines[^1];
@@ -783,14 +783,14 @@ namespace Mzinga.Viewer
         {
             Position position = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
-            return (null != Board) ? Board.GetPieceOnTopAt(position) : PieceName.INVALID;
+            return (Board is not null) ? Board.GetPieceOnTopAt(position) : PieceName.INVALID;
         }
 
         public Position GetTargetPositionAt(double cursorX, double cursorY, double hexRadius, HexOrientation hexOrientation)
         {
             Position bottomPosition = PositionUtils.FromCursor(cursorX, cursorY, hexRadius, hexOrientation);
 
-            PieceName topPiece = (null != Board) ? Board.GetPieceOnTopAt(bottomPosition) : PieceName.INVALID;
+            PieceName topPiece = (Board is not null) ? Board.GetPieceOnTopAt(bottomPosition) : PieceName.INVALID;
 
             if (topPiece == PieceName.INVALID)
             {
@@ -806,7 +806,7 @@ namespace Mzinga.Viewer
 
         public bool CanPlayMove(Move? move)
         {
-            return (GameInProgress && CurrentTurnIsHuman && move.HasValue && null != ValidMoves && ValidMoves.Contains(move.Value));
+            return (GameInProgress && CurrentTurnIsHuman && move.HasValue && ValidMoves is not null && ValidMoves.Contains(move.Value));
         }
 
         private void OnIsIdleUpdate()
@@ -931,7 +931,7 @@ namespace Mzinga.Viewer
         {
             try
             {
-                if (null != _timedCommandCTS && null != _timedCommandTask)
+                if (_timedCommandCTS is not null && _timedCommandTask is not null)
                 {
                     _timedCommandCTS.Cancel();
                     _timedCommandTask.Wait(_timedCommandCTS.Token);

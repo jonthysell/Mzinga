@@ -77,7 +77,7 @@ namespace Mzinga.Viewer
 
         public void LoadConfig(Stream inputStream)
         {
-            if (null == inputStream)
+            if (inputStream is null)
             {
                 throw new ArgumentNullException(nameof(inputStream));
             }
@@ -174,7 +174,7 @@ namespace Mzinga.Viewer
 
         public void SaveConfig(Stream outputStream)
         {
-            if (null == outputStream)
+            if (outputStream is null)
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
@@ -258,7 +258,7 @@ namespace Mzinga.Viewer
 
         public void CopyFrom(ViewerConfig config)
         {
-            if (null == config)
+            if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));
             }

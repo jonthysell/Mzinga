@@ -131,38 +131,6 @@ namespace Mzinga.Test
             }
         }
 
-        [TestMethod]
-        public void Position_NullEqualityTest()
-        {
-            Position? p = null;
-
-            Assert.AreEqual(p, null);
-            Assert.AreEqual(null, p);
-
-            Assert.IsTrue(p == null);
-            Assert.IsTrue(null == p);
-
-            Assert.IsFalse(p != null);
-            Assert.IsFalse(null != p);
-        }
-
-        [TestMethod]
-        public void Position_NullInequalityTest()
-        {
-            Position? p = Position.OriginPosition;
-
-            Assert.AreNotEqual(p, null);
-            Assert.AreNotEqual(null, p);
-
-            Assert.IsFalse(p.Equals(null));
-
-            Assert.IsFalse(p == null);
-            Assert.IsFalse(null == p);
-
-            Assert.IsTrue(p != null);
-            Assert.IsTrue(null != p);
-        }
-
         private static Dictionary<Direction, Position> GetOriginNeighbors()
         {
             Dictionary<Direction, Position> originNeighbors = new Dictionary<Direction, Position>

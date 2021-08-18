@@ -169,7 +169,7 @@ namespace Mzinga.Trainer
 
         public void WriteXml(Stream outputStream)
         {
-            if (null == outputStream)
+            if (outputStream is null)
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
@@ -247,7 +247,7 @@ namespace Mzinga.Trainer
 
         public static Profile ReadXml(Stream inputStream)
         {
-            if (null == inputStream)
+            if (inputStream is null)
             {
                 throw new ArgumentNullException(nameof(inputStream));
             }
@@ -337,12 +337,12 @@ namespace Mzinga.Trainer
 
         public static Profile Mate(Profile parentA, Profile parentB, double minMix, double maxMix)
         {
-            if (null == parentA)
+            if (parentA is null)
             {
                 throw new ArgumentNullException(nameof(parentA));
             }
 
-            if (null == parentB)
+            if (parentB is null)
             {
                 throw new ArgumentNullException(nameof(parentB));
             }

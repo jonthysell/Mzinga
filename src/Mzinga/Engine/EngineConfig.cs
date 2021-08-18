@@ -52,11 +52,6 @@ namespace Mzinga.Engine
 
         public void LoadConfig(Stream inputStream)
         {
-            if (null == inputStream)
-            {
-                throw new ArgumentNullException(nameof(inputStream));
-            }
-
             using XmlReader reader = XmlReader.Create(inputStream);
             while (reader.Read())
             {
@@ -118,11 +113,6 @@ namespace Mzinga.Engine
 
         public void SaveConfig(Stream outputStream, string rootName, ConfigSaveType configSaveType)
         {
-            if (null == outputStream)
-            {
-                throw new ArgumentNullException(nameof(outputStream));
-            }
-
             if (string.IsNullOrWhiteSpace(rootName))
             {
                 throw new ArgumentNullException(nameof(rootName));
@@ -146,11 +136,6 @@ namespace Mzinga.Engine
 
         public void SaveGameAIConfig(XmlWriter writer, string rootName, ConfigSaveType configSaveType)
         {
-            if (null == writer)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
-
             if (string.IsNullOrWhiteSpace(rootName))
             {
                 throw new ArgumentNullException(nameof(rootName));

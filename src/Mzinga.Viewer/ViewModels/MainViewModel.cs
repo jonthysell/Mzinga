@@ -131,7 +131,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                return null == AppVM.EngineWrapper.CurrentGameSettings || AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
+                return AppVM.EngineWrapper.CurrentGameSettings is null || AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -139,7 +139,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                return null != AppVM.EngineWrapper.CurrentGameSettings && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
+                return AppVM.EngineWrapper.CurrentGameSettings is not null && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Review;
             }
         }
 
@@ -195,7 +195,7 @@ namespace Mzinga.Viewer.ViewModels
                     }
                 }, () =>
                 {
-                    return IsIdle && (null != BoardHistory) && BoardHistory.CurrentMoveIndex >= 0;
+                    return IsIdle && (BoardHistory is not null) && BoardHistory.CurrentMoveIndex >= 0;
                 });
             }
         }
@@ -211,7 +211,7 @@ namespace Mzinga.Viewer.ViewModels
             {
                 string state = "A game has not been started.";
 
-                if (null != Board)
+                if (Board is not null)
                 {
                     switch (Board.BoardState)
                     {
@@ -239,7 +239,7 @@ namespace Mzinga.Viewer.ViewModels
             get
             {
                 string moves = "";
-                if (null != AppVM.EngineWrapper.ValidMoves)
+                if (AppVM.EngineWrapper.ValidMoves is not null)
                 {
                     moves = AppVM.EngineWrapper.ValidMoves.Count.ToString();
                 }
@@ -253,7 +253,7 @@ namespace Mzinga.Viewer.ViewModels
             get
             {
                 string move = "";
-                if (null != AppVM.EngineWrapper.TargetMove)
+                if (AppVM.EngineWrapper.TargetMove is not null)
                 {
                     move = Board.GetMoveString(AppVM.EngineWrapper.TargetMove.Value);
                 }
@@ -381,7 +381,7 @@ namespace Mzinga.Viewer.ViewModels
                         {
                             try
                             {
-                                if (null != gameRecording)
+                                if (gameRecording is not null)
                                 {
                                     AppVM.EngineWrapper.LoadGame(gameRecording);
                                     RaisePropertyChanged(nameof(ViewModels.MainViewModel.Title));
@@ -552,7 +552,7 @@ namespace Mzinga.Viewer.ViewModels
             }
             set
             {
-                if (null != AppVM.EngineWrapper.CurrentGameSettings)
+                if (AppVM.EngineWrapper.CurrentGameSettings is not null)
                 {
                     AppVM.EngineWrapper.CurrentGameSettings?.Metadata.SetMoveCommentary(BoardHistory.CurrentMoveIndex + 1, value);
                 }
@@ -1049,7 +1049,7 @@ namespace Mzinga.Viewer.ViewModels
 
                     if (!ViewerConfig.RequireMoveConfirmation)
                     {
-                        if (PlayTarget.CanExecute(null) && null != AppVM.EngineWrapper.TargetMove)
+                        if (PlayTarget.CanExecute(null) && AppVM.EngineWrapper.TargetMove is not null)
                         {
                             // Only fast-play if a move is selected
                             PlayTarget.Execute(null);
@@ -1208,7 +1208,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             ObservableBoardHistory boardHistory = null;
 
-            if (null != Board)
+            if (Board is not null)
             {
                 if (IsPlayMode)
                 {

@@ -52,7 +52,7 @@ namespace Mzinga.Engine
         public static SigIntMonitor CreateAndStart(EventHandler sigIntReceivedEventHandler = null)
         {
             var monitor = new SigIntMonitor();
-            if (null != sigIntReceivedEventHandler)
+            if (sigIntReceivedEventHandler is not null)
             {
                 monitor.SigIntReceived += sigIntReceivedEventHandler;
             }

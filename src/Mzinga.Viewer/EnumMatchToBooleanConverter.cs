@@ -14,7 +14,7 @@ namespace Mzinga.Viewer
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (null == value || null == parameter)
+            if (value is null || parameter is null)
             {
                 return false;
             }
@@ -27,7 +27,7 @@ namespace Mzinga.Viewer
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (null == value || null == parameter)
+            if (value is null || parameter is null)
             {
                 return null;
             }

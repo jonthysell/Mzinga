@@ -109,7 +109,7 @@ namespace Mzinga.Viewer
                 throw new ArgumentNullException(nameof(key));
             }
 
-            value = null != value ? value.Replace("\"", "").Trim() : "";
+            value = value is not null ? value.Replace("\"", "").Trim() : "";
 
             switch (key)
             {
@@ -199,7 +199,7 @@ namespace Mzinga.Viewer
 
         public void CopyFrom(GameMetadata metadata)
         {
-            if (null == metadata)
+            if (metadata is null)
             {
                 throw new ArgumentNullException(nameof(metadata));
             }

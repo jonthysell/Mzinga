@@ -173,12 +173,12 @@ namespace Mzinga.Trainer
 
         static Command ParseArguments(string[] args, TrainerSettings trainerSettings)
         {
-            if (null == args || args.Length == 0)
+            if (args is null || args.Length == 0)
             {
                 throw new ArgumentNullException(nameof(args));
             }
 
-            if (null == trainerSettings)
+            if (trainerSettings is null)
             {
                 throw new ArgumentNullException(nameof(trainerSettings));
             }

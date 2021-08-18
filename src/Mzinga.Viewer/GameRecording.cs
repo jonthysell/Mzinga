@@ -28,7 +28,7 @@ namespace Mzinga.Viewer
 
             GameRecordingSource = gameRecordingSource;
 
-            if (null != metadata)
+            if (metadata is not null)
             {
                 Metadata = metadata.Clone();
             }
@@ -42,7 +42,7 @@ namespace Mzinga.Viewer
 
         public void SavePGN(Stream outputStream)
         {
-            if (null == outputStream)
+            if (outputStream is null)
             {
                 throw new ArgumentNullException(nameof(outputStream));
             }
@@ -93,7 +93,7 @@ namespace Mzinga.Viewer
 
         private static string GetPGNTag(string key, string value)
         {
-            return string.Format("[{0} \"{1}\"]", key.Trim(), null != value ? value.Trim() : "");
+            return string.Format("[{0} \"{1}\"]", key.Trim(), value is not null ? value.Trim() : "");
         }
 
         private void WritePGNMoveCommentary(StreamWriter streamWriter,  int moveNum)
@@ -107,7 +107,7 @@ namespace Mzinga.Viewer
 
         public static GameRecording LoadPGN(Stream inputStream, string fileName = null)
         {
-            if (null == inputStream)
+            if (inputStream is null)
             {
                 throw new ArgumentNullException(nameof(inputStream));
             }
@@ -127,7 +127,7 @@ namespace Mzinga.Viewer
                 {
                     line = line.Trim();
 
-                    if (null != multiLineCommentary)
+                    if (multiLineCommentary is not null)
                     {
                         // Line is part of multiline commentary
                         multiLineCommentary += Environment.NewLine + line;
@@ -157,7 +157,7 @@ namespace Mzinga.Viewer
                         // Line is a single line of commentary
                         metadata.SetMoveCommentary(moveList.Count, line);
                     }
-                    else if (line.StartsWith("{") && null == multiLineCommentary)
+                    else if (line.StartsWith("{") && multiLineCommentary is null)
                     {
                         multiLineCommentary = line;
                     }
@@ -221,7 +221,7 @@ namespace Mzinga.Viewer
 
         public static GameRecording LoadSGF(Stream inputStream, string fileName = null)
         {
-            if (null == inputStream)
+            if (inputStream is null)
             {
                 throw new ArgumentNullException(nameof(inputStream));
             }

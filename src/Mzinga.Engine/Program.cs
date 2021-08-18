@@ -21,7 +21,7 @@ namespace Mzinga.Engine
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            EngineConfig config = LoadConfig(null != args && args.Length > 0 ? args[0] : null);
+            EngineConfig config = LoadConfig(args is not null && args.Length > 0 ? args[0] : null);
 
             _engine = new Engine(ID, config, PrintLine);
             _engine.ParseCommand("info");

@@ -324,7 +324,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public void ProcessClose()
         {
-            if (null != Callback && Accepted)
+            if (Callback is not null && Accepted)
             {
                 Callback(GetNewGameSettings());
             }

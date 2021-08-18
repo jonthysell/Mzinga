@@ -739,11 +739,6 @@ namespace Mzinga.Core.AI
 
         private async ValueTask TreeStrapAsync(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads, CancellationToken token)
         {
-            if (null == board)
-            {
-                throw new ArgumentNullException(nameof(board));
-            }
-
             if (maxDepth < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(maxDepth));

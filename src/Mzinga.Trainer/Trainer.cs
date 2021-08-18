@@ -274,12 +274,12 @@ namespace Mzinga.Trainer
 
         private BoardState Battle(Profile whiteProfile, Profile blackProfile)
         {
-            if (null == whiteProfile)
+            if (whiteProfile is null)
             {
                 throw new ArgumentNullException(nameof(whiteProfile));
             }
 
-            if (null == blackProfile)
+            if (blackProfile is null)
             {
                 throw new ArgumentNullException(nameof(blackProfile));
             }
@@ -1165,7 +1165,7 @@ namespace Mzinga.Trainer
 
         private List<T> Shuffle<T>(List<T> items)
         {
-            if (null == items)
+            if (items is null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
@@ -1187,7 +1187,7 @@ namespace Mzinga.Trainer
 
         private List<Profile> Seed(List<Profile> profiles)
         {
-            if (null == profiles)
+            if (profiles is null)
             {
                 throw new ArgumentNullException(nameof(profiles));
             }
@@ -1335,7 +1335,7 @@ namespace Mzinga.Trainer
 
         private string ToString(Profile profile, GameType gameType)
         {
-            if (null == profile)
+            if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }
@@ -1345,7 +1345,7 @@ namespace Mzinga.Trainer
 
         private bool IsProvisional(Profile profile)
         {
-            if (null == profile)
+            if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }

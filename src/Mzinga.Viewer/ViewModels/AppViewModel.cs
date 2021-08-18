@@ -151,7 +151,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public static void Init(AppViewModelParameters parameters)
         {
-            if (null != Instance)
+            if (Instance is not null)
             {
                 throw new NotSupportedException();
             }
@@ -164,7 +164,7 @@ namespace Mzinga.Viewer.ViewModels
 
         private AppViewModel(AppViewModelParameters parameters)
         {
-            if (null == parameters)
+            if (parameters is null)
             {
                 throw new ArgumentNullException(nameof(parameters));
             }
@@ -191,7 +191,7 @@ namespace Mzinga.Viewer.ViewModels
                 }
             }
 
-            if (null == EngineWrapper)
+            if (EngineWrapper is null)
             {
                 // No engine started, use an internal one
                 EngineWrapper = new InternalEngineWrapper($"{ProgramTitle} v{FullVersion}", InternalEngineConfig);

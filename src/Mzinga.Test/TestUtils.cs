@@ -72,7 +72,7 @@ namespace Mzinga.Test
             using (StreamReader sr = new StreamReader(GetEmbeddedResource(fileName)))
             {
                 string line;
-                while (null != (line = sr.ReadLine()))
+                while ((line = sr.ReadLine()) is not null)
                 {
                     line = line.Trim();
                     if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))

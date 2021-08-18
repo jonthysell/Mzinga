@@ -474,7 +474,7 @@ namespace Mzinga.Core
                 return false;
             }
 
-            if (null == _cachedEnemyQueenNeighbors)
+            if (_cachedEnemyQueenNeighbors is null)
             {
                 _cachedEnemyQueenNeighbors = new PositionSet();
 

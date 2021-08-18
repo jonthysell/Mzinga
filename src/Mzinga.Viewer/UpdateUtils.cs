@@ -57,7 +57,7 @@ namespace Mzinga.Viewer
 
                 var latestRelease = await GetLatestGitHubReleaseInfoAsync("jonthysell", AppInfo.Product);
 
-                if (null == latestRelease)
+                if (latestRelease is null)
                 {
                     if (showUpToDate)
                     {

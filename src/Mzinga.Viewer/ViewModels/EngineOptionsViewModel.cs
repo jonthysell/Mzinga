@@ -107,7 +107,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public EngineOptionsViewModel(EngineOptions options = null, Action<IDictionary<string, string>> callback = null)
         {
-            _originalOptions =  null != options ? options.Clone() : new EngineOptions();
+            _originalOptions = options is not null ? options.Clone() : new EngineOptions();
 
             LoadOptions(false);
 
@@ -141,7 +141,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public void ProcessClose()
         {
-            if (null != Callback && Accepted)
+            if (Callback is not null && Accepted)
             {
                 Dictionary<string, string> changedOptions = new Dictionary<string, string>();
 

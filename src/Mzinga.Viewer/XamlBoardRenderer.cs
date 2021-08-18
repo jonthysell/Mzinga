@@ -129,7 +129,7 @@ namespace Mzinga.Viewer
             };
 
             // Bind board updates to VM
-            if (null != VM)
+            if (VM is not null)
             {
                 VM.PropertyChanged += VM_PropertyChanged;
             }
@@ -168,7 +168,7 @@ namespace Mzinga.Viewer
 
             int z = BoardCanvas.ZIndex;
 
-            if (null != board)
+            if (board is not null)
             {
                 Point minPoint = new Point(double.MaxValue, double.MaxValue);
                 Point maxPoint = new Point(double.MinValue, double.MinValue);
@@ -204,11 +204,11 @@ namespace Mzinga.Viewer
                 // Draw the pieces in white's hand
                 foreach (PieceName pieceName in board.GetWhiteHand())
                 {
-                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
+                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && targetPosition is null))
                     {
                         BugType bugType = Enums.GetBugType(pieceName);
 
-                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
@@ -227,11 +227,11 @@ namespace Mzinga.Viewer
                 // Draw the pieces in black's hand
                 foreach (PieceName pieceName in board.GetBlackHand())
                 {
-                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && null == targetPosition))
+                    if (pieceName != selectedPieceName || (pieceName == selectedPieceName && targetPosition is null))
                     {
                         BugType bugType = Enums.GetBugType(pieceName);
 
-                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                        bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
                         Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
@@ -269,7 +269,7 @@ namespace Mzinga.Viewer
                             hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
 
-                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(null != validMoves && validMoves.Any(m => m.PieceName == pieceName));
+                            bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
 
                             var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
                             hexText.ZIndex = z + 1;
@@ -339,7 +339,7 @@ namespace Mzinga.Viewer
                 if (MainViewModel.AppVM.ViewerConfig.HighlightValidMoves)
                 {
                     z++;
-                    if (selectedPieceName != PieceName.INVALID && null != validMoves)
+                    if (selectedPieceName != PieceName.INVALID && validMoves is not null)
                     {
                         foreach (Move validMove in validMoves)
                         {
@@ -450,7 +450,7 @@ namespace Mzinga.Viewer
 
         private static Dictionary<int, List<Tuple<PieceName, Position>>> GetPiecesOnBoard(Board board, out int numPieces, out int maxStack)
         {
-            if (null == board)
+            if (board is null)
             {
                 throw new ArgumentNullException(nameof(board));
             }

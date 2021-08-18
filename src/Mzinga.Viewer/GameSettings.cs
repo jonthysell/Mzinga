@@ -130,7 +130,7 @@ namespace Mzinga.Viewer
 
         public GameSettings(Board board, GameMetadata metadata = null)
         {
-            if (null == board)
+            if (board is null)
             {
                 throw new ArgumentNullException(nameof(board));
             }
