@@ -1243,8 +1243,8 @@ namespace Mzinga.Trainer
             Console.ForegroundColor = ConsoleColor.Red;
 
             Console.WriteLine();
-            Console.Error.WriteLine("Exception: {0}", ex.Message);
-            Console.Error.WriteLine(ex.StackTrace);
+            Console.WriteLine("Exception: {0}", ex.Message);
+            Console.WriteLine(ex.StackTrace);
 
             Console.ForegroundColor = oldColor;
 
