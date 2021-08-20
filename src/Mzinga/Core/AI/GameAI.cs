@@ -22,6 +22,7 @@ namespace Mzinga.Core.AI
         public readonly TranspositionTable TranspositionTable;
 
         private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
+        private const int PrincipalVariationMaxDepth = 24; // To prevent OOM if the PV is stuck in a loop
 
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
@@ -501,7 +502,7 @@ namespace Mzinga.Core.AI
 
             Board clone = board.Clone();
 
-            while (clone.GameInProgress)
+            while (clone.GameInProgress && moves.Count < PrincipalVariationMaxDepth)
             {
                 ulong key = clone.ZobristKey;
 
