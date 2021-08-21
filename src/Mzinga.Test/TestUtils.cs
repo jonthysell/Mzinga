@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -61,25 +62,27 @@ namespace Mzinga.Test
 
         public static void LoadAndExecuteTestCases<T>(string fileName) where T : ITestCase, new()
         {
-            IEnumerable<T> testCases = LoadTestCases<T>(fileName);
+            var testCases = LoadTestCases<T>(fileName);
             ExecuteTestCases<T>(testCases);
         }
 
-        public static IEnumerable<T> LoadTestCases<T>(string fileName) where T : ITestCase, new()
+        public static IReadOnlyDictionary<int, T> LoadTestCases<T>(string fileName) where T : ITestCase, new()
         {
-            List<T> testCases = new List<T>();
+            Dictionary <int, T> testCases = new Dictionary<int, T>();
 
             using (StreamReader sr = new StreamReader(GetEmbeddedResource(fileName)))
             {
                 string line;
+                int lineNum = 0;
                 while ((line = sr.ReadLine()) is not null)
                 {
+                    lineNum++;
                     line = line.Trim();
                     if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
                     {
                         T testCase = new T();
                         testCase.Parse(line);
-                        testCases.Add(testCase);
+                        testCases.Add(lineNum, testCase);
                     }
                 }
             }
@@ -100,14 +103,15 @@ namespace Mzinga.Test
             throw new FileNotFoundException();
         }
 
-        public static void ExecuteTestCases<T>(IEnumerable<T> testCases) where T : ITestCase, new()
+        public static void ExecuteTestCases<T>(IReadOnlyDictionary<int, T> testCases) where T : ITestCase, new()
         {
             List<T> failedTestCases = new List<T>();
             StringBuilder failMessages = new StringBuilder();
 
-            int testCaseIndex = 0;
-            foreach (T testCase in testCases)
+            foreach (int lineNum in testCases.Keys)
             {
+                var testCase = testCases[lineNum];
+                var stopWatch = Stopwatch.StartNew();
                 try
                 {
                     testCase.Execute();
@@ -115,13 +119,10 @@ namespace Mzinga.Test
                 catch (Exception ex)
                 {
                     failedTestCases.Add(testCase);
-                    failMessages.AppendLine(string.Format("Test case #{0} \"{1}\" failed:", testCaseIndex, testCase));
+                    failMessages.AppendLine(string.Format("Test case on line #{0} failed:", lineNum));
                     failMessages.AppendLine(ex.Message);
                 }
-                finally
-                {
-                    testCaseIndex++;
-                }
+                Trace.TraceInformation($"Test case on line #{lineNum} finished in {stopWatch.ElapsedMilliseconds}ms");
             }
 
             if (failedTestCases.Count > 0)

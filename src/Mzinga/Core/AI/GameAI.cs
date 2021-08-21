@@ -611,13 +611,13 @@ namespace Mzinga.Core.AI
 
             foreach (Move move in GetValidMoves(board))
             {
+                if (token.IsCancellationRequested)
+                {
+                    return null;
+                }
+
                 if (board.IsNoisyMove(move))
                 {
-                    if (token.IsCancellationRequested)
-                    {
-                        return null;
-                    }
-
                     board.TrustedPlay(move);
                     double? value = -1 * await QuiescenceSearchAsync(board, depth - 1, -beta, -alpha, -color, token);
                     board.TryUndoLastMove();

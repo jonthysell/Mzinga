@@ -47,5 +47,10 @@ namespace Mzinga.Core
             Move = move;
             MoveString = moveStr;
         }
+
+        public override string ToString()
+        {
+            return MoveString;
+        }
     }
 }

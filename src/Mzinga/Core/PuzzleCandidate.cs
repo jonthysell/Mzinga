@@ -57,7 +57,7 @@ namespace Mzinga.Core
 
         private bool TargetColorCanForceWin(int depth)
         {
-            if (depth == 0)
+            if (depth == 0 || Board.GameIsOver)
             {
                 return TargetColorWins();
             }
