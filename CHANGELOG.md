@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Fixed crash when trying to stack all beetles and mosquitos
 * Core: Fixed puzzle validation
 * Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
 * Core.AI: Fixed OOM crash when getting Principal Variation where the game never ends
