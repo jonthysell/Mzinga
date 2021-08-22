@@ -119,7 +119,7 @@ namespace Mzinga.Viewer.ViewModels
         private RelayCommand _launchMzingaWebsite;
 
 #if WINSTORE
-        public bool CheckForUpdatesEnabled => false;
+        public static bool CheckForUpdatesEnabled => false;
 #else
         public static bool CheckForUpdatesEnabled => true;
 #endif
