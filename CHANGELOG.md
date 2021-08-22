@@ -8,6 +8,7 @@
 * Core.AI: Fixed OOM crash when getting Principal Variation where the game never ends
 * Test: Added more puzzle tests
 * Trainer: Added better exception logging during battles
+* Viewer: Fixed Store app icons
 
 ## v0.11.2 ##
 
