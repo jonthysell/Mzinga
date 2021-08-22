@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.3 ##
 
 * Core: Fixed crash when trying to stack all beetles and mosquitos
 * Core: Fixed puzzle validation
