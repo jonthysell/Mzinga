@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.4 ##
 
 * Engine: Fixed bug where pondering starts after a game is over, causing an error
 * Viewer: Fixed bug where game over message is displayed more than once
