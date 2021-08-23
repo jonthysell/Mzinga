@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Engine: Fixed bug where pondering starts after a game is over, causing an error
+
 ## v0.11.3 ##
 
 * Core: Fixed crash when trying to stack all beetles and mosquitos

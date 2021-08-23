@@ -437,9 +437,9 @@ namespace Mzinga.Engine
                 throw new InvalidMoveException(move, $"Unable to parse move \"{moveStr}\".");
             }
 
-            _board.Play(move, moveString);
-
             StopPonder();
+
+            _board.Play(move, moveString);
 
             ConsoleOut(_board.GetGameString());
         }
@@ -755,7 +755,8 @@ namespace Mzinga.Engine
             if (Config.PonderDuringIdle != PonderDuringIdleType.Disabled && !_isPondering && _board is not null && _board.GameInProgress && _gameAI is not null)
             {
                 _ponderCTS = new CancellationTokenSource();
-                _ponderTask = Task.Run(async () => await _gameAI.GetBestMoveAsync(_board.Clone(), Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
+                Board clone = _board.Clone();
+                _ponderTask = Task.Run(async () => await _gameAI.GetBestMoveAsync(clone, Config.PonderDuringIdle == PonderDuringIdleType.MultiThreaded ? Config.MaxHelperThreads : 0, _ponderCTS.Token));
 
                 _isPondering = true;
             }
