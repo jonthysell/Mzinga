@@ -60,6 +60,8 @@ namespace Mzinga.Viewer
         {
             try
             {
+                Trace.TraceInformation($"ShowExceptionAsync: { message.ExceptionVM.Exception }");
+
                 InformationWindow window = new InformationWindow
                 {
                     VM = message.ExceptionVM,
@@ -73,16 +75,25 @@ namespace Mzinga.Viewer
             }
         }
 
+        // Code dispatched to Avalonia's UI thread sometimes runs multiple times, which causes us to display multiple game over messages
+        private static volatile InformationWindow _currentInformationWindow = null;
+
         private static async Task ShowInformationAsync(InformationMessage message)
         {
             try
             {
-                InformationWindow window = new InformationWindow
-                {
-                   VM = message.InformationVM,
-                };
+                Trace.TraceInformation($"ShowInformationAsync: { message.InformationVM.Message }");
 
-                await window.ShowDialog(MainWindow);
+                if (_currentInformationWindow is null)
+                {
+                    _currentInformationWindow = new InformationWindow
+                    {
+                        VM = message.InformationVM,
+                    };
+
+                    await _currentInformationWindow.ShowDialog(MainWindow);
+                    _currentInformationWindow = null;
+                }
             }
             catch (Exception ex)
             {
