@@ -3,6 +3,7 @@
 ## next ##
 
 * Engine: Fixed bug where pondering starts after a game is over, causing an error
+* Viewer: Update Avalonia to 0.10.7
 
 ## v0.11.3 ##
 
