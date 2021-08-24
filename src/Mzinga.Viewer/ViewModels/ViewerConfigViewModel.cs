@@ -248,6 +248,8 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
+        public static bool PlaySoundEffectsEnabled => AppInfo.IsWindows;
+
         public bool PlaySoundEffects
         {
             get

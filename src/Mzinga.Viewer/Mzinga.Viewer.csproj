@@ -29,11 +29,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Resources\*.*" />
+    <AvaloniaResource Include="Resources\icon.ico" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
     <Content Include="Resources\icon.icns">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\*.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

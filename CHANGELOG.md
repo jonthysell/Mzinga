@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Viewer: Added sound support for Windows
+
 ## v0.11.4 ##
 
 * Engine: Fixed bug where pondering starts after a game is over, causing an error
