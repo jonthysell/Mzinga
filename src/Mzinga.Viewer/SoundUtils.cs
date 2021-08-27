@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -11,22 +12,53 @@ namespace Mzinga.Viewer
     {
         public static void PlaySound(GameSound gameSound)
         {
+            string fileName = Path.Combine(AppContext.BaseDirectory, "Resources", $"{ gameSound }sfx.wav".ToLower());
             if (AppInfo.IsWindows)
             {
-                WindowsPlaySound(gameSound);
+                WindowsPlaySound(fileName);
+            }
+            else if (AppInfo.IsMacOS)
+            {
+                MacOSPlaySound(fileName);
+            }
+            else if (AppInfo.IsLinux)
+            {
+                LinuxPlaySound(fileName);
             }
         }
 
-        private static void WindowsPlaySound(GameSound gameSound)
+        private static void WindowsPlaySound(string fileName)
         {
-            var pszSound = GetSoundFile(gameSound);
-            NativeMethods.PlaySound(pszSound, IntPtr.Zero, NativeMethods.SoundFlags.SND_ASYNC | NativeMethods.SoundFlags.SND_FILENAME);
+            NativeMethods.PlaySound(fileName, IntPtr.Zero, NativeMethods.SoundFlags.SND_ASYNC | NativeMethods.SoundFlags.SND_FILENAME);
         }
 
-        private static string GetSoundFile(GameSound gameSound)
+        private static void MacOSPlaySound(string fileName)
         {
-            string fileName = $"{ gameSound }sfx.wav".ToLower();
-            return Path.Combine(Path.GetDirectoryName(AppInfo.Assembly.Location), "Resources", fileName);
+            StartBashProcess($"afplay '{ fileName }'");
+        }
+
+        private static void LinuxPlaySound(string fileName)
+        {
+            StartBashProcess($"aplay -q '{ fileName }'");
+        }
+
+        // Adapted from https://github.com/mobiletechtracker/NetCoreAudio
+        private static void StartBashProcess(string command)
+        {
+            var escapedArgs = command.Replace("\"", "\\\"");
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = $"-c \"{escapedArgs}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+            process.Start();
         }
     }
 

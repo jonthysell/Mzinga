@@ -200,9 +200,8 @@
                                        Content="General"
                                        DockPanel.Dock="Top" />
                                 <StackPanel>
-                                    <CheckBox Content="Play sound effects (Windows-only)"
-                                              IsChecked="{Binding PlaySoundEffects}"
-                                              IsEnabled="{Binding PlaySoundEffectsEnabled}" />
+                                    <CheckBox Content="Play sound effects"
+                                              IsChecked="{Binding PlaySoundEffects}" />
                                     <CheckBox Content="Check for updates on start"
                                               IsChecked="{Binding CheckUpdateOnStart}"
                                               IsVisible="{Binding AppVM.CheckForUpdatesEnabled}" />

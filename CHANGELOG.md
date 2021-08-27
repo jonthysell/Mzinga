@@ -2,7 +2,7 @@
 
 ## next ##
 
-* Viewer: Added sound support for Windows
+* Viewer: Added sound support for Windows, MacOS, and Linux
 
 ## v0.11.4 ##
 
