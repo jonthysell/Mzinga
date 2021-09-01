@@ -28,6 +28,7 @@ namespace Mzinga.Viewer
         public StackPanel BlackHandStackPanel { get; private set; }
 
         private Point? DragStartPoint = null;
+        private PieceName DragStartPieceName = PieceName.INVALID;
         private double DragStartCanvasOffsetX = 0.0;
         private double DragStartCanvasOffsetY = 0.0;
         private bool MoveAfterDragStart = false;
@@ -446,23 +447,28 @@ namespace Mzinga.Viewer
                     }
                 }
 
-                // Translate all game elements on the board
-                TranslateTransform translate = new TranslateTransform()
-                {
-                    X = CanvasOffsetX,
-                    Y = CanvasOffsetY
-                };
-
-                foreach (var child in BoardCanvas.Children)
-                {
-                    child.RenderTransform = translate;
-                }
+                TranslateBoardChildren();
 
                 VM.CanvasHexRadius = BoardPieceSize;
                 VM.CanRaiseStackedPieces = maxStack > 0;
             }
 
             LastBoard = board;
+        }
+
+        private void TranslateBoardChildren()
+        {
+            // Translate all game elements on the board
+            TranslateTransform translate = new TranslateTransform()
+            {
+                X = CanvasOffsetX,
+                Y = CanvasOffsetY
+            };
+
+            foreach (var child in BoardCanvas.Children)
+            {
+                child.RenderTransform = translate;
+            }
         }
 
         private static Point Min(Point center, double size, Point minPoint)
@@ -858,9 +864,10 @@ namespace Mzinga.Viewer
         private void BoardCanvas_PointerPressed(object sender, PointerPressedEventArgs e)
         {
             var pointerPoint = e.GetCurrentPoint(BoardCanvas);
-            if (pointerPoint.Properties.IsLeftButtonPressed && MainViewModel.AppVM.EngineWrapper.GetPieceAt(pointerPoint.Position.X - CanvasOffsetX, pointerPoint.Position.Y - CanvasOffsetY, BoardPieceSize, MainViewModel.ViewerConfig.HexOrientation) != PieceName.INVALID)
+            if (pointerPoint.Properties.IsLeftButtonPressed)
             {
                 DragStartPoint = pointerPoint.Position;
+                DragStartPieceName = MainViewModel.AppVM.EngineWrapper.GetPieceAt(pointerPoint.Position.X - CanvasOffsetX, pointerPoint.Position.Y - CanvasOffsetY, BoardPieceSize, MainViewModel.ViewerConfig.HexOrientation);
                 DragStartCanvasOffsetX = CanvasOffsetX;
                 DragStartCanvasOffsetY = CanvasOffsetY;
                 e.Handled = true;
@@ -868,6 +875,7 @@ namespace Mzinga.Viewer
             else
             {
                 DragStartPoint = null;
+                DragStartPieceName = PieceName.INVALID;
             }
             MoveAfterDragStart = false;
         }
@@ -884,9 +892,14 @@ namespace Mzinga.Viewer
 
                     if (MoveAfterDragStart || Math.Sqrt(dX * dX + dY * dY) >= MinDragDistanceToStartPan)
                     {
-                        CanvasOffsetX = DragStartCanvasOffsetX + (pointerPoint.Position.X - DragStartPoint.Value.X);
-                        CanvasOffsetY = DragStartCanvasOffsetY + (pointerPoint.Position.Y - DragStartPoint.Value.Y);
-                        TryRedraw();
+                        if (!VM.AutoCenterBoard && DragStartPieceName != PieceName.INVALID)
+                        {
+                            CanvasOffsetX = DragStartCanvasOffsetX + (pointerPoint.Position.X - DragStartPoint.Value.X);
+                            CanvasOffsetY = DragStartCanvasOffsetY + (pointerPoint.Position.Y - DragStartPoint.Value.Y);
+
+                            TranslateBoardChildren();
+                        }
+
                         MoveAfterDragStart = true;
                         e.Handled = true;
                     }
@@ -899,13 +912,14 @@ namespace Mzinga.Viewer
             if (e.InitialPressMouseButton == MouseButton.Left)
             {
                 Point point = e.GetPosition(BoardCanvas);
-                if ((DragStartPoint is null || !MoveAfterDragStart) && VM.IsIdle)
+                if (!MoveAfterDragStart && VM.IsIdle)
                 {
                     VM.CanvasClick(point.X - CanvasOffsetX, point.Y - CanvasOffsetY);
                     e.Handled = true;
                 }
             }
             DragStartPoint = null;
+            DragStartPieceName = PieceName.INVALID;
             MoveAfterDragStart = false;
         }
 
