@@ -30,6 +30,9 @@ namespace Mzinga.Viewer
         private Point? DragStartPoint = null;
         private double DragStartCanvasOffsetX = 0.0;
         private double DragStartCanvasOffsetY = 0.0;
+        private bool MoveAfterDragStart = false;
+
+        private double MinDragDistanceToStartPan => BoardPieceSize / 3.0;
 
         private readonly double PieceCanvasMargin = 3.0;
 
@@ -866,6 +869,7 @@ namespace Mzinga.Viewer
             {
                 DragStartPoint = null;
             }
+            MoveAfterDragStart = false;
         }
 
         private void BoardCanvas_PointerMoved(object sender, PointerEventArgs e)
@@ -875,10 +879,17 @@ namespace Mzinga.Viewer
                 var pointerPoint = e.GetCurrentPoint(BoardCanvas);
                 if (pointerPoint.Properties.IsLeftButtonPressed)
                 {
-                    CanvasOffsetX = DragStartCanvasOffsetX + (pointerPoint.Position.X - DragStartPoint.Value.X);
-                    CanvasOffsetY = DragStartCanvasOffsetY + (pointerPoint.Position.Y - DragStartPoint.Value.Y);
-                    TryRedraw();
-                    e.Handled = true;
+                    var dX = pointerPoint.Position.X - DragStartPoint.Value.X;
+                    var dY = pointerPoint.Position.X - DragStartPoint.Value.X;
+
+                    if (MoveAfterDragStart || Math.Sqrt(dX * dX + dY * dY) >= MinDragDistanceToStartPan)
+                    {
+                        CanvasOffsetX = DragStartCanvasOffsetX + (pointerPoint.Position.X - DragStartPoint.Value.X);
+                        CanvasOffsetY = DragStartCanvasOffsetY + (pointerPoint.Position.Y - DragStartPoint.Value.Y);
+                        TryRedraw();
+                        MoveAfterDragStart = true;
+                        e.Handled = true;
+                    }
                 }
             }
         }
@@ -888,13 +899,14 @@ namespace Mzinga.Viewer
             if (e.InitialPressMouseButton == MouseButton.Left)
             {
                 Point point = e.GetPosition(BoardCanvas);
-                if (DragStartPoint is null && VM.IsIdle)
+                if ((DragStartPoint is null || !MoveAfterDragStart) && VM.IsIdle)
                 {
                     VM.CanvasClick(point.X - CanvasOffsetX, point.Y - CanvasOffsetY);
                     e.Handled = true;
                 }
             }
             DragStartPoint = null;
+            MoveAfterDragStart = false;
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
