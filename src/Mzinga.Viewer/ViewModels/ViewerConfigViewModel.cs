@@ -66,6 +66,32 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
+        public bool AutoCenterBoard
+        {
+            get
+            {
+                return Config.AutoCenterBoard;
+            }
+            set
+            {
+                Config.AutoCenterBoard = value;
+                RaisePropertyChanged(nameof(AutoCenterBoard));
+            }
+        }
+
+        public bool AutoZoomBoard
+        {
+            get
+            {
+                return Config.AutoZoomBoard;
+            }
+            set
+            {
+                Config.AutoZoomBoard = value;
+                RaisePropertyChanged(nameof(AutoZoomBoard));
+            }
+        }
+
         public HexOrientation HexOrientation
         {
             get
@@ -366,6 +392,8 @@ namespace Mzinga.Viewer.ViewModels
                         RaisePropertyChanged(nameof(EngineType));
                         RaisePropertyChanged(nameof(EngineCommandLine));
                         RaisePropertyChanged(nameof(VisualTheme));
+                        RaisePropertyChanged(nameof(AutoCenterBoard));
+                        RaisePropertyChanged(nameof(AutoZoomBoard));
                         RaisePropertyChanged(nameof(HexOrientation));
                         RaisePropertyChanged(nameof(PieceStyle));
                         RaisePropertyChanged(nameof(PieceColors));

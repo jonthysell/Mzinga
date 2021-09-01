@@ -323,5 +323,45 @@ namespace Mzinga.Core
 
             return GameType.Base;
         }
+
+        public static int NumPieceNames(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.Base:
+                    return (int)PieceName.NumPieceNames - 6;
+                case GameType.BaseM:
+                case GameType.BaseL:
+                case GameType.BaseP:
+                    return (int)PieceName.NumPieceNames - 4;
+                case GameType.BaseML:
+                case GameType.BaseMP:
+                case GameType.BaseLP:
+                    return (int)PieceName.NumPieceNames - 2;
+                case GameType.BaseMLP:
+                default:
+                    return (int)PieceName.NumPieceNames;
+            }
+        }
+
+        public static int NumBugTypes(GameType gameType)
+        {
+            switch (gameType)
+            {
+                case GameType.Base:
+                    return (int)BugType.NumBugTypes - 3;
+                case GameType.BaseM:
+                case GameType.BaseL:
+                case GameType.BaseP:
+                    return (int)BugType.NumBugTypes - 2;
+                case GameType.BaseML:
+                case GameType.BaseMP:
+                case GameType.BaseLP:
+                    return (int)BugType.NumBugTypes - 1;
+                case GameType.BaseMLP:
+                default:
+                    return (int)BugType.NumBugTypes;
+            }
+        }
     }
 }

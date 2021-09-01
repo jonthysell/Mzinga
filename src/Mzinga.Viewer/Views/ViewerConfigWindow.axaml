@@ -176,6 +176,17 @@
                             </DockPanel>
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
+                                       Content="Centering and Zoom"
+                                       DockPanel.Dock="Top" />
+                                <StackPanel>
+                                    <CheckBox Content="Automatically center the board"
+                                              IsChecked="{Binding AutoCenterBoard}" />
+                                    <CheckBox Content="Automatically zoom the board"
+                                              IsChecked="{Binding AutoZoomBoard}" />
+                                </StackPanel>
+                            </DockPanel>
+                            <DockPanel Classes="GroupBox">
+                                <Label Classes="Header"
                                        Content="Sidebars"
                                        DockPanel.Dock="Top" />
                                 <StackPanel>

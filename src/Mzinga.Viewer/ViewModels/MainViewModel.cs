@@ -155,6 +155,14 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
+        public static bool BoardIsLoaded
+        {
+            get
+            {
+                return Board is not null;
+            }
+        }
+
         public static Board ReviewBoard
         {
             get
@@ -252,17 +260,15 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                string move = "";
-                if (AppVM.EngineWrapper.TargetMove is not null)
+                if (AppVM.EngineWrapper.TargetMove is not null && Board.TryGetMoveString(AppVM.EngineWrapper.TargetMove.Value, out string move))
                 {
-                    move = Board.GetMoveString(AppVM.EngineWrapper.TargetMove.Value);
+                    return move;
                 }
                 else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
                 {
-                    move = AppVM.EngineWrapper.TargetPiece.ToString();
+                    return AppVM.EngineWrapper.TargetPiece.ToString();
                 }
-
-                return move;
+                return "";
             }
         }
 
@@ -348,7 +354,7 @@ namespace Mzinga.Viewer.ViewModels
                             try
                             {
                                 AppVM.EngineWrapper.NewGame(settings);
-                                RaisePropertyChanged(nameof(ViewModels.MainViewModel.Title));
+                                RaisePropertyChanged(nameof(Title));
                             }
                             catch (Exception ex)
                             {
@@ -384,7 +390,7 @@ namespace Mzinga.Viewer.ViewModels
                                 if (gameRecording is not null)
                                 {
                                     AppVM.EngineWrapper.LoadGame(gameRecording);
-                                    RaisePropertyChanged(nameof(ViewModels.MainViewModel.Title));
+                                    RaisePropertyChanged(nameof(Title));
                                 }
                             }
                             catch (Exception ex)
@@ -490,7 +496,7 @@ namespace Mzinga.Viewer.ViewModels
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && ViewerConfig.RequireMoveConfirmation && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayTargetMove) && IsPlayMode;
                 });
             }
         }
@@ -512,7 +518,7 @@ namespace Mzinga.Viewer.ViewModels
                     }
                 }, () =>
                 {
-                    return IsIdle && AppVM.EngineWrapper.GameInProgress && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
+                    return IsIdle && AppVM.EngineWrapper.GameInProgress && ViewerConfig.RequireMoveConfirmation && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPass) && IsPlayMode;
                 });
             }
         }
@@ -882,6 +888,32 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
+        public bool AutoCenterBoard
+        {
+            get
+            {
+                return ViewerConfig.AutoCenterBoard;
+            }
+            set
+            {
+                ViewerConfig.AutoCenterBoard = value;
+                RaisePropertyChanged(nameof(AutoCenterBoard));
+            }
+        }
+
+        public bool AutoZoomBoard
+        {
+            get
+            {
+                return ViewerConfig.AutoZoomBoard;
+            }
+            set
+            {
+                ViewerConfig.AutoZoomBoard = value;
+                RaisePropertyChanged(nameof(AutoZoomBoard));
+            }
+        }
+
         public RelayCommand ToggleShowBoardHistory
         {
             get
@@ -919,6 +951,44 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
         private RelayCommand _toggleShowMoveCommentary = null;
+
+        public RelayCommand ToggleAutoCenterBoard
+        {
+            get
+            {
+                return _toggleAutoCenterBoard ??= new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AutoCenterBoard = !AutoCenterBoard;
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+        private RelayCommand _toggleAutoCenterBoard = null;
+
+        public RelayCommand ToggleAutoZoomBoard
+        {
+            get
+            {
+                return _toggleAutoZoomBoard ??= new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AutoZoomBoard = !AutoZoomBoard;
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                });
+            }
+        }
+        private RelayCommand _toggleAutoZoomBoard = null;
 
         public RelayCommand ShowViewerConfig
         {
@@ -984,6 +1054,7 @@ namespace Mzinga.Viewer.ViewModels
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged(nameof(Board));
+                    RaisePropertyChanged(nameof(BoardIsLoaded));
                     SaveGame.RaiseCanExecuteChanged();
 
                     PlayTarget.RaiseCanExecuteChanged();
@@ -1049,15 +1120,15 @@ namespace Mzinga.Viewer.ViewModels
 
                     if (!ViewerConfig.RequireMoveConfirmation)
                     {
-                        if (PlayTarget.CanExecute(null) && AppVM.EngineWrapper.TargetMove is not null)
+                        if (AppVM.EngineWrapper.TargetMove is not null)
                         {
                             // Only fast-play if a move is selected
-                            PlayTarget.Execute(null);
+                            AppVM.EngineWrapper.PlayTargetMove();
                         }
-                        else if (Pass.CanExecute(null) && AppVM.EngineWrapper.CanPass)
+                        else if (AppVM.EngineWrapper.CanPass)
                         {
                             // Only fast-pass if pass is available
-                            Pass.Execute(null);
+                            AppVM.EngineWrapper.Pass();
                         }
                     }
                 });
@@ -1199,6 +1270,8 @@ namespace Mzinga.Viewer.ViewModels
                     {
                         RaisePropertyChanged(nameof(ShowBoardHistory));
                         RaisePropertyChanged(nameof(ShowMoveCommentary));
+                        RaisePropertyChanged(nameof(AutoCenterBoard));
+                        RaisePropertyChanged(nameof(AutoZoomBoard));
                     });
                     break;
             }
@@ -1288,7 +1361,7 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
-        internal static void PieceClick(PieceName clickedPiece)
+        internal static bool TryPieceClick(PieceName clickedPiece)
         {
             if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
@@ -1298,15 +1371,20 @@ namespace Mzinga.Viewer.ViewModels
                 }
 
                 AppVM.EngineWrapper.TargetPiece = clickedPiece;
+                return true;
             }
+            return false;
         }
 
-        internal static void CancelClick()
+        internal static bool TryCancelClick()
         {
             if (AppVM.EngineWrapper.CurrentTurnIsHuman)
             {
                 AppVM.EngineWrapper.TargetPiece = PieceName.INVALID;
+                return true;
             }
+
+            return false;
         }
     }
 }

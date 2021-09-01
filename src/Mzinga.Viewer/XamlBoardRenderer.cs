@@ -27,10 +27,20 @@ namespace Mzinga.Viewer
         public StackPanel WhiteHandStackPanel { get; private set; }
         public StackPanel BlackHandStackPanel { get; private set; }
 
+        private Point? DragStartPoint = null;
+        private double DragStartCanvasOffsetX = 0.0;
+        private double DragStartCanvasOffsetY = 0.0;
+
         private readonly double PieceCanvasMargin = 3.0;
 
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
+
+        private double CurrentZoomFactor = 1.0;
+
+        private double BoardPieceSize => GetDefaultPieceSize() * CurrentZoomFactor;
+
+        private double HandPieceSize => GetDefaultPieceSize();
 
         public bool RaiseStackedPieces
         {
@@ -136,9 +146,42 @@ namespace Mzinga.Viewer
 
             // Attach events
             BoardCanvas.PropertyChanged += BoardCanvas_SizeChanged;
-            BoardCanvas.PointerReleased += BoardCanvas_Click;
+            BoardCanvas.PointerPressed += BoardCanvas_PointerPressed;
+            BoardCanvas.PointerMoved += BoardCanvas_PointerMoved;
+            BoardCanvas.PointerReleased += BoardCanvas_PointerReleased;
+            BoardCanvas.PointerWheelChanged += BoardCanvas_PointerWheelChanged;
             WhiteHandStackPanel.PointerReleased += CancelClick;
             BlackHandStackPanel.PointerReleased += CancelClick;
+        }
+
+        public void TryRedraw(bool forceAutoCenter = false, bool forceAutoZoom = false)
+        {
+            if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(20))
+            {
+                DrawBoard(LastBoard, forceAutoCenter, forceAutoZoom);
+                LastRedrawOnSizeChange = DateTime.Now;
+            }
+        }
+
+        public void SetZoom(double value)
+        {
+            CurrentZoomFactor = Math.Max(0.25, value);
+        }
+
+        public void IncreaseZoom()
+        {
+            SetZoom(CurrentZoomFactor + 0.25);
+        }
+
+        public void DecreaseZoom()
+        {
+            SetZoom(CurrentZoomFactor - 0.25);
+        }
+
+        private double GetDefaultPieceSize()
+        {
+            int numPiecesToDisplay = MainViewModel.ViewerConfig.StackPiecesInHand ? 2 + Enums.NumBugTypes(LastBoard?.GameType ?? GameType.Base) : 2 + (Enums.NumPieceNames(LastBoard?.GameType ?? GameType.Base) / 2);
+            return 0.5 * ((BoardCanvas.Bounds.Height / numPiecesToDisplay) - (2 * PieceCanvasMargin));
         }
 
         private void VM_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -149,6 +192,8 @@ namespace Mzinga.Viewer
                 case nameof(MainViewModel.ValidMoves):
                 case nameof(MainViewModel.TargetMove):
                 case nameof(MainViewModel.ViewerConfig):
+                case nameof(MainViewModel.AutoCenterBoard):
+                case nameof(MainViewModel.AutoZoomBoard):
                     AppViewModel.Instance.DoOnUIThread(() =>
                     {
                         DrawBoard(MainViewModel.Board);
@@ -157,16 +202,16 @@ namespace Mzinga.Viewer
             }
         }
 
-        private void DrawBoard(Board board)
+        private void DrawBoard(Board board, bool forceAutoCenter = false, bool forceAutoZoom = false)
         {
             BoardCanvas.Children.Clear();
             WhiteHandStackPanel.Children.Clear();
             BlackHandStackPanel.Children.Clear();
 
-            CanvasOffsetX = 0.0;
-            CanvasOffsetX = 0.0;
-
             int z = BoardCanvas.ZIndex;
+
+            bool autoCenter = forceAutoCenter ||  MainViewModel.ViewerConfig.AutoCenterBoard || LastBoard is null || LastBoard.BoardState == BoardState.NotStarted;
+            bool autoZoom = forceAutoZoom || MainViewModel.ViewerConfig.AutoZoomBoard || LastBoard is null || LastBoard.BoardState == BoardState.NotStarted;
 
             if (board is not null)
             {
@@ -184,10 +229,14 @@ namespace Mzinga.Viewer
                 int verticalPiecesMin = 3 + Math.Max(Math.Max(whiteHandCount, blackHandCount), board.GetWidth());
                 int horizontalPiecesMin = 2 + Math.Min(whiteHandCount, 1) + Math.Min(blackHandCount, 1) + board.GetHeight();
 
-                double size = 0.5 * Math.Min(boardCanvasHeight / verticalPiecesMin, boardCanvasWidth / horizontalPiecesMin);
+                if (autoZoom)
+                {
+                    double desiredSize = 0.5 * Math.Min(boardCanvasHeight / verticalPiecesMin, boardCanvasWidth / horizontalPiecesMin);
+                    SetZoom(desiredSize / GetDefaultPieceSize());
+                }
 
-                WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
-                BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (size + PieceCanvasMargin) * 2 : 0;
+                WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (HandPieceSize + PieceCanvasMargin) * 2 : 0;
+                BlackHandStackPanel.MinWidth = blackHandCount > 0 ? (HandPieceSize + PieceCanvasMargin) * 2 : 0;
 
                 Position? lastMoveStart = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Source;
                 Position? lastMoveEnd = MainViewModel.AppVM.EngineWrapper.Board?.BoardHistory.LastMove?.Destination;
@@ -209,7 +258,7 @@ namespace Mzinga.Viewer
                         BugType bugType = Enums.GetBugType(pieceName);
 
                         bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
-                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, HandPieceSize, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
                         {
@@ -232,7 +281,7 @@ namespace Mzinga.Viewer
                         BugType bugType = Enums.GetBugType(pieceName);
 
                         bool disabled = MainViewModel.ViewerConfig.DisablePiecesInHandWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
-                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, size, hexOrientation, disabled);
+                        Canvas pieceCanvas = GetPieceInHandCanvas(pieceName, HandPieceSize, hexOrientation, disabled);
 
                         if (!pieceCanvasesByBugType.ContainsKey(bugType))
                         {
@@ -261,60 +310,60 @@ namespace Mzinga.Viewer
                                 position = targetPosition.Value;
                             }
 
-                            Point center = GetPoint(position, size, hexOrientation, true);
+                            Point center = GetPoint(position, BoardPieceSize, hexOrientation, true);
 
                             HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
 
-                            Shape hex = GetHex(center, size, hexType, hexOrientation);
+                            Shape hex = GetHex(center, BoardPieceSize, hexType, hexOrientation);
                             hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
 
                             bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
 
-                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
+                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, BoardPieceSize, pieceName, disabled) : GetPieceGraphics(center, BoardPieceSize, pieceName, disabled);
                             hexText.ZIndex = z + 1;
                             BoardCanvas.Children.Add(hexText);
 
-                            minPoint = Min(center, size, minPoint);
-                            maxPoint = Max(center, size, maxPoint);
+                            minPoint = Min(center, BoardPieceSize, minPoint);
+                            maxPoint = Max(center, BoardPieceSize, maxPoint);
                         }
                         z += 2;
                     }
                 }
 
                 // Highlight last move played
-                if (MainViewModel.AppVM.ViewerConfig.HighlightLastMovePlayed)
+                if (MainViewModel.ViewerConfig.HighlightLastMovePlayed)
                 {
                     z++;
                     // Highlight the lastMove start position
                     if (lastMoveStart.HasValue && lastMoveStart.Value.Stack >= 0)
                     {
-                        Point center = GetPoint(lastMoveStart.Value, size, hexOrientation, true);
+                        Point center = GetPoint(lastMoveStart.Value, BoardPieceSize, hexOrientation, true);
 
-                        Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        Shape hex = GetHex(center, BoardPieceSize, HexType.LastMove, hexOrientation);
                         hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
-                        minPoint = Min(center, size, minPoint);
-                        maxPoint = Max(center, size, maxPoint);
+                        minPoint = Min(center, BoardPieceSize, minPoint);
+                        maxPoint = Max(center, BoardPieceSize, maxPoint);
                     }
 
                     // Highlight the lastMove end position
                     if (lastMoveEnd.HasValue)
                     {
-                        Point center = GetPoint(lastMoveEnd.Value, size, hexOrientation, true);
+                        Point center = GetPoint(lastMoveEnd.Value, BoardPieceSize, hexOrientation, true);
 
-                        Shape hex = GetHex(center, size, HexType.LastMove, hexOrientation);
+                        Shape hex = GetHex(center, BoardPieceSize, HexType.LastMove, hexOrientation);
                         hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
-                        minPoint = Min(center, size, minPoint);
-                        maxPoint = Max(center, size, maxPoint);
+                        minPoint = Min(center, BoardPieceSize, minPoint);
+                        maxPoint = Max(center, BoardPieceSize, maxPoint);
                     }
                 }
 
                 // Highlight the selected piece
-                if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
+                if (MainViewModel.ViewerConfig.HighlightTargetMove)
                 {
                     z++;
                     if (selectedPieceName != PieceName.INVALID)
@@ -323,20 +372,20 @@ namespace Mzinga.Viewer
 
                         if (selectedPiecePosition != Position.NullPosition)
                         {
-                            Point center = GetPoint(selectedPiecePosition, size, hexOrientation, true);
+                            Point center = GetPoint(selectedPiecePosition, BoardPieceSize, hexOrientation, true);
                             
-                            Shape hex = GetHex(center, size, HexType.SelectedPiece, hexOrientation);
+                            Shape hex = GetHex(center, BoardPieceSize, HexType.SelectedPiece, hexOrientation);
                             hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
 
-                            minPoint = Min(center, size, minPoint);
-                            maxPoint = Max(center, size, maxPoint);
+                            minPoint = Min(center, BoardPieceSize, minPoint);
+                            maxPoint = Max(center, BoardPieceSize, maxPoint);
                         }
                     }
                 }
 
                 // Draw the valid moves for that piece
-                if (MainViewModel.AppVM.ViewerConfig.HighlightValidMoves)
+                if (MainViewModel.ViewerConfig.HighlightValidMoves)
                 {
                     z++;
                     if (selectedPieceName != PieceName.INVALID && validMoves is not null)
@@ -345,68 +394,68 @@ namespace Mzinga.Viewer
                         {
                             if (validMove.PieceName == selectedPieceName)
                             {
-                                Point center = GetPoint(validMove.Destination, size, hexOrientation);
+                                Point center = GetPoint(validMove.Destination, BoardPieceSize, hexOrientation);
 
-                                Shape hex = GetHex(center, size, HexType.ValidMove, hexOrientation);
+                                Shape hex = GetHex(center, BoardPieceSize, HexType.ValidMove, hexOrientation);
                                 hex.ZIndex = z;
                                 BoardCanvas.Children.Add(hex);
 
-                                minPoint = Min(center, size, minPoint);
-                                maxPoint = Max(center, size, maxPoint);
+                                minPoint = Min(center, BoardPieceSize, minPoint);
+                                maxPoint = Max(center, BoardPieceSize, maxPoint);
                             }
                         }
                     }
                 }
 
                 // Highlight the target position
-                if (MainViewModel.AppVM.ViewerConfig.HighlightTargetMove)
+                if (MainViewModel.ViewerConfig.HighlightTargetMove)
                 {
                     z++;
                     if (targetPosition.HasValue)
                     {
-                        Point center = GetPoint(targetPosition.Value, size, hexOrientation, true);
+                        Point center = GetPoint(targetPosition.Value, BoardPieceSize, hexOrientation, true);
 
-                        Shape hex = GetHex(center, size, HexType.SelectedMove, hexOrientation);
+                        Shape hex = GetHex(center, BoardPieceSize, HexType.SelectedMove, hexOrientation);
                         hex.ZIndex = z;
                         BoardCanvas.Children.Add(hex);
 
-                        minPoint = Min(center, size, minPoint);
-                        maxPoint = Max(center, size, maxPoint);
+                        minPoint = Min(center, BoardPieceSize, minPoint);
+                        maxPoint = Max(center, BoardPieceSize, maxPoint);
+                    }
+                }
+
+                // Re-center the game board
+                if (autoCenter)
+                {
+                    double boardWidth = Math.Abs(maxPoint.X - minPoint.X);
+                    double boardHeight = Math.Abs(maxPoint.Y - minPoint.Y);
+
+                    if (!double.IsInfinity(boardWidth) && !double.IsInfinity(boardHeight))
+                    {
+                        double boardCenterX = minPoint.X + (boardWidth / 2);
+                        double boardCenterY = minPoint.Y + (boardHeight / 2);
+
+                        double canvasCenterX = boardCanvasWidth / 2;
+                        double canvasCenterY = boardCanvasHeight / 2;
+
+                        CanvasOffsetX = canvasCenterX - boardCenterX;
+                        CanvasOffsetY = canvasCenterY - boardCenterY;
                     }
                 }
 
                 // Translate all game elements on the board
-                double boardWidth = Math.Abs(maxPoint.X - minPoint.X);
-                double boardHeight = Math.Abs(maxPoint.Y - minPoint.Y);
-
-                if (!double.IsInfinity(boardWidth) && !double.IsInfinity(boardHeight))
+                TranslateTransform translate = new TranslateTransform()
                 {
-                    double boardCenterX = minPoint.X + (boardWidth / 2);
-                    double boardCenterY = minPoint.Y + (boardHeight / 2);
+                    X = CanvasOffsetX,
+                    Y = CanvasOffsetY
+                };
 
-                    double canvasCenterX = boardCanvasWidth / 2;
-                    double canvasCenterY = boardCanvasHeight / 2;
-
-                    double offsetX = canvasCenterX - boardCenterX;
-                    double offsetY = canvasCenterY - boardCenterY;
-
-                    TranslateTransform translate = new TranslateTransform()
-                    {
-                        X = offsetX,
-                        Y = offsetY
-                    };
-
-                    foreach (var child in BoardCanvas.Children)
-                    {
-                        child.RenderTransform = translate;
-                    }
-
-                    CanvasOffsetX = offsetX;
-                    CanvasOffsetY = offsetY;
-
-                    VM.CanvasHexRadius = size;
+                foreach (var child in BoardCanvas.Children)
+                {
+                    child.RenderTransform = translate;
                 }
 
+                VM.CanvasHexRadius = BoardPieceSize;
                 VM.CanRaiseStackedPieces = maxStack > 0;
             }
 
@@ -797,52 +846,82 @@ namespace Mzinga.Viewer
                 if (e.InitialPressMouseButton == MouseButton.Left)
                 {
                     PieceName clickedPiece = Enum.Parse<PieceName>(pieceCanvas.Name);
-                    MainViewModel.PieceClick(clickedPiece);
-                    e.Handled = true;
-                }
-                else if (e.InitialPressMouseButton == MouseButton.Right)
-                {
-                    MainViewModel.CancelClick();
+                    MainViewModel.TryPieceClick(clickedPiece);
                     e.Handled = true;
                 }
             }
         }
 
-        private void BoardCanvas_Click(object sender, PointerReleasedEventArgs e)
+        private void BoardCanvas_PointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            var pointerPoint = e.GetCurrentPoint(BoardCanvas);
+            if (pointerPoint.Properties.IsLeftButtonPressed && MainViewModel.AppVM.EngineWrapper.GetPieceAt(pointerPoint.Position.X - CanvasOffsetX, pointerPoint.Position.Y - CanvasOffsetY, BoardPieceSize, MainViewModel.ViewerConfig.HexOrientation) != PieceName.INVALID)
+            {
+                DragStartPoint = pointerPoint.Position;
+                DragStartCanvasOffsetX = CanvasOffsetX;
+                DragStartCanvasOffsetY = CanvasOffsetY;
+                e.Handled = true;
+            }
+            else
+            {
+                DragStartPoint = null;
+            }
+        }
+
+        private void BoardCanvas_PointerMoved(object sender, PointerEventArgs e)
+        {
+            if (DragStartPoint is not null)
+            {
+                var pointerPoint = e.GetCurrentPoint(BoardCanvas);
+                if (pointerPoint.Properties.IsLeftButtonPressed)
+                {
+                    CanvasOffsetX = DragStartCanvasOffsetX + (pointerPoint.Position.X - DragStartPoint.Value.X);
+                    CanvasOffsetY = DragStartCanvasOffsetY + (pointerPoint.Position.Y - DragStartPoint.Value.Y);
+                    TryRedraw();
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void BoardCanvas_PointerReleased(object sender, PointerReleasedEventArgs e)
         {
             if (e.InitialPressMouseButton == MouseButton.Left)
             {
                 Point point = e.GetPosition(BoardCanvas);
-                VM.CanvasClick(point.X - CanvasOffsetX, point.Y - CanvasOffsetY);
-                e.Handled = true;
+                if (DragStartPoint is null && VM.IsIdle)
+                {
+                    VM.CanvasClick(point.X - CanvasOffsetX, point.Y - CanvasOffsetY);
+                    e.Handled = true;
+                }
             }
-            else if (e.InitialPressMouseButton == MouseButton.Right)
-            {
-                MainViewModel.CancelClick();
-                e.Handled = true;
-            }
+            DragStartPoint = null;
         }
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            MainViewModel.CancelClick();
+            MainViewModel.TryCancelClick();
         }
 
         private DateTime LastRedrawOnSizeChange = DateTime.Now;
-
-        private void TryRedraw()
-        {
-            if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(20))
-            {
-                DrawBoard(LastBoard);
-                LastRedrawOnSizeChange = DateTime.Now;
-            }
-        }
 
         private void BoardCanvas_SizeChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (e.Property == Canvas.BoundsProperty)
             {
+                TryRedraw();
+            }
+        }
+
+        private void BoardCanvas_PointerWheelChanged(object sender, PointerWheelEventArgs e)
+        {
+            if (e.Delta.Y > 0)
+            {
+                IncreaseZoom();
+                TryRedraw();
+            }
+            else if (e.Delta.Y < 0)
+            {
+                DecreaseZoom();
                 TryRedraw();
             }
         }

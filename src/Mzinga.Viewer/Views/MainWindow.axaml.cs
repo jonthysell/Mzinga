@@ -105,6 +105,18 @@ namespace Mzinga.Viewer.Views
             }
         }
 
+        private void BoardCanvas_RecenterClick(object sender, RoutedEventArgs e)
+        {
+            BoardRenderer.TryRedraw(true, false);
+            e.Handled = true;
+        }
+
+        private void BoardCanvas_RezoomClick(object sender, RoutedEventArgs e)
+        {
+            BoardRenderer.TryRedraw(false, true);
+            e.Handled = true;
+        }
+
         private void LiftButton_Click(object sender, RoutedEventArgs e)
         {
             if (VM.CanRaiseStackedPieces)

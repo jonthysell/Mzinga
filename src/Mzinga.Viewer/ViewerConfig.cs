@@ -63,6 +63,10 @@ namespace Mzinga.Viewer
 
         public bool PlaySoundEffects { get; set; } = true;
 
+        public bool AutoZoomBoard { get; set; } = true;
+
+        public bool AutoCenterBoard { get; set; } = true;
+
         public bool ShowBoardHistory { get; set; } = false;
 
         public bool ShowMoveCommentary { get; set; } = false;
@@ -137,6 +141,12 @@ namespace Mzinga.Viewer
                         case "PlaySoundEffects":
                             PlaySoundEffects = ParseBoolValue(reader.ReadElementContentAsString(), PlaySoundEffects);
                             break;
+                        case "AutoCenterBoard":
+                            AutoCenterBoard = ParseBoolValue(reader.ReadElementContentAsString(), AutoCenterBoard);
+                            break;
+                        case "AutoZoomBoard":
+                            AutoZoomBoard = ParseBoolValue(reader.ReadElementContentAsString(), AutoZoomBoard);
+                            break;
                         case "ShowBoardHistory":
                             ShowBoardHistory = ParseBoolValue(reader.ReadElementContentAsString(), ShowBoardHistory);
                             break;
@@ -206,6 +216,8 @@ namespace Mzinga.Viewer
             writer.WriteElementString("AddPieceNumbers", AddPieceNumbers.ToString());
             writer.WriteElementString("StackPiecesInHand", StackPiecesInHand.ToString());
             writer.WriteElementString("PlaySoundEffects", PlaySoundEffects.ToString());
+            writer.WriteElementString("AutoCenterBoard", AutoCenterBoard.ToString());
+            writer.WriteElementString("AutoZoomBoard", AutoZoomBoard.ToString());
             writer.WriteElementString("ShowBoardHistory", ShowBoardHistory.ToString());
             writer.WriteElementString("ShowMoveCommentary", ShowMoveCommentary.ToString());
             writer.WriteElementString("FirstRun", FirstRun.ToString());
@@ -224,6 +236,7 @@ namespace Mzinga.Viewer
                 EngineType = EngineType,
 
                 VisualTheme = VisualTheme,
+
                 HexOrientation = HexOrientation,
 
                 PieceStyle = PieceStyle,
@@ -243,6 +256,9 @@ namespace Mzinga.Viewer
                 StackPiecesInHand = StackPiecesInHand,
 
                 PlaySoundEffects = PlaySoundEffects,
+
+                AutoCenterBoard = AutoCenterBoard,
+                AutoZoomBoard = AutoZoomBoard,
 
                 ShowBoardHistory = ShowBoardHistory,
                 ShowMoveCommentary = ShowMoveCommentary,
@@ -267,6 +283,7 @@ namespace Mzinga.Viewer
             EngineType = config.EngineType;
 
             VisualTheme = config.VisualTheme;
+
             HexOrientation = config.HexOrientation;
 
             PieceStyle = config.PieceStyle;
@@ -286,6 +303,9 @@ namespace Mzinga.Viewer
             StackPiecesInHand = config.StackPiecesInHand;
 
             PlaySoundEffects = config.PlaySoundEffects;
+
+            AutoCenterBoard = config.AutoCenterBoard;
+            AutoZoomBoard = config.AutoZoomBoard;
 
             ShowBoardHistory = config.ShowBoardHistory;
             ShowMoveCommentary = config.ShowMoveCommentary;

@@ -80,6 +80,13 @@
                                         Header="Show Move Commentary"
                                         IsChecked="{Binding ShowMoveCommentary}" />
                         <NativeMenuItemSeperator />
+                        <NativeMenuItem Command="{Binding ToggleAutoCenterBoard}"
+                                        Header="Auto Center Board"
+                                        IsChecked="{Binding AutoCenterBoard}" />
+                        <NativeMenuItem Command="{Binding ToggleAutoZoomBoard}"
+                                        Header="Auto Zoom Board"
+                                        IsChecked="{Binding AutoZoomBoard}" />
+                        <NativeMenuItemSeperator />
                         <NativeMenuItem Command="{Binding ShowViewerConfig}"
                                         Gesture="Cmd+Shift+V"
                                         Header="Viewer Options" />
@@ -156,9 +163,30 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Command="{Binding ToggleShowMoveCommentary}"
-                              Header="Show Move _Commentary">
+                              Header="Show _Move Commentary">
                         <MenuItem.Icon>
                             <CheckBox IsChecked="{Binding ShowMoveCommentary}"
+                                      IsHitTestVisible="False"
+                                      Margin="0"
+                                      Padding="0"
+                                      Width="32" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Command="{Binding ToggleAutoCenterBoard}"
+                              Header="Auto _Center Board">
+                        <MenuItem.Icon>
+                            <CheckBox IsChecked="{Binding AutoCenterBoard}"
+                                      IsHitTestVisible="False"
+                                      Margin="0"
+                                      Padding="0"
+                                      Width="32" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding ToggleAutoZoomBoard}"
+                              Header="Auto _Zoom Board">
+                        <MenuItem.Icon>
+                            <CheckBox IsChecked="{Binding AutoZoomBoard}"
                                       IsHitTestVisible="False"
                                       Margin="0"
                                       Padding="0"
@@ -198,8 +226,17 @@
                       Grid.Row="0">
                     <Canvas Background="Transparent"
                             ClipToBounds="True"
-                            IsEnabled="{Binding IsIdle}"
-                            Name="BoardCanvas" />
+                            IsEnabled="{Binding BoardIsLoaded}"
+                            Name="BoardCanvas">
+                        <Canvas.ContextMenu>
+                            <ContextMenu IsEnabled="{Binding BoardIsLoaded}">
+                                <MenuItem Click="BoardCanvas_RecenterClick"
+                                          Header="Recenter Board" />
+                                <MenuItem Click="BoardCanvas_RezoomClick"
+                                          Header="Reset Zoom" />
+                            </ContextMenu>
+                        </Canvas.ContextMenu>
+                    </Canvas>
                     <StackPanel HorizontalAlignment="Center"
                                 Orientation="Vertical"
                                 VerticalAlignment="Bottom">
