@@ -1120,15 +1120,22 @@ namespace Mzinga.Viewer.ViewModels
 
                     if (!ViewerConfig.RequireMoveConfirmation)
                     {
-                        if (AppVM.EngineWrapper.TargetMove is not null)
+                        try
                         {
-                            // Only fast-play if a move is selected
-                            AppVM.EngineWrapper.PlayTargetMove();
+                            if (AppVM.EngineWrapper.TargetMove is not null)
+                            {
+                                // Only fast-play if a move is selected
+                                AppVM.EngineWrapper.PlayTargetMove();
+                            }
+                            else if (AppVM.EngineWrapper.CanPass)
+                            {
+                                // Only fast-pass if pass is available
+                                AppVM.EngineWrapper.Pass();
+                            }
                         }
-                        else if (AppVM.EngineWrapper.CanPass)
+                        catch (Exception ex)
                         {
-                            // Only fast-pass if pass is available
-                            AppVM.EngineWrapper.Pass();
+                            ExceptionUtils.HandleException(ex);
                         }
                     }
                 });
@@ -1346,7 +1353,7 @@ namespace Mzinga.Viewer.ViewModels
                     {
                         // Get the move with the clicked position
                         Move targetMove = new Move(AppVM.EngineWrapper.TargetPiece, Board.GetPosition(AppVM.EngineWrapper.TargetPiece), clickedPosition);
-                        if (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove))
+                        if (IsPlayMode && (!ViewerConfig.BlockInvalidMoves || AppVM.EngineWrapper.CanPlayMove(targetMove)))
                         {
                             // Move is selectable, select position
                             AppVM.EngineWrapper.TargetPosition = clickedPosition;
