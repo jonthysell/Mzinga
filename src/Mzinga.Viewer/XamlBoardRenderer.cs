@@ -159,7 +159,7 @@ namespace Mzinga.Viewer
 
         public void TryRedraw(bool forceAutoCenter = false, bool forceAutoZoom = false)
         {
-            if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(20))
+            if (DateTime.Now - LastRedrawOnSizeChange > TimeSpan.FromMilliseconds(10))
             {
                 DrawBoard(LastBoard, forceAutoCenter, forceAutoZoom);
                 LastRedrawOnSizeChange = DateTime.Now;
@@ -213,7 +213,7 @@ namespace Mzinga.Viewer
 
             int z = BoardCanvas.ZIndex;
 
-            bool autoCenter = forceAutoCenter ||  MainViewModel.ViewerConfig.AutoCenterBoard || LastBoard is null || LastBoard.BoardState == BoardState.NotStarted;
+            bool autoCenter = forceAutoCenter || MainViewModel.ViewerConfig.AutoCenterBoard || LastBoard is null || LastBoard.BoardState == BoardState.NotStarted;
             bool autoZoom = forceAutoZoom || MainViewModel.ViewerConfig.AutoZoomBoard || LastBoard is null || LastBoard.BoardState == BoardState.NotStarted;
 
             if (board is not null)
@@ -376,7 +376,7 @@ namespace Mzinga.Viewer
                         if (selectedPiecePosition != Position.NullPosition)
                         {
                             Point center = GetPoint(selectedPiecePosition, BoardPieceSize, hexOrientation, true);
-                            
+
                             Shape hex = GetHex(center, BoardPieceSize, HexType.SelectedPiece, hexOrientation);
                             hex.ZIndex = z;
                             BoardCanvas.Children.Add(hex);
