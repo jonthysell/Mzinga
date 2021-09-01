@@ -4,6 +4,7 @@
 
 * Viewer: Added sound support for Windows, MacOS, and Linux
 * Viewer: Added options for free panning and zoom of game board
+* Viewer: Bottom buttons no longer render directly on top of board pieces
 
 ## v0.11.4 ##
 

@@ -214,10 +214,11 @@
                 </MenuItem>
             </Menu>
             <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
-                  RowDefinitions="*,Auto">
+                  RowDefinitions="*,Auto,Auto">
                 <StackPanel Background="Transparent"
                             Grid.Column="0"
                             Grid.Row="0"
+                            Grid.RowSpan="2"
                             IsEnabled="{Binding IsIdle}"
                             Name="WhiteHandStackPanel"
                             Orientation="Vertical"
@@ -237,6 +238,9 @@
                             </ContextMenu>
                         </Canvas.ContextMenu>
                     </Canvas>
+                </Grid>
+                <Grid Grid.Column="1"
+                      Grid.Row="1">
                     <StackPanel HorizontalAlignment="Center"
                                 Orientation="Vertical"
                                 VerticalAlignment="Bottom">
@@ -292,6 +296,7 @@
                 <StackPanel Background="Transparent"
                             Grid.Column="2"
                             Grid.Row="0"
+                            Grid.RowSpan="2"
                             IsEnabled="{Binding IsIdle}"
                             Name="BlackHandStackPanel"
                             Orientation="Vertical"
@@ -299,6 +304,7 @@
                 <DockPanel Classes="GroupBox"
                            Grid.Column="3"
                            Grid.Row="0"
+                           Grid.RowSpan="2"
                            IsVisible="{Binding ShowBoardHistory, FallbackValue=True}">
                     <Label Classes="Header"
                            Content="History"
@@ -330,6 +336,7 @@
                 <DockPanel Classes="GroupBox"
                            Grid.Column="4"
                            Grid.Row="0"
+                           Grid.RowSpan="2"
                            IsVisible="{Binding ShowMoveCommentary, FallbackValue=True}">
                     <Label Classes="Header"
                            Content="Commentary"
@@ -345,7 +352,7 @@
                 </DockPanel>
                 <Grid Grid.Column="0"
                       Grid.ColumnSpan="5"
-                      Grid.Row="1"
+                      Grid.Row="2"
                       Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
