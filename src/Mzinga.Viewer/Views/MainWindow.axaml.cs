@@ -86,35 +86,31 @@ namespace Mzinga.Viewer.Views
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            if (VM.CanRaiseStackedPieces)
-            {
-                if (e.Key == Key.X)
-                {
-                    BoardRenderer.RaiseStackedPieces = true;
-                    e.Handled = true;
-                }
-            }
         }
 
         private void MainWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.X)
+            switch (e.Key)
             {
-                BoardRenderer.RaiseStackedPieces = false;
-                e.Handled = true;
+                case Key.Z:
+                    ReZoomButton_Click(sender, e);
+                    break;
+                case Key.X:
+                    LiftButton_Click(sender, e);
+                    break;
+                case Key.C:
+                    ReCenterButton_Click(sender, e);
+                    break;
             }
         }
 
-        private void BoardCanvas_RecenterClick(object sender, RoutedEventArgs e)
+        private void ReZoomButton_Click(object sender, RoutedEventArgs e)
         {
-            BoardRenderer.TryRedraw(true, false);
-            e.Handled = true;
-        }
-
-        private void BoardCanvas_RezoomClick(object sender, RoutedEventArgs e)
-        {
-            BoardRenderer.TryRedraw(false, true);
-            e.Handled = true;
+            if (!VM.AutoZoomBoard)
+            {
+                BoardRenderer.TryRedraw(false, true);
+                e.Handled = true;
+            }
         }
 
         private void LiftButton_Click(object sender, RoutedEventArgs e)
@@ -122,6 +118,15 @@ namespace Mzinga.Viewer.Views
             if (VM.CanRaiseStackedPieces)
             {
                 BoardRenderer.RaiseStackedPieces = !BoardRenderer.RaiseStackedPieces;
+                e.Handled = true;
+            }
+        }
+
+        private void ReCenterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!VM.AutoCenterBoard)
+            {
+                BoardRenderer.TryRedraw(true, false);
                 e.Handled = true;
             }
         }

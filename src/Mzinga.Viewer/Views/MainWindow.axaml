@@ -228,16 +228,7 @@
                     <Canvas Background="Transparent"
                             ClipToBounds="True"
                             IsEnabled="{Binding BoardIsLoaded}"
-                            Name="BoardCanvas">
-                        <Canvas.ContextMenu>
-                            <ContextMenu IsEnabled="{Binding BoardIsLoaded}">
-                                <MenuItem Click="BoardCanvas_RecenterClick"
-                                          Header="Recenter Board" />
-                                <MenuItem Click="BoardCanvas_RezoomClick"
-                                          Header="Reset Zoom" />
-                            </ContextMenu>
-                        </Canvas.ContextMenu>
-                    </Canvas>
+                            Name="BoardCanvas" />
                 </Grid>
                 <Grid Grid.Column="1"
                       Grid.Row="1">
@@ -254,12 +245,28 @@
                                      ShowProgressText="True"
                                      Value="{Binding TimedCommandProgress, Mode=OneWay}"
                                      Width="120" />
-                        <Button Click="LiftButton_Click"
-                                Content="Lift Pieces (X)"
-                                HorizontalAlignment="Center"
-                                IsEnabled="{Binding CanRaiseStackedPieces}"
-                                IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
-                                Name="LiftButton" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Bottom">
+                            <Button Click="ReCenterButton_Click"
+                                    Content="Re-Center (C)"
+                                    HorizontalAlignment="Center"
+                                    IsEnabled="{Binding CanCenterBoard}"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
+                                    Name="ReCenterButton" />
+                            <Button Click="LiftButton_Click"
+                                    Content="Lift Pieces (X)"
+                                    HorizontalAlignment="Center"
+                                    IsEnabled="{Binding CanRaiseStackedPieces}"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
+                                    Name="LiftButton" />
+                            <Button Click="ReZoomButton_Click"
+                                    Content="Re-Zoom (Z)"
+                                    HorizontalAlignment="Center"
+                                    IsEnabled="{Binding CanZoomBoard}"
+                                    IsVisible="{Binding RelativeSource={RelativeSource Mode=Self} Path=IsEffectivelyEnabled}"
+                                    Name="ReZoomButton" />
+                        </StackPanel>
                         <StackPanel HorizontalAlignment="Center"
                                     IsVisible="{Binding IsPlayMode}"
                                     Orientation="Horizontal"

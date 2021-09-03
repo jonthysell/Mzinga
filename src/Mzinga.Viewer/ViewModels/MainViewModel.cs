@@ -323,6 +323,14 @@ namespace Mzinga.Viewer.ViewModels
         }
         private double _canvasCursorY;
 
+        public bool CanCenterBoard
+        {
+            get
+            {
+                return (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver) && !ViewerConfig.AutoCenterBoard;
+            }
+        }
+
         public bool CanRaiseStackedPieces
         {
             get
@@ -336,6 +344,14 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
         private bool _canRaiseStackedPieces = false;
+
+        public bool CanZoomBoard
+        {
+            get
+            {
+                return (AppVM.EngineWrapper.GameInProgress || AppVM.EngineWrapper.GameIsOver) && !ViewerConfig.AutoZoomBoard;
+            }
+        }
 
         #endregion
 
@@ -898,6 +914,7 @@ namespace Mzinga.Viewer.ViewModels
             {
                 ViewerConfig.AutoCenterBoard = value;
                 RaisePropertyChanged(nameof(AutoCenterBoard));
+                RaisePropertyChanged(nameof(CanCenterBoard));
             }
         }
 
@@ -911,6 +928,7 @@ namespace Mzinga.Viewer.ViewModels
             {
                 ViewerConfig.AutoZoomBoard = value;
                 RaisePropertyChanged(nameof(AutoZoomBoard));
+                RaisePropertyChanged(nameof(CanZoomBoard));
             }
         }
 
@@ -1269,7 +1287,9 @@ namespace Mzinga.Viewer.ViewModels
                         RaisePropertyChanged(nameof(ShowBoardHistory));
                         RaisePropertyChanged(nameof(ShowMoveCommentary));
                         RaisePropertyChanged(nameof(AutoCenterBoard));
+                        RaisePropertyChanged(nameof(CanCenterBoard));
                         RaisePropertyChanged(nameof(AutoZoomBoard));
+                        RaisePropertyChanged(nameof(CanZoomBoard));
                     });
                     break;
             }
