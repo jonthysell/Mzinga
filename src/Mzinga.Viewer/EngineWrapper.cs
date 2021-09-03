@@ -367,19 +367,12 @@ namespace Mzinga.Viewer
                 throw new Exception("Please switch the current game to play mode first.");
             }
 
-            if (TargetMove is null)
+            if (TargetMove is null || !Board.TryGetMoveString(TargetMove.Value, out string moveStr))
             {
                 throw new Exception("Please select a valid piece and destination first.");
             }
 
-            if (TargetMove == Move.PassMove)
-            {
-                Pass();
-            }
-            else
-            {
-                SendCommand("play {0}", Board.GetMoveString(TargetMove.Value));
-            }
+            SendCommand("play {0}", moveStr);
         }
 
         public void Pass()

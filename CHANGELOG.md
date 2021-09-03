@@ -7,6 +7,7 @@
 * Viewer: Bottom buttons no longer render directly on top of board pieces
 * Viewer: Fixed issue with AI playing too fast causing board state to become corrupted
 * Viewer: Fixed issue with trying to play moves in review mode
+* Viewer: Fixed issue with trying to play moves that can't even be parsed into move strings
 
 ## v0.11.4 ##
 
