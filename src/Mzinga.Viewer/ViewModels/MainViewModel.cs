@@ -1102,23 +1102,14 @@ namespace Mzinga.Viewer.ViewModels
                 });
             };
 
-            AppVM.EngineWrapper.TargetPieceUpdated += (sender, args) =>
-            {
-                AppVM.DoOnUIThread(() =>
-                {
-                    RaisePropertyChanged(nameof(TargetMove));
-                    PlayTarget.RaiseCanExecuteChanged();
-                });
-            };
-
-            AppVM.EngineWrapper.TargetPositionUpdated += (sender, args) =>
+            AppVM.EngineWrapper.TargetMoveUpdated += (sender, args) =>
             {
                 AppVM.DoOnUIThread(() =>
                 {
                     RaisePropertyChanged(nameof(TargetMove));
                     PlayTarget.RaiseCanExecuteChanged();
 
-                    if (!ViewerConfig.RequireMoveConfirmation)
+                    if (AppVM.EngineWrapper.CurrentTurnIsHuman && IsPlayMode && !ViewerConfig.RequireMoveConfirmation)
                     {
                         try
                         {

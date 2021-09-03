@@ -121,14 +121,8 @@ namespace Mzinga.Viewer
             }
             set
             {
-                PieceName oldValue = _targetPiece;
-
                 _targetPiece = value;
-
-                if (oldValue != value)
-                {
-                    OnTargetPieceUpdate();
-                }
+                OnTargetPieceUpdate();
             }
         }
         private PieceName _targetPiece = PieceName.INVALID;
@@ -141,19 +135,25 @@ namespace Mzinga.Viewer
             }
             set
             {
-                var oldValue = _targetPosition;
-
                 _targetPosition = value;
-
-                if (oldValue != value)
-                {
-                    OnTargetPositionUpdate();
-                }
+                OnTargetPositionUpdate();
             }
         }
         private Position? _targetPosition = null;
 
-        public Move? TargetMove { get; private set; }
+        public Move? TargetMove
+        {
+            get
+            {
+                return _targetMove;
+            }
+            private set
+            {
+                _targetMove = value;
+                OnTargetMoveUpdate();
+            }
+        }
+        private Move? _targetMove = null;
 
         public bool CanPlayTargetMove
         {
@@ -254,6 +254,7 @@ namespace Mzinga.Viewer
 
         public event EventHandler TargetPieceUpdated;
         public event EventHandler TargetPositionUpdated;
+        public event EventHandler TargetMoveUpdated;
 
         public event EventHandler MovePlaying;
         public event EventHandler MoveUndoing;
@@ -852,6 +853,7 @@ namespace Mzinga.Viewer
         private void OnTargetPieceUpdate()
         {
             TargetPosition = null;
+            TargetMove = null;
 
             TargetPieceUpdated?.Invoke(this, null);
         }
@@ -865,6 +867,11 @@ namespace Mzinga.Viewer
             }
 
             TargetPositionUpdated?.Invoke(this, null);
+        }
+
+        private void OnTargetMoveUpdate()
+        {
+            TargetMoveUpdated?.Invoke(this, null);
         }
 
         private void OnGameModeChanged()

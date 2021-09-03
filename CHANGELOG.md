@@ -5,6 +5,7 @@
 * Viewer: Added sound support for Windows, MacOS, and Linux
 * Viewer: Added options for free panning and zoom of game board
 * Viewer: Bottom buttons no longer render directly on top of board pieces
+* Viewer: Fixed issue with AI playing too fast causing board state to become corrupted
 * Viewer: Fixed issue with trying to play moves in review mode
 
 ## v0.11.4 ##
