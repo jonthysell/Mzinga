@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.5 ##
 
 * Viewer: Added sound support for Windows, MacOS, and Linux
 * Viewer: Added options for free panning and zoom of game board
