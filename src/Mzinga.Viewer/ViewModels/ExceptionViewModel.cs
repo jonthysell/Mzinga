@@ -22,7 +22,7 @@ namespace Mzinga.Viewer.ViewModels
         }
         private Exception _exception;
 
-        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : "Error")
+        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : exception is EngineErrorException ? "Engine Error" : "Error")
         {
             Exception = exception;
             Details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString());
