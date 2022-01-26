@@ -1,7 +1,7 @@
 param()
 
 [string] $Product = "Mzinga"
-[string] $Target = "Portable"
+[string] $Target = "Unpacked"
 
 & "$PSScriptRoot\Build.ps1" -Product $Product -Target $Target -BuildArgs "-target:Publish"
 

@@ -43,7 +43,7 @@ jobs:
     needs: pub_create_github_release
     strategy:
       matrix:
-        target: [Portable, Win32, Win64]
+        target: [Unpacked, Win32, Win64]
     steps:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1

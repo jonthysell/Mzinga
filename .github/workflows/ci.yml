@@ -21,7 +21,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        target: [Portable, Win32, Win64]
+        target: [Unpacked, Win32, Win64]
     steps:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
