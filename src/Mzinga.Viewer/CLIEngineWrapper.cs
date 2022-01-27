@@ -50,7 +50,7 @@ namespace Mzinga.Viewer
             _process.StartInfo.FileName = programName;
             _process.StartInfo.Arguments = arguments;
 
-#if WINSTORE
+#if INSTALLED
             // Can't expect relative paths when packaged, so do nothing
 #else
             _process.StartInfo.WorkingDirectory = AppInfo.IsMacOS && AppContext.BaseDirectory.EndsWith(".app/Contents/MacOS/") ? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../")) : AppInfo.EntryAssemblyPath;

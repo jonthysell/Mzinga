@@ -131,7 +131,7 @@ namespace Mzinga.Viewer
 
         private static string GetDefaultViewerConfigFileName()
         {
-#if WINSTORE
+#if INSTALLED
             // Only safe place is within the redirected AppData folder
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mzinga", ViewerConfigFileName);
 #else

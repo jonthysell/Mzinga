@@ -11,10 +11,11 @@
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <DebugType>embedded</DebugType>
+    <RepoRoot>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)..\LICENSE.md">
+    <None Include="$(RepoRoot)\LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

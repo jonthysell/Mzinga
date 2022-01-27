@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+    <Product Id="*"
+             Language="1033"
+             Manufacturer="Jon Thysell"
+             Name="Mzinga"
+             UpgradeCode="A8C747E7-2EE7-4224-82C0-25462EF0493C"
+             Version="!(bind.FileVersion.MzingaViewerApp)">
+        <Package Compressed="yes"
+                 InstallScope="perMachine"
+                 InstallerVersion="200"
+                 Languages="1033" />
+        <MajorUpgrade AllowSameVersionUpgrades="yes"
+                      DowngradeErrorMessage="A newer version of Mzinga is already installed." />
+        <?if $(var.Configuration) = "Release"?>
+        <MediaTemplate CompressionLevel="high"
+                       EmbedCab="yes" />
+        <?elseif $(var.Configuration) = "Debug"?>
+        <MediaTemplate CompressionLevel="none"
+                       EmbedCab="yes" />
+        <?endif?>
+        <Feature Id="MzingaFeature"
+                 Level="1"
+                 Title="Mzinga">
+            <ComponentGroupRef Id="MzingaPublishOut" />
+            <ComponentRef Id="MzingaViewerApp" />
+        </Feature>
+        <Icon Id="icon.ico"
+              SourceFile="$(var.SolutionDir)\Mzinga.Viewer\Resources\icon.ico" />
+        <Property Id="ARPPRODUCTICON"
+                  Value="icon.ico" />
+        <Property Id="ARPHELPLINK"
+                  Value="http://jonthysell.com" />
+        <Property Id="ARPURLINFOABOUT"
+                  Value="http://jonthysell.com" />
+        <Property Id="WixShellExecTarget"
+                  Value="[#MzingaViewerApp]" />
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT"
+                  Value="Start Mzinga" />
+        <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX"
+                  Value="1" />
+        <CustomAction Directory="INSTALLFOLDER"
+                      ExeCommand="[#MzingaViewerApp]"
+                      Id="LaunchApplication"
+                      Impersonate="yes"
+                      Return="asyncNoWait" />
+        <UI>
+            <UIRef Id="WixUI_Minimal" />
+            <Publish Control="Finish"
+                     Dialog="ExitDialog"
+                     Event="DoAction"
+                     Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+        </UI>
+        <InstallExecuteSequence>
+            <Custom Action="LaunchApplication"
+                    After="InstallFinalize">UILevel = 3 and NOT Installed</Custom>
+        </InstallExecuteSequence>
+        <WixVariable Id="WixUILicenseRtf"
+                     Value="license.rtf" />
+        <Property Id="DISABLEADVTSHORTCUTS"
+                  Value="1" />
+    </Product>
+    <Fragment>
+        <Directory Id="TARGETDIR"
+                   Name="SourceDir">
+            <?if $(var.Platform) = "x86"?>
+            <Directory Id="ProgramFilesFolder">
+            <?elseif $(var.Platform) = "x64"?>
+            <Directory Id="ProgramFiles64Folder">
+            <?endif?>
+                <Directory Id="INSTALLFOLDER"
+                            Name="Mzinga">
+                    <Component Id="MzingaViewerApp">
+                        <File Id="MzingaViewerApp"
+                              KeyPath="yes"
+                              Source="$(var.PublishPath)\MzingaViewer.exe">
+                            <Shortcut Advertise="yes"
+                                      Description="AI player for the board game Hive."
+                                      Directory="ProgramMenuFolder"
+                                      Id="MzingaViewerAppShortcut"
+                                      Name="MzingaViewer"
+                                      WorkingDirectory="INSTALLFOLDER" />
+                        </File>
+                        <File Id="MzingaReadme"
+                              Source="$(var.SolutionDir)..\README.md" />
+                        <File Id="MzingaLicense"
+                              Name="License.txt"
+                              Source="$(var.SolutionDir)..\scripts\Licenses.txt" />
+                        <RemoveFolder Id="ApplicationProgramsFolder"
+                                      On="uninstall" />
+                    </Component>
+                </Directory>
+            <?if $(var.Platform) = "x86"?>
+            </Directory>
+            <?elseif $(var.Platform) = "x64"?>
+            </Directory>
+            <?endif?>
+            <Directory Id="ProgramMenuFolder" />
+        </Directory>
+    </Fragment>
+</Wix>

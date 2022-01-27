@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Restored the MSI install option with the new Mzinga.Viewer.Setup project
+
 ## v0.11.5 ##
 
 * Viewer: Added sound support for Windows, MacOS, and Linux

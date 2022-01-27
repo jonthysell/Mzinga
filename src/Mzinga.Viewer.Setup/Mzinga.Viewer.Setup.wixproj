@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build"
+         ToolsVersion="4.0"
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == ''">x86</Platform>
+        <ProductVersion>3.9</ProductVersion>
+        <ProjectGuid>eb905695-d35d-4b73-ae9c-ddff734604f8</ProjectGuid>
+        <SchemaVersion>2.0</SchemaVersion>
+        <OutputName Condition=" '$(Platform)' == 'x86'">MzingaViewer.Win32.Setup</OutputName>
+        <OutputName Condition=" '$(Platform)' == 'x64'">MzingaViewer.Win64.Setup</OutputName>
+        <OutputType>Package</OutputType>
+        <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != ''">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+        <WixTargetsPath Condition=" '$(WixTargetsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86'">
+        <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+        <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+        <DefineConstants>Debug</DefineConstants>
+        <SuppressIces>ICE61;</SuppressIces>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86'">
+        <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+        <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+        <SuppressIces>ICE61;</SuppressIces>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64'">
+        <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+        <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+        <DefineConstants>Debug</DefineConstants>
+        <SuppressIces>ICE61;</SuppressIces>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64'">
+        <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+        <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+        <SuppressIces>ICE61;</SuppressIces>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="MzingaViewer.$(Configuration).$(Platform).wxs">
+            <Visible>false</Visible>
+        </Compile>
+        <Compile Include="Product.wxs" />
+    </ItemGroup>
+    <ItemGroup>
+        <WixExtension Include="WixUIExtension">
+            <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+            <Name>WixUIExtension</Name>
+        </WixExtension>
+        <WixExtension Include="WixUtilExtension">
+            <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+            <Name>WixUtilExtension</Name>
+        </WixExtension>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="ExcludeExe.xslt" />
+        <None Include="MzingaViewer.Debug.x86.wxs" />
+        <None Include="MzingaViewer.Release.x86.wxs" />
+        <None Include="MzingaViewer.Debug.x64.wxs" />
+        <None Include="MzingaViewer.Release.x64.wxs" />
+    </ItemGroup>
+    <Import Project="$(WixTargetsPath)" />
+    <PropertyGroup>
+        <PostBuildEvent />
+    </PropertyGroup>
+    <Target Name="BeforeBuild">
+        <Exec Command="dotnet msbuild -target:Publish -restore -p:SkipGetTargetFrameworkProperties=True -p:Configuration=$(Configuration) -p:Platform=$(Platform) -p:PublishProfile=Properties\PublishProfiles\Setup.$(Configuration).$(Platform).pubxml ..\Mzinga.Viewer\Mzinga.Viewer.csproj" />
+        <PropertyGroup>
+            <LinkerBaseInputPaths>..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</LinkerBaseInputPaths>
+            <DefineConstants>PublishPath=..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</DefineConstants>
+        </PropertyGroup>
+        <HeatDirectory AutoGenerateGuids="true"
+                       ComponentGroupName="MzingaPublishOut"
+                       Directory="..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\"
+                       DirectoryRefId="INSTALLFOLDER"
+                       GenerateGuidsNow="true"
+                       OutputFile="MzingaViewer.$(Configuration).$(Platform).wxs"
+                       PreprocessorVariable="var.PublishPath"
+                       SuppressCom="true"
+                       SuppressFragments="true"
+                       SuppressRegistry="true"
+                       SuppressRootDirectory="true"
+                       ToolPath="$(WixToolPath)"
+                       Transforms="ExcludeExe.xslt" />
+    </Target>
+</Project>
