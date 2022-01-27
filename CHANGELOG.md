@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.11.6 ##
 
 * Restored the MSI install option with the new Mzinga.Viewer.Setup project
 

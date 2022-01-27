@@ -14,7 +14,7 @@ For more information on Mzinga and its projects, please check out the [Mzinga Wi
 
 Mzinga was written in C# and should run anywhere that supports [.NET 5.0](https://github.com/dotnet/core/blob/master/release-notes/5.0/5.0-supported-os.md). It has been officially tested on:
 
-* Windows 10
+* Windows 10 and 11
 * Ubuntu 20.04
 * macOS 10.15
 
@@ -22,18 +22,29 @@ Mzinga was written in C# and should run anywhere that supports [.NET 5.0](https:
 
 #### Standard ####
 
-The Windows release provides self-contained x86/x64 binaries which run on Windows 7 SP1+, 8.1, and 10.
+The standard Windows release provides self-contained x86/x64 binaries which run on Windows 7 SP1+, 8.1, 10, and 11.
 
 1. Download the latest Windows zip file (Mzinga.Win32.zip *or* Mzinga.Win64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the zip file
 
 **Note:** If you're unsure which version to download, try Mzinga.Win64.zip first. Most modern PCs are 64-bit.
 
+#### Setup MSI ####
+
+A standalone version of *MzingaViewer* is available via an installer which can run on Windows 7 SP1+, 8.1, 10, and 11.
+
+1. Download the latest Windows setup file (MzingaViewer.Win32.Setup.msi *or* MzingaViewer.Win64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
+2. Open the installer
+
+**Note:** If you're unsure which version to download, try MzingaViewer.Win64.Setup.msi first. Most modern PCs are 64-bit.
+
+**Note:** This version does not contain the *MzingaEngine*, *MzingaPerft*, or *MzingaTrainer* binaries.
+
 #### Microsoft Store ####
 
-A standalone version of *MzingaViewer* is available via the Microsoft Store: https://www.microsoft.com/en-us/p/mzingaviewer/9pm7p224hpgq
+A standalone version of *MzingaViewer* is available via the Microsoft Store for Windows 10 and 11: https://www.microsoft.com/en-us/p/mzingaviewer/9pm7p224hpgq
 
-**Note:** This version does not contain the *MzingaEngine*, *MzingaPerft*, or *MzingaTrainer* binaries and is provided for Windows 10 users restricted to running Store applications.
+**Note:** This version does not contain the *MzingaEngine*, *MzingaPerft*, or *MzingaTrainer* binaries.
 
 ### MacOS ###
 
@@ -49,19 +60,19 @@ The Linux release provides self-contained x64 binaries which run on many Linux d
 1. Download the latest Linux tar.gz file (Mzinga.Linux.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
 
-### Portable ###
+### Unpacked ###
 
-The Portable release provides loose, framework-dependent .NET 5 binaries.
+The Unpacked release provides loose, framework-dependent .NET 5 binaries.
 
 1. Install the latest [.NET Runtime](https://dotnet.microsoft.com/download/dotnet/5.0)
-2. Download the latest Portable zip file (Mzinga.Portable.zip) from https://github.com/jonthysell/Mzinga/releases/latest
+2. Download the latest Unpacked zip file (Mzinga.Unpacked.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 3. Extract the zip file
 
 ## Copyright ##
 
 Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
 
-Mzinga Copyright (c) 2015-2021 Jon Thysell.
+Mzinga Copyright (c) 2015-2022 Jon Thysell.
 
 Avalonia Copyright (c) .NET Foundation and Contributors.
 

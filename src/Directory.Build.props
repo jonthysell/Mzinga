@@ -3,10 +3,10 @@
     <Product>Mzinga</Product>
     <Company>Jon Thysell</Company>
     <Authors>Jon Thysell</Authors>
-    <Copyright>Copyright © 2015-2021 Jon Thysell</Copyright>
+    <Copyright>Copyright © 2015-2022 Jon Thysell</Copyright>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/jonthysell/Mzinga</RepositoryUrl>
-    <Version>0.11.5</Version>
+    <Version>0.11.6</Version>
     <AssemblyVersion>$(Version).0</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
