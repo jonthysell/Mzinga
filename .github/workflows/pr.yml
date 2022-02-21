@@ -20,7 +20,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
+        dotnet-version: '6.0.x'
 
     - name: Checkout
       uses: actions/checkout@v2
@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name:  ${{ matrix.configuration }}Binaries
-        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net5.0
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net6.0

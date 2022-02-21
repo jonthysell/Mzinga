@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>Mzinga.Perft.Program</StartupObject>
     <AssemblyName>MzingaPerft</AssemblyName>
     <RootNamespace>Mzinga.Perft</RootNamespace>

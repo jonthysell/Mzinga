@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Updated all projects to .NET 6
+
 ## v0.11.6 ##
 
 * Restored the MSI install option with the new Mzinga.Viewer.Setup project

@@ -12,7 +12,7 @@ For more information on Mzinga and its projects, please check out the [Mzinga Wi
 
 ## Installation ##
 
-Mzinga was written in C# and should run anywhere that supports [.NET 5.0](https://github.com/dotnet/core/blob/master/release-notes/5.0/5.0-supported-os.md). It has been officially tested on:
+Mzinga was written in C# and should run anywhere that supports [.NET 6.0](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md). It has been officially tested on:
 
 * Windows 10 and 11
 * Ubuntu 20.04
@@ -62,9 +62,9 @@ The Linux release provides self-contained x64 binaries which run on many Linux d
 
 ### Unpacked ###
 
-The Unpacked release provides loose, framework-dependent .NET 5 binaries.
+The Unpacked release provides loose, framework-dependent .NET 6 binaries.
 
-1. Install the latest [.NET Runtime](https://dotnet.microsoft.com/download/dotnet/5.0)
+1. Install the latest [.NET Runtime](https://dotnet.microsoft.com/download/dotnet/6.0)
 2. Download the latest Unpacked zip file (Mzinga.Unpacked.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 3. Extract the zip file
 

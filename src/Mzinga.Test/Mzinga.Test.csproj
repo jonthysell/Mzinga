@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>MzingaTest</AssemblyName>
     <RootNamespace>Mzinga.Test</RootNamespace>
     <IsPackable>false</IsPackable>

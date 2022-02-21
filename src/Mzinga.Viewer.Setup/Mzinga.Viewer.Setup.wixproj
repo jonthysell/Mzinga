@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build"
          ToolsVersion="4.0"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -68,6 +68,7 @@
         <PropertyGroup>
             <LinkerBaseInputPaths>..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</LinkerBaseInputPaths>
             <DefineConstants>PublishPath=..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</DefineConstants>
+            <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86' ">true</RunWixToolsOutOfProc>
         </PropertyGroup>
         <HeatDirectory AutoGenerateGuids="true"
                        ComponentGroupName="MzingaPublishOut"
@@ -76,6 +77,7 @@
                        GenerateGuidsNow="true"
                        OutputFile="MzingaViewer.$(Configuration).$(Platform).wxs"
                        PreprocessorVariable="var.PublishPath"
+                       RunAsSeparateProcess="$(RunWixToolsOutOfProc)"
                        SuppressCom="true"
                        SuppressFragments="true"
                        SuppressRegistry="true"
