@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>Mzinga</AssemblyName>
     <RootNamespace>Mzinga</RootNamespace>
     <Nullable>enable</Nullable>
