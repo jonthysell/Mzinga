@@ -3,6 +3,7 @@
 ## next ##
 
 * Updated all projects to .NET 6
+* Viewer: Updated Avalonia to 0.10.12
 
 ## v0.11.6 ##
 
