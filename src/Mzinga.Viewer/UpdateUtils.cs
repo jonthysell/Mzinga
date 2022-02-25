@@ -4,7 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -28,24 +29,13 @@ namespace Mzinga.Viewer
         {
             get
             {
-                try
-                {
-                    using var client = new WebClient();
-                    using (client.OpenRead("http://google.com/generate_204"))
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return NetworkInterface.GetIsNetworkAvailable();
             }
         }
 
         public static bool IsCheckingforUpdate { get; private set; }
 
-        internal static int TimeoutMS = 3000;
+        public const int MinTimeoutMS = 3000;
 
         public const int MaxTimeoutMS = 100000;
 
@@ -55,7 +45,7 @@ namespace Mzinga.Viewer
             {
                 IsCheckingforUpdate = true;
 
-                var latestRelease = await GetLatestGitHubReleaseInfoAsync("jonthysell", AppInfo.Product);
+                var latestRelease = await GetLatestGitHubReleaseInfoAsync("jonthysell", AppInfo.Product, showUpToDate ? MaxTimeoutMS : MinTimeoutMS);
 
                 if (latestRelease is null)
                 {
@@ -94,18 +84,6 @@ namespace Mzinga.Viewer
                     }
                 }
             }
-            catch (WebException ex)
-            {
-                if (ex.Status == WebExceptionStatus.Timeout)
-                {
-                    TimeoutMS = (int)Math.Min(TimeoutMS * 1.5, MaxTimeoutMS);
-                }
-
-                if (showUpToDate)
-                {
-                    ExceptionUtils.HandleException(new UpdateException(ex));
-                }
-            }
             catch (Exception ex)
             {
                 ExceptionUtils.HandleException(new UpdateException(ex));
@@ -116,9 +94,9 @@ namespace Mzinga.Viewer
             }
         }
 
-        private static async Task<GitHubReleaseInfo> GetLatestGitHubReleaseInfoAsync(string owner, string repo)
+        private static async Task<GitHubReleaseInfo> GetLatestGitHubReleaseInfoAsync(string owner, string repo, int timeoutMS = MinTimeoutMS)
         {
-            var releaseInfos = await GetGitHubReleaseInfosAsync(owner, repo);
+            var releaseInfos = await GetGitHubReleaseInfosAsync(owner, repo, timeoutMS);
 
             return releaseInfos
                 .OrderByDescending(info => info.LongVersion)
@@ -126,7 +104,7 @@ namespace Mzinga.Viewer
                 .FirstOrDefault();
         }
 
-        private static async Task<IList<GitHubReleaseInfo>> GetGitHubReleaseInfosAsync(string owner, string repo)
+        private static async Task<IList<GitHubReleaseInfo>> GetGitHubReleaseInfosAsync(string owner, string repo, int timeoutMS = MinTimeoutMS)
         {
             if (!IsConnectedToInternet)
             {
@@ -137,13 +115,12 @@ namespace Mzinga.Viewer
 
             try
             {
-                var request = WebRequest.CreateHttp($"https://api.github.com/repos/{owner}/{repo}/releases");
-                request.Headers.Add("Accept: application/vnd.github.v3+json");
-                request.UserAgent = _userAgent;
-                request.Timeout = TimeoutMS;
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(_userAgent);
+                client.Timeout = TimeSpan.FromMilliseconds(timeoutMS);
 
-                using var response = await request.GetResponseAsync();
-                var responseStream = response.GetResponseStream();
+                using var responseStream = await client.GetStreamAsync($"https://api.github.com/repos/{owner}/{repo}/releases");
                 var jsonDocument = await JsonDocument.ParseAsync(responseStream);
 
                 foreach (var releaseObject in jsonDocument.RootElement.EnumerateArray())
@@ -204,9 +181,9 @@ namespace Mzinga.Viewer
             get
             {
                 string message = "Unable to update at this time. Please try again later.";
-                if (InnerException is WebException wex)
+                if (InnerException is HttpRequestException hre)
                 {
-                    message = $"{message} ({wex.Status})";
+                    message = $"{message} ({hre.StatusCode})";
                 }
                 return message;
             }
