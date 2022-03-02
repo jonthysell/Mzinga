@@ -27,7 +27,7 @@
             <ComponentRef Id="MzingaViewerApp" />
         </Feature>
         <Icon Id="icon.ico"
-              SourceFile="$(var.SolutionDir)\Mzinga.Viewer\Resources\icon.ico" />
+              SourceFile="..\Mzinga.Viewer\Resources\icon.ico" />
         <Property Id="ARPPRODUCTICON"
                   Value="icon.ico" />
         <Property Id="ARPHELPLINK"
@@ -83,10 +83,10 @@
                                       WorkingDirectory="INSTALLFOLDER" />
                         </File>
                         <File Id="MzingaReadme"
-                              Source="$(var.SolutionDir)..\README.md" />
+                              Source="..\..\README.md" />
                         <File Id="MzingaLicense"
                               Name="License.txt"
-                              Source="$(var.SolutionDir)..\scripts\Licenses.txt" />
+                              Source="..\..\scripts\Licenses.txt" />
                         <RemoveFolder Id="ApplicationProgramsFolder"
                                       On="uninstall" />
                     </Component>
