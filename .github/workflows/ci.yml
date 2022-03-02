@@ -42,6 +42,33 @@ jobs:
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.zip
+
+  ci_build_windows_setup:
+    name: CI Windows Setup Build
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        target: [Win32.Setup, Win64.Setup]
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}Viewer.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}Viewer.${{ matrix.target }}/${{ env.Product }}Viewer.${{ matrix.target }}.msi
     
   ci_build_linux:
     name: CI Linux Build
