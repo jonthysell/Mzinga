@@ -65,7 +65,39 @@ jobs:
         asset_path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.zip
         asset_name: ${{ env.Product }}.${{ matrix.target }}.zip
         asset_content_type: application/zip
-    
+
+  pub_build_windows_setup:
+    name: Publish Windows Setup Build
+    runs-on: windows-latest
+    needs: pub_create_github_release
+    strategy:
+      matrix:
+        target: [Win32.Setup, Win64.Setup]
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Upload ${{ matrix.target }} Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.pub_create_github_release.outputs.upload_url }}
+        asset_path: ${{ env.BuildDir }}/${{ env.Product }}Viewer.${{ matrix.target }}/${{ env.Product }}Viewer.${{ matrix.target }}.msi
+        asset_name: ${{ env.Product }}Viewer.${{ matrix.target }}.msi
+        asset_content_type: application/octet-stream
+
   pub_build_linux:
     name: Publish Linux Build
     runs-on: ubuntu-latest
