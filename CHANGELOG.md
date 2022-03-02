@@ -1,6 +1,6 @@
 # Mzinga ChangeLog #
 
-## next ##
+## v0.12.0 ##
 
 * Updated all projects to .NET 6
 * Viewer: Updated Avalonia to 0.10.12
