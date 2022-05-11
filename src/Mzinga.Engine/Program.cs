@@ -48,6 +48,11 @@ namespace Mzinga.Engine
             while (!_engine.ExitRequested)
             {
                 string command = Console.ReadLine();
+                if (command == null)
+                {
+                    // Exit if input stream closes.
+                    break;
+                }
                 if (!string.IsNullOrWhiteSpace(command))
                 {
                     _engine.ParseCommand(command);
