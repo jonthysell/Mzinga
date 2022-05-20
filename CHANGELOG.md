@@ -1,5 +1,9 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Engine: Fixed issue when program doesn't exit if input pipe closes
+
 ## v0.12.0 ##
 
 * Updated all projects to .NET 6
