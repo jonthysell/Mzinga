@@ -3,6 +3,7 @@
 ## next ##
 
 * Engine: Fixed issue when program doesn't exit if input pipe closes
+* Viewer: Updated Avalonia to 0.10.14
 
 ## v0.12.0 ##
 
