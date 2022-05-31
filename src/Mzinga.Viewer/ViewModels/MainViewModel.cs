@@ -1087,6 +1087,9 @@ namespace Mzinga.Viewer.ViewModels
                     FindBestMove.RaiseCanExecuteChanged();
                     RaisePropertyChanged(nameof(GameState));
 
+                    RaisePropertyChanged(nameof(CanCenterBoard));
+                    RaisePropertyChanged(nameof(CanZoomBoard));
+
                     if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
                     {
                         if (ViewerConfig.PlaySoundEffects)

@@ -1,7 +1,11 @@
 # Mzinga ChangeLog #
 
+## next ##
+
+* Viewer: Fixed bug where center/zoom buttons don't appear on new game
+
 ## v0.12.1 ##
-* Engne: Fixed issue when program doesn't exit if input pipe closes
+* Engine: Fixed issue when program doesn't exit if input pipe closes
 * Viewer: Updated Avalonia to 0.10.14
 
 ## v0.12.0 ##
