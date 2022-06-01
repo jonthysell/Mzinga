@@ -1,12 +1,13 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.2 ##
 
 * Viewer: Fixed bug where center/zoom buttons don't appear on new game
 * Viewer: Added dependency on Markdown.Avalonia
 * Viewer: Revamped about window with embedded license and changelog contents
 
 ## v0.12.1 ##
+
 * Engine: Fixed issue when program doesn't exit if input pipe closes
 * Viewer: Updated Avalonia to 0.10.14
 
