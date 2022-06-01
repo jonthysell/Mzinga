@@ -107,7 +107,7 @@ namespace Mzinga.Viewer.ViewModels
                 "To that end, Mzinga proposes a [Universal Hive Protocol](https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol) to support interoperability for Hive-playing software.",
                 "For more information on Mzinga and its projects, please check out the [Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki).",
                 "## MzingaViewer ##",
-                "MzingaViewer is a graphical application which can drive any engine that implements the specifications of the Universal Hive Protocol).",
+                "MzingaViewer is a graphical application which can drive any engine that implements the specifications of the Universal Hive Protocol.",
                 "MzingaViewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.");
         }
 
