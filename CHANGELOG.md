@@ -10,7 +10,7 @@
 * Engine: Fixed issue when program doesn't exit if input pipe closes
 * Viewer: Updated Avalonia to 0.10.14
 
-## v0.12.0 ##
+## v0.12 ##
 
 * Updated all projects to .NET 6
 * Viewer: Updated Avalonia to 0.10.12
@@ -39,7 +39,7 @@
 
 ## v0.11.3 ##
 
-* Core: Fixed crash when trying to stack all beetles and mosquitos
+* Core: Fixed crash when trying to stack all beetles and mosquitoes
 * Core: Fixed puzzle validation
 * Core: Fixed race condition where FixedCache.TryLookup accesses an entry being removed
 * Core.AI: Fixed OOM crash when getting Principal Variation where the game never ends
@@ -62,9 +62,9 @@
 
 * Viewer: Fixed bug with creating folder to save config
 
-## v0.11.0 ##
+## v0.11 ##
 
-* Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entrypoint
+* Engine/Viewer: Fixed bug where loading default config looked in working directory, not app entry-point
 * Viewer: Enable GPU rendering to improve performance
 * Viewer: Fix MacOS bundle for MzingaViewer
 * Viewer: Fixed issues with launching CLI engines
