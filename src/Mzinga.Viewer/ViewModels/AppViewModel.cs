@@ -43,7 +43,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ShowLicensesMessage());
+                        Messenger.Default.Send(new ShowAboutMessage());
                     }
                     catch (Exception ex)
                     {

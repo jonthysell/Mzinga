@@ -9,13 +9,13 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class LicensesWindow : Window
+    public class AboutWindow : Window
     {
-        public LicensesViewModel VM
+        public AboutViewModel VM
         {
             get
             {
-                return (LicensesViewModel)DataContext;
+                return (AboutViewModel)DataContext;
             }
             set
             {
@@ -24,7 +24,7 @@ namespace Mzinga.Viewer.Views
             }
         }
 
-        public LicensesWindow()
+        public AboutWindow()
         {
             InitializeComponent();
 #if DEBUG

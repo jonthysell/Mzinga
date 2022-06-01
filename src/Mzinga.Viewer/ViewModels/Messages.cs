@@ -61,18 +61,18 @@ namespace Mzinga.Viewer.ViewModels
         }
     }
 
-    public class ShowLicensesMessage : MessageBase
+    public class ShowAboutMessage : MessageBase
     {
-        public LicensesViewModel LicensesVM { get; private set; }
+        public AboutViewModel AboutVM { get; private set; }
 
-        public ShowLicensesMessage(Action callback = null) : base()
+        public ShowAboutMessage(Action callback = null) : base()
         {
-            LicensesVM = new LicensesViewModel(callback);
+            AboutVM = new AboutViewModel(callback);
         }
 
         public void Process()
         {
-            LicensesVM.ProcessClose();
+            AboutVM.ProcessClose();
         }
     }
 

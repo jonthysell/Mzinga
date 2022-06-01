@@ -30,7 +30,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Register<InformationMessage>(recipient, async (message) => await ShowInformationAsync(message));
             Messenger.Default.Register<ConfirmationMessage>(recipient, async (message) => await ShowConfirmationAsync(message));
             Messenger.Default.Register<LaunchUrlMessage>(recipient, async (message) => await LaunchUrlAsync(message));
-            Messenger.Default.Register<ShowLicensesMessage>(recipient, async (message) => await ShowLicenseAsync(message));
+            Messenger.Default.Register<ShowAboutMessage>(recipient, async (message) => await ShowAboutAsync(message));
             Messenger.Default.Register<NewGameMessage>(recipient, async (message) => await ShowNewGameAsync(message));
             Messenger.Default.Register<LoadGameMessage>(recipient, async (message) => await ShowLoadGameAsync(message));
             Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
@@ -45,7 +45,7 @@ namespace Mzinga.Viewer
             Messenger.Default.Unregister<ExceptionMessage>(recipient);
             Messenger.Default.Unregister<InformationMessage>(recipient);
             Messenger.Default.Unregister<ConfirmationMessage>(recipient);
-            Messenger.Default.Unregister<ShowLicensesMessage>(recipient);
+            Messenger.Default.Unregister<ShowAboutMessage>(recipient);
             Messenger.Default.Unregister<LaunchUrlMessage>(recipient);
             Messenger.Default.Unregister<NewGameMessage>(recipient);
             Messenger.Default.Unregister<LoadGameMessage>(recipient);
@@ -159,13 +159,13 @@ namespace Mzinga.Viewer
             });
         }
 
-        private static async Task ShowLicenseAsync(ShowLicensesMessage message)
+        private static async Task ShowAboutAsync(ShowAboutMessage message)
         {
             try
             {
-                var window = new LicensesWindow()
+                var window = new AboutWindow()
                 {
-                    VM = message.LicensesVM,
+                    VM = message.AboutVM,
                 };
 
                 await window.ShowDialog(MainWindow);

@@ -76,4 +76,6 @@ Mzinga Copyright (c) 2015-2022 Jon Thysell.
 
 Avalonia Copyright (c) .NET Foundation and Contributors.
 
+Markdown.Avalonia Copyright (c) 2010 Bevan Arps, 2020 Whistyun.
+
 MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
