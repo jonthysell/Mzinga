@@ -12,10 +12,10 @@ namespace Mzinga.Engine
 {
     public class SigIntMonitor
     {
-        public event EventHandler SigIntReceived;
+        public event EventHandler? SigIntReceived;
 
-        private Task _task;
-        private CancellationTokenSource _cts;
+        private Task? _task;
+        private CancellationTokenSource? _cts;
 
         private SigIntMonitor() { }
 
@@ -40,16 +40,16 @@ namespace Mzinga.Engine
 
         public void Stop()
         {
-            _cts.Cancel();
-            _task.Wait();
+            _cts?.Cancel();
+            _task?.Wait();
         }
 
         private void OnSigIntReceived()
         {
-            SigIntReceived?.Invoke(this, null);
+            SigIntReceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public static SigIntMonitor CreateAndStart(EventHandler sigIntReceivedEventHandler = null)
+        public static SigIntMonitor CreateAndStart(EventHandler? sigIntReceivedEventHandler = null)
         {
             var monitor = new SigIntMonitor();
             if (sigIntReceivedEventHandler is not null)

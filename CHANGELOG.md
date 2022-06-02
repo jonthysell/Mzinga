@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Engine: Converted project to nullable
+
 ## v0.12.2 ##
 
 * Viewer: Fixed bug where center/zoom buttons don't appear on new game

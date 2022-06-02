@@ -5,6 +5,7 @@
     <StartupObject>Mzinga.Engine.Program</StartupObject>
     <AssemblyName>MzingaEngine</AssemblyName>
     <RootNamespace>Mzinga.Engine</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

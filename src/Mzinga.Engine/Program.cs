@@ -11,17 +11,17 @@ namespace Mzinga.Engine
     {
         static string ID => $"{AppInfo.Name} v{AppInfo.Version}";
 
-        private static Engine _engine;
+        private static Engine? _engine;
 
         private static volatile bool _interceptCancel = false;
 
-        private static SigIntMonitor _sigIntMonitor;
+        private static SigIntMonitor? _sigIntMonitor;
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
 
-            EngineConfig config = LoadConfig(args is not null && args.Length > 0 ? args[0] : null);
+            EngineConfig config = LoadConfig(args.Length > 0 ? args[0] : null);
 
             _engine = new Engine(ID, config, PrintLine);
             _engine.ParseCommand("info");
@@ -47,7 +47,7 @@ namespace Mzinga.Engine
 
             while (!_engine.ExitRequested)
             {
-                string command = Console.ReadLine();
+                string? command = Console.ReadLine();
                 if (command is null)
                 {
                     break;
@@ -61,20 +61,20 @@ namespace Mzinga.Engine
             _sigIntMonitor?.Stop();
         }
 
-        private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        private static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
         {
             if (_interceptCancel)
             {
-                _engine.TryCancelAsyncCommand();
+                _engine?.TryCancelAsyncCommand();
                 e.Cancel = true;
             }
         }
 
-        private static void SigIntMonitor_SigIntReceived(object sender, EventArgs e)
+        private static void SigIntMonitor_SigIntReceived(object? sender, EventArgs e)
         {
             if (_interceptCancel)
             {
-                _engine.TryCancelAsyncCommand();
+                _engine?.TryCancelAsyncCommand();
             }
             else
             {
@@ -90,24 +90,28 @@ namespace Mzinga.Engine
             Console.Out.WriteLine(format, arg);
         }
 
-        static EngineConfig LoadConfig(string configPath)
+        static EngineConfig LoadConfig(string? configPath)
         {
-
-            // Try loading specified file
-            if (!TryLoadConfig(configPath, out EngineConfig result))
+            if (!string.IsNullOrWhiteSpace(configPath))
             {
-                // Try loading default file
-                if (!TryLoadConfig(Path.Combine(AppInfo.EntryAssemblyPath, DefaultEngineConfigFileName), out result))
+                // Try loading specified file
+                if (!TryLoadConfig(configPath, out EngineConfig? result))
                 {
-                    // Load default from embedded resource
-                    result = EngineConfig.GetDefaultEngineConfig();
+                    // Try loading default file
+                    TryLoadConfig(Path.Combine(AppInfo.EntryAssemblyPath, DefaultEngineConfigFileName), out result);
+                }
+
+                if (result is not null)
+                {
+                    return result;
                 }
             }
 
-            return result;
+            // Load default from embedded resource
+            return EngineConfig.GetDefaultEngineConfig();
         }
 
-        private static bool TryLoadConfig(string configPath, out EngineConfig result)
+        private static bool TryLoadConfig(string configPath, out EngineConfig? result)
         {
             try
             {
