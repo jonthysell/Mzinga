@@ -34,7 +34,7 @@
 * Viewer: Fixed issue with AI playing too fast causing board state to become corrupted
 * Viewer: Fixed issue with trying to play moves in review mode
 * Viewer: Fixed issue with trying to play moves that can't even be parsed into move strings
-* Viewer: Re-arranged center, lift, zoom buttons"
+* Viewer: Re-arranged center, lift, zoom buttons
 
 ## v0.11.4 ##
 
