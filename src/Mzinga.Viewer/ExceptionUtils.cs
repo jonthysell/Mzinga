@@ -9,7 +9,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer
 {
-    public class ExceptionUtils
+    public static class ExceptionUtils
     {
         public static AppViewModel AppVM
         {

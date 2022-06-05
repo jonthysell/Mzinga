@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -94,8 +92,8 @@ namespace Mzinga.Viewer.ViewModels
             TabItems = new ObservableCollection<ObservableAboutTabItem>
             {
                 new ObservableAboutTabItem("About", GetAboutText()),
-                new ObservableAboutTabItem("Changelog", GetEmbeddedMarkdownText("CHANGELOG.md")),
-                new ObservableAboutTabItem("Licenses", GetEmbeddedMarkdownText("Licenses.txt")),
+                new ObservableAboutTabItem("Changelog", AssemblyUtils.GetEmbeddedMarkdownText<AboutViewModel>("CHANGELOG.md", true)),
+                new ObservableAboutTabItem("Licenses", AssemblyUtils.GetEmbeddedMarkdownText<AboutViewModel>("Licenses.txt", true)),
             };
         }
 
@@ -109,35 +107,6 @@ namespace Mzinga.Viewer.ViewModels
                 "## MzingaViewer ##",
                 "MzingaViewer is a graphical application which can drive any engine that implements the specifications of the Universal Hive Protocol.",
                 "MzingaViewer is not meant to be graphically impressive or compete with commercial versions of Hive, but rather be a ready-made UI for developers who'd rather focus their time on building a compatible engine and AI.");
-        }
-
-        private static string GetEmbeddedMarkdownText(string filename, bool stripHeader = true)
-        {
-            var assembly = Assembly.GetAssembly(typeof(AboutViewModel));
-            if (assembly is not null)
-            {
-                foreach (string resourceName in assembly.GetManifestResourceNames())
-                {
-                    if (resourceName.EndsWith(filename))
-                    {
-                        using Stream inputStream = assembly.GetManifestResourceStream(resourceName);
-                        if (inputStream is not null)
-                        {
-                            using StreamReader reader = new StreamReader(inputStream);
-                            string text = reader.ReadToEnd();
-                            
-                            if (stripHeader && text.StartsWith("# "))
-                            {
-                                text = text.Substring(text.IndexOf(" #") + " #".Length);
-                            }
-
-                            return text;
-                        }
-                    }
-                }
-            }
-
-            throw new Exception($"Unable to load embedded { filename }.");
         }
 
         public void ProcessClose()

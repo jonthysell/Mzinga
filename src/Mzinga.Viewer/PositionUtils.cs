@@ -7,7 +7,7 @@ using Mzinga.Core;
 
 namespace Mzinga.Viewer
 {
-    public class PositionUtils
+    public static class PositionUtils
     {
         public static Position FromCursor(double cursorX, double cursorY, double hexRadius, HexOrientation hexOrientation)
         {

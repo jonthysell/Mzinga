@@ -14,7 +14,7 @@ using Mzinga.Engine;
 
 namespace Mzinga.Test
 {
-    public class TestUtils
+    public static class TestUtils
     {
         public static Assembly TestAssembly => _testAssembly ??= typeof(TestUtils).GetTypeInfo().Assembly;
         private static Assembly _testAssembly;

@@ -5,7 +5,7 @@ using System;
 
 namespace Mzinga
 {
-    public class VersionUtils
+    public static class VersionUtils
     {
         public static ulong ParseLongVersion(string s)
         {

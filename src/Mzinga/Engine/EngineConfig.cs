@@ -363,23 +363,8 @@ namespace Mzinga.Engine
 
         public static EngineConfig GetDefaultEngineConfig()
         {
-            var assembly = Assembly.GetAssembly(typeof(EngineConfig));
-            if (assembly is not null)
-            {
-                foreach (string resourceName in assembly.GetManifestResourceNames())
-                {
-                    if (resourceName.EndsWith("DefaultEngineConfig.xml"))
-                    {
-                        using Stream? inputStream = assembly.GetManifestResourceStream(resourceName);
-                        if (inputStream is not null)
-                        {
-                            return new EngineConfig(inputStream);
-                        }
-                    }
-                }
-            }
-
-            throw new Exception("Unable to load embedded DefaultEngineConfig.xml.");
+            using Stream inputStream = AssemblyUtils.GetEmbeddedResource<EngineConfig>("DefaultEngineConfig.xml");
+            return new EngineConfig(inputStream);
         }
 
         public EngineConfig GetOptionsClone()

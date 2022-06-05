@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace Mzinga.Viewer
 {
-    public class SoundUtils
+    public static class SoundUtils
     {
         public static void PlaySound(GameSound gameSound)
         {

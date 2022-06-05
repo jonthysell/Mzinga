@@ -15,14 +15,19 @@ namespace Mzinga.Engine
     public class Engine
     {
         public string ID { get; private set; }
-        public ConsoleOut ConsoleOut { get; private set; }
+
         public EngineConfig Config { get; private set; }
 
         public EngineConfig DefaultConfig { get; private set; }
 
+        public ConsoleOut ConsoleOut { get; private set; }
+
+        public string LicensesText { get; private set; }
+
         public bool ExitRequested { get; private set; }
 
         public event EventHandler? StartAsyncCommand;
+
         public event EventHandler? EndAsyncCommand;
 
         private Board? _board;
@@ -35,12 +40,14 @@ namespace Mzinga.Engine
         private CancellationTokenSource? _ponderCTS = null;
         private volatile bool _isPondering = false;
 
-        public Engine(string id, EngineConfig config, ConsoleOut consoleOut)
+        public Engine(string id, EngineConfig config, ConsoleOut consoleOut, string? licensesText = null)
         {
             ID = id;
             Config = config;
             DefaultConfig = config.GetOptionsClone();
             ConsoleOut = consoleOut;
+
+            LicensesText = licensesText ?? AppInfo.FormattedLicensesText;
 
             ExitRequested = false;
         }
@@ -705,15 +712,7 @@ namespace Mzinga.Engine
 
         private void Licenses()
         {
-            ConsoleOut(string.Format("# {0} #", AppInfo.HiveProduct));
-            ConsoleOut("");
-            ConsoleOut(string.Join(Environment.NewLine + Environment.NewLine, AppInfo.HiveCopyright, AppInfo.HiveLicense));
-
-            ConsoleOut("");
-
-            ConsoleOut(string.Format("# {0} #", AppInfo.Product));
-            ConsoleOut("");
-            ConsoleOut(string.Join(Environment.NewLine + Environment.NewLine, AppInfo.MitLicenseName, AppInfo.Copyright, AppInfo.MitLicenseBody));
+            ConsoleOut(LicensesText);
         }
 
         private void Perft(int maxDepth = Int32.MaxValue)

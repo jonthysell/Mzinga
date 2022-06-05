@@ -15,7 +15,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer
 {
-    public class UpdateUtils
+    public static class UpdateUtils
     {
         public static AppViewModel AppVM
         {
