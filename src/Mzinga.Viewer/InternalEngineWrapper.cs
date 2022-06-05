@@ -28,7 +28,7 @@ namespace Mzinga.Viewer
             _engine = new Engine.Engine(_id, EngineConfig, (format, args) =>
             {
                 OnEngineOutput(string.Format(format, args));
-            }, AssemblyUtils.GetEmbeddedMarkdownText<InternalEngineWrapper>("Licenses.txt"));
+            }, AssemblyUtils.GetEmbeddedMarkdownText<InternalEngineWrapper>("Licenses.txt").TrimEnd());
 
             _engine.ParseCommand("info");
         }
