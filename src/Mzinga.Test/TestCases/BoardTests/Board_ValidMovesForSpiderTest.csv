@@ -3,3 +3,6 @@ Base;InProgress;White[2];wS1;bS1 wS1-	wS2 \wS1;wS2 /wS1;wS2 -wS1
 
 # Issue #102
 Base;InProgress;White[5]; wA1; bG1 -wA1; wB1 wA1/; bA1 -bG1; wQ \wB1; bQ \bA1; wS1 \wQ; bS1 bQ/	wS1 wB1-;wS1 \bS1;wS1 bS1\;wS1 /wQ
+
+# Issue #116
+Base;InProgress;White[6];wS1;bS1 wS1-;wQ -wS1;bQ bS1/;wG1 /wQ;bB1 bS1\;wB1 wG1\;bG1 /bB1;wS2 wQ\;bQ bB1/	wS2 /bG1;wS2 wB1\;wS2 /wB1;wS2 bG1\

@@ -1161,6 +1161,7 @@ namespace Mzinga.Core
         {
             var startingPosition = _piecePositions[(int)pieceName];
 
+            // Always add starting position
             _visitedPositions.Clear();
             _visitedPositions.Add(startingPosition);
 
@@ -1171,7 +1172,8 @@ namespace Mzinga.Core
 
         private void GetValidSlides(PieceName pieceName, MoveSet moveSet, Position startingPosition, Position currentPosition, int currentRange, int maxRange)
         {
-            if (maxRange < 0 || currentRange < maxRange)
+            bool unlimitedRange = maxRange < 0;
+            if (unlimitedRange || currentRange < maxRange)
             {
                 for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
                 {
@@ -1187,11 +1189,17 @@ namespace Mzinga.Core
                         if (HasPieceAt(in currentPosition, right) != HasPieceAt(in currentPosition, left))
                         {
                             // Can slide into slide position
+
                             var move = new Move(pieceName, startingPosition, slidePosition);
 
-                            if (moveSet.Add(move))
+                            if (unlimitedRange)
                             {
                                 _visitedPositions.Add(slidePosition);
+                            }
+
+                            bool moveAdded = moveSet.Add(move);
+                            if (moveAdded || (!moveAdded && !unlimitedRange))
+                            {
                                 GetValidSlides(pieceName, moveSet, startingPosition, slidePosition, currentRange + 1, maxRange);
                             }
                         }

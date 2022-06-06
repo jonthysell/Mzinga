@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Fixed spider move generation
 * Engine: Converted project to nullable
 * Engine: Fixed licenses output
 * Engine: Fixed help output
