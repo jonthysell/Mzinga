@@ -3,7 +3,8 @@
 ## next ##
 
 * Engine: Converted project to nullable
-* Engine: Refactored licenses output
+* Engine: Fixed licenses output
+* Engine: Fixed help output
 
 ## v0.12.2 ##
 

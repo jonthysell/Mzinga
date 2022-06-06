@@ -297,7 +297,7 @@ namespace Mzinga.Engine
 
                 ConsoleOut("");
 
-                ConsoleOut("  Advanced commands:");
+                ConsoleOut("Advanced commands:");
                 ConsoleOut("  licenses");
                 ConsoleOut("  perft");
 
@@ -309,7 +309,7 @@ namespace Mzinga.Engine
 #endif
                 ConsoleOut("");
 
-                ConsoleOut("  Try 'help Command' to see help for a particular Command.");
+                ConsoleOut("Try 'help Command' to see help for a particular Command.");
             }
             else
             {
