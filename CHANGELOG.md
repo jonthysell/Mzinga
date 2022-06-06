@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.3 ##
 
 * Core: Fixed spider move generation
 * Engine: Converted project to nullable
