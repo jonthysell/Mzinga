@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Move generation performance improvement for Spider
+
 ## v0.12.3 ##
 
 * Core: Fixed spider move generation

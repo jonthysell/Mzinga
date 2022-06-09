@@ -893,37 +893,44 @@ namespace Mzinga.Core
 
         private void GetValidQueenBeeMoves(PieceName pieceName, MoveSet moveSet)
         {
-            var piecePosition = GetPosition(pieceName);
-            SetPosition(pieceName, Position.NullPosition, false);
-            for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
-            {
-                if (!HasPieceAt(in piecePosition, (Direction)slideDirection))
-                {
-                    // Slide position is open
-                    var left = Enums.LeftOf((Direction)slideDirection);
-                    var right = Enums.RightOf((Direction)slideDirection);
-
-                    if (HasPieceAt(in piecePosition, right) != HasPieceAt(in piecePosition, left))
-                    {
-                        // Can slide into slide position
-                        moveSet.Add(new Move(pieceName, piecePosition, piecePosition.GetNeighborAt((Direction)slideDirection)));
-                    }
-                }
-            }
-            SetPosition(pieceName, piecePosition, false);
+            GetValidSlidesExactRange(pieceName, moveSet, 1);
         }
 
         private void GetValidSpiderMoves(PieceName pieceName, MoveSet moveSet)
         {
-            // Get all slides up to 3 spots away
-            var upToThree = new MoveSet();
-            GetValidSlides(pieceName, upToThree, 3);
+            GetValidSlidesExactRange(pieceName, moveSet, 3);
+        }
 
-            foreach (var move in upToThree)
+        private void GetValidSlidesExactRange(PieceName pieceName, MoveSet moveSet, int remainingSlides)
+        {
+            var startingPosition = GetPosition(pieceName);
+            SetPosition(pieceName, Position.NullPosition, false);
+
+            GetValidSlidesExactRange(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition, remainingSlides);
+
+            SetPosition(pieceName, startingPosition, false);
+        }
+
+        private void GetValidSlidesExactRange(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition, int remainingSlides)
+        {
+            if (remainingSlides == 0)
             {
-                if (CanSlideToPositionInExactRange(pieceName, move.Destination, 3))
+                moveSet.Add(new Move(pieceName, startingPosition, currentPosition));
+            }
+            else
+            {
+                for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
                 {
-                    moveSet.FastAdd(move);
+                    var slidePosition = currentPosition.GetNeighborAt((Direction)slideDirection);
+                    if (slidePosition != lastPosition && slidePosition != startingPosition  && !HasPieceAt(in slidePosition))
+                    {
+                        // Slide position is open
+                        if (HasPieceAt(in currentPosition, Enums.RightOf((Direction)slideDirection)) != HasPieceAt(in currentPosition, Enums.LeftOf((Direction)slideDirection)))
+                        {
+                            // Can slide into slide position
+                            GetValidSlidesExactRange(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition, remainingSlides - 1);
+                        }
+                    }
                 }
             }
         }
