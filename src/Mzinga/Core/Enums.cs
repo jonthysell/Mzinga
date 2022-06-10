@@ -209,13 +209,36 @@ namespace Mzinga.Core
 
         public static bool TryParse(string str, out GameType result)
         {
-            if (Enum.TryParse(str.Replace("+",""), out result))
+            switch (str)
             {
-                return true;
+                case "Base":
+                    result = GameType.Base;
+                    return true;
+                case "Base+M":
+                    result = GameType.BaseM;
+                    return true;
+                case "Base+L":
+                    result = GameType.BaseL;
+                    return true;
+                case "Base+P":
+                    result = GameType.BaseP;
+                    return true;
+                case "Base+ML":
+                    result = GameType.BaseML;
+                    return true;
+                case "Base+MP":
+                    result = GameType.BaseMP;
+                    return true;
+                case "Base+LP":
+                    result = GameType.BaseLP;
+                    return true;
+                case "Base+MLP":
+                    result = GameType.BaseMLP;
+                    return true;
+                default:
+                    result = GameType.INVALID;
+                    return false;
             }
-
-            result = GameType.INVALID;
-            return false;
         }
 
         public static string GetGameTypeString(GameType value)

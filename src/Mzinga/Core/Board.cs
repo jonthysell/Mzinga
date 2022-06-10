@@ -95,7 +95,10 @@ namespace Mzinga.Core
         {
             var split = gameStr.Split(';');
 
-            GameType gameType = Enum.Parse<GameType>(split[0].Replace("+", ""));
+            if (!Enums.TryParse(split[0], out GameType gameType))
+            {
+                throw new ArgumentException($"Unable to parse '{split[0]}' in GameString.", nameof(gameStr));
+            }
 
             Board board = new Board(gameType);
 
@@ -157,7 +160,7 @@ namespace Mzinga.Core
         {
             var sb = new StringBuilder();
 
-            sb.Append($"{GameType};{BoardState};{CurrentColor}[{CurrentPlayerTurn}]");
+            sb.Append($"{Enums.GetGameTypeString(GameType)};{BoardState};{CurrentColor}[{CurrentPlayerTurn}]");
 
             foreach (var item in BoardHistory)
             {

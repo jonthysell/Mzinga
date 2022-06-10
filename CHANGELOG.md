@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Fixed bug with producing (and accepting) invalid UHP GameStrings
 * Core: Move generation performance improvement for Spider
 * Core: Move generation performance improvement for SoldierAnt
 * Test: Move tests based on real games
