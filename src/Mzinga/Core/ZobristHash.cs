@@ -19,7 +19,7 @@ namespace Mzinga.Core
             Value = EmptyBoard;
         }
 
-        public void TogglePiece(PieceName pieceName, Position position)
+        public void TogglePiece(PieceName pieceName, in Position position)
         {
             Value ^= _hashPartByPosition[(int)pieceName, (Position.BoardSize / 2) + position.Q, (Position.BoardSize / 2) + position.R, position.Stack + 1];
         }

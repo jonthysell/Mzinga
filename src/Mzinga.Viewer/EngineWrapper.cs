@@ -167,7 +167,7 @@ namespace Mzinga.Viewer
         {
             get
             {
-                return GameInProgress && CurrentTurnIsHuman && ValidMoves is not null && ValidMoves.Contains(Move.PassMove) && CurrentGameSettings.GameMode == GameMode.Play;
+                return GameInProgress && CurrentTurnIsHuman && ValidMoves is not null && ValidMoves.Contains(in Move.PassMove) && CurrentGameSettings.GameMode == GameMode.Play;
             }
         }
 
@@ -805,7 +805,7 @@ namespace Mzinga.Viewer
 
         public bool CanPlayMove(Move? move)
         {
-            return (GameInProgress && CurrentTurnIsHuman && move.HasValue && ValidMoves is not null && ValidMoves.Contains(move.Value));
+            return GameInProgress && CurrentTurnIsHuman && move.HasValue && ValidMoves is not null && ValidMoves.Contains(move.Value);
         }
 
         private void OnIsIdleUpdate()

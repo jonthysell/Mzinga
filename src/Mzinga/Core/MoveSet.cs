@@ -29,7 +29,7 @@ namespace Mzinga.Core
                 {
                     throw new Exception($"Unable to parse '{inputMoveStr}'.");
                 }
-                moves.Add(move);
+                moves.Add(in move);
             }
             return moves;
         }

@@ -14,12 +14,12 @@ namespace Mzinga.Core
 
         public int Count => _items.Count;
 
-        public bool Contains(T item)
+        public bool Contains(in T item)
         {
             return _items.Contains(item);
         }
         
-        internal bool Add(T item)
+        internal bool Add(in T item)
         {
             if (_items.Contains(item))
             {
@@ -30,7 +30,7 @@ namespace Mzinga.Core
             return true;
         }
 
-        internal void FastAdd(T item)
+        internal void FastAdd(in T item)
         {
             _items.Add(item);
         }

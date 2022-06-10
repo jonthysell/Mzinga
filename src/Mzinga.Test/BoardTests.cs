@@ -99,7 +99,7 @@ namespace Mzinga.Test
             Board b = Board.ParseGameString(@"Base;InProgress;Black[3];wS1;bS1 wS1-;wQ \wS1;bQ bS1/;wG1 wQ/");
             Assert.IsTrue(b.IsOneHive());
 
-            b.SetPosition(PieceName.wS1, Position.NullPosition, false);
+            b.SetPosition(PieceName.wS1, in Position.NullPosition, false);
             Assert.IsFalse(b.IsOneHive());
         }
 

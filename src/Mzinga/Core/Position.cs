@@ -56,12 +56,12 @@ namespace Mzinga.Core
             return HashCode.Combine(Q, R, Stack);
         }
 
-        public static bool operator ==(Position lhs, Position rhs)
+        public static bool operator ==(in Position lhs, in Position rhs)
         {
             return lhs.Q == rhs.Q && lhs.R == rhs.R && lhs.Stack == rhs.Stack;
         }
 
-        public static bool operator !=(Position lhs, Position rhs) => !(lhs == rhs);
+        public static bool operator !=(in Position lhs, in Position rhs) => !(lhs == rhs);
 
         public const int BoardSize = 128;
         public const int BoardStackSize = 8;
