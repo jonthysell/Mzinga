@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.4 ##
 
 * Core: Fixed bug with producing (and accepting) invalid UHP GameStrings
 * Core: Move generation performance improvement for Spider
