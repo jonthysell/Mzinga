@@ -14,7 +14,7 @@ namespace Mzinga.Perft
     public class Program
     {
         static GameType GameType = GameType.Base;
-        static Board Board = null;
+        static Board? Board = null;
         static uint MaxDepth = uint.MaxValue;
         static bool MultiThreaded = false;
 
@@ -66,7 +66,7 @@ namespace Mzinga.Perft
             }
         }
 
-        static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        static void Console_CancelKeyPress(object? sender, ConsoleCancelEventArgs e)
         {
             PerftCTS.Cancel();
             e.Cancel = true;
@@ -86,7 +86,7 @@ namespace Mzinga.Perft
                     {
                         GameType = gameType;
                     }
-                    else if (Board.TryParseGameString(args[i], false, out Board board))
+                    else if (Board.TryParseGameString(args[i], false, out Board? board) && board is not null)
                     {
                         GameType = board.GameType;
                         Board = board;

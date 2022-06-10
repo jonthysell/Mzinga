@@ -5,6 +5,7 @@
     <StartupObject>Mzinga.Perft.Program</StartupObject>
     <AssemblyName>MzingaPerft</AssemblyName>
     <RootNamespace>Mzinga.Perft</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
