@@ -38,5 +38,14 @@ namespace Mzinga.Viewer
                 }
             }
         }
+
+        public bool CanPlayGameType(GameType gameType)
+        {
+            bool mosquitoCheck = !Enums.BugTypeIsEnabledForGameType(BugType.Mosquito, gameType) || Mosquito;
+            bool ladybugCheck = !Enums.BugTypeIsEnabledForGameType(BugType.Ladybug, gameType) || Ladybug;
+            bool pillbugCheck = !Enums.BugTypeIsEnabledForGameType(BugType.Pillbug, gameType) || Pillbug;
+
+            return mosquitoCheck && ladybugCheck && pillbugCheck;
+        }
     }
 }

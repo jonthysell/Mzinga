@@ -350,6 +350,11 @@ namespace Mzinga.Viewer
                 throw new ArgumentNullException(nameof(gameRecording));
             }
 
+            if (!EngineCapabilities.CanPlayGameType(gameRecording.Board.GameType))
+            {
+                throw new Exception($"The current engine is incapable of loading the selected game. Please switch to an engine which supports games of type \"{ Enums.GetGameTypeString(gameRecording.Board.GameType) }\".");
+            }
+
             CurrentGameSettings = new GameSettings(gameRecording)
             {
                 WhitePlayerType = PlayerType.Human,

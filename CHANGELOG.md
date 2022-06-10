@@ -5,6 +5,7 @@
 * Core: Fixed bug with producing (and accepting) invalid UHP GameStrings
 * Core: Move generation performance improvement for Spider
 * Core: Move generation performance improvement for SoldierAnt
+* Viewer: Added error message when opening a saved game of a type the engine cannot play
 * Test: Move tests based on real games
 
 ## v0.12.3 ##
