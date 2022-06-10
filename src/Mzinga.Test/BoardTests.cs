@@ -253,6 +253,12 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
+        public void Board_ValidMovesFromRealGamesTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<BoardValidMoveTestCase>("Board_ValidMovesFromRealGamesTest.csv");
+        }
+
+        [TestMethod]
         public void Board_InvalidMovesByRuleTest()
         {
             TestUtils.LoadAndExecuteTestCases<BoardInvalidMoveTestCase>("Board_InvalidMovesByRuleTest.csv");
