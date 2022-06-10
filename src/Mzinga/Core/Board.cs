@@ -83,8 +83,6 @@ namespace Mzinga.Core
 
         private bool _cachedValidPlacementsReady = false;
         private readonly PositionSet _cachedValidPlacements = new PositionSet();
-
-        private readonly PositionSet _visitedPositions = new PositionSet();
         
         private PositionSet? _cachedEnemyQueenNeighbors = null;
 
@@ -1141,10 +1139,6 @@ namespace Mzinga.Core
             }
             else
             {
-                // Always add starting position
-                _visitedPositions.Clear();
-                _visitedPositions.Add(startingPosition);
-
                 GetValidSlides(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition);
             }
 
@@ -1181,18 +1175,13 @@ namespace Mzinga.Core
             {
                 var slidePosition = currentPosition.GetNeighborAt((Direction)slideDirection);
 
-                if (slidePosition != lastPosition && slidePosition != startingPosition && !_visitedPositions.Contains(slidePosition) && !HasPieceAt(in slidePosition))
+                if (slidePosition != lastPosition && slidePosition != startingPosition && !HasPieceAt(in slidePosition))
                 {
                     // Slide position is open
                     if (HasPieceAt(in currentPosition, Enums.RightOf((Direction)slideDirection)) != HasPieceAt(in currentPosition, Enums.LeftOf((Direction)slideDirection)))
                     {
                         // Can slide into slide position
-
-                        var move = new Move(pieceName, startingPosition, slidePosition);
-
-                        _visitedPositions.Add(slidePosition);
-
-                        if (moveSet.Add(move))
+                        if (moveSet.Add(new Move(pieceName, startingPosition, slidePosition)))
                         {
                             GetValidSlides(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition);
                         }

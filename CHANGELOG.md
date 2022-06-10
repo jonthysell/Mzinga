@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Move generation performance improvement for Spider
+* Core: Move generation performance improvement for SoldierAnt
 * Test: Move tests based on real games
 
 ## v0.12.3 ##
