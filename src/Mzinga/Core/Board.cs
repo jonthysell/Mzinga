@@ -1128,14 +1128,14 @@ namespace Mzinga.Core
             }
         }
 
-        private void GetValidSlides(PieceName pieceName, MoveSet moveSet, int? fixedRange = null)
+        private void GetValidSlides(PieceName pieceName, MoveSet moveSet, int fixedRange = 0)
         {
             var startingPosition = GetPosition(pieceName);
             SetPosition(pieceName, Position.NullPosition, false);
 
-            if (fixedRange.HasValue)
+            if (fixedRange > 0)
             {
-                GetValidSlidesExactRange(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition, fixedRange.Value);
+                GetValidSlides(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition, fixedRange);
             }
             else
             {
@@ -1143,30 +1143,6 @@ namespace Mzinga.Core
             }
 
             SetPosition(pieceName, startingPosition, false);
-        }
-
-        private void GetValidSlidesExactRange(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition, int remainingSlides)
-        {
-            if (remainingSlides == 0)
-            {
-                moveSet.Add(new Move(pieceName, startingPosition, currentPosition));
-            }
-            else
-            {
-                for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
-                {
-                    var slidePosition = currentPosition.GetNeighborAt((Direction)slideDirection);
-                    if (slidePosition != lastPosition && slidePosition != startingPosition && !HasPieceAt(in slidePosition))
-                    {
-                        // Slide position is open
-                        if (HasPieceAt(in currentPosition, Enums.RightOf((Direction)slideDirection)) != HasPieceAt(in currentPosition, Enums.LeftOf((Direction)slideDirection)))
-                        {
-                            // Can slide into slide position
-                            GetValidSlidesExactRange(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition, remainingSlides - 1);
-                        }
-                    }
-                }
-            }
         }
 
         private void GetValidSlides(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition)
@@ -1184,6 +1160,30 @@ namespace Mzinga.Core
                         if (moveSet.Add(new Move(pieceName, startingPosition, slidePosition)))
                         {
                             GetValidSlides(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GetValidSlides(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition, int remainingSlides)
+        {
+            if (remainingSlides == 0)
+            {
+                moveSet.Add(new Move(pieceName, startingPosition, currentPosition));
+            }
+            else
+            {
+                for (int slideDirection = 0; slideDirection < (int)Direction.NumDirections; slideDirection++)
+                {
+                    var slidePosition = currentPosition.GetNeighborAt((Direction)slideDirection);
+                    if (slidePosition != lastPosition && slidePosition != startingPosition && !HasPieceAt(in slidePosition))
+                    {
+                        // Slide position is open
+                        if (HasPieceAt(in currentPosition, Enums.RightOf((Direction)slideDirection)) != HasPieceAt(in currentPosition, Enums.LeftOf((Direction)slideDirection)))
+                        {
+                            // Can slide into slide position
+                            GetValidSlides(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition, remainingSlides - 1);
                         }
                     }
                 }
