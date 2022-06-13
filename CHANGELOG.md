@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Set focus to input when opening Engine Console
+
 ## v0.12.5 ##
 
 * Viewer: Show release details when prompting to update

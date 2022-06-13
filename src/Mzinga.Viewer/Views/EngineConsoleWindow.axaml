@@ -20,12 +20,13 @@
         <Grid ColumnDefinitions="*,Auto,Auto"
               Margin="5"
               RowDefinitions="Auto,*">
-            <TextBox FontFamily="Lucida Console"
+            <TextBox AttachedToVisualTree="EngineConsoleInput_AttachedToVisualTree"
+                     FontFamily="Lucida Console"
                      Grid.Column="0"
                      Grid.Row="0"
                      KeyUp="EngineConsoleInput_KeyUp"
-                     Name="EngineConsoleInput"
-                     Text="{Binding EngineInputText}" />
+                     Text="{Binding EngineInputText}"
+                     x:Name="EngineConsoleInput" />
             <Button Command="{Binding SendEngineCommand}"
                     Content="Send"
                     Grid.Column="1"

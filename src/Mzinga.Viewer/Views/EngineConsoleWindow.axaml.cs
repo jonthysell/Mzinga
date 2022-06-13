@@ -46,6 +46,11 @@ namespace Mzinga.Viewer.Views
             Instance = null;
         }
 
+        private void EngineConsoleInput_AttachedToVisualTree(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            (sender as InputElement)?.Focus();
+        }
+
         private void EngineConsoleInput_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
