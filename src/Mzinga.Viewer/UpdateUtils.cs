@@ -66,7 +66,7 @@ namespace Mzinga.Viewer
                     // Update available
                     if (confirmUpdate)
                     {
-                        Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body), (result) =>
+                        Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", !string.IsNullOrWhiteSpace(latestRelease.Body) ? string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body) : null, (result) =>
                         {
                             try
                             {
