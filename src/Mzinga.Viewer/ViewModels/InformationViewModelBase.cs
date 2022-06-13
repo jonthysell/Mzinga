@@ -7,7 +7,7 @@ using GalaSoft.MvvmLight;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public abstract class DialogViewModel : ViewModelBase
+    public abstract class InformationViewModelBase : ViewModelBase
     {
         public AppViewModel AppVM
         {
@@ -54,11 +54,11 @@ namespace Mzinga.Viewer.ViewModels
 
         public string Details { get; protected set; }
 
-        public virtual bool ShowDetails => !string.IsNullOrWhiteSpace(Details);
+        public bool ShowDetails => !string.IsNullOrWhiteSpace(Details);
 
         public event EventHandler RequestClose;
 
-        public DialogViewModel(string message, string title, string details = null)
+        public InformationViewModelBase(string message, string title, string details = null)
         {
             Title = title;
             Message = message;

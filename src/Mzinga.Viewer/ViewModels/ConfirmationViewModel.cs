@@ -15,7 +15,7 @@ namespace Mzinga.Viewer.ViewModels
         Yes,
     }
 
-    public class ConfirmationViewModel : DialogViewModel
+    public class ConfirmationViewModel : InformationViewModelBase
     {
         #region Properties
 

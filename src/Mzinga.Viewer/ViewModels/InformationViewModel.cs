@@ -8,7 +8,7 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class InformationViewModel : DialogViewModel
+    public class InformationViewModel : InformationViewModelBase
     {
         #region Commands
 

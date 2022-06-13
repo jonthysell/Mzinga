@@ -9,8 +9,6 @@ namespace Mzinga.Viewer.ViewModels
     {
         #region Properties
 
-        public override bool ShowDetails => !(Exception is EngineInvalidMoveException);
-
         public Exception Exception
         {
             get
@@ -26,9 +24,18 @@ namespace Mzinga.Viewer.ViewModels
 
         #endregion
 
-        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : exception is EngineErrorException ? "Engine Error" : "Error", $"```{ (exception is EngineErrorException ee ? string.Join(Environment.NewLine, ee.OutputLines) : exception.ToString()) }```")
+        public ExceptionViewModel(Exception exception) : base(exception?.Message, "Error", $"```{exception}```")
         {
-            Exception = exception;
+            if (exception is EngineInvalidMoveException)
+            {
+                Title = "Invalid Move";
+                Details = null;
+            }
+            else if (exception is EngineErrorException ee)
+            {
+                Title = "Engine Error";
+                Details = $"```{string.Join(Environment.NewLine, ee.OutputLines)}```";
+            }
         }
     }
 }
