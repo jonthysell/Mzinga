@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Show release details when prompting to update
+
 ## v0.12.4 ##
 
 * Core: Fixed bug with producing (and accepting) invalid UHP GameStrings

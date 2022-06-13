@@ -22,9 +22,9 @@ namespace Mzinga.Viewer.ViewModels
     {
         public InformationViewModel InformationVM { get; private set; }
 
-        public InformationMessage(string message, string title = "Mzinga", Action callback = null) : base()
+        public InformationMessage(string message, string title = "Mzinga", string details = null, Action callback = null) : base()
         {
-            InformationVM = new InformationViewModel(message, title, callback);
+            InformationVM = new InformationViewModel(message, title, details, callback);
         }
 
         public void Process()
@@ -42,6 +42,12 @@ namespace Mzinga.Viewer.ViewModels
         public ConfirmationMessage(string message, Action<bool> callback) : base()
         {
             ConfirmationVM = new ConfirmationViewModel(message);
+            Callback = callback;
+        }
+
+        public ConfirmationMessage(string message, string details, Action<bool> callback) : base()
+        {
+            ConfirmationVM = new ConfirmationViewModel(message, details);
             Callback = callback;
         }
 

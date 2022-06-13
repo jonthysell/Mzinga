@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Resources\icon.ico" />
+    <AvaloniaResource Include="Resources\MarkdownStyles.axaml" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
@@ -59,7 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
-  <EmbeddedResource Include="$(RepoRoot)\CHANGELOG.md" />
+    <EmbeddedResource Include="$(RepoRoot)\CHANGELOG.md" />
     <EmbeddedResource Include="$(RepoRoot)\scripts\Licenses.txt" />
   </ItemGroup>
 

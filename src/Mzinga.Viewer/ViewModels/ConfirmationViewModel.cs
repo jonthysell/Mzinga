@@ -15,22 +15,9 @@ namespace Mzinga.Viewer.ViewModels
         Yes,
     }
 
-    public class ConfirmationViewModel : ViewModelBase
+    public class ConfirmationViewModel : DialogViewModel
     {
-        public static AppViewModel AppVM
-        {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-
-
-        }
         #region Properties
-
-        public static string Title => "Confirmation";
-
-        public string Message { get; private set; }
 
         public ConfirmationResult Result { get; private set; } = ConfirmationResult.Cancel;
 
@@ -47,7 +34,7 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         Result = ConfirmationResult.Yes;
-                        RequestClose?.Invoke(this, null);
+                        OnRequestClose();
                     }
                     catch (Exception ex)
                     {
@@ -67,7 +54,7 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         Result = ConfirmationResult.No;
-                        RequestClose?.Invoke(this, null);
+                        OnRequestClose();
                     }
                     catch (Exception ex)
                     {
@@ -87,7 +74,7 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         Result = ConfirmationResult.Cancel;
-                        RequestClose?.Invoke(this, null);
+                        OnRequestClose();
                     }
                     catch (Exception ex)
                     {
@@ -100,11 +87,6 @@ namespace Mzinga.Viewer.ViewModels
 
         #endregion
 
-        public event EventHandler RequestClose;
-
-        public ConfirmationViewModel(string message) : base()
-        {
-            Message = message ?? throw new ArgumentNullException(nameof(message));
-        }
+        public ConfirmationViewModel(string message, string details = null) : base(message, "Confirmation", details) { }
     }
 }

@@ -49,38 +49,6 @@ namespace Mzinga.Viewer.ViewModels
         }
         private RelayCommand _accept;
 
-        public RelayCommand<string> LaunchURL
-        {
-            get
-            {
-                return _launchURL ??= new RelayCommand<string>((url) =>
-                {
-                    try
-                    {
-                        Messenger.Default.Send(new ConfirmationMessage("This will open a website in your browser. Do you want to continue?", (confirmed) =>
-                        {
-                            try
-                            {
-                                if (confirmed)
-                                {
-                                    Messenger.Default.Send(new LaunchUrlMessage(url));
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-                        }));
-                    }
-                    catch (Exception ex)
-                    {
-                        ExceptionUtils.HandleException(ex);
-                    }
-                });
-            }
-        }
-        private RelayCommand<string> _launchURL;
-
         public event EventHandler RequestClose;
 
         public Action Callback { get; private set; }

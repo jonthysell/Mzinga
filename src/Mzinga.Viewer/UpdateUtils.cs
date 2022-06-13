@@ -66,7 +66,7 @@ namespace Mzinga.Viewer
                     // Update available
                     if (confirmUpdate)
                     {
-                        Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", (result) =>
+                        Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body), (result) =>
                         {
                             try
                             {
@@ -128,10 +128,11 @@ namespace Mzinga.Viewer
                     string name = releaseObject.GetProperty("name").GetString();
                     string tagName = releaseObject.GetProperty("tag_name").GetString();
                     string htmlUrl = releaseObject.GetProperty("html_url").GetString();
+                    string body = releaseObject.GetProperty("body").GetString();
                     bool draft = releaseObject.GetProperty("draft").GetBoolean();
                     bool prerelease = releaseObject.GetProperty("prerelease").GetBoolean();
 
-                    releaseInfos.Add(new GitHubReleaseInfo(name, tagName, htmlUrl, draft, prerelease));
+                    releaseInfos.Add(new GitHubReleaseInfo(name, tagName, htmlUrl, body, draft, prerelease));
                 }
             }
             catch (Exception) { }
@@ -147,6 +148,7 @@ namespace Mzinga.Viewer
         public readonly string Name;
         public readonly string TagName;
         public readonly Uri HtmlUrl;
+        public readonly string Body;
         public readonly bool Draft;
         public readonly bool Prerelease;
 
@@ -163,11 +165,12 @@ namespace Mzinga.Viewer
         }
         private ulong? _longVersion;
 
-        public GitHubReleaseInfo(string name, string tagName, string htmlUrl, bool draft, bool prerelease)
+        public GitHubReleaseInfo(string name, string tagName, string htmlUrl, string body, bool draft, bool prerelease)
         {
             Name = name?.Trim() ?? throw new ArgumentNullException(nameof(name));
             TagName = tagName?.Trim() ?? throw new ArgumentNullException(nameof(tagName));
             HtmlUrl = new Uri(htmlUrl);
+            Body = body?.Trim() ?? throw new ArgumentNullException(nameof(body));
             Draft = draft;
             Prerelease = prerelease;
         }

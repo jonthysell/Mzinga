@@ -7,6 +7,8 @@ namespace Mzinga.Viewer.ViewModels
 {
     public class ExceptionViewModel : InformationViewModel
     {
+        #region Properties
+
         public override bool ShowDetails => !(Exception is EngineInvalidMoveException);
 
         public Exception Exception
@@ -22,10 +24,11 @@ namespace Mzinga.Viewer.ViewModels
         }
         private Exception _exception;
 
-        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : exception is EngineErrorException ? "Engine Error" : "Error")
+        #endregion
+
+        public ExceptionViewModel(Exception exception) : base(exception?.Message, exception is EngineInvalidMoveException ? "Invalid Move" : exception is EngineErrorException ? "Engine Error" : "Error", $"```{ (exception is EngineErrorException ee ? string.Join(Environment.NewLine, ee.OutputLines) : exception.ToString()) }```")
         {
             Exception = exception;
-            Details = Exception is EngineErrorException ee ? string.Format(string.Join(Environment.NewLine, ee.OutputLines)) : string.Format(Exception.ToString());
         }
     }
 }

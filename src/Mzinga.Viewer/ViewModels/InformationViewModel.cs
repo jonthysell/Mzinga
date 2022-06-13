@@ -8,54 +8,9 @@ using GalaSoft.MvvmLight.Command;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class InformationViewModel : ViewModelBase
+    public class InformationViewModel : DialogViewModel
     {
-        public static AppViewModel AppVM
-        {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-
-        }
-
-        public string Title
-        {
-            get
-            {
-                return _title;
-            }
-            protected set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _title = value;
-            }
-        }
-        private string _title;
-
-        public string Message
-        {
-            get
-            {
-                return _message;
-            }
-            protected set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    throw new ArgumentNullException(nameof(value));
-                }
-                _message = value;
-            }
-        }
-        private string _message;
-
-        public string Details { get; protected set; }
-
-        public virtual bool ShowDetails => !string.IsNullOrWhiteSpace(Details);
+        #region Commands
 
         public RelayCommand Accept
         {
@@ -65,7 +20,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        RequestClose?.Invoke(this, null);
+                        OnRequestClose();
                     }
                     catch (Exception ex)
                     {
@@ -76,14 +31,12 @@ namespace Mzinga.Viewer.ViewModels
         }
         private RelayCommand _accept = null;
 
-        public event EventHandler RequestClose;
+        #endregion
 
         public Action Callback { get; private set; }
 
-        public InformationViewModel(string message, string title, Action callback = null)
+        public InformationViewModel(string message, string title, string details = null, Action callback = null) : base(message, title, details)
         {
-            Title = title;
-            Message = message;
             Callback = callback;
         }
 

@@ -10,8 +10,10 @@
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.ConfirmationWindow"
         xmlns="https://github.com/avaloniaui"
+        xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Panel>
@@ -27,8 +29,21 @@
                         Grid.Row="0">
                 <TextBlock Margin="5"
                            Text="{Binding Message}"
-                           TextWrapping="Wrap"
-                           VerticalAlignment="Center" />
+                           TextWrapping="Wrap" />
+                <Expander Header="Details"
+                          IsVisible="{Binding ShowDetails}"
+                          Margin="5">
+                    <md:MarkdownScrollViewer Height="100"
+                                             Margin="0"
+                                             Markdown="{Binding Details, Mode=OneWay}">
+                        <md:MarkdownScrollViewer.Styles>
+                            <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
+                        </md:MarkdownScrollViewer.Styles>
+                        <md:MarkdownScrollViewer.Engine>
+                            <md:Markdown HyperlinkCommand="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.AppVM.LaunchURL}" />
+                        </md:MarkdownScrollViewer.Engine>
+                    </md:MarkdownScrollViewer>
+                </Expander>
             </StackPanel>
             <StackPanel Classes="DialogButtons"
                         Grid.Column="1"

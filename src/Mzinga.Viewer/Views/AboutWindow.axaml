@@ -40,27 +40,10 @@
                                                  Markdown="{Binding Body, Mode=OneWay}"
                                                  Width="500">
                             <md:MarkdownScrollViewer.Styles>
-                                <Style Selector="ctxt|CTextBlock.Heading2">
-                                    <Setter Property="FontSize"
-                                            Value="14" />
-                                    <Setter Property="FontWeight"
-                                            Value="Bold" />
-                                    <Setter Property="Foreground"
-                                            Value="{StaticResource TextControlForeground}" />
-                                    <Setter Property="Margin"
-                                            Value="0,5" />
-                                </Style>
-                                <Style Selector="ctxt|CTextBlock.Heading2:nth-child(n+2)">
-                                    <Setter Property="Margin"
-                                            Value="0,15,0,5" />
-                                </Style>
-                                <Style Selector="Grid.List">
-                                    <Setter Property="Margin"
-                                            Value="10,0" />
-                                </Style>
+                                <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
                             </md:MarkdownScrollViewer.Styles>
                             <md:MarkdownScrollViewer.Engine>
-                                <md:Markdown HyperlinkCommand="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.LaunchURL}" />
+                                <md:Markdown HyperlinkCommand="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.AppVM.LaunchURL}" />
                             </md:MarkdownScrollViewer.Engine>
                         </md:MarkdownScrollViewer>
                     </DataTemplate>
