@@ -25,6 +25,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Create Release Notes
+        run: ${{ env.ScriptDir }}/CreateReleaseNotes.ps1
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -33,7 +36,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ env.Product }} ${{ github.ref }}
-          body: See [README.md](./README.md) for installation instructions and [CHANGELOG.md](./CHANGELOG.md) for specific information about this release.
+          body_path: ${{ env.BuildDir }}/ReleaseNotes.md
           draft: false
           prerelease: ${{ env.Prerelease }}
 
