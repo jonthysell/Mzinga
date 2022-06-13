@@ -1213,7 +1213,10 @@ namespace Mzinga.Viewer.ViewModels
 
                     if (AppViewModel.CheckForUpdatesEnabled && ViewerConfig.CheckUpdateOnStart && UpdateUtils.IsConnectedToInternet)
                     {
-                        await UpdateUtils.UpdateCheckAsync(true, false);
+                        //AppVM.DoOnUIThread(async () =>
+                        //{
+                            await UpdateUtils.UpdateCheckAsync(true, false);
+                        //});
                     }
                 }
                 catch (Exception ex)

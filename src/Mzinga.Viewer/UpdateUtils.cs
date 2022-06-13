@@ -47,42 +47,45 @@ namespace Mzinga.Viewer
 
                 var latestRelease = await GetLatestGitHubReleaseInfoAsync("jonthysell", AppInfo.Product, showUpToDate ? MaxTimeoutMS : MinTimeoutMS);
 
-                if (latestRelease is null)
+                AppVM.DoOnUIThread(() =>
                 {
-                    if (showUpToDate)
+                    if (latestRelease is null)
                     {
-                        Messenger.Default.Send(new InformationMessage("Unable to check for updates at this time. Please try again later."));
-                    }
-                }
-                else if (latestRelease.LongVersion <= AppInfo.LongVersion)
-                {
-                    if (showUpToDate)
-                    {
-                        Messenger.Default.Send(new InformationMessage($"{AppInfo.Product} is already up-to-date."));
-                    }
-                }
-                else
-                {
-                    // Update available
-                    if (confirmUpdate)
-                    {
-                        Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", !string.IsNullOrWhiteSpace(latestRelease.Body) ? string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body) : null, (result) =>
+                        if (showUpToDate)
                         {
-                            try
-                            {
-                                if (result)
-                                {
-                                    Messenger.Default.Send(new LaunchUrlMessage(latestRelease.HtmlUrl.AbsoluteUri));
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                ExceptionUtils.HandleException(ex);
-                            }
-
-                        }));
+                            Messenger.Default.Send(new InformationMessage("Unable to check for updates at this time. Please try again later."));
+                        }
                     }
-                }
+                    else if (latestRelease.LongVersion <= AppInfo.LongVersion)
+                    {
+                        if (showUpToDate)
+                        {
+                            Messenger.Default.Send(new InformationMessage($"{AppInfo.Product} is already up-to-date."));
+                        }
+                    }
+                    else
+                    {
+                        // Update available
+                        if (confirmUpdate)
+                        {
+                            Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", !string.IsNullOrWhiteSpace(latestRelease.Body) ? string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body) : null, (result) =>
+                            {
+                                try
+                                {
+                                    if (result)
+                                    {
+                                        Messenger.Default.Send(new LaunchUrlMessage(latestRelease.HtmlUrl.AbsoluteUri));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    ExceptionUtils.HandleException(ex);
+                                }
+
+                            }));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
