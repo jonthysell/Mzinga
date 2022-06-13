@@ -795,6 +795,8 @@ namespace Mzinga.Viewer.ViewModels
 
         #region Engine
 
+        public string EngineId => AppVM.EngineWrapper.ID;
+
         public RelayCommand FindBestMove
         {
             get

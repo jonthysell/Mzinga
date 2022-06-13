@@ -58,6 +58,9 @@
             <NativeMenuItem Header="Engine">
                 <NativeMenuItem.Menu>
                     <NativeMenu>
+                        <NativeMenuItem Header="{Binding EngineId}"
+                                        IsEnabled="False" />
+                        <NativeMenuItemSeperator />
                         <NativeMenuItem Command="{Binding FindBestMove}"
                                         Header="Find Best Move" />
                         <NativeMenuItemSeperator />
@@ -139,6 +142,9 @@
                               IsVisible="{Binding IsPlayMode}" />
                 </MenuItem>
                 <MenuItem Header="_Engine">
+                    <MenuItem Header="{Binding EngineId}"
+                              IsEnabled="False" />
+                    <Separator />
                     <MenuItem Command="{Binding FindBestMove}"
                               Header="_Find Best Move" />
                     <Separator />

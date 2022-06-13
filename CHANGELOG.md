@@ -3,6 +3,7 @@
 ## next ##
 
 * Viewer: Set focus to input when opening Engine Console
+* Viewer: Show engine id at top of Engine menu
 
 ## v0.12.5 ##
 
