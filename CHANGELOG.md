@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.5 ##
 
 * Viewer: Show release details when prompting to update
 * Viewer: Fix invalid thread error when new update detected at app start
