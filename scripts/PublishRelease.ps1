@@ -2,7 +2,8 @@ param(
     [string]$BumpPart = "patch",
     [string]$DirectoryBuildPropsFile = "src\Directory.Build.props",
     [string]$AppxManifestFile = "src\Mzinga.Viewer.WinStore\Package.appxmanifest",
-    [string]$ChangelogFile = ".\CHANGELOG.md"
+    [string]$ChangelogFile = ".\CHANGELOG.md",
+    [boolean]$Test = $False
 )
 
 # Adapted from https://gist.github.com/derantell/b8a4c87ea50177b900379df92a25de9d
@@ -59,11 +60,13 @@ try
     Write-Host "Tagging release commit..."
     &git tag v$NewVersion
 
-    Write-Host "Pushing release commit..."
-    &git push
+    if (!$Test) {
+        Write-Host "Pushing release commit..."
+        &git push
 
-    Write-Host "Pushing tags..."
-    &git push --tags
+        Write-Host "Pushing tags..."
+        &git push --tags
+    }
 }
 finally
 {
