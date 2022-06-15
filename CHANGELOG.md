@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.6 ##
 
 * Viewer: Set focus to input when opening Engine Console
 * Viewer: Show engine id at top of Engine menu
