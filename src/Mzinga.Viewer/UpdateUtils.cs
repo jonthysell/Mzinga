@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using GalaSoft.MvvmLight.Messaging;
@@ -135,6 +136,16 @@ namespace Mzinga.Viewer
                     bool draft = releaseObject.GetProperty("draft").GetBoolean();
                     bool prerelease = releaseObject.GetProperty("prerelease").GetBoolean();
 
+                    if (!string.IsNullOrWhiteSpace(body))
+                    {
+                        // Make relative URLs absolute.
+                        body = _markdownUriRegex.Replace(body, (m) =>
+                        {
+                            var newUri = new Uri(new Uri($"https://github.com/{owner}/{repo}/blob/{tagName}/"), m.Groups[2].Value);
+                            return $"[{ m.Groups[1].Value }]({ newUri })";
+                        });
+                    }
+
                     releaseInfos.Add(new GitHubReleaseInfo(name, tagName, htmlUrl, body, draft, prerelease));
                 }
             }
@@ -142,6 +153,8 @@ namespace Mzinga.Viewer
 
             return releaseInfos;
         }
+
+        private static Regex _markdownUriRegex = new Regex(@"\[([^\]]*)\]\(([^\)]*)\)", RegexOptions.Compiled);
 
         private const string _userAgent = "Mozilla/5.0";
     }

@@ -4,6 +4,7 @@
 
 * Viewer: Set focus to input when opening Engine Console
 * Viewer: Show engine id at top of Engine menu
+* Viewer: Fix relative links when showing update release notes
 
 ## v0.12.5 ##
 

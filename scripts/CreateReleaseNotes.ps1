@@ -19,6 +19,9 @@ try
 
     $ReleaseNotes = $ChangelogLines[$FirstIndex..$LastIndex] -Match "\*"
 
+    $ReleaseNotes += ""
+    $ReleaseNotes += "See the [Read Me](./README.md) for installation instructions and the [Changelog](./CHANGELOG.md) for the complete change history."
+
     $ReleaseNotes | ForEach-Object { Write-Host $_ }
 
     if (-not (Test-Path "$OutputRoot")) {
