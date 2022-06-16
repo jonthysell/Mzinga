@@ -22,6 +22,16 @@ namespace Mzinga.Core
 
         public static readonly Position NullPosition = new Position(0, 0, -1);
 
+        public static readonly Position[] OriginNeighbors = new Position[]
+        {
+            new Position(0, -1, 0),
+            new Position(1, -1, 0),
+            new Position(1, 0, 0),
+            new Position(0, 1, 0),
+            new Position(-1, 1, 0),
+            new Position(-1, 0, 0),
+        };
+
         internal static readonly int[][] NeighborDeltas = new int[][]
         {
             new int[] { 0, -1, 0 },

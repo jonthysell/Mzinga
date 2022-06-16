@@ -82,7 +82,7 @@ namespace Mzinga.Core
         private readonly PieceName[,,] _pieceGrid = new PieceName[Position.BoardSize, Position.BoardSize, Position.BoardStackSize];
 
         private bool _cachedValidPlacementsReady = false;
-        private readonly PositionSet _cachedValidPlacements = new PositionSet();
+        private readonly PositionSet _cachedValidPlacements = new PositionSet(32);
         
         private PositionSet? _cachedEnemyQueenNeighbors = null;
 
@@ -475,7 +475,7 @@ namespace Mzinga.Core
 
             if (_cachedEnemyQueenNeighbors is null)
             {
-                _cachedEnemyQueenNeighbors = new PositionSet();
+                _cachedEnemyQueenNeighbors = new PositionSet(8);
 
                 Position enemyQueenPosition = GetPosition(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.wQ);
 
@@ -848,7 +848,7 @@ namespace Mzinga.Core
                 {
                     for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                     {
-                        _cachedValidPlacements.Add(Position.OriginPosition.GetNeighborAt((Direction)dir));
+                        _cachedValidPlacements.Add(Position.OriginNeighbors[dir]);
                     }
                 }
                 else

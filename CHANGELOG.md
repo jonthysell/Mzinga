@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Set initial PositionSet capacity to improve performance
+
 ## v0.12.6 ##
 
 * Viewer: Set focus to input when opening Engine Console

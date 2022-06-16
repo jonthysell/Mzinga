@@ -6,5 +6,9 @@ using System.Collections.Generic;
 
 namespace Mzinga.Core
 {
-    public class PositionSet : HashSet<Position> { }
+    public class PositionSet : HashSet<Position>
+    {
+        public PositionSet() : base() { }
+        public PositionSet(int capacity) : base(capacity) { }
+    }
 }
