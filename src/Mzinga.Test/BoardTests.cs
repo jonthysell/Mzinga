@@ -335,6 +335,44 @@ namespace Mzinga.Test
             }
         }
 
+        [TestMethod]
+        public void Board_NewGameGetBoardMetricsTest()
+        {
+            Board board = new Board();
+
+            BoardMetrics bm = board.GetBoardMetrics();
+            Assert.IsNotNull(bm);
+
+            Assert.AreEqual(BoardState.NotStarted, bm.BoardState);
+            Assert.AreEqual(22, bm.PiecesInHand);
+            Assert.AreEqual(0, bm.PiecesInPlay);
+
+            for (int pn = (int)PieceName.wQ; pn < (int)PieceName.NumPieceNames; pn++)
+            {
+                var pieceName = (PieceName)pn;
+                bool pieceIsEnabled = Enums.PieceNameIsEnabledForGameType(pieceName, board.GameType);
+                bool pieceInOrder = board.PlacingPieceInOrder(pieceName);
+                bool pieceIsQueen = Enums.GetBugType(pieceName) == BugType.QueenBee;
+
+                int quietMoveCount = pieceIsQueen || !pieceIsEnabled || !pieceInOrder ? 0 : (Enums.GetColor(pieceName) == PlayerColor.White ? 1 : 6);
+
+                int isPinned = pieceIsEnabled && quietMoveCount == 0 ? 1 : 0;
+
+                VerifyPieceMetrics(bm[pieceName], isPinned: isPinned, quietMoveCount: quietMoveCount);
+            }
+        }
+
+        private static void VerifyPieceMetrics(PieceMetrics pieceMetrics, int inPlay = 0, int isPinned = 0, int isCovered = 0, int noisyMoveCount = 0, int quietMoveCount = 0, int friendlyNeighborCount = 0, int enemyNeighborCount = 0)
+        {
+            Assert.AreEqual(inPlay, pieceMetrics.InPlay);
+            Assert.AreEqual(isPinned, pieceMetrics.IsPinned);
+            Assert.AreEqual(isCovered, pieceMetrics.IsCovered);
+            Assert.AreEqual(noisyMoveCount, pieceMetrics.NoisyMoveCount);
+            Assert.AreEqual(quietMoveCount, pieceMetrics.QuietMoveCount);
+            Assert.AreEqual(friendlyNeighborCount, pieceMetrics.FriendlyNeighborCount);
+            Assert.AreEqual(enemyNeighborCount, pieceMetrics.EnemyNeighborCount);
+        }
+
         private static void VerifyCanMoveWithoutBreakingHive(Board board, PieceName pieceName, bool canMoveExpected)
         {
             bool canMoveActual = board.CanMoveWithoutBreakingHive(pieceName);

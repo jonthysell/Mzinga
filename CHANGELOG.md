@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Set initial PositionSet capacity to improve performance
+* Core: Fixed broken BoardMetrics calculations
 
 ## v0.12.6 ##
 

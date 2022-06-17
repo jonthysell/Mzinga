@@ -83,6 +83,8 @@ namespace Mzinga.Core
 
         private bool _cachedValidPlacementsReady = false;
         private readonly PositionSet _cachedValidPlacements = new PositionSet(32);
+
+        private MoveSet? _cachedValidMoves = null;
         
         private PositionSet? _cachedEnemyQueenNeighbors = null;
 
@@ -172,26 +174,28 @@ namespace Mzinga.Core
 
         internal MoveSet GetValidMoves()
         {
-            var validMoves = new MoveSet();
-
-            if (GameInProgress)
+            if (_cachedValidMoves is null)
             {
-                for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
-                {
-                    GetValidMoves((PieceName)pn, validMoves);
-                }
+                _cachedValidMoves = new MoveSet();
 
-                if (validMoves.Count == 0)
+                if (GameInProgress)
                 {
-                    validMoves.FastAdd(in Move.PassMove);
+                    for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
+                    {
+                        GetValidMoves((PieceName)pn, _cachedValidMoves);
+                    }
+
+                    if (_cachedValidMoves.Count == 0)
+                    {
+                        _cachedValidMoves.FastAdd(in Move.PassMove);
+                    }
                 }
-            }
 
 #if DEBUG
-            validMoves.ValidateSet();
+                _cachedValidMoves.ValidateSet();
 #endif
-
-            return validMoves;
+            }
+            return _cachedValidMoves;
         }
 
         public void Play(Move move, string moveString = "")
@@ -616,21 +620,23 @@ namespace Mzinga.Core
             // Get the metrics for the current turn
             if (GameInProgress)
             {
-                var moveSet = new MoveSet();   
-                SetCurrentPlayerMetrics(boardMetrics, moveSet);
+                var currentValidMoves = GetValidMoves();
+                SetCurrentPlayerMetrics(boardMetrics, currentValidMoves);
 
                 // Save off cache objects until return
                 PositionSet? enemyQueenNeighbors = _cachedEnemyQueenNeighbors;
-                _cachedEnemyQueenNeighbors = null;
 
                 // Spoof going to the next turn to get the opponent's metrics
                 CurrentTurn++;
-                moveSet.Clear();
-                SetCurrentPlayerMetrics(boardMetrics, moveSet);
+
+                var nextValidMoves = GetValidMoves();
+                SetCurrentPlayerMetrics(boardMetrics, nextValidMoves);
                 CurrentTurn--;
 
                 // Returned, so reload saved cached objects
                 _cachedEnemyQueenNeighbors = enemyQueenNeighbors;
+
+                _cachedValidMoves = currentValidMoves;
             }
 
             return boardMetrics;
@@ -638,22 +644,14 @@ namespace Mzinga.Core
 
         private void SetCurrentPlayerMetrics(BoardMetrics boardMetrics, MoveSet moveSet)
         {
-            bool pullbugEnabled = Enums.BugTypeIsEnabledForGameType(BugType.Pillbug, GameType);
-            bool mosquitoEnabled = Enums.BugTypeIsEnabledForGameType(BugType.Mosquito, GameType);
-
-            var pillbugMoves = new MoveSet();
-            GetValidMoves(CurrentColor == PlayerColor.White ? PieceName.wP : PieceName.bP, pillbugMoves);
-
-            var mosquitoMoves = new MoveSet();
-            GetValidMoves(CurrentColor == PlayerColor.White ? PieceName.wM : PieceName.bM, mosquitoMoves);
-
             for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
             {
                 var pieceName = (PieceName)pn;
 
                 if (Enums.PieceNameIsEnabledForGameType(pieceName, GameType))
                 {
-                    if (PieceInPlay(pieceName))
+                    bool pieceInPlay = PieceInPlay(pieceName);
+                    if (pieceInPlay)
                     {
                         boardMetrics.PiecesInPlay++;
                         boardMetrics[pieceName].InPlay = 1;
@@ -667,30 +665,8 @@ namespace Mzinga.Core
                     // Move metrics
                     bool isPinned = IsPinned(pieceName, moveSet, out boardMetrics[pieceName].NoisyMoveCount, out boardMetrics[pieceName].QuietMoveCount);
 
-                    if (isPinned && pullbugEnabled)
-                    {
-                        bool pullbugCanMove = pillbugMoves.Contains(pieceName);
-                        bool mosquitoCanMove = mosquitoEnabled && mosquitoMoves.Contains(pieceName);
-
-                        if (Enums.GetBugType(pieceName) == BugType.Pillbug)
-                        {
-                            // Check if the current player's mosquito can move it
-                            isPinned = !mosquitoCanMove;
-                        }
-                        else if (Enums.GetBugType(pieceName) == BugType.Mosquito)
-                        {
-                            // Check if the current player's pillbug can move it
-                            isPinned = !pullbugCanMove;
-                        }
-                        else
-                        {
-                            // Check if the current player's pillbug or mosquito can move it
-                            isPinned = !(mosquitoCanMove || pullbugCanMove);
-                        }
-                    }
-
                     boardMetrics[pieceName].IsPinned = isPinned ? 1 : 0;
-                    boardMetrics[pieceName].IsCovered = PieceIsOnTop(pieceName) ? 0 : 1;
+                    boardMetrics[pieceName].IsCovered = pieceInPlay && !PieceIsOnTop(pieceName) ? 1 : 0;
 
                     CountNeighbors(pieceName, out boardMetrics[pieceName].FriendlyNeighborCount, out boardMetrics[pieceName].EnemyNeighborCount);
                 }
@@ -702,30 +678,22 @@ namespace Mzinga.Core
             noisyCount = 0;
             quietCount = 0;
 
-            int previousMoves = moveSet.Count;
-            GetValidMoves(pieceName, moveSet);
-            
-            if (moveSet.Count > previousMoves)
+            foreach (var move in moveSet)
             {
-                foreach (var move in moveSet)
+                if (move.PieceName == pieceName)
                 {
-                    if (move.PieceName == pieceName)
+                    if (IsNoisyMove(move))
                     {
-                        if (IsNoisyMove(move))
-                        {
-                            noisyCount++;
-                        }
-                        else
-                        {
-                            quietCount++;
-                        }
+                        noisyCount++;
+                    }
+                    else
+                    {
+                        quietCount++;
                     }
                 }
-
-                return false;
             }
 
-            return true;
+            return (noisyCount + quietCount) == 0;
         }
 
         public Board Clone()
@@ -1210,7 +1178,7 @@ namespace Mzinga.Core
             LastPieceMoved = move.PieceName;
         }
 
-        private bool PlacingPieceInOrder(PieceName pieceName)
+        internal bool PlacingPieceInOrder(PieceName pieceName)
         {
             if (PieceInHand(pieceName))
             {
@@ -1496,6 +1464,7 @@ namespace Mzinga.Core
         private void ResetCaches()
         {
             _cachedValidPlacementsReady = false;
+            _cachedValidMoves = null;
             _cachedEnemyQueenNeighbors = null;
         }
     }
