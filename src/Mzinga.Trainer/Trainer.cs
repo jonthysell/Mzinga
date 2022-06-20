@@ -190,7 +190,7 @@ namespace Mzinga.Trainer
 
             ParallelOptions po = new ParallelOptions
             {
-                MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles
+                MaxDegreeOfParallelism = Math.Max(maxConcurrentBattles, Environment.ProcessorCount)
             };
 
             Parallel.ForEach(matches.AsParallel().AsOrdered(), po, (match, loopState) =>
@@ -817,7 +817,7 @@ namespace Mzinga.Trainer
 
                 ParallelOptions po = new ParallelOptions
                 {
-                    MaxDegreeOfParallelism = (maxConcurrentBattles == TrainerSettings.MaxMaxConcurrentBattles) ? Environment.ProcessorCount : maxConcurrentBattles
+                    MaxDegreeOfParallelism = Math.Max(maxConcurrentBattles, Environment.ProcessorCount)
                 };
 
                 Parallel.For(0, winners.Length, po, (i, loopState) =>
@@ -942,10 +942,17 @@ namespace Mzinga.Trainer
 
         public void AutoTrain()
         {
-            RunCommandInAllGameTypes(() => { AutoTrain(TrainerSettings.TargetProfilePath); });
+            if (string.IsNullOrWhiteSpace(TrainerSettings.TargetProfilePath))
+            {
+                RunCommandInAllGameTypes(() => { AutoTrainSelf(); });
+            }
+            else
+            {
+                RunCommandInAllGameTypes(() => { AutoTrainProfile(TrainerSettings.TargetProfilePath); });
+            }
         }
 
-        private void AutoTrain(string path)
+        private void AutoTrainProfile(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -954,7 +961,7 @@ namespace Mzinga.Trainer
 
             StartTime = DateTime.Now;
 
-            Log("AutoTrain start.");
+            Log("AutoTrain profile start.");
 
             // Read profile
             Profile profile;
@@ -963,8 +970,6 @@ namespace Mzinga.Trainer
                 profile = Profile.ReadXml(fs);
             }
 
-            int battleCount = 0;
-
             // Create AI
             GameAI gameAI = new GameAI(new GameAIConfig()
             {
@@ -972,6 +977,54 @@ namespace Mzinga.Trainer
                 EndMetricWeights = profile.EndMetricWeights,
                 TranspositionTableSizeMB = TrainerSettings.TransTableSize,
             });
+
+            AutoTrain(gameAI, () =>
+            {
+                // Update profile with final MetricWeights
+                profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights, TrainerSettings.GameType);
+
+                // Write profile
+                using FileStream fs = new FileStream(path, FileMode.Create);
+                profile.WriteXml(fs);
+            });
+
+            Log("AutoTrain profile end.");
+        }
+
+        private void AutoTrainSelf()
+        {
+            StartTime = DateTime.Now;
+
+            Log("AutoTrain self start.");
+
+            TryGetAutoTrainEngineConfig(true, out EngineConfig config);
+
+            // Create AI
+            MetricWeights[] mw = config.GetMetricWeights(TrainerSettings.GameType);
+
+            GameAI gameAI = new GameAI(new GameAIConfig()
+            {
+                StartMetricWeights = mw[0],
+                EndMetricWeights = mw[1] ?? mw[0],
+                TranspositionTableSizeMB = TrainerSettings.TransTableSize,
+            });
+
+            AutoTrain(gameAI, () =>
+            {
+                // Update config with final MetricWeights
+                config.MetricWeightSet[TrainerSettings.GameType] = new MetricWeights[] { gameAI.StartMetricWeights, gameAI.EndMetricWeights };
+
+                // Write profile
+                using FileStream fs = new FileStream(MzingaAutoTrainConfig, FileMode.Create);
+                config.SaveConfig(fs, "MzingaTrainer", ConfigSaveType.MetricWeights);
+            });
+
+            Log("AutoTrain self end.");
+        }
+
+        private void AutoTrain(GameAI gameAI, Action saveResults)
+        {
+            int battleCount = 0;
 
             while (TrainerSettings.MaxBattles == TrainerSettings.MaxMaxBattles || battleCount < TrainerSettings.MaxBattles)
             {
@@ -998,14 +1051,7 @@ namespace Mzinga.Trainer
                     Task treeStrapTask = TrainerSettings.MaxDepth >= 0 ? gameAI.TreeStrapAsync(board, TrainerSettings.MaxDepth, TrainerSettings.MaxHelperThreads, cts.Token).AsTask() : gameAI.TreeStrapAsync(board, TrainerSettings.TurnMaxTime, TrainerSettings.MaxHelperThreads, cts.Token).AsTask();
                     treeStrapTask.Wait();
 
-                    // Update profile with final MetricWeights
-                    profile.UpdateMetricWeights(gameAI.StartMetricWeights, gameAI.EndMetricWeights, board.GameType);
-
-                    // Write profile
-                    using (FileStream fs = new FileStream(path, FileMode.Create))
-                    {
-                        profile.WriteXml(fs);
-                    }
+                    saveResults();
 
                     Log("AutoTrain battle {0} {1} end {2};{3}[{4}].", Enums.GetGameTypeString(board.GameType), battleCount + 1, board.BoardState.ToString(), board.CurrentColor.ToString(), board.CurrentPlayerTurn);
                 }
@@ -1024,8 +1070,6 @@ namespace Mzinga.Trainer
 
                 battleCount++;
             }
-
-            Log("AutoTrain end.");
         }
 
         public void Top()
@@ -1113,14 +1157,14 @@ namespace Mzinga.Trainer
             StartTime = DateTime.Now;
             Log("ExportAI start.");
 
-            EngineConfig config = EngineConfig.GetDefaultEngineConfig();
+            bool autoTrain = TryGetAutoTrainEngineConfig(false, out EngineConfig config);
 
             for (int i = 0; i < (int)GameType.NumGameTypes; i++)
             {
                 GameType gameType = (GameType)i;
 
-                Guid id = ToGuid(AppInfo.LongVersion + (ulong)i);
-                string name = string.Format("Mzinga v{0} ({1})", AppInfo.Version, Enums.GetGameTypeString(gameType));
+                Guid id = ToGuid((autoTrain ? 0UL : AppInfo.LongVersion) + (ulong)i);
+                string name = $"Mzinga v{(autoTrain ? "AutoTrain" : AppInfo.Version)} ({Enums.GetGameTypeString(gameType)})";
 
                 Profile p = new Profile(id, name, config.MetricWeightSet[gameType][0], config.MetricWeightSet[gameType][1]);
 
@@ -1132,6 +1176,32 @@ namespace Mzinga.Trainer
 
             Log("ExportAI end.");
         }
+
+        private bool TryGetAutoTrainEngineConfig(bool createFile, out EngineConfig config)
+        {
+            bool filePresent = File.Exists(MzingaAutoTrainConfig);
+
+            if (filePresent)
+            {
+                Log($"Loading {MzingaAutoTrainConfig}.");
+                using var inputStream = new FileStream(MzingaAutoTrainConfig, FileMode.Open);
+                config = new EngineConfig(inputStream);
+                return true;
+            }
+
+            config = EngineConfig.GetDefaultEngineConfig();
+
+            if (!filePresent && createFile)
+            {
+                using var outputStream = new FileStream(MzingaAutoTrainConfig, FileMode.CreateNew);
+                config.SaveConfig(outputStream, "MzingaTrainer", ConfigSaveType.MetricWeights);
+                filePresent = true;
+            }
+
+            return filePresent;
+        }
+
+        private const string MzingaAutoTrainConfig = "MzingaAutoTrainConfig.xml";
 
         private static Guid ToGuid(ulong value)
         {

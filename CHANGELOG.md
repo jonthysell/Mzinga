@@ -4,6 +4,7 @@
 
 * Core: Set initial PositionSet capacity to improve performance
 * Core: Fixed broken BoardMetrics calculations
+* Trainer: AutoTrain now supports using MzingaAutoTrainConfig.xml
 
 ## v0.12.6 ##
 
