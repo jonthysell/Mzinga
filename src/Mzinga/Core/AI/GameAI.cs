@@ -645,7 +645,7 @@ namespace Mzinga.Core.AI
 
         #region Board Scores
 
-        private double CalculateBoardScore(Board board)
+        internal double CalculateBoardScore(Board board)
         {
             // Always score from white's point of view
 
@@ -727,6 +727,29 @@ namespace Mzinga.Core.AI
         #region TreeStrap
 
         // TreeStrap algorithms taken from http://papers.nips.cc/paper/3722-bootstrapping-from-game-tree-search.pdf
+
+        public void TreeStrap(Board board, TimeSpan maxTime, int maxHelperThreads)
+        {
+            TreeStrap(board, int.MaxValue, maxTime, maxHelperThreads);
+        }
+
+        public void TreeStrap(Board board, int maxDepth, int maxHelperThreads)
+        {
+            TreeStrap(board, maxDepth, TimeSpan.MaxValue, maxHelperThreads);
+        }
+
+        private void TreeStrap(Board board, int maxDepth, TimeSpan maxTime, int maxHelperThreads)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            if (maxTime < TimeSpan.MaxValue)
+            {
+                cts.CancelAfter(maxTime);
+            }
+
+            Task task = TreeStrapAsync(board, maxDepth, maxTime, maxHelperThreads, cts.Token).AsTask();
+            task.Wait();
+        }
 
         public async ValueTask TreeStrapAsync(Board board, int maxDepth, int maxHelperThreads, CancellationToken token)
         {

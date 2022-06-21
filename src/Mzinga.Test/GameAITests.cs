@@ -127,6 +127,12 @@ namespace Mzinga.Test
         }
 
         [TestMethod]
+        public void GameAI_TreeStrapImprovesBoardScoreForOneBestMoveToForceWinPuzzleTest()
+        {
+            TestUtils.LoadAndExecuteTestCases<GameAITreeStrapTestCase>("PuzzleCandidate_IsOneBestMoveToForceWinPuzzleTest.csv");
+        }
+
+        [TestMethod]
         public void GameAI_BlockWinningMoveIsBestMoveTest()
         {
             TestUtils.LoadAndExecuteTestCases<GameAIBestMoveTestCase>("GameAI_BlockWinningMoveIsBestMoveTest.csv");
@@ -150,20 +156,48 @@ namespace Mzinga.Test
             return TestUtils.DefaultGameEngineConfig.GetGameAI(gameType);
         }
 
-        private class GameAIBestMoveTestCase : ITestCase
+        private class GameAIBestMoveTestCase : GameAIBestMoveTestCaseBase
         {
-            public Board Board;
-            public int MaxDepth;
-
-            public Move ExpectedBestMove;
             public Move ActualBestMove;
 
-            public void Execute()
+            public override void Execute()
             {
                 GameAI ai = GetTestGameAI(Board.GameType);
                 ActualBestMove = ai.GetBestMove(Board, MaxDepth, TestMaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove, $"Expected: {Board.GetMoveString(ExpectedBestMove)}, Actual: {Board.GetMoveString(ActualBestMove)}.");
             }
+        }
+
+        private class GameAITreeStrapTestCase : GameAIBestMoveTestCaseBase
+        {
+            public override void Execute()
+            {
+                GameAI ai = GetTestGameAI(Board.GameType);
+
+                double colorValue = Board.CurrentColor == PlayerColor.White ? 1.0 : -1.0;
+
+                Board.TrustedPlay(ExpectedBestMove);
+                var clone = Board.Clone();
+
+                double startScore = colorValue * ai.CalculateBoardScore(Board);
+
+                ai.TreeStrap(Board, MaxDepth, TestMaxHelperThreads);
+                ai.ResetCaches();
+
+                double endScore = colorValue * ai.CalculateBoardScore(clone);
+
+                Assert.IsTrue(endScore >= startScore);
+            }
+        }
+
+        private abstract class GameAIBestMoveTestCaseBase : ITestCase
+        {
+            public Board Board;
+            public int MaxDepth;
+
+            public Move ExpectedBestMove;
+
+            public abstract void Execute();
 
             public void Parse(string s)
             {
