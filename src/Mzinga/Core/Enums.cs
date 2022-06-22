@@ -266,27 +266,26 @@ namespace Mzinga.Core
             }
         }
 
+        private static uint[] _pieceNameIsEnabledForGameType = new uint[]
+        {
+            0b1111111111100011111111111000,
+            0b1111111111110011111111111100,
+            0b1111111111101011111111111010,
+            0b1111111111100111111111111001,
+            0b1111111111111011111111111110,
+            0b1111111111110111111111111101,
+            0b1111111111101111111111111011,
+            0b1111111111111111111111111111,
+        };
+
         public static bool PieceNameIsEnabledForGameType(PieceName pieceName, GameType gameType)
         {
-            switch (pieceName)
+            if (pieceName == PieceName.INVALID || gameType == GameType.INVALID)
             {
-                case PieceName.INVALID:
-                    return false;
-                case PieceName.wM:
-                case PieceName.bM:
-                    return gameType == GameType.BaseM || gameType == GameType.BaseML || gameType == GameType.BaseMP ||
-                           gameType == GameType.BaseMLP;
-                case PieceName.wL:
-                case PieceName.bL:
-                    return gameType == GameType.BaseL || gameType == GameType.BaseML || gameType == GameType.BaseLP ||
-                           gameType == GameType.BaseMLP;
-                case PieceName.wP:
-                case PieceName.bP:
-                    return gameType == GameType.BaseP || gameType == GameType.BaseMP || gameType == GameType.BaseLP ||
-                           gameType == GameType.BaseMLP;
-                default:
-                    return true;
+                return false;
             }
+
+            return ((0b1000000000000000000000000000 >> (int)pieceName) & _pieceNameIsEnabledForGameType[(int)gameType]) != 0;
         }
 
         public static bool BugTypeIsEnabledForGameType(BugType bugType, GameType gameType)

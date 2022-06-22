@@ -1180,34 +1180,23 @@ namespace Mzinga.Core
 
         internal bool PlacingPieceInOrder(PieceName pieceName)
         {
-            if (PieceInHand(pieceName))
+            if (_piecePositions[(int)pieceName].Stack < 0)
             {
                 switch (pieceName)
                 {
                     case PieceName.wS2:
-                        return PieceInPlay(PieceName.wS1);
                     case PieceName.wB2:
-                        return PieceInPlay(PieceName.wB1);
                     case PieceName.wG2:
-                        return PieceInPlay(PieceName.wG1);
                     case PieceName.wG3:
-                        return PieceInPlay(PieceName.wG2);
                     case PieceName.wA2:
-                        return PieceInPlay(PieceName.wA1);
                     case PieceName.wA3:
-                        return PieceInPlay(PieceName.wA2);
                     case PieceName.bS2:
-                        return PieceInPlay(PieceName.bS1);
                     case PieceName.bB2:
-                        return PieceInPlay(PieceName.bB1);
                     case PieceName.bG2:
-                        return PieceInPlay(PieceName.bG1);
                     case PieceName.bG3:
-                        return PieceInPlay(PieceName.bG2);
                     case PieceName.bA2:
-                        return PieceInPlay(PieceName.bA1);
                     case PieceName.bA3:
-                        return PieceInPlay(PieceName.bA2);
+                        return _piecePositions[(int)pieceName - 1].Stack >= 0;
                 }
             }
 

@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Optimized Enums.PieceNameIsEnabledForGameType and Board.PlacingPieceInOrder for better performance
+
 ## v0.12.7 ##
 
 * Core: Set initial PositionSet capacity to improve performance
