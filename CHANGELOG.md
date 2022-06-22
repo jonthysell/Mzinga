@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.7 ##
 
 * Core: Set initial PositionSet capacity to improve performance
 * Core: Fixed broken BoardMetrics calculations
