@@ -4,6 +4,7 @@
 
 * Core: Set initial PositionSet capacity to improve performance
 * Core: Fixed broken BoardMetrics calculations
+* Core: Empty board should always be scored as a zero
 * Test: Added TreeStrap tests
 * Trainer: AutoTrain now supports using MzingaAutoTrainConfig.xml
 

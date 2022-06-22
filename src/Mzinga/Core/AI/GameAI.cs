@@ -657,7 +657,7 @@ namespace Mzinga.Core.AI
             {
                 return double.NegativeInfinity;
             }
-            else if (board.BoardState == BoardState.Draw)
+            else if (board.BoardState == BoardState.Draw || board.BoardState == BoardState.NotStarted)
             {
                 return 0.0;
             }
