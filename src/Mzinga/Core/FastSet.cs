@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Mzinga.Core
 {
-    public class FastSet<T> : IReadOnlyCollection<T>
+    public class FastSet<T> : IReadOnlyCollection<T> where T: struct
     {
         private readonly List<T> _items = new List<T>(32);
 
@@ -16,12 +16,19 @@ namespace Mzinga.Core
 
         public bool Contains(in T item)
         {
-            return _items.Contains(item);
+            for (int i = Count - 1; i >= 0; i--)
+            {
+                if (_items[i].Equals(item))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         
         internal bool Add(in T item)
         {
-            if (_items.Contains(item))
+            if (Contains(in item))
             {
                 return false;
             }
