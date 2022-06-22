@@ -190,7 +190,7 @@ namespace Mzinga.Trainer
 
             ParallelOptions po = new ParallelOptions
             {
-                MaxDegreeOfParallelism = Math.Max(maxConcurrentBattles, Environment.ProcessorCount)
+                MaxDegreeOfParallelism = maxConcurrentBattles < 1 ? Environment.ProcessorCount : maxConcurrentBattles,
             };
 
             Parallel.ForEach(matches.AsParallel().AsOrdered(), po, (match, loopState) =>
@@ -817,7 +817,7 @@ namespace Mzinga.Trainer
 
                 ParallelOptions po = new ParallelOptions
                 {
-                    MaxDegreeOfParallelism = Math.Max(maxConcurrentBattles, Environment.ProcessorCount)
+                    MaxDegreeOfParallelism = maxConcurrentBattles < 1 ? Environment.ProcessorCount : maxConcurrentBattles,
                 };
 
                 Parallel.For(0, winners.Length, po, (i, loopState) =>
