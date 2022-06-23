@@ -1292,16 +1292,16 @@ namespace Mzinga.Core
             int pieceIndex = (int)pieceName;
             if (_piecePositions[pieceIndex].Stack == 0)
             {
-                // Try edge heurestic
-                int edges = 0;
+                // Try gaps heurestic
+                int gaps = 0;
                 bool? lastHasPiece = null;
                 for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                 {
                     bool hasPiece = HasPieceAt(in _piecePositions[pieceIndex], (Direction)dir);
                     if (lastHasPiece.HasValue && lastHasPiece.Value != hasPiece)
                     {
-                        edges++;
-                        if (edges > 2)
+                        gaps++;
+                        if (gaps > 2)
                         {
                             break;
                         }
@@ -1309,7 +1309,7 @@ namespace Mzinga.Core
                     lastHasPiece = hasPiece;
                 }
 
-                if (edges <= 2)
+                if (gaps <= 2)
                 {
                     return true;
                 }
