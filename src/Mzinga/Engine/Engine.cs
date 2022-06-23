@@ -84,9 +84,10 @@ namespace Mzinga.Engine
                     Board clone = _board.Clone();
                     for (int i = 0; i < args.PrincipalVariation.Count; i++)
                     {
+                        var move = args.PrincipalVariation[i];
                         sb.Append(';');
-                        sb.Append(clone.GetMoveString(args.PrincipalVariation[i]));
-                        clone.TrustedPlay(args.PrincipalVariation[i]);
+                        sb.Append(clone.GetMoveString(in move));
+                        clone.TrustedPlay(in move);
                     }
                 }
 

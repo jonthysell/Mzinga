@@ -682,7 +682,7 @@ namespace Mzinga.Core
             {
                 if (move.PieceName == pieceName)
                 {
-                    if (IsNoisyMove(move))
+                    if (IsNoisyMove(in move))
                     {
                         noisyCount++;
                     }
@@ -1057,7 +1057,7 @@ namespace Mzinga.Core
 
         private void GetValidPillbugBasicMoves(PieceName pieceName, MoveSet moveSet)
         {
-            GetValidQueenBeeMoves(pieceName, moveSet);
+            GetValidSlides(pieceName, moveSet, 1);
         }
 
         private void GetValidPillbugSpecialMoves(PieceName pieceName, MoveSet moveSet)
@@ -1144,7 +1144,7 @@ namespace Mzinga.Core
             if (remainingSlides == 0)
             {
                 var move = new Move(pieceName, startingPosition, currentPosition);
-                moveSet.Add(move);
+                moveSet.Add(in move);
             }
             else
             {
@@ -1166,7 +1166,7 @@ namespace Mzinga.Core
 
         internal void TrustedPlay(in Move move, string moveStr = "")
         {
-            BoardHistory.Add(move, moveStr);
+            BoardHistory.Add(in move, moveStr);
 
             if (move != Move.PassMove)
             {
