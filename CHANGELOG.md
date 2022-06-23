@@ -6,6 +6,7 @@
 * Core: Optimized FastSet by reversing search order
 * Core: Optimized Move equality comparison
 * Core: Optimized Position.GetHashCode
+* Test: Added more move tests based on final matches of the Online Hive World Championships 
 
 ## v0.12.7 ##
 
