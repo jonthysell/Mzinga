@@ -32,21 +32,21 @@ namespace Mzinga.Core
             new Position(-1, 0, 0),
         };
 
-        internal static readonly int[][] NeighborDeltas = new int[][]
+        internal static readonly int[,] NeighborDeltas = new int[,]
         {
-            new int[] { 0, -1, 0 },
-            new int[] { 1, -1, 0 },
-            new int[] { 1, 0, 0 },
-            new int[] { 0, 1, 0 },
-            new int[] { -1, 1, 0 },
-            new int[] { -1, 0, 0 },
-            new int[] { 0, 0, 1 },
+            { 0, -1, 0 },
+            { 1, -1, 0 },
+            { 1, 0, 0 },
+            { 0, 1, 0 },
+            { -1, 1, 0 },
+            { -1, 0, 0 },
+            { 0, 0, 1 },
         };
 
         public Position GetNeighborAt(Direction direction) => new Position
         (
-            Q + NeighborDeltas[(int)direction][0],
-            R + NeighborDeltas[(int)direction][1],
+            Q + NeighborDeltas[(int)direction, 0],
+            R + NeighborDeltas[(int)direction, 1],
             Stack
         );
 

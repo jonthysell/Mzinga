@@ -1242,7 +1242,7 @@ namespace Mzinga.Core
 
         private PieceName GetPieceAt(in Position position, Direction direction)
         {
-            return _pieceGrid[(Position.BoardSize / 2) + position.Q + Position.NeighborDeltas[(int)direction][0], (Position.BoardSize / 2) + position.R + Position.NeighborDeltas[(int)direction][1], position.Stack + Position.NeighborDeltas[(int)direction][2]];
+            return _pieceGrid[(Position.BoardSize / 2) + position.Q + Position.NeighborDeltas[(int)direction, 0], (Position.BoardSize / 2) + position.R + Position.NeighborDeltas[(int)direction, 1], position.Stack + Position.NeighborDeltas[(int)direction, 2]];
         }
 
         public PieceName GetPieceOnTopAt(in Position position)
