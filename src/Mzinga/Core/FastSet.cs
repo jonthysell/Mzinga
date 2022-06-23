@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Mzinga.Core
 {
-    public class FastSet<T> : IReadOnlyCollection<T> where T: struct
+    public class FastSet<T> : IReadOnlyCollection<T> where T: struct, IEquatable<T>
     {
         private readonly List<T> _items = new List<T>(32);
 

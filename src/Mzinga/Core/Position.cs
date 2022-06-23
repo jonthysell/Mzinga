@@ -5,7 +5,7 @@ using System;
 
 namespace Mzinga.Core
 {
-    public readonly struct Position
+    public readonly struct Position : IEquatable<Position>
     {
         public readonly int Q;
         public readonly int R;
@@ -59,6 +59,11 @@ namespace Mzinga.Core
         public override bool Equals(object? obj)
         {
             return obj is Position pos && this == pos;
+        }
+
+        public bool Equals(Position other)
+        {
+            return this == other;
         }
 
         public override int GetHashCode()

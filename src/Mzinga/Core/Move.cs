@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Mzinga.Core
 {
-    public readonly struct Move
+    public readonly struct Move : IEquatable<Move>
     {
         public readonly PieceName PieceName;
         public readonly Position Source;
@@ -26,17 +26,22 @@ namespace Mzinga.Core
             return obj is Move move && this == move;
         }
 
+        public bool Equals(Move other)
+        {
+            return this == other;
+        }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(PieceName, Destination);
         }
 
-        public static bool operator ==(Move lhs, Move rhs)
+        public static bool operator ==(in Move lhs, in Move rhs)
         {
             return lhs.PieceName == rhs.PieceName && lhs.Source == rhs.Source && lhs.Destination == rhs.Destination;
         }
 
-        public static bool operator !=(Move lhs, Move rhs) => !(lhs == rhs);
+        public static bool operator !=(in Move lhs, in Move rhs) => !(lhs == rhs);
 
         public static string BuildMoveString(bool isPass, PieceName startPiece, char beforeSeperator, PieceName endPiece, char afterSeperator)
         {
