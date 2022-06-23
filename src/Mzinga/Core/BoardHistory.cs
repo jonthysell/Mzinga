@@ -16,9 +16,9 @@ namespace Mzinga.Core
 
         private readonly List<BoardHistoryItem> _items = new List<BoardHistoryItem>();
 
-        internal void Add(Move move, string moveStr)
+        internal void Add(in Move move, string moveStr)
         {
-            _items.Add(new BoardHistoryItem(move, moveStr));
+            _items.Add(new BoardHistoryItem(in move, moveStr));
         }
 
         internal void UndoLast()
@@ -42,7 +42,7 @@ namespace Mzinga.Core
         public readonly Move Move;
         public readonly string MoveString;
 
-        public BoardHistoryItem(Move move, string moveStr)
+        public BoardHistoryItem(in Move move, string moveStr)
         {
             Move = move;
             MoveString = moveStr;

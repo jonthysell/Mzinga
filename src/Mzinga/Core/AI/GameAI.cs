@@ -249,7 +249,7 @@ namespace Mzinga.Core.AI
                     return new EvaluatedMoveCollection(movesToEvaluate, false);
                 }
 
-                board.TrustedPlay(moveToEvaluate.Move);
+                board.TrustedPlay(in moveToEvaluate.Move);
 
                 double? value = null;
 
@@ -428,7 +428,7 @@ namespace Mzinga.Core.AI
 
                 double? value = null;
 
-                board.TrustedPlay(move);
+                board.TrustedPlay(in move);
 
                 if (firstMove)
                 {
@@ -513,7 +513,7 @@ namespace Mzinga.Core.AI
 
                 var move = tEntry.BestMove.Value;
                 moves.Add(move);
-                clone.TrustedPlay(move);
+                clone.TrustedPlay(in move);
             }
 
             return moves;
@@ -566,7 +566,7 @@ namespace Mzinga.Core.AI
             return validMoves;
         }
 
-        private static int PreSortMoves(Move a, Move b, Board board, Move? bestMove)
+        private static int PreSortMoves(in Move a, in Move b, Board board, Move? bestMove)
         {
             // Put the best move from a previous search first
             if (bestMove is not null)
@@ -582,11 +582,11 @@ namespace Mzinga.Core.AI
             }
 
             // Put noisy moves first
-            if (board.IsNoisyMove(a) && !board.IsNoisyMove(b))
+            if (board.IsNoisyMove(in a) && !board.IsNoisyMove(in b))
             {
                 return -1;
             }
-            else if (board.IsNoisyMove(b) && !board.IsNoisyMove(a))
+            else if (board.IsNoisyMove(in b) && !board.IsNoisyMove(in a))
             {
                 return 1;
             }
@@ -616,9 +616,9 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
-                if (board.IsNoisyMove(move))
+                if (board.IsNoisyMove(in move))
                 {
-                    board.TrustedPlay(move);
+                    board.TrustedPlay(in move);
                     double? value = -1 * await QuiescenceSearchAsync(board, depth - 1, -beta, -alpha, -color, token);
                     board.TryUndoLastMove();
 
@@ -820,7 +820,7 @@ namespace Mzinga.Core.AI
                 EndMetricWeights.Add(deltaEnd);
 
                 // Play best move and reset caches
-                board.TrustedPlay(bestMove, board.GetMoveString(bestMove));
+                board.TrustedPlay(in bestMove, board.GetMoveString(bestMove));
                 ResetCaches();
             }
         }
@@ -873,7 +873,7 @@ namespace Mzinga.Core.AI
                         break;
                     }
 
-                    board.TrustedPlay(move);
+                    board.TrustedPlay(in move);
                     DeltaFromTransTable(board, visitedKeys, token, out MetricWeights ds1, out MetricWeights de1);
                     ds.Add(ds1);
                     de.Add(de1);

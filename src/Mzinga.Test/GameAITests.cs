@@ -176,7 +176,7 @@ namespace Mzinga.Test
 
                 double colorValue = Board.CurrentColor == PlayerColor.White ? 1.0 : -1.0;
 
-                Board.TrustedPlay(ExpectedBestMove);
+                Board.TrustedPlay(in ExpectedBestMove);
                 var clone = Board.Clone();
 
                 double startScore = colorValue * ai.CalculateBoardScore(Board);

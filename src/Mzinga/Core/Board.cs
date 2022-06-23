@@ -113,9 +113,9 @@ namespace Mzinga.Core
 
                 if (trustedPlay)
                 {
-                    board.TrustedPlay(move, parsedMoveString);
+                    board.TrustedPlay(in move, parsedMoveString);
                 }
-                else if (!board.TryPlayMove(move, parsedMoveString))
+                else if (!board.TryPlayMove(in move, parsedMoveString))
                 {
                     throw new ArgumentException($"Unable to play '{split[i]}' in GameString.", nameof(gameStr));
                 }
@@ -198,7 +198,7 @@ namespace Mzinga.Core
             return _cachedValidMoves;
         }
 
-        public void Play(Move move, string moveString = "")
+        public void Play(in Move move, string moveString = "")
         {
             if (move == Move.PassMove)
             {
@@ -270,7 +270,7 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(move);
             }
 
-            TrustedPlay(move, moveString);
+            TrustedPlay(in move, moveString);
         }
 
         public void Pass()
@@ -285,16 +285,16 @@ namespace Mzinga.Core
                 throw new InvalidMoveException(Move.PassMove, "You can't pass when you have valid moves.");
             }
 
-            TrustedPlay(Move.PassMove, Move.PassString);
+            TrustedPlay(in Move.PassMove, Move.PassString);
         }
 
-        public bool TryPlayMove(Move move, string moveString = "")
+        public bool TryPlayMove(in Move move, string moveString = "")
         {
             var validMoves = GetValidMoves();
 
             if (validMoves.Contains(in move))
             {
-                TrustedPlay(move, moveString);
+                TrustedPlay(in move, moveString);
                 return true;
             }
 
@@ -323,7 +323,7 @@ namespace Mzinga.Core
             return false;
         }
 
-        public string GetMoveString(Move move)
+        public string GetMoveString(in Move move)
         {
             if (move == Move.PassMove)
             {
@@ -390,11 +390,11 @@ namespace Mzinga.Core
             throw new ArgumentOutOfRangeException(nameof(move));
         }
 
-        public bool TryGetMoveString(Move move, out string result)
+        public bool TryGetMoveString(in Move move, out string result)
         {
             try
             {
-                result = GetMoveString(move);
+                result = GetMoveString(in move);
                 return true;
             }
             catch (Exception) { }
@@ -470,7 +470,7 @@ namespace Mzinga.Core
             return false;
         }
 
-        public bool IsNoisyMove(Move move)
+        public bool IsNoisyMove(in Move move)
         {
             if (move == Move.PassMove)
             {
@@ -530,7 +530,7 @@ namespace Mzinga.Core
                     break;
                 }
 
-                TrustedPlay(move);
+                TrustedPlay(in move);
 
                 long? value = await CalculatePerftAsync(depth - 1, token);
                 TryUndoLastMove();
@@ -591,7 +591,7 @@ namespace Mzinga.Core
                         }
 
                         var clone = Clone();
-                        clone.TrustedPlay(move);
+                        clone.TrustedPlay(in move);
 
                         long? value = await clone.CalculatePerftAsync(depth - 1, token);
 
@@ -701,7 +701,7 @@ namespace Mzinga.Core
             var board = new Board(GameType);
             foreach (var item in BoardHistory)
             {
-                board.TrustedPlay(item.Move, item.MoveString);
+                board.TrustedPlay(in item.Move, item.MoveString);
             }
 
             return board;
@@ -1165,7 +1165,7 @@ namespace Mzinga.Core
             }
         }
 
-        internal void TrustedPlay(Move move, string moveStr = "")
+        internal void TrustedPlay(in Move move, string moveStr = "")
         {
             BoardHistory.Add(move, moveStr);
 

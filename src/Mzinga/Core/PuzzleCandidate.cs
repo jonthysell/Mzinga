@@ -38,7 +38,7 @@ namespace Mzinga.Core
             bool bestMoveWon = false;
             foreach (var move in validMoves)
             {
-                Board.TrustedPlay(move, Board.GetMoveString(move));
+                Board.TrustedPlay(in move, Board.GetMoveString(move));
                 bool moveCanWin = TargetColorCanForceWin(MaxDepth - 1);
                 Board.TryUndoLastMove();
 
@@ -69,7 +69,7 @@ namespace Mzinga.Core
                 // Every move should force a win for target player
                 foreach (var move in validMoves)
                 {
-                    Board.TrustedPlay(move, Board.GetMoveString(move));
+                    Board.TrustedPlay(in move, Board.GetMoveString(move));
                     bool moveWonForTargetPlayer = TargetColorCanForceWin(depth - 1);
                     Board.TryUndoLastMove();
 
@@ -85,7 +85,7 @@ namespace Mzinga.Core
             // There should be at least one move that forces a win for the target player
             foreach (var move in validMoves)
             {
-                Board.TrustedPlay(move, Board.GetMoveString(move));
+                Board.TrustedPlay(in move, Board.GetMoveString(move));
                 bool moveWonForTargetPlayer = TargetColorCanForceWin(depth - 1);
                 Board.TryUndoLastMove();
 

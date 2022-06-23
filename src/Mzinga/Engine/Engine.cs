@@ -446,7 +446,7 @@ namespace Mzinga.Engine
 
             StopPonder();
 
-            _board.Play(move, moveString);
+            _board.Play(in move, moveString);
 
             ConsoleOut(_board.GetGameString());
         }
