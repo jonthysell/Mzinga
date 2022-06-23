@@ -718,8 +718,8 @@ namespace Mzinga.Core
                     // First turn by white
                     if (pieceName != PieceName.wQ)
                     {
-                        var move = new Move(pieceName, _piecePositions[pieceIndex], Position.OriginPosition);
-                        moveSet.FastAdd(move);
+                        var move = new Move(pieceName, Position.NullPosition, Position.OriginPosition);
+                        moveSet.FastAdd(in move);
                     }
                 }
                 else if (CurrentTurn == 1)
@@ -727,11 +727,10 @@ namespace Mzinga.Core
                     // First turn by black
                     if (pieceName != PieceName.bQ)
                     {
-                        CalculateValidPlacements();
-                        foreach (var placement in _cachedValidPlacements)
+                        for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                         {
-                            var move = new Move(pieceName, _piecePositions[pieceIndex], placement);
-                            moveSet.FastAdd(move);
+                            var move = new Move(pieceName, Position.NullPosition, Position.OriginNeighbors[dir]);
+                            moveSet.FastAdd(in move);
                         }
                     }
                 }
@@ -746,7 +745,7 @@ namespace Mzinga.Core
                         foreach (var placement in _cachedValidPlacements)
                         {
                             var move = new Move(pieceName, _piecePositions[pieceIndex], placement);
-                            moveSet.FastAdd(move);
+                            moveSet.FastAdd(in move);
                         }
                     }
                 }
@@ -931,7 +930,7 @@ namespace Mzinga.Core
                 {
                     // Can only move if there's at least one piece in the way
                     var move = new Move(pieceName, startingPosition, landingPosition);
-                    moveSet.FastAdd(move);
+                    moveSet.FastAdd(in move);
                 }
             }
         }
