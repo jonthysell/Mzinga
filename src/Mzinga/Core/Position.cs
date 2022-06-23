@@ -63,7 +63,7 @@ namespace Mzinga.Core
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Q, R, Stack);
+            return (int)((uint)(((sbyte)Q) << 16) + (uint)(((sbyte)R) << 8) + ((sbyte)Stack));
         }
 
         public static bool operator ==(in Position lhs, in Position rhs)

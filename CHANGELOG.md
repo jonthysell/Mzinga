@@ -4,6 +4,7 @@
 
 * Core: Optimized Enums.PieceNameIsEnabledForGameType and Board.PlacingPieceInOrder for better performance
 * Core: Optimized FastSet by reversing search order
+* Core: Optimized Position.GetHashCode
 
 ## v0.12.7 ##
 
