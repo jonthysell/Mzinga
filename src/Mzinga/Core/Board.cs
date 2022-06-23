@@ -744,7 +744,7 @@ namespace Mzinga.Core
                         CalculateValidPlacements();
                         foreach (var placement in _cachedValidPlacements)
                         {
-                            var move = new Move(pieceName, _piecePositions[pieceIndex], placement);
+                            var move = new Move(pieceName, Position.NullPosition, placement);
                             moveSet.FastAdd(in move);
                         }
                     }
