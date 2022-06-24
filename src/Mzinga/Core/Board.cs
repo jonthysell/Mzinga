@@ -904,7 +904,7 @@ namespace Mzinga.Core
                     if (!(destinationHeight < topLeftNeighborHeight && destinationHeight < topRightNeighborHeight && currentHeight < topLeftNeighborHeight && currentHeight < topRightNeighborHeight))
                     {
                         var targetMove = new Move(pieceName, _piecePositions[(int)pieceName], new Position(newPosition.Q, newPosition.R, (int)destinationHeight));
-                        moveSet.Add(in targetMove);
+                        moveSet.FastAdd(in targetMove);
                     }
                 }
             }
@@ -1107,7 +1107,7 @@ namespace Mzinga.Core
 
             if (fixedRange > 0)
             {
-                GetValidSlides(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition, fixedRange);
+                GetValidSlides(pieceName, moveSet, in startingPosition, in startingPosition, in startingPosition, fixedRange, fixedRange == 1);
             }
             else
             {
@@ -1139,12 +1139,19 @@ namespace Mzinga.Core
             }
         }
 
-        private void GetValidSlides(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition, int remainingSlides)
+        private void GetValidSlides(PieceName pieceName, MoveSet moveSet, in Position startingPosition, in Position lastPosition, in Position currentPosition, int remainingSlides, bool fastAdd)
         {
             if (remainingSlides == 0)
             {
                 var move = new Move(pieceName, startingPosition, currentPosition);
-                moveSet.Add(in move);
+                if (fastAdd)
+                {
+                    moveSet.FastAdd(in move);
+                }
+                else
+                {
+                    moveSet.Add(in move);
+                }
             }
             else
             {
@@ -1157,7 +1164,7 @@ namespace Mzinga.Core
                         if (HasPieceAt(in currentPosition, Enums.RightOf((Direction)slideDirection)) != HasPieceAt(in currentPosition, Enums.LeftOf((Direction)slideDirection)))
                         {
                             // Can slide into slide position
-                            GetValidSlides(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition, remainingSlides - 1);
+                            GetValidSlides(pieceName, moveSet, in startingPosition, in currentPosition, in slidePosition, remainingSlides - 1, fastAdd);
                         }
                     }
                 }
