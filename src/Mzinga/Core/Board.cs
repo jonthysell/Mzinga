@@ -807,55 +807,42 @@ namespace Mzinga.Core
             {
                 _cachedValidPlacements.Clear();
 
-                if (CurrentTurn == 0)
+                for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
                 {
-                    _cachedValidPlacements.Add(Position.OriginPosition);
-                }
-                else if (CurrentTurn == 1)
-                {
-                    for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
-                    {
-                        _cachedValidPlacements.Add(Position.OriginNeighbors[dir]);
-                    }
-                }
-                else
-                {
-                    for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
-                    {
-                        var pieceName = (PieceName)pn;
+                    var pieceName = (PieceName)pn;
 
-                        if (PieceIsOnTop(pieceName))
+                    if (PieceIsOnTop(pieceName))
+                    {
+                        var bottomPosition = _piecePositions[pn].GetBottom();
+                        for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                         {
-                            var bottomPosition = _piecePositions[pn].GetBottom();
-                            for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
+                            var neighbor = bottomPosition.GetNeighborAt((Direction)dir);
+
+                            if (!HasPieceAt(in neighbor))
                             {
-                                var neighbor = bottomPosition.GetNeighborAt((Direction)dir);
+                                // Neighboring position is a potential, verify its neighbors are empty or same color
 
-                                if (!HasPieceAt(in neighbor))
+                                bool validPlacement = true;
+                                for (int dir2 = 0; dir2 < (int)Direction.NumDirections; dir2++)
                                 {
-                                    // Neighboring position is a potential, verify its neighbors are empty or same color
-
-                                    bool validPlacement = true;
-                                    for (int dir2 = 0; dir2 < (int)Direction.NumDirections; dir2++)
+                                    var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
+                                    var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
+                                    if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
                                     {
-                                        var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
-                                        var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
-                                        if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
-                                        {
-                                            validPlacement = false;
-                                            break;
-                                        }
+                                        validPlacement = false;
+                                        break;
                                     }
+                                }
 
-                                    if (validPlacement)
-                                    {
-                                        _cachedValidPlacements.Add(neighbor);
-                                    }
+                                if (validPlacement)
+                                {
+                                    _cachedValidPlacements.Add(neighbor);
                                 }
                             }
                         }
                     }
                 }
+
                 _cachedValidPlacementsReady = true;
             }
         }
