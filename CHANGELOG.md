@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Optimized CalculateValidPlacements
 * Core: Optimized Enums.PieceNameIsEnabledForGameType and Board.PlacingPieceInOrder for better performance
 * Core: Optimized FastSet by reversing search order
 * Core: Optimized Move equality comparison

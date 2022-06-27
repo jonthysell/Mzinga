@@ -817,8 +817,18 @@ namespace Mzinga.Core
                         for (int dir = 0; dir < (int)Direction.NumDirections; dir++)
                         {
                             var neighbor = bottomPosition.GetNeighborAt((Direction)dir);
+                            var neighborPiece = GetPieceOnTopAt(in neighbor);
 
-                            if (!HasPieceAt(in neighbor))
+                            if (neighborPiece != PieceName.INVALID)
+                            {
+                                // Neighbor has a piece
+                                if (Enums.GetColor(neighborPiece) != CurrentColor)
+                                {
+                                    // Neighbor is the opposite color, skip the following direction
+                                    dir++;
+                                }
+                            }
+                            else
                             {
                                 // Neighboring position is a potential, verify its neighbors are empty or same color
 
