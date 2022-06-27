@@ -180,7 +180,9 @@ namespace Mzinga.Core
 
                 if (GameInProgress)
                 {
-                    for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
+                    int startPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ);
+                    int endPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames);
+                    for (int pn = startPiece; pn < endPiece; pn++)
                     {
                         GetValidMoves((PieceName)pn, _cachedValidMoves);
                     }
@@ -644,7 +646,9 @@ namespace Mzinga.Core
 
         private void SetCurrentPlayerMetrics(BoardMetrics boardMetrics, MoveSet moveSet)
         {
-            for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
+            int startPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ);
+            int endPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames);
+            for (int pn = startPiece; pn < endPiece; pn++)
             {
                 var pieceName = (PieceName)pn;
 
@@ -808,7 +812,9 @@ namespace Mzinga.Core
                 _cachedValidPlacements.Clear();
 
                 // Loop through pieces of the same color as the current turn
-                for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
+                int startPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ);
+                int endPiece = (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames);
+                for (int pn = startPiece; pn < endPiece; pn++)
                 {
                     var pieceName = (PieceName)pn;
 
