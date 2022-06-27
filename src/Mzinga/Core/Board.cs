@@ -807,6 +807,7 @@ namespace Mzinga.Core
             {
                 _cachedValidPlacements.Clear();
 
+                // Loop through pieces of the same color as the current turn
                 for (int pn = (int)(CurrentColor == PlayerColor.White ? PieceName.wQ : PieceName.bQ); pn < (int)(CurrentColor == PlayerColor.White ? PieceName.bQ : PieceName.NumPieceNames); pn++)
                 {
                     var pieceName = (PieceName)pn;
@@ -830,17 +831,22 @@ namespace Mzinga.Core
                             }
                             else
                             {
-                                // Neighboring position is a potential, verify its neighbors are empty or same color
+                                // Neighboring position is empty, verify its neighbors are empty or same color
+
+                                var originalPieceDir = (dir + ((int)Direction.NumDirections / 2)) % (int)Direction.NumDirections;
 
                                 bool validPlacement = true;
                                 for (int dir2 = 0; dir2 < (int)Direction.NumDirections; dir2++)
                                 {
-                                    var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
-                                    var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
-                                    if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
+                                    if (dir2 != originalPieceDir)
                                     {
-                                        validPlacement = false;
-                                        break;
+                                        var surroundingPosition = neighbor.GetNeighborAt((Direction)dir2);
+                                        var surroundingPiece = GetPieceOnTopAt(in surroundingPosition);
+                                        if (surroundingPiece != PieceName.INVALID && Enums.GetColor(surroundingPiece) != CurrentColor)
+                                        {
+                                            validPlacement = false;
+                                            break;
+                                        }
                                     }
                                 }
 
