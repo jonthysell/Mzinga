@@ -27,8 +27,6 @@ function Bump-Version {
 
 [string] $RepoRoot = Resolve-Path "$PSScriptRoot\.."
 
-[string] $OutputRoot = "bld"
-
 $StartingLocation = Get-Location
 Set-Location -Path $RepoRoot
 
@@ -54,13 +52,13 @@ try
     Write-Host "Updating $ChangelogFile with new version..."
     (Get-Content $ChangelogFile).Replace("## next ##", "## v$NewVersion ##") | Set-Content $ChangelogFile
 
-    Write-Host "Creating release commit..."
-    &git commit -a -m "Version v$NewVersion release"
-
-    Write-Host "Tagging release commit..."
-    &git tag v$NewVersion
-
     if (!$Test) {
+        Write-Host "Creating release commit..."
+        &git commit -a -m "Version v$NewVersion release"
+
+        Write-Host "Tagging release commit..."
+        &git tag v$NewVersion
+    
         Write-Host "Pushing release commit..."
         &git push
 
