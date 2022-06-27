@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.12.8 ##
 
 * Core: Optimized CalculateValidPlacements
 * Core: Optimized Enums.PieceNameIsEnabledForGameType and Board.PlacingPieceInOrder for better performance
