@@ -585,7 +585,6 @@ namespace Mzinga.Core
                 int i = 0;
                 foreach (var move in validMoves)
                 {
-                    var clone = Clone();
                     tasks[i] = Task.Run(async () =>
                     {
                         if (token.IsCancellationRequested)
@@ -593,9 +592,10 @@ namespace Mzinga.Core
                             return;
                         }
 
+                        var clone = Clone();
                         clone.TrustedPlay(in move);
 
-                        long? value = depth % 2 == 1 ? await clone.ParallelPerftAsync(depth - 1, token) : await clone.CalculatePerftAsync(depth - 1, token);
+                        long? value = await clone.CalculatePerftAsync(depth - 1, token);
 
                         if (!value.HasValue)
                         {

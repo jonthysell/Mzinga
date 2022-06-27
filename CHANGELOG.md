@@ -1,9 +1,5 @@
 # Mzinga Changelog #
 
-## next ##
-
-* Core: Improved multithreaded Perft calculations
-
 ## v0.12.8 ##
 
 * Core: Optimized CalculateValidPlacements
