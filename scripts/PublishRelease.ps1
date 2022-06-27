@@ -35,22 +35,22 @@ try
 {
     [xml]$DirectoryBuildProps = Get-Content $DirectoryBuildPropsFile
 
-    $CurrentVersion = $DirectoryBuildProps.Project.PropertyGroup.Version
+    [string]$CurrentVersion = ([string]$DirectoryBuildProps.Project.PropertyGroup.Version).Trim()
 
     Write-Host "Current version: $CurrentVersion"
 
-    $NewVersion = Bump-Version $CurrentVersion $BumpPart
+    [string]$NewVersion = Bump-Version $CurrentVersion $BumpPart
 
     Write-Host "New version: $NewVersion"
 
     Write-Host "Updating $DirectoryBuildPropsFile with new version..."
-    (Get-Content $DirectoryBuildPropsFile).Replace($CurrentVersion, $NewVersion) | Set-Content $DirectoryBuildPropsFile
+    ((Get-Content $DirectoryBuildPropsFile).Replace($CurrentVersion, $NewVersion)) | Set-Content $DirectoryBuildPropsFile
 
     Write-Host "Updating $AppxManifestFile with new version..."
-    (Get-Content $AppxManifestFile).Replace($CurrentVersion, $NewVersion) | Set-Content $AppxManifestFile -Encoding 'utf8BOM'
+    ((Get-Content $AppxManifestFile).Replace($CurrentVersion, $NewVersion)) | Set-Content $AppxManifestFile -Encoding 'utf8BOM'
 
     Write-Host "Updating $ChangelogFile with new version..."
-    (Get-Content $ChangelogFile).Replace("## next ##", "## v$NewVersion ##") | Set-Content $ChangelogFile
+    ((Get-Content $ChangelogFile).Replace("## next ##", "## v$NewVersion ##")) | Set-Content $ChangelogFile
 
     if (!$Test) {
         Write-Host "Creating release commit..."
