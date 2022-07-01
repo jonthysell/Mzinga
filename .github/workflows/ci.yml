@@ -5,6 +5,8 @@ env:
   ScriptDir: ./scripts
   SrcDir: ./src
   Product: Mzinga
+  BinDir: ./src/Mzinga/bin
+  SolutionFile: ./src/Mzinga.sln
 
 on:
   push:
