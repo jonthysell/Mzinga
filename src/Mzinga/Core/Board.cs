@@ -783,8 +783,10 @@ namespace Mzinga.Core
                                 GetValidLadybugMoves(pieceName, moveSet);
                                 break;
                             case BugType.Pillbug:
-                                GetValidPillbugBasicMoves(pieceName, moveSet);
-                                GetValidPillbugSpecialMoves(pieceName, moveSet);
+                                MoveSet newMoves = new MoveSet();
+                                GetValidPillbugBasicMoves(pieceName, newMoves);
+                                GetValidPillbugSpecialMoves(pieceName, newMoves);
+                                moveSet.Add(newMoves);
                                 break;
                         }
                     }
@@ -1008,13 +1010,7 @@ namespace Mzinga.Core
                         }
                     }
 
-                    if (newMoves.Count > 0)
-                    {
-                        foreach (var move in newMoves)
-                        {
-                            moveSet.Add(in move);
-                        }
-                    }
+                    moveSet.Add(newMoves);
 
                     bugTypesEvaluated[(int)(neighborBugType)] = true;
                 }

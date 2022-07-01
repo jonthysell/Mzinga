@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Fixed conflict with Pillbugs and Mosquitos adding duplicate moves
+
 ## v0.12.8 ##
 
 * Core: Optimized CalculateValidPlacements

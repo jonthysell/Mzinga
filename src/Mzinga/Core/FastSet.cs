@@ -25,7 +25,15 @@ namespace Mzinga.Core
             }
             return false;
         }
-        
+
+        internal void Add(in IEnumerable<T> items)
+        {
+            foreach (var item in items)
+            {
+                Add(in item);
+            }
+        }
+
         internal bool Add(in T item)
         {
             if (Contains(in item))
@@ -33,7 +41,7 @@ namespace Mzinga.Core
                 return false;
             }
 
-            _items.Add(item);
+            FastAdd(in item);
             return true;
         }
 

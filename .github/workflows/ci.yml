@@ -16,9 +16,37 @@ defaults:
     shell: pwsh
 
 jobs:
+  ci_build_and_test:
+    name: CI Build and Test
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build Solution
+      run: dotnet build --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
+
+    - name: Test Solution
+      run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name:  ${{ matrix.configuration }}Binaries
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net6.0
+
   ci_build_windows:
     name: CI Windows Build
     runs-on: windows-latest
+    needs: ci_build_and_test
     strategy:
       matrix:
         target: [Unpacked, Win32, Win64]
@@ -46,6 +74,7 @@ jobs:
   ci_build_windows_setup:
     name: CI Windows Setup Build
     runs-on: windows-latest
+    needs: ci_build_and_test
     strategy:
       matrix:
         target: [Win32.Setup, Win64.Setup]
@@ -73,6 +102,7 @@ jobs:
   ci_build_linux:
     name: CI Linux Build
     runs-on: ubuntu-latest
+    needs: ci_build_and_test
     strategy:
       matrix:
         target: [Linux]
@@ -100,6 +130,7 @@ jobs:
   ci_build_macos:
     name: CI MacOS Build
     runs-on: macOS-latest
+    needs: ci_build_and_test
     strategy:
       matrix:
         target: [MacOS]
