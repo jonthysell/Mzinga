@@ -17,15 +17,11 @@ namespace Mzinga.Core.AI
 
         public readonly TranspositionTable TranspositionTable;
 
-        public const int MaxMaxBranchingFactor = 500;
+        private readonly int _maxBranchingFactor;
 
-        private readonly int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
+        private readonly int _quiescentSearchMaxDepth; // To prevent runaway stack overflows
 
-        public const int MaxQuiescentSearchMaxDepth = 12;
-        private readonly int _quiescentSearchMaxDepth = MaxQuiescentSearchMaxDepth; // To prevent runaway stack overflows
-
-        public const int MaxPrincipalVariationMaxDepth = 24;
-        private readonly int _principalVariationMaxDepth = MaxPrincipalVariationMaxDepth; // To prevent OOM if the PV is stuck in a loop
+        private readonly int _principalVariationMaxDepth; // To prevent OOM if the PV is stuck in a loop
 
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
@@ -37,7 +33,7 @@ namespace Mzinga.Core.AI
             StartMetricWeights = new MetricWeights();
             EndMetricWeights = new MetricWeights();
 
-            TranspositionTable = new TranspositionTable();
+            TranspositionTable = new TranspositionTable(GameAIConfig.DefaultTranspositionTableSizeMB);
         }
 
         public GameAI(GameAIConfig config)
@@ -47,32 +43,16 @@ namespace Mzinga.Core.AI
 
             if (config.TranspositionTableSizeMB.HasValue)
             {
-                TranspositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value * 1024 * 1024);
+                TranspositionTable = new TranspositionTable(config.TranspositionTableSizeMB.Value);
             }
             else
             {
-                TranspositionTable = new TranspositionTable();
+                TranspositionTable = new TranspositionTable(GameAIConfig.DefaultTranspositionTableSizeMB);
             }
-
-            if (config.MaxBranchingFactor.HasValue)
-            {
-                _maxBranchingFactor = config.MaxBranchingFactor.Value;
-            }
-
-            if (config.MaxBranchingFactor.HasValue)
-            {
-                _maxBranchingFactor = config.MaxBranchingFactor.Value;
-            }
-
-            if (config.QuiescentSearchMaxDepth.HasValue)
-            {
-                _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth.Value;
-            }
-
-            if (config.PrincipalVariationMaxDepth.HasValue)
-            {
-                _principalVariationMaxDepth = config.PrincipalVariationMaxDepth.Value;
-            }
+            
+            _maxBranchingFactor = config.MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor;
+            _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth;
+            _principalVariationMaxDepth = config.PrincipalVariationMaxDepth ?? GameAIConfig.DefaultPrincipalVariationMaxDepth;
 
             ResetCaches();
         }

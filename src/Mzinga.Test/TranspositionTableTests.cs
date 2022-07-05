@@ -16,17 +16,17 @@ namespace Mzinga.Test
         [TestMethod]
         public void TranspositionTable_NewTest()
         {
-            TranspositionTable tt = new TranspositionTable();
+            TranspositionTable tt = new TranspositionTable(TestTranspositionTableSizeMB);
             Assert.IsNotNull(tt);
         }
 
         [TestMethod]
         public void TranspositionTable_MaxMemoryTest()
         {
-            long expectedSizeInBytes = TranspositionTable.DefaultSizeInBytes;
-
-            TranspositionTable tt = new TranspositionTable(expectedSizeInBytes);
+            TranspositionTable tt = new TranspositionTable(TestTranspositionTableSizeMB);
             Assert.IsNotNull(tt);
+
+            long expectedSizeInBytes = 1024L * 1024L * TestTranspositionTableSizeMB;
 
             long startMemoryUsage = GC.GetTotalAllocatedBytes(true);
             for (int i = 0; i < tt.Capacity; i++)
@@ -55,7 +55,7 @@ namespace Mzinga.Test
 
             for (int i = 0; i < iterations; i++)
             {
-                TranspositionTable tt = new TranspositionTable(TranspositionTable.DefaultSizeInBytes / 1024);
+                TranspositionTable tt = new TranspositionTable(TestTranspositionTableSizeMB);
                 Assert.IsNotNull(tt);
 
                 Stopwatch sw = Stopwatch.StartNew();
@@ -95,5 +95,7 @@ namespace Mzinga.Test
             };
             return te;
         }
+
+        public const int TestTranspositionTableSizeMB = 1;
     }
 }

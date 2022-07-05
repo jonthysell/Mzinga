@@ -10,6 +10,10 @@ namespace Mzinga.Core.AI
         public MetricWeights? StartMetricWeights = null;
         public MetricWeights? EndMetricWeights = null;
 
+        public const int MinMaxBranchingFactor = 1;
+        public const int DefaultMaxBranchingFactor = 256; // To prevent search explosion
+        public const int MaxMaxBranchingFactor = 512;
+
         public int? MaxBranchingFactor
         {
             get
@@ -18,7 +22,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value.HasValue && value.Value <= 0)
+                if (value.HasValue && (value.Value < MinMaxBranchingFactor || value > MaxMaxBranchingFactor))
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
@@ -26,6 +30,10 @@ namespace Mzinga.Core.AI
             }
         }
         private int? _maxBranchingFactor = null;
+
+        public const int MinQuiescentSearchMaxDepth = 0;
+        public const int DefaultQuiescentSearchMaxDepth = 6; // To prevent runaway stack overflows
+        public const int MaxQuiescentSearchMaxDepth = 12;
 
         public int? QuiescentSearchMaxDepth
         {
@@ -35,7 +43,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value.HasValue && value.Value < 0)
+                if (value.HasValue && (value.Value < MinQuiescentSearchMaxDepth || value > MaxQuiescentSearchMaxDepth))
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
@@ -43,6 +51,10 @@ namespace Mzinga.Core.AI
             }
         }
         private int? _quiescentSearchMaxDepth = null;
+
+        public const int MinPrincipalVariationMaxDepth = 0;
+        public const int DefaultPrincipalVariationMaxDepth = 8; // To prevent OOM if the PV is stuck in a loop
+        public const int MaxPrincipalVariationMaxDepth = 16;
 
         public int? PrincipalVariationMaxDepth
         {
@@ -52,7 +64,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value.HasValue && value.Value < 0)
+                if (value.HasValue && (value.Value < MinPrincipalVariationMaxDepth || value > MaxPrincipalVariationMaxDepth))
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
@@ -60,6 +72,10 @@ namespace Mzinga.Core.AI
             }
         }
         private int? _principalVariationMaxDepth = null;
+
+        public const int MinTranspositionTableSizeMB = 1;
+        public const int DefaultTranspositionTableSizeMB = 2;
+        public const int MaxTranspositionTableSizeMB = 1024;
 
         public int? TranspositionTableSizeMB
         {
@@ -69,7 +85,7 @@ namespace Mzinga.Core.AI
             }
             set
             {
-                if (value.HasValue && value.Value <= 0)
+                if (value.HasValue && (value < MinTranspositionTableSizeMB || value > MaxTranspositionTableSizeMB))
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }

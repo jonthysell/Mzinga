@@ -13,21 +13,33 @@ namespace Mzinga.Engine
 {
     public class EngineConfig
     {
-        #region GameAI
+        #region Options
 
-        public int? TranspositionTableSizeMB { get; private set; } = null;
+        public const int MinMaxHelperThreads = 0;
+        public static int DefaultMaxHelperThreads => (Environment.ProcessorCount / 2) - 1;
+        public static int MaxMaxHelperThreads => Environment.ProcessorCount - 1;
 
         public int MaxHelperThreads
         {
             get
             {
                 // Hard min is 0, hard max is (Environment.ProcessorCount / 2) - 1
-                return Math.Max(MinMaxHelperThreads, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, MaxMaxHelperThreads) : MaxMaxHelperThreads);
+                return Math.Max(MinMaxHelperThreads, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, MaxMaxHelperThreads) : DefaultMaxHelperThreads);
             }
         }
         private int? _maxHelperThreads = null;
 
-        public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
+        public const PonderDuringIdleType DefaultPonderDuringIdle = PonderDuringIdleType.Disabled;
+
+        public PonderDuringIdleType PonderDuringIdle { get; private set; } = DefaultPonderDuringIdle;
+
+        public const bool DefaultReportIntermediateBestMoves = false;
+
+        public bool ReportIntermediateBestMoves { get; private set; } = DefaultReportIntermediateBestMoves;
+
+        #endregion
+
+        #region GameAIConfig Options
 
         public int? MaxBranchingFactor { get; private set; } = null;
 
@@ -35,16 +47,13 @@ namespace Mzinga.Engine
 
         public int? PrincipalVariationMaxDepth { get; private set; } = null;
 
-        public bool ReportIntermediateBestMoves { get; private set; } = false;
+        public int? TranspositionTableSizeMB { get; private set; } = null;
 
         public Dictionary<GameType, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<GameType, MetricWeights[]>();
 
         #endregion
 
-        public EngineConfig()
-        {
-
-        }
+        public EngineConfig() { }
 
         public EngineConfig(Stream inputStream) : this()
         {
@@ -222,15 +231,15 @@ namespace Mzinga.Engine
         {
             if (int.TryParse(rawValue, out int intValue))
             {
-                TranspositionTableSizeMB = Math.Max(MinTranspositionTableSizeMB, Math.Min(intValue, MaxTranspositionTableSizeMB));
+                TranspositionTableSizeMB = Math.Max(GameAIConfig.MinTranspositionTableSizeMB, Math.Min(intValue, GameAIConfig.MaxTranspositionTableSizeMB));
             }
         }
 
         public void GetTranspositionTableSizeMBValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (TranspositionTableSizeMB ?? TranspositionTable.DefaultSizeInBytes / (1024 * 1024)).ToString();
-            values = string.Format("{0};{1}", MinTranspositionTableSizeMB, MaxTranspositionTableSizeMB);
+            value = (TranspositionTableSizeMB ?? GameAIConfig.DefaultTranspositionTableSizeMB).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinTranspositionTableSizeMB, GameAIConfig.MaxTranspositionTableSizeMB);
         }
 
         public void ParseMaxHelperThreadsValue(string rawValue)
@@ -298,45 +307,45 @@ namespace Mzinga.Engine
         {
             if (int.TryParse(rawValue, out int intValue))
             {
-                MaxBranchingFactor = Math.Max(MinMaxBranchingFactor, Math.Min(intValue, GameAI.MaxMaxBranchingFactor));
+                MaxBranchingFactor = Math.Max(GameAIConfig.MinMaxBranchingFactor, Math.Min(intValue, GameAIConfig.MaxMaxBranchingFactor));
             }
         }
 
         public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (MaxBranchingFactor ?? GameAI.MaxMaxBranchingFactor).ToString();
-            values = string.Format("{0};{1}", MinMaxBranchingFactor, GameAI.MaxMaxBranchingFactor);
+            value = (MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinMaxBranchingFactor, GameAIConfig.MaxMaxBranchingFactor);
         }
 
         public void ParseQuiescentSearchMaxDepthValue(string rawValue)
         {
             if (int.TryParse(rawValue, out int intValue))
             {
-                QuiescentSearchMaxDepth = Math.Max(MinQuiescentSearchMaxDepth, Math.Min(intValue, GameAI.MaxQuiescentSearchMaxDepth));
+                QuiescentSearchMaxDepth = Math.Max(GameAIConfig.MinQuiescentSearchMaxDepth, Math.Min(intValue, GameAIConfig.MaxQuiescentSearchMaxDepth));
             }
         }
 
         public void GetQuiescentSearchMaxDepthValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (QuiescentSearchMaxDepth ?? GameAI.MaxQuiescentSearchMaxDepth).ToString();
-            values = string.Format("{0};{1}", MinQuiescentSearchMaxDepth, GameAI.MaxQuiescentSearchMaxDepth);
+            value = (QuiescentSearchMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinQuiescentSearchMaxDepth, GameAIConfig.MaxQuiescentSearchMaxDepth);
         }
 
         public void ParsePrincipalVariationMaxDepthValue(string rawValue)
         {
             if (int.TryParse(rawValue, out int intValue))
             {
-                PrincipalVariationMaxDepth = Math.Max(MinPrincipalVariationMaxDepth, Math.Min(intValue, GameAI.MaxPrincipalVariationMaxDepth));
+                PrincipalVariationMaxDepth = Math.Max(GameAIConfig.MinPrincipalVariationMaxDepth, Math.Min(intValue, GameAIConfig.MaxPrincipalVariationMaxDepth));
             }
         }
 
         public void GetPrincipalVariationMaxDepthValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (PrincipalVariationMaxDepth ?? GameAI.MaxPrincipalVariationMaxDepth).ToString();
-            values = string.Format("{0};{1}", MinPrincipalVariationMaxDepth, GameAI.MaxPrincipalVariationMaxDepth);
+            value = (PrincipalVariationMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinPrincipalVariationMaxDepth, GameAIConfig.MaxPrincipalVariationMaxDepth);
         }
 
         public void ParseReportIntermediateBestMovesValue(string rawValue)
@@ -446,16 +455,6 @@ namespace Mzinga.Engine
         }
 
         #endregion
-
-        private const int MinTranspositionTableSizeMB = 1;
-        private const int MaxTranspositionTableSizeMB = 1024;
-
-        private const int MinMaxHelperThreads = 0;
-        private static int MaxMaxHelperThreads { get { return (Environment.ProcessorCount / 2) - 1; } }
-
-        private const int MinMaxBranchingFactor = 1;
-        private const int MinQuiescentSearchMaxDepth = 0;
-        private const int MinPrincipalVariationMaxDepth = 0;
     }
 
     public enum MaxHelperThreadsType

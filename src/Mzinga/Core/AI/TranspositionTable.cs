@@ -7,7 +7,7 @@ namespace Mzinga.Core.AI
 {
     public class TranspositionTable : FixedCache<ulong, TranspositionTableEntry>
     {
-        public TranspositionTable(long sizeInBytes = DefaultSizeInBytes) : base(GetCapacity(sizeInBytes), TranspostionTableReplaceEntryPredicate) { }
+        public TranspositionTable(int sizeInMegaBytes) : base(GetCapacity(1024L * 1024L * sizeInMegaBytes), TranspostionTableReplaceEntryPredicate) { }
 
         private static int GetCapacity(long sizeInBytes)
         {
@@ -25,8 +25,6 @@ namespace Mzinga.Core.AI
         }
 
         private static readonly long EntrySizeInBytes = EstimateSizeInBytes(sizeof(ulong), TranspositionTableEntry.SizeInBytes);
-
-        public const long DefaultSizeInBytes = 32 * 1024 * 1024;
     }
 
     public class TranspositionTableEntry
