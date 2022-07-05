@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -118,7 +119,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             _options = new ObservableCollection<ObservableEngineOption>();
 
-            foreach (EngineOption eo in _originalOptions)
+            foreach (EngineOption eo in _originalOptions.OrderBy(opt => opt.Key))
             {
                 if (eo is BooleanEngineOption beo)
                 {
