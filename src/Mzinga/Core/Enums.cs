@@ -266,7 +266,7 @@ namespace Mzinga.Core
             }
         }
 
-        private static uint[] _pieceNameIsEnabledForGameType = new uint[]
+        private static readonly uint[] _pieceNameIsEnabledForGameType = new uint[]
         {
             0b1111111111100011111111111000,
             0b1111111111110011111111111100,

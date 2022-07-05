@@ -15,7 +15,7 @@ namespace Mzinga
 
             for (int i = 0; i < parts.Length; i++)
             {
-                vers |= (ulong.Parse(parts[i]) << ((4 - (i + 1)) * 16));
+                vers |= ulong.Parse(parts[i]) << ((4 - (i + 1)) * 16);
             }
 
             return vers;

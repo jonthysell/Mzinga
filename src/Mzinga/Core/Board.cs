@@ -713,10 +713,8 @@ namespace Mzinga.Core
 
         private void GetValidMoves(PieceName pieceName, MoveSet moveSet)
         {
-            if (Enums.PieceNameIsEnabledForGameType(pieceName, GameType) && GameInProgress && CurrentColor == Enums.GetColor(pieceName) && PlacingPieceInOrder(pieceName))
+            if (Enums.PieceNameIsEnabledForGameType(pieceName, GameType) && PlacingPieceInOrder(pieceName))
             {
-                int pieceIndex = (int)pieceName;
-
                 if (CurrentTurn == 0)
                 {
                     // First turn by white
@@ -741,9 +739,9 @@ namespace Mzinga.Core
                 else if (PieceInHand(pieceName))
                 {
                     // Piece is in hand
-                    if ((CurrentPlayerTurn != 4 ||
+                    if (CurrentPlayerTurn != 4 ||
                          (CurrentPlayerTurn == 4 &&
-                          (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && Enums.GetBugType(pieceName) == BugType.QueenBee)))))
+                          (CurrentTurnQueenInPlay || (!CurrentTurnQueenInPlay && Enums.GetBugType(pieceName) == BugType.QueenBee))))
                     {
                         CalculateValidPlacements();
                         foreach (var placement in _cachedValidPlacements)
@@ -971,7 +969,7 @@ namespace Mzinga.Core
 
                 var neighborBugType = Enums.GetBugType(neighborPieceName);
 
-                if (neighborPieceName != PieceName.INVALID && !bugTypesEvaluated[(int)(neighborBugType)])
+                if (neighborPieceName != PieceName.INVALID && !bugTypesEvaluated[(int)neighborBugType])
                 {
                     var newMoves = new MoveSet();
                     if (specialAbilityOnly)
@@ -1012,7 +1010,7 @@ namespace Mzinga.Core
 
                     moveSet.Add(newMoves);
 
-                    bugTypesEvaluated[(int)(neighborBugType)] = true;
+                    bugTypesEvaluated[(int)neighborBugType] = true;
                 }
             }
         }
@@ -1285,12 +1283,12 @@ namespace Mzinga.Core
 
         public bool PieceInHand(PieceName pieceName)
         {
-            return (_piecePositions[(int)pieceName].Stack < 0);
+            return _piecePositions[(int)pieceName].Stack < 0;
         }
 
         public bool PieceInPlay(PieceName pieceName)
         {
-            return (_piecePositions[(int)pieceName].Stack >= 0);
+            return _piecePositions[(int)pieceName].Stack >= 0;
         }
 
         private bool PieceIsOnTop(PieceName pieceName)
@@ -1440,8 +1438,8 @@ namespace Mzinga.Core
 
         private void ResetState()
         {
-            bool whiteQueenSurrounded = (CountNeighbors(PieceName.wQ) == 6);
-            bool blackQueenSurrounded = (CountNeighbors(PieceName.bQ) == 6);
+            bool whiteQueenSurrounded = CountNeighbors(PieceName.wQ) == 6;
+            bool blackQueenSurrounded = CountNeighbors(PieceName.bQ) == 6;
 
             if (whiteQueenSurrounded && blackQueenSurrounded)
             {
