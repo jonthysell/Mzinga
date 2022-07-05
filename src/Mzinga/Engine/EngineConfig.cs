@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Xml;
 
 using Mzinga.Core;
@@ -31,6 +30,10 @@ namespace Mzinga.Engine
         public PonderDuringIdleType PonderDuringIdle { get; private set; } = PonderDuringIdleType.Disabled;
 
         public int? MaxBranchingFactor { get; private set; } = null;
+
+        public int? QuiescentSearchMaxDepth { get; private set; } = null;
+
+        public int? PrincipalVariationMaxDepth { get; private set; } = null;
 
         public bool ReportIntermediateBestMoves { get; private set; } = false;
 
@@ -88,6 +91,12 @@ namespace Mzinga.Engine
                             break;
                         case "MaxBranchingFactor":
                             ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
+                            break;
+                        case "QuiescentSearchMaxDepth":
+                            ParseQuiescentSearchMaxDepthValue(reader.ReadElementContentAsString());
+                            break;
+                        case "PrincipalVariationMaxDepth":
+                            ParsePrincipalVariationMaxDepthValue(reader.ReadElementContentAsString());
                             break;
                         case "ReportIntermediateBestMoves":
                             ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
@@ -168,6 +177,16 @@ namespace Mzinga.Engine
                 if (MaxBranchingFactor.HasValue)
                 {
                     writer.WriteElementString("MaxBranchingFactor", MaxBranchingFactor.Value.ToString());
+                }
+
+                if (QuiescentSearchMaxDepth.HasValue)
+                {
+                    writer.WriteElementString("QuiescentSearchMaxDepth", QuiescentSearchMaxDepth.Value.ToString());
+                }
+
+                if (PrincipalVariationMaxDepth.HasValue)
+                {
+                    writer.WriteElementString("PrincipalVariationMaxDepth", PrincipalVariationMaxDepth.Value.ToString());
                 }
 
                 writer.WriteElementString("ReportIntermediateBestMoves", ReportIntermediateBestMoves.ToString());
@@ -290,6 +309,36 @@ namespace Mzinga.Engine
             values = string.Format("{0};{1}", MinMaxBranchingFactor, GameAI.MaxMaxBranchingFactor);
         }
 
+        public void ParseQuiescentSearchMaxDepthValue(string rawValue)
+        {
+            if (int.TryParse(rawValue, out int intValue))
+            {
+                QuiescentSearchMaxDepth = Math.Max(MinQuiescentSearchMaxDepth, Math.Min(intValue, GameAI.MaxQuiescentSearchMaxDepth));
+            }
+        }
+
+        public void GetQuiescentSearchMaxDepthValue(out string type, out string value, out string values)
+        {
+            type = "int";
+            value = (QuiescentSearchMaxDepth ?? GameAI.MaxQuiescentSearchMaxDepth).ToString();
+            values = string.Format("{0};{1}", MinQuiescentSearchMaxDepth, GameAI.MaxQuiescentSearchMaxDepth);
+        }
+
+        public void ParsePrincipalVariationMaxDepthValue(string rawValue)
+        {
+            if (int.TryParse(rawValue, out int intValue))
+            {
+                PrincipalVariationMaxDepth = Math.Max(MinPrincipalVariationMaxDepth, Math.Min(intValue, GameAI.MaxPrincipalVariationMaxDepth));
+            }
+        }
+
+        public void GetPrincipalVariationMaxDepthValue(out string type, out string value, out string values)
+        {
+            type = "int";
+            value = (PrincipalVariationMaxDepth ?? GameAI.MaxPrincipalVariationMaxDepth).ToString();
+            values = string.Format("{0};{1}", MinPrincipalVariationMaxDepth, GameAI.MaxPrincipalVariationMaxDepth);
+        }
+
         public void ParseReportIntermediateBestMovesValue(string rawValue)
         {
             if (bool.TryParse(rawValue, out bool boolValue))
@@ -357,6 +406,8 @@ namespace Mzinga.Engine
                 StartMetricWeights = mw[0],
                 EndMetricWeights = mw[0] ?? mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
+                QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
+                PrincipalVariationMaxDepth = PrincipalVariationMaxDepth,
                 TranspositionTableSizeMB = TranspositionTableSizeMB
             });
         }
@@ -375,6 +426,8 @@ namespace Mzinga.Engine
                 _maxHelperThreads = _maxHelperThreads,
                 PonderDuringIdle = PonderDuringIdle,
                 MaxBranchingFactor = MaxBranchingFactor,
+                QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
+                PrincipalVariationMaxDepth = PrincipalVariationMaxDepth,
                 ReportIntermediateBestMoves = ReportIntermediateBestMoves
             };
 
@@ -387,6 +440,8 @@ namespace Mzinga.Engine
             _maxHelperThreads = other._maxHelperThreads;
             PonderDuringIdle = other.PonderDuringIdle;
             MaxBranchingFactor = other.MaxBranchingFactor;
+            QuiescentSearchMaxDepth = other.QuiescentSearchMaxDepth;
+            PrincipalVariationMaxDepth = other.PrincipalVariationMaxDepth;
             ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
         }
 
@@ -399,6 +454,8 @@ namespace Mzinga.Engine
         private static int MaxMaxHelperThreads { get { return (Environment.ProcessorCount / 2) - 1; } }
 
         private const int MinMaxBranchingFactor = 1;
+        private const int MinQuiescentSearchMaxDepth = 0;
+        private const int MinPrincipalVariationMaxDepth = 0;
     }
 
     public enum MaxHelperThreadsType

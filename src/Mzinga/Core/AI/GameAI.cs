@@ -15,14 +15,17 @@ namespace Mzinga.Core.AI
         public readonly MetricWeights StartMetricWeights;
         public readonly MetricWeights EndMetricWeights;
 
-        private readonly int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
+        public readonly TranspositionTable TranspositionTable;
 
         public const int MaxMaxBranchingFactor = 500;
 
-        public readonly TranspositionTable TranspositionTable;
+        private readonly int _maxBranchingFactor = MaxMaxBranchingFactor; // To prevent search explosion
 
-        private const int QuiescentSearchMaxDepth = 12; // To prevent runaway stack overflows
-        private const int PrincipalVariationMaxDepth = 24; // To prevent OOM if the PV is stuck in a loop
+        public const int MaxQuiescentSearchMaxDepth = 12;
+        private readonly int _quiescentSearchMaxDepth = MaxQuiescentSearchMaxDepth; // To prevent runaway stack overflows
+
+        public const int MaxPrincipalVariationMaxDepth = 24;
+        private readonly int _principalVariationMaxDepth = MaxPrincipalVariationMaxDepth; // To prevent OOM if the PV is stuck in a loop
 
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
@@ -54,6 +57,21 @@ namespace Mzinga.Core.AI
             if (config.MaxBranchingFactor.HasValue)
             {
                 _maxBranchingFactor = config.MaxBranchingFactor.Value;
+            }
+
+            if (config.MaxBranchingFactor.HasValue)
+            {
+                _maxBranchingFactor = config.MaxBranchingFactor.Value;
+            }
+
+            if (config.QuiescentSearchMaxDepth.HasValue)
+            {
+                _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth.Value;
+            }
+
+            if (config.PrincipalVariationMaxDepth.HasValue)
+            {
+                _principalVariationMaxDepth = config.PrincipalVariationMaxDepth.Value;
             }
 
             ResetCaches();
@@ -407,7 +425,7 @@ namespace Mzinga.Core.AI
 
             if (depth == 0 || board.GameIsOver)
             {
-                return await QuiescenceSearchAsync(board, QuiescentSearchMaxDepth, alpha, beta, color, token);
+                return await QuiescenceSearchAsync(board, _quiescentSearchMaxDepth, alpha, beta, color, token);
             }
 
             double? bestValue = null;
@@ -500,20 +518,23 @@ namespace Mzinga.Core.AI
         {
             List<Move> moves = new List<Move>();
 
-            Board clone = board.Clone();
-
-            while (clone.GameInProgress && moves.Count < PrincipalVariationMaxDepth)
+            if (_principalVariationMaxDepth > 0)
             {
-                ulong key = clone.ZobristKey;
+                Board clone = board.Clone();
 
-                if (!TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) || tEntry is null || !tEntry.BestMove.HasValue)
+                while (clone.GameInProgress && moves.Count < _principalVariationMaxDepth)
                 {
-                    break;
-                }
+                    ulong key = clone.ZobristKey;
 
-                var move = tEntry.BestMove.Value;
-                moves.Add(move);
-                clone.TrustedPlay(in move);
+                    if (!TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) || tEntry is null || !tEntry.BestMove.HasValue)
+                    {
+                        break;
+                    }
+
+                    var move = tEntry.BestMove.Value;
+                    moves.Add(move);
+                    clone.TrustedPlay(in move);
+                }
             }
 
             return moves;

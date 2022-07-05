@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Engine: Exposed QuiescentSearchMaxDepth and PrincipalVariationMaxDepth options
+
 ## v0.12.9 ##
 
 * Core: Fixed conflict with Pillbugs and Mosquitos adding duplicate moves

@@ -27,6 +27,40 @@ namespace Mzinga.Core.AI
         }
         private int? _maxBranchingFactor = null;
 
+        public int? QuiescentSearchMaxDepth
+        {
+            get
+            {
+                return _quiescentSearchMaxDepth;
+            }
+            set
+            {
+                if (value.HasValue && value.Value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _quiescentSearchMaxDepth = value;
+            }
+        }
+        private int? _quiescentSearchMaxDepth = null;
+
+        public int? PrincipalVariationMaxDepth
+        {
+            get
+            {
+                return _principalVariationMaxDepth;
+            }
+            set
+            {
+                if (value.HasValue && value.Value < 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+                _principalVariationMaxDepth = value;
+            }
+        }
+        private int? _principalVariationMaxDepth = null;
+
         public int? TranspositionTableSizeMB
         {
             get
