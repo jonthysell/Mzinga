@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core;
@@ -19,6 +20,8 @@ namespace Mzinga.Test
 
         private class PuzzleCandidateIsOneBestMoveToForceWinPuzzleTestCase : ITestCase
         {
+            public object[] TestArgs { get; set; }
+
             public Board Board;
             public int MaxDepth;
 

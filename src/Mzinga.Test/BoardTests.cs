@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core;
@@ -398,6 +399,8 @@ namespace Mzinga.Test
 
         private class BoardValidMoveTestCase : ITestCase
         {
+            public object[] TestArgs { get; set; }
+
             public Board Board;
 
             public string[] ValidMoveStrings;
@@ -439,6 +442,8 @@ namespace Mzinga.Test
 
         private class BoardInvalidMoveTestCase : ITestCase
         {
+            public object[] TestArgs { get; set; }
+
             public Board Board;
             
             public string InvalidMoveString;
@@ -478,6 +483,8 @@ namespace Mzinga.Test
 
         private class BoardPerftTestCase : ITestCase
         {
+            public object[] TestArgs { get; set; }
+
             public Board Board;
 
             public int Depth;

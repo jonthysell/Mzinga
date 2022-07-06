@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Mzinga.Core;

@@ -27,27 +27,27 @@ namespace Mzinga.Engine
                 return Math.Max(MinMaxHelperThreads, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, MaxMaxHelperThreads) : DefaultMaxHelperThreads);
             }
         }
-        private int? _maxHelperThreads = null;
+        internal int? _maxHelperThreads = null;
 
         public const PonderDuringIdleType DefaultPonderDuringIdle = PonderDuringIdleType.Disabled;
 
-        public PonderDuringIdleType PonderDuringIdle { get; private set; } = DefaultPonderDuringIdle;
+        public PonderDuringIdleType PonderDuringIdle { get; internal set; } = DefaultPonderDuringIdle;
 
         public const bool DefaultReportIntermediateBestMoves = false;
 
-        public bool ReportIntermediateBestMoves { get; private set; } = DefaultReportIntermediateBestMoves;
+        public bool ReportIntermediateBestMoves { get; internal set; } = DefaultReportIntermediateBestMoves;
 
         #endregion
 
         #region GameAIConfig Options
 
-        public int? MaxBranchingFactor { get; private set; } = null;
+        public int? MaxBranchingFactor { get; internal set; } = null;
 
-        public int? QuiescentSearchMaxDepth { get; private set; } = null;
+        public int? QuiescentSearchMaxDepth { get; internal set; } = null;
 
-        public int? PrincipalVariationMaxDepth { get; private set; } = null;
+        public int? PrincipalVariationMaxDepth { get; internal set; } = null;
 
-        public int? TranspositionTableSizeMB { get; private set; } = null;
+        public int? TranspositionTableSizeMB { get; internal set; } = null;
 
         public Dictionary<GameType, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<GameType, MetricWeights[]>();
 

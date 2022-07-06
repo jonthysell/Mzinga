@@ -8,9 +8,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Mzinga.Engine;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Mzinga.Test
 {
@@ -60,13 +59,13 @@ namespace Mzinga.Test
             Assert.IsTrue(object1.CompareTo(object2) == 0);
         }
 
-        public static void LoadAndExecuteTestCases<T>(string fileName) where T : ITestCase, new()
+        public static void LoadAndExecuteTestCases<T>(string fileName, params object[] args) where T : ITestCase, new()
         {
-            var testCases = LoadTestCases<T>(fileName);
+            var testCases = LoadTestCases<T>(fileName, args);
             ExecuteTestCases<T>(testCases);
         }
 
-        public static IReadOnlyDictionary<int, T> LoadTestCases<T>(string fileName) where T : ITestCase, new()
+        public static IReadOnlyDictionary<int, T> LoadTestCases<T>(string fileName, params object[] args) where T : ITestCase, new()
         {
             Dictionary <int, T> testCases = new Dictionary<int, T>();
 
@@ -81,6 +80,7 @@ namespace Mzinga.Test
                     if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
                     {
                         T testCase = new T();
+                        testCase.TestArgs = args;
                         testCase.Parse(line);
                         testCases.Add(lineNum, testCase);
                     }
@@ -147,19 +147,12 @@ namespace Mzinga.Test
             " \t ",
             "\t \t",
         };
-
-        public static EngineConfig DefaultGameEngineConfig
-        {
-            get
-            {
-                return _defaultGameEngineConfig ??= EngineConfig.GetDefaultEngineConfig();
-            }
-        }
-        private static EngineConfig _defaultGameEngineConfig;
     }
 
     public interface ITestCase
     {
+        object[] TestArgs { get; set; }
+
         void Execute();
         void Parse(string s);
     }
