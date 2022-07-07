@@ -156,8 +156,8 @@ namespace Mzinga.Test
 
         private static IEnumerable<object[]> GetEngineConfigOptions()
         {
-            var maxHelperThreads = new int?[] {  EngineConfig.MinMaxHelperThreads, EngineConfig.MaxMaxHelperThreads };
-            var quiescentSearchMaxDepth = new int?[] { GameAIConfig.MinQuiescentSearchMaxDepth, GameAIConfig.MaxQuiescentSearchMaxDepth };
+            var maxHelperThreads = new int?[] {  EngineConfig.MinMaxHelperThreads, EngineConfig.DefaultMaxHelperThreads };
+            var quiescentSearchMaxDepth = new int?[] { GameAIConfig.MinQuiescentSearchMaxDepth, GameAIConfig.DefaultQuiescentSearchMaxDepth };
 
             foreach (var mht in maxHelperThreads)
             {
@@ -186,8 +186,6 @@ namespace Mzinga.Test
 
         private class GameAIBestMoveTestCase : GameAIBestMoveTestCaseBase
         {
-            public Move ActualBestMove;
-
             public override void Execute()
             {
                 var config = EngineConfig.GetDefaultEngineConfig();
@@ -208,21 +206,14 @@ namespace Mzinga.Test
                 config._maxHelperThreads= TestArgs?[0] as int?;
                 config.QuiescentSearchMaxDepth = TestArgs?[1] as int?;
 
+                // Use TreeStrap (on clone since it doesn't undo moves) to improve the metrics
                 GameAI ai = config.GetGameAI(Board.GameType);
-
-                double colorValue = Board.CurrentColor == PlayerColor.White ? 1.0 : -1.0;
-
-                Board.TrustedPlay(in ExpectedBestMove);
-                var clone = Board.Clone();
-
-                double startScore = colorValue * ai.CalculateBoardScore(Board);
-
-                ai.TreeStrap(Board, MaxDepth, config.MaxHelperThreads);
+                ai.TreeStrap(Board.Clone(), MaxDepth, config.MaxHelperThreads);
                 ai.ResetCaches();
 
-                double endScore = colorValue * ai.CalculateBoardScore(clone);
-
-                Assert.IsTrue(endScore >= startScore);
+                // Confirm best move hasn't changed
+                ActualBestMove = ai.GetBestMove(Board, MaxDepth, config.MaxHelperThreads);
+                Assert.AreEqual(ExpectedBestMove, ActualBestMove, $"Expected: {Board.GetMoveString(ExpectedBestMove)}, Actual: {Board.GetMoveString(ActualBestMove)}.");
             }
         }
 
@@ -234,6 +225,7 @@ namespace Mzinga.Test
             public int MaxDepth;
 
             public Move ExpectedBestMove;
+            public Move ActualBestMove;
 
             public abstract void Execute();
 
