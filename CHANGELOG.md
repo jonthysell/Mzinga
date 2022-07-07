@@ -4,6 +4,7 @@
 
 * Engine: Changed defaults and acceptable ranges for options
 * Engine: Exposed QuiescentSearchMaxDepth and PrincipalVariationMaxDepth options
+* Engine: Fixed issue with never using end metric weights
 * Test: Improve GameAI tests with configurable options matrix
 * Viewer: Sort options in Engine Options dialog
 

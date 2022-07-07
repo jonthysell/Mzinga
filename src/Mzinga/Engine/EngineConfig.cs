@@ -413,7 +413,7 @@ namespace Mzinga.Engine
             return new GameAI(new GameAIConfig()
             {
                 StartMetricWeights = mw[0],
-                EndMetricWeights = mw[0] ?? mw[1],
+                EndMetricWeights = mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
                 QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
                 PrincipalVariationMaxDepth = PrincipalVariationMaxDepth,
