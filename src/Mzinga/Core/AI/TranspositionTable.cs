@@ -43,6 +43,9 @@ namespace Mzinga.Core.AI
                                                   + IntPtr.Size // BestMove pointer
                                                   + sizeof(PieceName) // BestMove PieceName
                                                   + (6 * sizeof(int)) // BestMove Position values
+#if DEBUG
+                                                  + IntPtr.Size // BestMoveString pointer
+#endif
                                                   ;
     }
 
