@@ -610,7 +610,6 @@ namespace Mzinga.Engine
         {
             OptionsGet("MaxBranchingFactor");
             OptionsGet("QuiescentSearchMaxDepth");
-            OptionsGet("PrincipalVariationMaxDepth");
             OptionsGet("MaxHelperThreads");
             OptionsGet("PonderDuringIdle");
             OptionsGet("TranspositionTableSizeMB");
@@ -640,10 +639,6 @@ namespace Mzinga.Engine
                 case "QuiescentSearchMaxDepth":
                     DefaultConfig.GetQuiescentSearchMaxDepthValue(out _, out defaultValue, out _);
                     Config.GetQuiescentSearchMaxDepthValue(out type, out value, out values);
-                    break;
-                case "PrincipalVariationMaxDepth":
-                    DefaultConfig.GetPrincipalVariationMaxDepthValue(out _, out defaultValue, out _);
-                    Config.GetPrincipalVariationMaxDepthValue(out type, out value, out values);
                     break;
                 case "MaxHelperThreads":
                     DefaultConfig.GetMaxHelperThreadsValue(out _, out defaultValue, out _);
@@ -698,9 +693,6 @@ namespace Mzinga.Engine
                     Config.ParseQuiescentSearchMaxDepthValue(value);
                     refreshAI = true;
                     resetCaches = true;
-                    break;
-                case "PrincipalVariationMaxDepth":
-                    Config.ParsePrincipalVariationMaxDepthValue(value);
                     break;
                 case "MaxHelperThreads":
                     Config.ParseMaxHelperThreadsValue(value);

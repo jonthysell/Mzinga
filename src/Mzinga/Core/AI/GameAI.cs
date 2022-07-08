@@ -21,8 +21,6 @@ namespace Mzinga.Core.AI
 
         private readonly int _quiescentSearchMaxDepth; // To prevent runaway stack overflows
 
-        private readonly int _principalVariationMaxDepth; // To prevent OOM if the PV is stuck in a loop
-
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
 
@@ -52,7 +50,6 @@ namespace Mzinga.Core.AI
             
             _maxBranchingFactor = config.MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor;
             _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth;
-            _principalVariationMaxDepth = config.PrincipalVariationMaxDepth ?? GameAIConfig.DefaultPrincipalVariationMaxDepth;
 
             ResetCaches();
         }
@@ -331,7 +328,7 @@ namespace Mzinga.Core.AI
             {
                 if (BestMoveFound is not null)
                 {
-                    BestMoveFound.Invoke(this, new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove, GetPrincipalVariationFromTranspositionTable(board)));
+                    BestMoveFound.Invoke(this, new BestMoveFoundEventArgs(evaluatedMove.Move, evaluatedMove.Depth, evaluatedMove.ScoreAfterMove, GetPrincipalVariationFromTranspositionTable(board, evaluatedMove.Depth)));
                 }
                 bestMoveParams.BestMove = evaluatedMove;
             }
@@ -500,15 +497,15 @@ namespace Mzinga.Core.AI
             return bestValue;
         }
 
-        public IReadOnlyList<Move> GetPrincipalVariationFromTranspositionTable(Board board)
+        public IReadOnlyList<Move> GetPrincipalVariationFromTranspositionTable(Board board, int maxDepth)
         {
             List<Move> moves = new List<Move>();
 
-            if (_principalVariationMaxDepth > 0)
+            if (maxDepth > 0)
             {
                 Board clone = board.Clone();
 
-                while (clone.GameInProgress && moves.Count < _principalVariationMaxDepth)
+                while (clone.GameInProgress && moves.Count < maxDepth)
                 {
                     ulong key = clone.ZobristKey;
 

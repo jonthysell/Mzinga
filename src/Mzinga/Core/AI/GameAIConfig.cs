@@ -52,27 +52,6 @@ namespace Mzinga.Core.AI
         }
         private int? _quiescentSearchMaxDepth = null;
 
-        public const int MinPrincipalVariationMaxDepth = 0;
-        public const int DefaultPrincipalVariationMaxDepth = 8; // To prevent OOM if the PV is stuck in a loop
-        public const int MaxPrincipalVariationMaxDepth = 16;
-
-        public int? PrincipalVariationMaxDepth
-        {
-            get
-            {
-                return _principalVariationMaxDepth;
-            }
-            set
-            {
-                if (value.HasValue && (value.Value < MinPrincipalVariationMaxDepth || value > MaxPrincipalVariationMaxDepth))
-                {
-                    throw new ArgumentOutOfRangeException(nameof(value));
-                }
-                _principalVariationMaxDepth = value;
-            }
-        }
-        private int? _principalVariationMaxDepth = null;
-
         public const int MinTranspositionTableSizeMB = 0;
         public const int DefaultTranspositionTableSizeMB = 2;
         public const int MaxTranspositionTableSizeMB = 1024;

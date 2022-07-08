@@ -45,8 +45,6 @@ namespace Mzinga.Engine
 
         public int? QuiescentSearchMaxDepth { get; internal set; } = null;
 
-        public int? PrincipalVariationMaxDepth { get; internal set; } = null;
-
         public int? TranspositionTableSizeMB { get; internal set; } = null;
 
         public Dictionary<GameType, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<GameType, MetricWeights[]>();
@@ -103,9 +101,6 @@ namespace Mzinga.Engine
                             break;
                         case "QuiescentSearchMaxDepth":
                             ParseQuiescentSearchMaxDepthValue(reader.ReadElementContentAsString());
-                            break;
-                        case "PrincipalVariationMaxDepth":
-                            ParsePrincipalVariationMaxDepthValue(reader.ReadElementContentAsString());
                             break;
                         case "ReportIntermediateBestMoves":
                             ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
@@ -191,11 +186,6 @@ namespace Mzinga.Engine
                 if (QuiescentSearchMaxDepth.HasValue)
                 {
                     writer.WriteElementString("QuiescentSearchMaxDepth", QuiescentSearchMaxDepth.Value.ToString());
-                }
-
-                if (PrincipalVariationMaxDepth.HasValue)
-                {
-                    writer.WriteElementString("PrincipalVariationMaxDepth", PrincipalVariationMaxDepth.Value.ToString());
                 }
 
                 writer.WriteElementString("ReportIntermediateBestMoves", ReportIntermediateBestMoves.ToString());
@@ -333,21 +323,6 @@ namespace Mzinga.Engine
             values = string.Format("{0};{1}", GameAIConfig.MinQuiescentSearchMaxDepth, GameAIConfig.MaxQuiescentSearchMaxDepth);
         }
 
-        public void ParsePrincipalVariationMaxDepthValue(string rawValue)
-        {
-            if (int.TryParse(rawValue, out int intValue))
-            {
-                PrincipalVariationMaxDepth = Math.Max(GameAIConfig.MinPrincipalVariationMaxDepth, Math.Min(intValue, GameAIConfig.MaxPrincipalVariationMaxDepth));
-            }
-        }
-
-        public void GetPrincipalVariationMaxDepthValue(out string type, out string value, out string values)
-        {
-            type = "int";
-            value = (PrincipalVariationMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth).ToString();
-            values = string.Format("{0};{1}", GameAIConfig.MinPrincipalVariationMaxDepth, GameAIConfig.MaxPrincipalVariationMaxDepth);
-        }
-
         public void ParseReportIntermediateBestMovesValue(string rawValue)
         {
             if (bool.TryParse(rawValue, out bool boolValue))
@@ -416,7 +391,6 @@ namespace Mzinga.Engine
                 EndMetricWeights = mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
                 QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
-                PrincipalVariationMaxDepth = PrincipalVariationMaxDepth,
                 TranspositionTableSizeMB = TranspositionTableSizeMB
             });
         }
@@ -436,7 +410,6 @@ namespace Mzinga.Engine
                 PonderDuringIdle = PonderDuringIdle,
                 MaxBranchingFactor = MaxBranchingFactor,
                 QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
-                PrincipalVariationMaxDepth = PrincipalVariationMaxDepth,
                 ReportIntermediateBestMoves = ReportIntermediateBestMoves
             };
 
@@ -450,7 +423,6 @@ namespace Mzinga.Engine
             PonderDuringIdle = other.PonderDuringIdle;
             MaxBranchingFactor = other.MaxBranchingFactor;
             QuiescentSearchMaxDepth = other.QuiescentSearchMaxDepth;
-            PrincipalVariationMaxDepth = other.PrincipalVariationMaxDepth;
             ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
         }
 
