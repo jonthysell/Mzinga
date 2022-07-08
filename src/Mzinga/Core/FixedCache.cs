@@ -49,7 +49,7 @@ namespace Mzinga.Core
 
         public FixedCache(int capacity = DefaultCapacity, FixedCacheReplaceEntryPredicate<TEntry>? replaceEntryPredicate = null)
         {
-            if (capacity <= 0)
+            if (capacity < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(capacity));
             }

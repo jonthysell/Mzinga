@@ -13,7 +13,7 @@ namespace Mzinga.Core.AI
         {
             if (sizeInBytes < EntrySizeInBytes)
             {
-                throw new ArgumentOutOfRangeException(nameof(sizeInBytes));
+                return 0;
             }
 
             return 1 + (int)Math.Round(DefaultFillFactor * sizeInBytes / EntrySizeInBytes);

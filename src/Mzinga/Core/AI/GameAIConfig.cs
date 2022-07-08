@@ -73,7 +73,7 @@ namespace Mzinga.Core.AI
         }
         private int? _principalVariationMaxDepth = null;
 
-        public const int MinTranspositionTableSizeMB = 1;
+        public const int MinTranspositionTableSizeMB = 0;
         public const int DefaultTranspositionTableSizeMB = 2;
         public const int MaxTranspositionTableSizeMB = 1024;
 
