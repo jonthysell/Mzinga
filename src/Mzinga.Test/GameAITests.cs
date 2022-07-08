@@ -143,7 +143,8 @@ namespace Mzinga.Test
 
         [DataTestMethod]
         [DynamicData(nameof(GetEngineConfigOptions), DynamicDataSourceType.Method)]
-        public void GameAI_TreeStrapImprovesBoardScoreForOneBestMoveToForceWinPuzzleTest(int maxHelperThreads, int quiescentSearchMaxDepth)
+        [Ignore]
+        public void GameAI_TreeStrapAICanSolveOneBestMoveToForceWinPuzzleTest(int maxHelperThreads, int quiescentSearchMaxDepth)
         {
             TestUtils.LoadAndExecuteTestCases<GameAITreeStrapTestCase>("PuzzleCandidate_IsOneBestMoveToForceWinPuzzleTest.csv", maxHelperThreads, quiescentSearchMaxDepth);
         }
