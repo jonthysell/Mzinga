@@ -9,6 +9,7 @@
 * Test: Improve debugging of GameAI tests
 * Test: Improve GameAI tests with configurable options matrix
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
+* Viewer: Fix issue when using newgame via the Engine Console not updating the GameType metadata
 * Viewer: Sort options in Engine Options dialog
 
 ## v0.12.9 ##

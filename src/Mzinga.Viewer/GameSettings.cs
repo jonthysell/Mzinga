@@ -100,6 +100,7 @@ namespace Mzinga.Viewer
                 if (GameMode == GameMode.Play)
                 {
                     GameRecording = new GameRecording(CurrentBoard, GameRecordingSource.Game, GameRecording.Metadata);
+                    Metadata.SetTag("GameType", Enums.GetGameTypeString(CurrentBoard.GameType));
                     Metadata.SetTag("Result", CurrentBoard.BoardState.ToString());
                 }
             }
