@@ -312,6 +312,9 @@ namespace Mzinga.Core.AI
                 // Move is a lower bound winning move if bestValue >= beta (always infinity in this function), otherwise it's exact
                 tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
                 tEntry.BestMove = evaluatedMoves.BestMove?.Move;
+#if DEBUG
+                tEntry.BestMoveString = tEntry.BestMove.HasValue ? board.GetMoveString(tEntry.BestMove.Value) : null;
+#endif
             }
 
             tEntry.Value = bestValue ?? double.NaN;
@@ -483,6 +486,9 @@ namespace Mzinga.Core.AI
                 {
                     tEntry.Type = bestValue >= beta ? TranspositionTableEntryType.LowerBound : TranspositionTableEntryType.Exact;
                     tEntry.BestMove = bestMove;
+#if DEBUG
+                    tEntry.BestMoveString = tEntry.BestMove.HasValue ? board.GetMoveString(tEntry.BestMove.Value) : null;
+#endif
                 }
 
                 tEntry.Value = bestValue.Value;
