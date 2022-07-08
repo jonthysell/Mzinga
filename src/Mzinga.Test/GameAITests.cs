@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -184,6 +185,29 @@ namespace Mzinga.Test
             return gb;
         }
 
+        private static EventHandler<BestMoveFoundEventArgs> GetLogBestMoveFoundEventHandler(Board board)
+        {
+            return (sender, args) =>
+            {
+                var sb = new StringBuilder();
+                sb.AppendJoin(';', board.GetMoveString(args.Move), args.Depth, args.Score.ToString("0.00"));
+
+                if (args.PrincipalVariation.Count > 0)
+                {
+                    Board clone = board.Clone();
+                    for (int i = 0; i < args.PrincipalVariation.Count; i++)
+                    {
+                        var move = args.PrincipalVariation[i];
+                        sb.Append(';');
+                        sb.Append(clone.GetMoveString(in move));
+                        clone.TrustedPlay(in move);
+                    }
+                }
+
+                Trace.TraceInformation(sb.ToString());
+            };
+        }
+
         private class GameAIBestMoveTestCase : GameAIBestMoveTestCaseBase
         {
             public override void Execute()
@@ -193,6 +217,10 @@ namespace Mzinga.Test
                 config.QuiescentSearchMaxDepth = TestArgs?[1] as int?;
 
                 GameAI ai = config.GetGameAI(Board.GameType);
+#if DEBUG
+                ai.BestMoveFound += GetLogBestMoveFoundEventHandler(Board);
+#endif
+
                 ActualBestMove = ai.GetBestMove(Board, MaxDepth, config.MaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove, $"Expected: {Board.GetMoveString(ExpectedBestMove)}, Actual: {Board.GetMoveString(ActualBestMove)}.");
             }
@@ -212,6 +240,9 @@ namespace Mzinga.Test
                 ai.ResetCaches();
 
                 // Confirm best move hasn't changed
+#if DEBUG
+                ai.BestMoveFound += GetLogBestMoveFoundEventHandler(Board);
+#endif
                 ActualBestMove = ai.GetBestMove(Board, MaxDepth, config.MaxHelperThreads);
                 Assert.AreEqual(ExpectedBestMove, ActualBestMove, $"Expected: {Board.GetMoveString(ExpectedBestMove)}, Actual: {Board.GetMoveString(ActualBestMove)}.");
             }

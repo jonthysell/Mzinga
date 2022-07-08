@@ -21,6 +21,13 @@ namespace Mzinga.Core
 
         public static readonly Move PassMove = new Move(PieceName.INVALID, Position.NullPosition, Position.NullPosition);
 
+#if DEBUG
+        public override string ToString()
+        {
+            return $"{PieceName}{Destination}";
+        }
+#endif
+
         public override bool Equals(object? obj)
         {
             return obj is Move move && this == move;

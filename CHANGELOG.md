@@ -5,6 +5,7 @@
 * Engine: Changed defaults and acceptable ranges for options
 * Engine: Exposed QuiescentSearchMaxDepth and PrincipalVariationMaxDepth options
 * Engine: Fixed issue with never using end metric weights
+* Test: Improve debugging of GameAI tests
 * Test: Improve GameAI tests with configurable options matrix
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
 * Viewer: Sort options in Engine Options dialog

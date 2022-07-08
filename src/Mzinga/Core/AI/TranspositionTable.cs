@@ -33,6 +33,9 @@ namespace Mzinga.Core.AI
         public double Value;
         public int Depth;
         public Move? BestMove;
+#if DEBUG
+        public string? BestMoveString;
+#endif
 
         public static readonly int SizeInBytes = sizeof(TranspositionTableEntryType) // Type
                                                   + sizeof(double) // Value

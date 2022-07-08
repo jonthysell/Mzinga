@@ -56,6 +56,13 @@ namespace Mzinga.Core
 
         public Position GetBottom() => Stack == 0 ? this : new Position(Q, R, 0);
 
+#if DEBUG
+        public override string ToString()
+        {
+            return $"({Q},{R},{Stack})";
+        }
+#endif
+
         public override bool Equals(object? obj)
         {
             return obj is Position pos && this == pos;
