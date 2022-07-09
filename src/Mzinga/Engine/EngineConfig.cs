@@ -69,7 +69,7 @@ namespace Mzinga.Engine
                 {
                     switch (reader.Name)
                     {
-                        case "GameAI":
+                        case nameof(GameAI):
                             LoadGameAIConfig(reader.ReadSubtree());
                             break;
                     }
@@ -83,36 +83,36 @@ namespace Mzinga.Engine
             {
                 if (reader.IsStartElement())
                 {
-                    _ = Enums.TryParse(reader["GameType"] ?? "", out GameType gameType);
+                    _ = Enums.TryParse(reader[nameof(GameType)] ?? "", out GameType gameType);
                     
                     switch (reader.Name)
                     {
-                        case "TranspositionTableSizeMB":
+                        case nameof(TranspositionTableSizeMB):
                             ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
                             break;
-                        case "MaxHelperThreads":
+                        case nameof(MaxHelperThreads):
                             ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
                             break;
-                        case "PonderDuringIdle":
+                        case nameof(PonderDuringIdle):
                             ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
                             break;
-                        case "MaxBranchingFactor":
+                        case nameof(MaxBranchingFactor):
                             ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
                             break;
-                        case "QuiescentSearchMaxDepth":
+                        case nameof(QuiescentSearchMaxDepth):
                             ParseQuiescentSearchMaxDepthValue(reader.ReadElementContentAsString());
                             break;
-                        case "ReportIntermediateBestMoves":
+                        case nameof(ReportIntermediateBestMoves):
                             ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
                             break;
-                        case "MetricWeights":
+                        case nameof(MetricWeights):
                             SetStartMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             SetEndMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
-                        case "StartMetricWeights":
+                        case nameof(GameAIConfig.StartMetricWeights):
                             SetStartMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
-                        case "EndMetricWeights":
+                        case nameof(GameAIConfig.EndMetricWeights):
                             SetEndMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
                             break;
                     }
@@ -142,7 +142,7 @@ namespace Mzinga.Engine
             writer.WriteAttributeString("version", AppInfo.Version);
             writer.WriteAttributeString("date", DateTime.UtcNow.ToString());
 
-            SaveGameAIConfig(writer, "GameAI", configSaveType);
+            SaveGameAIConfig(writer, nameof(GameAI), configSaveType);
 
             writer.WriteEndElement();
         }
@@ -160,35 +160,35 @@ namespace Mzinga.Engine
             {
                 if (TranspositionTableSizeMB.HasValue)
                 {
-                    writer.WriteElementString("TranspositionTableSizeMB", TranspositionTableSizeMB.Value.ToString());
+                    writer.WriteElementString(nameof(TranspositionTableSizeMB), TranspositionTableSizeMB.Value.ToString());
                 }
 
                 if (!_maxHelperThreads.HasValue)
                 {
-                    writer.WriteElementString("MaxHelperThreads", "Auto");
+                    writer.WriteElementString(nameof(MaxHelperThreads), nameof(MaxHelperThreadsType.Auto));
                 }
                 else if (_maxHelperThreads.Value == 0)
                 {
-                    writer.WriteElementString("MaxHelperThreads", "None");
+                    writer.WriteElementString(nameof(MaxHelperThreads), nameof(MaxHelperThreadsType.None));
                 }
                 else
                 {
-                    writer.WriteElementString("MaxHelperThreads", _maxHelperThreads.Value.ToString());
+                    writer.WriteElementString(nameof(MaxHelperThreads), _maxHelperThreads.Value.ToString());
                 }
 
-                writer.WriteElementString("PonderDuringIdle", PonderDuringIdle.ToString());
+                writer.WriteElementString(nameof(PonderDuringIdle), PonderDuringIdle.ToString());
 
                 if (MaxBranchingFactor.HasValue)
                 {
-                    writer.WriteElementString("MaxBranchingFactor", MaxBranchingFactor.Value.ToString());
+                    writer.WriteElementString(nameof(MaxBranchingFactor), MaxBranchingFactor.Value.ToString());
                 }
 
                 if (QuiescentSearchMaxDepth.HasValue)
                 {
-                    writer.WriteElementString("QuiescentSearchMaxDepth", QuiescentSearchMaxDepth.Value.ToString());
+                    writer.WriteElementString(nameof(QuiescentSearchMaxDepth), QuiescentSearchMaxDepth.Value.ToString());
                 }
 
-                writer.WriteElementString("ReportIntermediateBestMoves", ReportIntermediateBestMoves.ToString());
+                writer.WriteElementString(nameof(ReportIntermediateBestMoves), ReportIntermediateBestMoves.ToString());
             }
 
             if (configSaveType.HasFlag(ConfigSaveType.MetricWeights))
@@ -200,8 +200,8 @@ namespace Mzinga.Engine
 
                     if (mw[0] is not null && mw[1] is not null)
                     {
-                        mw[0].WriteMetricWeightsXml(writer, "StartMetricWeights", gameType);
-                        mw[1].WriteMetricWeightsXml(writer, "EndMetricWeights", gameType);
+                        mw[0].WriteMetricWeightsXml(writer, nameof(GameAIConfig.StartMetricWeights), gameType);
+                        mw[1].WriteMetricWeightsXml(writer, nameof(GameAIConfig.EndMetricWeights), gameType);
                     }
                     else if (mw[0] is not null && mw[1] is null)
                     {
@@ -259,18 +259,18 @@ namespace Mzinga.Engine
             
             if (!_maxHelperThreads.HasValue)
             {
-                value = "Auto";
+                value = nameof(MaxHelperThreadsType.Auto);
             }
             else if (_maxHelperThreads.Value == 0)
             {
-                value = "None";
+                value = nameof(MaxHelperThreadsType.None);
             }
             else
             {
                 value = _maxHelperThreads.Value.ToString();
             }
 
-            values = "Auto;None";
+            values = $"{nameof(MaxHelperThreadsType.Auto)};{nameof(MaxHelperThreadsType.None)}";
 
             for (int i = 1; i <= MaxMaxHelperThreads; i++)
             {
@@ -290,7 +290,7 @@ namespace Mzinga.Engine
         {
             type = "enum";
             value = PonderDuringIdle.ToString();
-            values = "Disabled;SingleThreaded;MultiThreaded";
+            values = $"{PonderDuringIdleType.Disabled};{PonderDuringIdleType.SingleThreaded};{PonderDuringIdleType.MultiThreaded}";
         }
 
         public void ParseMaxBranchingFactorValue(string rawValue)

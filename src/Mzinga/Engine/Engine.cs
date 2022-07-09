@@ -608,12 +608,12 @@ namespace Mzinga.Engine
 
         private void OptionsList()
         {
-            OptionsGet("MaxBranchingFactor");
-            OptionsGet("QuiescentSearchMaxDepth");
-            OptionsGet("MaxHelperThreads");
-            OptionsGet("PonderDuringIdle");
-            OptionsGet("TranspositionTableSizeMB");
-            OptionsGet("ReportIntermediateBestMoves");
+            OptionsGet(nameof(EngineConfig.MaxBranchingFactor));
+            OptionsGet(nameof(EngineConfig.QuiescentSearchMaxDepth));
+            OptionsGet(nameof(EngineConfig.MaxHelperThreads));
+            OptionsGet(nameof(EngineConfig.PonderDuringIdle));
+            OptionsGet(nameof(EngineConfig.TranspositionTableSizeMB));
+            OptionsGet(nameof(EngineConfig.ReportIntermediateBestMoves));
         }
 
         private void OptionsGet(string key)
@@ -632,27 +632,27 @@ namespace Mzinga.Engine
 
             switch (key)
             {
-                case "MaxBranchingFactor":
+                case nameof(EngineConfig.MaxBranchingFactor):
                     DefaultConfig.GetMaxBranchingFactorValue(out _, out defaultValue, out _);
                     Config.GetMaxBranchingFactorValue(out type, out value, out values);
                     break;
-                case "QuiescentSearchMaxDepth":
+                case nameof(EngineConfig.QuiescentSearchMaxDepth):
                     DefaultConfig.GetQuiescentSearchMaxDepthValue(out _, out defaultValue, out _);
                     Config.GetQuiescentSearchMaxDepthValue(out type, out value, out values);
                     break;
-                case "MaxHelperThreads":
+                case nameof(EngineConfig.MaxHelperThreads):
                     DefaultConfig.GetMaxHelperThreadsValue(out _, out defaultValue, out _);
                     Config.GetMaxHelperThreadsValue(out type, out value, out values);
                     break;
-                case "PonderDuringIdle":
+                case nameof(EngineConfig.PonderDuringIdle):
                     DefaultConfig.GetPonderDuringIdleValue(out _, out defaultValue, out _);
                     Config.GetPonderDuringIdleValue(out type, out value, out values);
                     break;
-                case "TranspositionTableSizeMB":
+                case nameof(EngineConfig.TranspositionTableSizeMB):
                     DefaultConfig.GetTranspositionTableSizeMBValue(out _, out defaultValue, out _);
                     Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
                     break;
-                case "ReportIntermediateBestMoves":
+                case nameof(EngineConfig.ReportIntermediateBestMoves):
                     DefaultConfig.GetReportIntermediateBestMovesValue(out _, out defaultValue, out _);
                     Config.GetReportIntermediateBestMovesValue(out type, out value, out values);
                     break;
@@ -684,28 +684,28 @@ namespace Mzinga.Engine
 
             switch (key)
             {
-                case "MaxBranchingFactor":
+                case nameof(EngineConfig.MaxBranchingFactor):
                     Config.ParseMaxBranchingFactorValue(value);
                     refreshAI = true;
                     resetCaches = true;
                     break;
-                case "QuiescentSearchMaxDepth":
+                case nameof(EngineConfig.QuiescentSearchMaxDepth):
                     Config.ParseQuiescentSearchMaxDepthValue(value);
                     refreshAI = true;
                     resetCaches = true;
                     break;
-                case "MaxHelperThreads":
+                case nameof(EngineConfig.MaxHelperThreads):
                     Config.ParseMaxHelperThreadsValue(value);
                     break;
-                case "PonderDuringIdle":
+                case nameof(EngineConfig.PonderDuringIdle):
                     Config.ParsePonderDuringIdleValue(value);
                     break;
-                case "TranspositionTableSizeMB":
+                case nameof(EngineConfig.TranspositionTableSizeMB):
                     Config.ParseTranspositionTableSizeMBValue(value);
                     refreshAI = true;
                     resetCaches = true;
                     break;
-                case "ReportIntermediateBestMoves":
+                case nameof(EngineConfig.ReportIntermediateBestMoves):
                     Config.ParseReportIntermediateBestMovesValue(value);
                     refreshAI = true;
                     break;
