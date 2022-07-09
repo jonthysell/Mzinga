@@ -609,11 +609,12 @@ namespace Mzinga.Engine
         private void OptionsList()
         {
             OptionsGet(nameof(EngineConfig.MaxBranchingFactor));
-            OptionsGet(nameof(EngineConfig.QuiescentSearchMaxDepth));
             OptionsGet(nameof(EngineConfig.MaxHelperThreads));
             OptionsGet(nameof(EngineConfig.PonderDuringIdle));
-            OptionsGet(nameof(EngineConfig.TranspositionTableSizeMB));
+            OptionsGet(nameof(EngineConfig.QuiescentSearchMaxDepth));
             OptionsGet(nameof(EngineConfig.ReportIntermediateBestMoves));
+            OptionsGet(nameof(EngineConfig.TranspositionTableSizeMB));
+            OptionsGet(nameof(EngineConfig.UseNullAspirationWindow));
         }
 
         private void OptionsGet(string key)
@@ -636,10 +637,6 @@ namespace Mzinga.Engine
                     DefaultConfig.GetMaxBranchingFactorValue(out _, out defaultValue, out _);
                     Config.GetMaxBranchingFactorValue(out type, out value, out values);
                     break;
-                case nameof(EngineConfig.QuiescentSearchMaxDepth):
-                    DefaultConfig.GetQuiescentSearchMaxDepthValue(out _, out defaultValue, out _);
-                    Config.GetQuiescentSearchMaxDepthValue(out type, out value, out values);
-                    break;
                 case nameof(EngineConfig.MaxHelperThreads):
                     DefaultConfig.GetMaxHelperThreadsValue(out _, out defaultValue, out _);
                     Config.GetMaxHelperThreadsValue(out type, out value, out values);
@@ -648,13 +645,21 @@ namespace Mzinga.Engine
                     DefaultConfig.GetPonderDuringIdleValue(out _, out defaultValue, out _);
                     Config.GetPonderDuringIdleValue(out type, out value, out values);
                     break;
-                case nameof(EngineConfig.TranspositionTableSizeMB):
-                    DefaultConfig.GetTranspositionTableSizeMBValue(out _, out defaultValue, out _);
-                    Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
+                case nameof(EngineConfig.QuiescentSearchMaxDepth):
+                    DefaultConfig.GetQuiescentSearchMaxDepthValue(out _, out defaultValue, out _);
+                    Config.GetQuiescentSearchMaxDepthValue(out type, out value, out values);
                     break;
                 case nameof(EngineConfig.ReportIntermediateBestMoves):
                     DefaultConfig.GetReportIntermediateBestMovesValue(out _, out defaultValue, out _);
                     Config.GetReportIntermediateBestMovesValue(out type, out value, out values);
+                    break;
+                case nameof(EngineConfig.TranspositionTableSizeMB):
+                    DefaultConfig.GetTranspositionTableSizeMBValue(out _, out defaultValue, out _);
+                    Config.GetTranspositionTableSizeMBValue(out type, out value, out values);
+                    break;
+                case nameof(EngineConfig.UseNullAspirationWindow):
+                    DefaultConfig.GetUseNullAspirationWindowValue(out _, out defaultValue, out _);
+                    Config.GetUseNullAspirationWindowValue(out type, out value, out values);
                     break;
                 default:
                     throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
@@ -689,25 +694,30 @@ namespace Mzinga.Engine
                     refreshAI = true;
                     resetCaches = true;
                     break;
-                case nameof(EngineConfig.QuiescentSearchMaxDepth):
-                    Config.ParseQuiescentSearchMaxDepthValue(value);
-                    refreshAI = true;
-                    resetCaches = true;
-                    break;
                 case nameof(EngineConfig.MaxHelperThreads):
                     Config.ParseMaxHelperThreadsValue(value);
                     break;
                 case nameof(EngineConfig.PonderDuringIdle):
                     Config.ParsePonderDuringIdleValue(value);
                     break;
-                case nameof(EngineConfig.TranspositionTableSizeMB):
-                    Config.ParseTranspositionTableSizeMBValue(value);
+                case nameof(EngineConfig.QuiescentSearchMaxDepth):
+                    Config.ParseQuiescentSearchMaxDepthValue(value);
                     refreshAI = true;
                     resetCaches = true;
                     break;
                 case nameof(EngineConfig.ReportIntermediateBestMoves):
                     Config.ParseReportIntermediateBestMovesValue(value);
                     refreshAI = true;
+                    break;
+                case nameof(EngineConfig.TranspositionTableSizeMB):
+                    Config.ParseTranspositionTableSizeMBValue(value);
+                    refreshAI = true;
+                    resetCaches = true;
+                    break;
+                case nameof(EngineConfig.UseNullAspirationWindow):
+                    Config.ParseUseNullAspirationWindowValue(value);
+                    refreshAI = true;
+                    resetCaches = true;
                     break;
                 default:
                     throw new ArgumentException(string.Format("The option \"{0}\" is not valid.", key));
@@ -726,7 +736,7 @@ namespace Mzinga.Engine
             ConsoleOut(LicensesText);
         }
 
-        private void Perft(int maxDepth = Int32.MaxValue)
+        private void Perft(int maxDepth = int.MaxValue)
         {
             if (_board is null)
             {

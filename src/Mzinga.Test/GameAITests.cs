@@ -20,7 +20,7 @@ namespace Mzinga.Test
         [TestMethod]
         public void GameAI_NewTest()
         {
-            GameAI ai = new GameAI();
+            GameAI ai = new GameAI(new GameAIConfig());
             Assert.IsNotNull(ai);
         }
 

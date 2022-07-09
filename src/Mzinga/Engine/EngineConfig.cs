@@ -47,6 +47,8 @@ namespace Mzinga.Engine
 
         public int? TranspositionTableSizeMB { get; internal set; } = null;
 
+        public bool? UseNullAspirationWindow { get; set; } = null;
+
         public Dictionary<GameType, MetricWeights[]> MetricWeightSet { get; private set; } = new Dictionary<GameType, MetricWeights[]>();
 
         #endregion
@@ -87,8 +89,8 @@ namespace Mzinga.Engine
                     
                     switch (reader.Name)
                     {
-                        case nameof(TranspositionTableSizeMB):
-                            ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
+                        case nameof(MaxBranchingFactor):
+                            ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
                             break;
                         case nameof(MaxHelperThreads):
                             ParseMaxHelperThreadsValue(reader.ReadElementContentAsString());
@@ -96,14 +98,17 @@ namespace Mzinga.Engine
                         case nameof(PonderDuringIdle):
                             ParsePonderDuringIdleValue(reader.ReadElementContentAsString());
                             break;
-                        case nameof(MaxBranchingFactor):
-                            ParseMaxBranchingFactorValue(reader.ReadElementContentAsString());
-                            break;
                         case nameof(QuiescentSearchMaxDepth):
                             ParseQuiescentSearchMaxDepthValue(reader.ReadElementContentAsString());
                             break;
                         case nameof(ReportIntermediateBestMoves):
                             ParseReportIntermediateBestMovesValue(reader.ReadElementContentAsString());
+                            break;
+                        case nameof(TranspositionTableSizeMB):
+                            ParseTranspositionTableSizeMBValue(reader.ReadElementContentAsString());
+                            break;
+                        case nameof(UseNullAspirationWindow):
+                            ParseUseNullAspirationWindowValue(reader.ReadElementContentAsString());
                             break;
                         case nameof(MetricWeights):
                             SetStartMetricWeights(gameType, MetricWeights.ReadMetricWeightsXml(reader.ReadSubtree()));
@@ -158,9 +163,9 @@ namespace Mzinga.Engine
 
             if (configSaveType.HasFlag(ConfigSaveType.BasicOptions))
             {
-                if (TranspositionTableSizeMB.HasValue)
+                if (MaxBranchingFactor.HasValue)
                 {
-                    writer.WriteElementString(nameof(TranspositionTableSizeMB), TranspositionTableSizeMB.Value.ToString());
+                    writer.WriteElementString(nameof(MaxBranchingFactor), MaxBranchingFactor.Value.ToString());
                 }
 
                 if (!_maxHelperThreads.HasValue)
@@ -178,17 +183,22 @@ namespace Mzinga.Engine
 
                 writer.WriteElementString(nameof(PonderDuringIdle), PonderDuringIdle.ToString());
 
-                if (MaxBranchingFactor.HasValue)
-                {
-                    writer.WriteElementString(nameof(MaxBranchingFactor), MaxBranchingFactor.Value.ToString());
-                }
-
                 if (QuiescentSearchMaxDepth.HasValue)
                 {
                     writer.WriteElementString(nameof(QuiescentSearchMaxDepth), QuiescentSearchMaxDepth.Value.ToString());
                 }
 
                 writer.WriteElementString(nameof(ReportIntermediateBestMoves), ReportIntermediateBestMoves.ToString());
+
+                if (TranspositionTableSizeMB.HasValue)
+                {
+                    writer.WriteElementString(nameof(TranspositionTableSizeMB), TranspositionTableSizeMB.Value.ToString());
+                }
+
+                if (UseNullAspirationWindow.HasValue)
+                {
+                    writer.WriteElementString(nameof(UseNullAspirationWindow), UseNullAspirationWindow.Value.ToString());
+                }
             }
 
             if (configSaveType.HasFlag(ConfigSaveType.MetricWeights))
@@ -217,19 +227,19 @@ namespace Mzinga.Engine
 
         #region Engine Helpers
 
-        public void ParseTranspositionTableSizeMBValue(string rawValue)
+        public void ParseMaxBranchingFactorValue(string rawValue)
         {
             if (int.TryParse(rawValue, out int intValue))
             {
-                TranspositionTableSizeMB = Math.Max(GameAIConfig.MinTranspositionTableSizeMB, Math.Min(intValue, GameAIConfig.MaxTranspositionTableSizeMB));
+                MaxBranchingFactor = Math.Max(GameAIConfig.MinMaxBranchingFactor, Math.Min(intValue, GameAIConfig.MaxMaxBranchingFactor));
             }
         }
 
-        public void GetTranspositionTableSizeMBValue(out string type, out string value, out string values)
+        public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
         {
             type = "int";
-            value = (TranspositionTableSizeMB ?? GameAIConfig.DefaultTranspositionTableSizeMB).ToString();
-            values = string.Format("{0};{1}", GameAIConfig.MinTranspositionTableSizeMB, GameAIConfig.MaxTranspositionTableSizeMB);
+            value = (MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinMaxBranchingFactor, GameAIConfig.MaxMaxBranchingFactor);
         }
 
         public void ParseMaxHelperThreadsValue(string rawValue)
@@ -293,21 +303,6 @@ namespace Mzinga.Engine
             values = $"{PonderDuringIdleType.Disabled};{PonderDuringIdleType.SingleThreaded};{PonderDuringIdleType.MultiThreaded}";
         }
 
-        public void ParseMaxBranchingFactorValue(string rawValue)
-        {
-            if (int.TryParse(rawValue, out int intValue))
-            {
-                MaxBranchingFactor = Math.Max(GameAIConfig.MinMaxBranchingFactor, Math.Min(intValue, GameAIConfig.MaxMaxBranchingFactor));
-            }
-        }
-
-        public void GetMaxBranchingFactorValue(out string type, out string value, out string values)
-        {
-            type = "int";
-            value = (MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor).ToString();
-            values = string.Format("{0};{1}", GameAIConfig.MinMaxBranchingFactor, GameAIConfig.MaxMaxBranchingFactor);
-        }
-
         public void ParseQuiescentSearchMaxDepthValue(string rawValue)
         {
             if (int.TryParse(rawValue, out int intValue))
@@ -335,6 +330,36 @@ namespace Mzinga.Engine
         {
             type = "bool";
             value = ReportIntermediateBestMoves.ToString();
+            values = "";
+        }
+
+        public void ParseTranspositionTableSizeMBValue(string rawValue)
+        {
+            if (int.TryParse(rawValue, out int intValue))
+            {
+                TranspositionTableSizeMB = Math.Max(GameAIConfig.MinTranspositionTableSizeMB, Math.Min(intValue, GameAIConfig.MaxTranspositionTableSizeMB));
+            }
+        }
+
+        public void GetTranspositionTableSizeMBValue(out string type, out string value, out string values)
+        {
+            type = "int";
+            value = (TranspositionTableSizeMB ?? GameAIConfig.DefaultTranspositionTableSizeMB).ToString();
+            values = string.Format("{0};{1}", GameAIConfig.MinTranspositionTableSizeMB, GameAIConfig.MaxTranspositionTableSizeMB);
+        }
+
+        public void ParseUseNullAspirationWindowValue(string rawValue)
+        {
+            if (bool.TryParse(rawValue, out bool boolValue))
+            {
+                UseNullAspirationWindow = boolValue;
+            }
+        }
+
+        public void GetUseNullAspirationWindowValue(out string type, out string value, out string values)
+        {
+            type = "bool";
+            value = (UseNullAspirationWindow ?? GameAIConfig.DefaultUseNullAspirationWindow).ToString();
             values = "";
         }
 
@@ -391,7 +416,8 @@ namespace Mzinga.Engine
                 EndMetricWeights = mw[1],
                 MaxBranchingFactor = MaxBranchingFactor,
                 QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
-                TranspositionTableSizeMB = TranspositionTableSizeMB
+                TranspositionTableSizeMB = TranspositionTableSizeMB,
+                UseNullAspirationWindow = UseNullAspirationWindow,
             });
         }
 
@@ -405,12 +431,13 @@ namespace Mzinga.Engine
         {
             EngineConfig clone = new EngineConfig()
             {
-                TranspositionTableSizeMB = TranspositionTableSizeMB,
+                MaxBranchingFactor = MaxBranchingFactor,
                 _maxHelperThreads = _maxHelperThreads,
                 PonderDuringIdle = PonderDuringIdle,
-                MaxBranchingFactor = MaxBranchingFactor,
                 QuiescentSearchMaxDepth = QuiescentSearchMaxDepth,
-                ReportIntermediateBestMoves = ReportIntermediateBestMoves
+                ReportIntermediateBestMoves = ReportIntermediateBestMoves,
+                TranspositionTableSizeMB = TranspositionTableSizeMB,
+                UseNullAspirationWindow = UseNullAspirationWindow,
             };
 
             return clone;
@@ -418,12 +445,13 @@ namespace Mzinga.Engine
 
         public void CopyOptionsFrom(EngineConfig other)
         {
-            TranspositionTableSizeMB = other.TranspositionTableSizeMB;
+            MaxBranchingFactor = other.MaxBranchingFactor;
             _maxHelperThreads = other._maxHelperThreads;
             PonderDuringIdle = other.PonderDuringIdle;
-            MaxBranchingFactor = other.MaxBranchingFactor;
             QuiescentSearchMaxDepth = other.QuiescentSearchMaxDepth;
             ReportIntermediateBestMoves = other.ReportIntermediateBestMoves;
+            TranspositionTableSizeMB = other.TranspositionTableSizeMB;
+            UseNullAspirationWindow = other.UseNullAspirationWindow;
         }
 
         #endregion

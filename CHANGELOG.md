@@ -5,6 +5,7 @@
 * Core: Allow for no (zero-sized) transposition table
 * Engine: Changed defaults and acceptable ranges for options
 * Engine: Exposed QuiescentSearchMaxDepth option
+* Engine: Exposed UseNullAspirationWindow option
 * Engine: Fixed issue with never using end metric weights
 * Test: Improve debugging of GameAI tests
 * Test: Improve GameAI tests with configurable options matrix

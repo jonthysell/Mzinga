@@ -21,23 +21,20 @@ namespace Mzinga.Core.AI
 
         private readonly int _quiescentSearchMaxDepth; // To prevent runaway stack overflows
 
+        private readonly bool _useNullAspirationWindow;
+
         private readonly FixedCache<ulong, double> _cachedBoardScores = new FixedCache<ulong, double>(BoardScoreCacheSize);
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
 
         private readonly FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>();
 
-        public GameAI()
-        {
-            StartMetricWeights = new MetricWeights();
-            EndMetricWeights = new MetricWeights();
-
-            TranspositionTable = new TranspositionTable(GameAIConfig.DefaultTranspositionTableSizeMB);
-        }
-
         public GameAI(GameAIConfig config)
         {
             StartMetricWeights = config.StartMetricWeights?.Clone() ?? new MetricWeights();
             EndMetricWeights = config.EndMetricWeights?.Clone() ?? new MetricWeights();
+            
+            _maxBranchingFactor = config.MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor;
+            _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth;
 
             if (config.TranspositionTableSizeMB.HasValue)
             {
@@ -47,9 +44,8 @@ namespace Mzinga.Core.AI
             {
                 TranspositionTable = new TranspositionTable(GameAIConfig.DefaultTranspositionTableSizeMB);
             }
-            
-            _maxBranchingFactor = config.MaxBranchingFactor ?? GameAIConfig.DefaultMaxBranchingFactor;
-            _quiescentSearchMaxDepth = config.QuiescentSearchMaxDepth ?? GameAIConfig.DefaultQuiescentSearchMaxDepth;
+
+            _useNullAspirationWindow = config.UseNullAspirationWindow ?? GameAIConfig.DefaultUseNullAspirationWindow;
 
             ResetCaches();
         }
@@ -248,7 +244,7 @@ namespace Mzinga.Core.AI
 
                 double? value = null;
 
-                if (firstMove)
+                if (!_useNullAspirationWindow || firstMove)
                 {
                     // Full window search
                     value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
@@ -428,7 +424,7 @@ namespace Mzinga.Core.AI
 
                 board.TrustedPlay(in move);
 
-                if (firstMove)
+                if (!_useNullAspirationWindow || firstMove)
                 {
                     // Full window search
                     value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
