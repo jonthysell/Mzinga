@@ -20,7 +20,7 @@ defaults:
 jobs:
   ci_build_and_test:
     name: CI Build and Test
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         configuration: [Debug, Release]
@@ -63,9 +63,6 @@ jobs:
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
-
-    - name: Run Tests
-      run: ${{ env.ScriptDir }}/RunTests.ps1 -TestArgs "-c Release"
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
@@ -120,9 +117,6 @@ jobs:
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
-    - name: Run Tests
-      run: ${{ env.ScriptDir }}/RunTests.ps1 -TestArgs "-c Release"
-
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -147,9 +141,6 @@ jobs:
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
-
-    - name: Run Tests
-      run: ${{ env.ScriptDir }}/RunTests.ps1 -TestArgs "-c Release"
 
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
