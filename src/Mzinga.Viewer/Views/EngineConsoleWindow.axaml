@@ -44,6 +44,7 @@
                      Text="{Binding EngineOutputText, Mode=OneWay}"
                      TextWrapping="Wrap"
                      VerticalContentAlignment="Top"
+                     PropertyChanged="EngineConsoleOutput_PropertyChanged"
                      x:Name="EngineConsoleOutput" />
         </Grid>
     </Panel>

@@ -14,6 +14,7 @@
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
 * Viewer: Fix issue when using newgame via the Engine Console not updating the GameType metadata
 * Viewer: Sort options in Engine Options dialog
+* Viewer: Engine console now scrolls to keep up with the latest output
 
 ## v0.12.9 ##
 

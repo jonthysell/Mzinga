@@ -61,5 +61,16 @@ namespace Mzinga.Viewer.Views
                 }
             }
         }
+
+        private void EngineConsoleOutput_PropertyChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (e.Property == TextBox.TextProperty)
+            {
+                if (sender is TextBox tb && e.NewValue is string text)
+                {
+                    tb.CaretIndex = text.Length;
+                }
+            }
+        }
     }
 }
