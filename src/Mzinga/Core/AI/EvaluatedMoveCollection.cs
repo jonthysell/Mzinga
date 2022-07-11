@@ -26,13 +26,24 @@ namespace Mzinga.Core.AI
             }
         }
 
-        private readonly List<EvaluatedMove> _evaluatedMoves = new List<EvaluatedMove>();
+        private readonly List<EvaluatedMove> _evaluatedMoves;
 
-        public EvaluatedMoveCollection() { }
+        public EvaluatedMoveCollection(int capacity = 0)
+        {
+            _evaluatedMoves = new List<EvaluatedMove>(capacity);
+        }
 
-        public EvaluatedMoveCollection(IEnumerable<EvaluatedMove> evaluatedMoves, bool resort) : this()
+        public EvaluatedMoveCollection(IReadOnlyList<EvaluatedMove> evaluatedMoves, bool resort) : this(evaluatedMoves.Count)
         {
             Add(evaluatedMoves, resort);
+        }
+
+        internal  EvaluatedMoveCollection(IReadOnlyList<Move> moves) : this(moves.Count)
+        {
+            foreach (var move in moves)
+            {
+                Add(move);
+            }
         }
 
         public void Add(IEnumerable<EvaluatedMove> evaluatedMoves, bool resort)
@@ -86,6 +97,11 @@ namespace Mzinga.Core.AI
             {
                 _evaluatedMoves.RemoveRange(firstGameLosingMoveIndex, _evaluatedMoves.Count - firstGameLosingMoveIndex);
             }
+        }
+
+        internal void Add(Move move)
+        {
+            _evaluatedMoves.Add(new EvaluatedMove(move));
         }
 
         public IEnumerator<EvaluatedMove> GetEnumerator()

@@ -27,6 +27,7 @@ namespace Mzinga.Core.AI
         private static readonly int BoardScoreCacheSize = 1024 * 1024 / FixedCache<ulong, double>.EstimateSizeInBytes(sizeof(ulong), sizeof(double)); // 1MB
 
         private readonly FixedCache<ulong, MoveSet> _cachedValidMoves = new FixedCache<ulong, MoveSet>();
+        private readonly FixedCache<ulong, EvaluatedMoveCollection> _cachedSortedMoves = new FixedCache<ulong, EvaluatedMoveCollection>();
 
         public GameAI(GameAIConfig config)
         {
@@ -149,17 +150,17 @@ namespace Mzinga.Core.AI
             if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry is not null && tEntry.BestMove.HasValue)
             {
                 bestMove = new EvaluatedMove(tEntry.BestMove.Value, tEntry.Value, tEntry.Depth);
-                OnBestMoveFound(board, bestMoveParams, bestMove);
+                OnBestMoveFound(board, bestMoveParams, bestMove.Value);
             }
 
-            if (bestMove is not null && double.IsPositiveInfinity(bestMove.ScoreAfterMove))
+            if (bestMove.HasValue && double.IsPositiveInfinity(bestMove.Value.ScoreAfterMove))
             {
                 // Winning move, don't search
-                movesToEvaluate.Add(bestMove);
+                movesToEvaluate.Add(bestMove.Value);
                 return movesToEvaluate;
             }
 
-            List<EvaluatedMove> validMoves = GetPreSortedValidMoves(board, bestMove);
+            var validMoves = GetSortedValidMoves(board, bestMove);
             movesToEvaluate.Add(validMoves, false);
 
             if (movesToEvaluate.Count <= 1 || bestMoveParams.MaxSearchDepth == 0)
@@ -169,25 +170,25 @@ namespace Mzinga.Core.AI
             }
 
             // Iterative search
-            int depth = movesToEvaluate.BestMove is not null ? 1 + Math.Max(0, movesToEvaluate.BestMove.Depth) : 1;
+            int depth = movesToEvaluate.BestMove.HasValue ? 1 + Math.Max(0, movesToEvaluate.BestMove.Value.Depth) : 1;
             while (depth <= bestMoveParams.MaxSearchDepth)
             {
                 // Start LazySMP helper threads
                 CancellationTokenSource helperCTS = new CancellationTokenSource();
-                Task[]? helperThreads = StartHelperThreads(board, depth, movesToEvaluate, bestMoveParams.MaxHelperThreads, helperCTS);
+                Task[]? helperThreads = StartHelperThreads(board, depth, bestMoveParams.MaxSearchDepth, movesToEvaluate, bestMoveParams.MaxHelperThreads, helperCTS);
 
                 // "Re-sort" moves to evaluate based on the next iteration
-                movesToEvaluate = await EvaluateMovesToDepthAsync(board, depth, movesToEvaluate, OrderType.Default, token);
+                movesToEvaluate = await EvaluateMovesToDepthAsync(board, depth, movesToEvaluate, OrderType.Default, depth == 1, token);
 
                 // End LazySMP helper threads
                 EndHelperThreads(helperThreads, helperCTS);
 
                 // Fire BestMoveFound for current depth
-                if (movesToEvaluate.BestMove is not null)
+                if (movesToEvaluate.BestMove.HasValue)
                 {
-                    OnBestMoveFound(board, bestMoveParams, movesToEvaluate.BestMove);
+                    OnBestMoveFound(board, bestMoveParams, movesToEvaluate.BestMove.Value);
 
-                    if (double.IsInfinity(movesToEvaluate.BestMove.ScoreAfterMove))
+                    if (double.IsInfinity(movesToEvaluate.BestMove.Value.ScoreAfterMove))
                     {
                         // The best move ends the game, stop searching
                         break;
@@ -196,6 +197,9 @@ namespace Mzinga.Core.AI
 
                 // Prune game-losing moves if possible
                 movesToEvaluate.PruneGameLosingMoves();
+
+                // Save this sorted move list for later
+                _cachedSortedMoves.Store(key, movesToEvaluate);
 
                 if (movesToEvaluate.Count <= 1)
                 {
@@ -209,13 +213,13 @@ namespace Mzinga.Core.AI
                     break;
                 }
 
-                depth = 1 + (movesToEvaluate.BestMove is not null ? Math.Max(depth, movesToEvaluate.BestMove.Depth) : depth);
+                depth = 1 + (movesToEvaluate.BestMove.HasValue ? Math.Max(depth, movesToEvaluate.BestMove.Value.Depth) : depth);
             }
 
             return movesToEvaluate;
         }
 
-        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IReadOnlyList<EvaluatedMove> movesToEvaluate, OrderType orderType, CancellationToken token)
+        private async ValueTask<EvaluatedMoveCollection> EvaluateMovesToDepthAsync(Board board, int depth, IReadOnlyList<EvaluatedMove> movesToEvaluate, OrderType orderType, bool forceFullWindow, CancellationToken token)
         {
             double alpha = double.NegativeInfinity;
             double beta = double.PositiveInfinity;
@@ -228,12 +232,10 @@ namespace Mzinga.Core.AI
 
             EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection();
 
-            bool firstMove = true;
+            bool fullWindowSearch = true;
 
             foreach (EvaluatedMove moveToEvaluate in movesToEvaluate.GetEnumerableByOrderType(orderType))
             {
-                bool updateAlpha = false;
-
                 if (token.IsCancellationRequested)
                 {
                     // Cancel
@@ -244,12 +246,10 @@ namespace Mzinga.Core.AI
 
                 double? value = null;
 
-                if (!_useNullAspirationWindow || firstMove)
+                if (fullWindowSearch || forceFullWindow || !_useNullAspirationWindow)
                 {
                     // Full window search
                     value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
-                    updateAlpha = true;
-                    firstMove = false;
                 }
                 else
                 {
@@ -259,7 +259,6 @@ namespace Mzinga.Core.AI
                     {
                         // Research with full window
                         value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
-                        updateAlpha = true;
                     }
                 }
 
@@ -274,22 +273,25 @@ namespace Mzinga.Core.AI
                 EvaluatedMove evaluatedMove = new EvaluatedMove(moveToEvaluate.Move, value.Value, depth);
                 evaluatedMoves.Add(evaluatedMove);
 
-                if (updateAlpha)
-                {
-                    alpha = Math.Max(alpha, value.Value);
-                }
-
-                if (!bestValue.HasValue || value >= bestValue)
+                if (!bestValue.HasValue || value > bestValue)
                 {
                     bestValue = value;
                 }
 
-                if (bestValue >= beta)
+                if (value.Value > alpha)
+                {
+                    alpha = value.Value;
+                    fullWindowSearch = false;
+                }
+
+                if (value.Value >= beta)
                 {
                     // A winning move has been found, since beta is always infinity in this function
                     break;
                 }
             }
+
+            // If we made it through all the moves, store to TT
 
             ulong key = board.ZobristKey;
 
@@ -297,7 +299,7 @@ namespace Mzinga.Core.AI
 
             if (bestValue <= alphaOriginal)
             {
-                // Losing move since alphaOriginal os negative infinity in this function
+                // Losing move since alphaOriginal is negative infinity in this function
                 tEntry.Type = TranspositionTableEntryType.UpperBound;
             }
             else
@@ -334,10 +336,11 @@ namespace Mzinga.Core.AI
 
         #region Threading support
 
-        private Task[]? StartHelperThreads(Board board, int depth, IReadOnlyList<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
+        private Task[]? StartHelperThreads(Board board, int depth, int maxDepth, IReadOnlyList<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
         {
             Task[]? helperThreads = null;
 
+            // Only start helpers on later iterative depths past the first
             if (depth > 1 && threads > 0)
             {
                 helperThreads = new Task[threads];
@@ -346,12 +349,11 @@ namespace Mzinga.Core.AI
                 for (int i = 0; i < helperThreads.Length; i++)
                 {
                     Board clone = board.Clone();
-                    int helperDepth = depth + (i / 2);
-                    OrderType orderType = (OrderType)(2 - (i % 2));
+                    int helperDepth = Math.Min(maxDepth, depth + ((i + 1)/ 3));
+                    OrderType orderType = (OrderType)(2 - (i % 3));
                     helperThreads[i] = Task.Run(async () =>
                     {
-                        await EvaluateMovesToDepthAsync(clone, helperDepth, movesToEvaluate, orderType, tokenSource.Token);
-                        //await PrincipalVariationSearchAsync(clone, helperDepth, double.NegativeInfinity, double.PositiveInfinity, color, orderType, tokenSource.Token);
+                        await PrincipalVariationSearchAsync(clone, helperDepth, double.NegativeInfinity, double.PositiveInfinity, color, orderType, tokenSource.Token);
                     });
                 }
             }
@@ -407,14 +409,12 @@ namespace Mzinga.Core.AI
             double? bestValue = null;
             Move? bestMove = tEntry?.BestMove;
 
-            List<Move> moves = GetPreSortedValidMoves(board, bestMove);
+            var moves = GetSortedValidMoves(board, bestMove.HasValue ? new EvaluatedMove(bestMove.Value, alpha, tEntry!.Depth) : null);
 
-            bool firstMove = true;
+            bool fullWindowSearch = true;
 
-            foreach (Move move in moves.GetEnumerableByOrderType(orderType))
+            foreach (var move in moves.GetEnumerableByOrderType(orderType))
             {
-                bool updateAlpha = false;
-
                 if (token.IsCancellationRequested)
                 {
                     return null;
@@ -422,14 +422,12 @@ namespace Mzinga.Core.AI
 
                 double? value = null;
 
-                board.TrustedPlay(in move);
+                board.TrustedPlay(in move.Move);
 
-                if (!_useNullAspirationWindow || firstMove)
+                if (fullWindowSearch || !_useNullAspirationWindow)
                 {
                     // Full window search
                     value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
-                    updateAlpha = true;
-                    firstMove = false;
                 }
                 else
                 {
@@ -439,7 +437,6 @@ namespace Mzinga.Core.AI
                     {
                         // Research with full window
                         value = -1 * await PrincipalVariationSearchAsync(board, depth - 1, -beta, -alpha, -color, orderType, token);
-                        updateAlpha = true;
                     }
                 }
 
@@ -450,18 +447,19 @@ namespace Mzinga.Core.AI
                     return null;
                 }
 
-                if (updateAlpha)
-                {
-                    alpha = Math.Max(alpha, value.Value);
-                }
-
-                if (!bestValue.HasValue || value >= bestValue)
+                if (!bestValue.HasValue || value > bestValue)
                 {
                     bestValue = value;
-                    bestMove = move;
+                    bestMove = move.Move;
                 }
 
-                if (bestValue >= beta)
+                if (value.Value > alpha)
+                {
+                    alpha = value.Value;
+                    fullWindowSearch = false;
+                }
+
+                if (value.Value >= beta)
                 {
                     break;
                 }
@@ -521,13 +519,13 @@ namespace Mzinga.Core.AI
 
         #endregion
 
-        #region Pre-Sorted Moves
+        #region Getting Moves
 
         private MoveSet GetValidMoves(Board board)
         {
             ulong key = board.ZobristKey;
 
-            if (_cachedValidMoves.TryLookup(key, out MoveSet? moves) && moves is not null)
+            if (_cachedValidMoves.TryLookup(key, out var moves) && moves is not null)
             {
                 return moves;
             }
@@ -538,32 +536,53 @@ namespace Mzinga.Core.AI
             return moves;
         }
 
-        private List<EvaluatedMove> GetPreSortedValidMoves(Board board, EvaluatedMove? bestMove)
+        private EvaluatedMoveCollection GetSortedValidMoves(Board board, EvaluatedMove? bestMove)
         {
-            List<Move> validMoves = GetPreSortedValidMoves(board, bestMove?.Move);
+            ulong key = board.ZobristKey;
 
-            List<EvaluatedMove> evaluatedMoves = new List<EvaluatedMove>(validMoves.Count);
-            foreach (Move move in validMoves)
+            if (_cachedSortedMoves.TryLookup(key, out var moves) && moves is not null)
             {
-                evaluatedMoves.Add(move == bestMove?.Move ? bestMove : new EvaluatedMove(move));
+                return moves;
             }
 
-            return evaluatedMoves;
+            moves = GetPreSortedValidMoves(board, bestMove);
+            _cachedSortedMoves.Store(key, moves);
+
+            return moves;
         }
 
-        private List<Move> GetPreSortedValidMoves(Board board, Move? bestMove)
+        private EvaluatedMoveCollection GetPreSortedValidMoves(Board board, EvaluatedMove? bestMove)
         {
-            List<Move> validMoves = new List<Move>(GetValidMoves(board));
+            var validMoves = new List<Move>(GetValidMoves(board));
 
-            validMoves.Sort((a, b) => { return PreSortMoves(a, b, board, bestMove); });
+            validMoves.Sort((a, b) => { return PreSortMoves(a, b, board, bestMove?.Move); });
 
             if (validMoves.Count > _maxBranchingFactor)
             {
-                // Too many moves, reduce branching factor
                 validMoves.RemoveRange(_maxBranchingFactor, validMoves.Count - _maxBranchingFactor);
             }
 
-            return validMoves;
+            if (bestMove is null)
+            {
+                // Just return the pre-sorted result
+                return new EvaluatedMoveCollection(validMoves);
+            }
+
+            EvaluatedMoveCollection evaluatedMoves = new EvaluatedMoveCollection(validMoves.Count);
+
+            // Add evaluated best move as first item
+            if (bestMove.HasValue)
+            {
+                evaluatedMoves.Add(bestMove.Value);
+            }
+
+            // Add remaining moves after the first move
+            for (int i = 1; i < validMoves.Count; i++)
+            {
+                evaluatedMoves.Add(validMoves[i]);
+            }
+
+            return evaluatedMoves;
         }
 
         private static int PreSortMoves(in Move a, in Move b, Board board, Move? bestMove)

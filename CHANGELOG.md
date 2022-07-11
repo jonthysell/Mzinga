@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Allow for no (zero-sized) transposition table
+* Core: Cache sorted move lists at each position
 * Engine: Changed defaults and acceptable ranges for options
 * Engine: Exposed QuiescentSearchMaxDepth option
 * Engine: Exposed UseNullAspirationWindow option

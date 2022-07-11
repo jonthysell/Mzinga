@@ -5,7 +5,7 @@ using System;
 
 namespace Mzinga.Core.AI
 {
-    class EvaluatedMove : IEquatable<EvaluatedMove>, IComparable<EvaluatedMove>
+    public readonly struct EvaluatedMove : IEquatable<EvaluatedMove>, IComparable<EvaluatedMove>
     {
         public readonly Move Move;
 
@@ -20,23 +20,13 @@ namespace Mzinga.Core.AI
             Depth = depth;
         }
 
-        public int CompareTo(EvaluatedMove? evaluatedMove)
+        public int CompareTo(EvaluatedMove evaluatedMove)
         {
-            if (evaluatedMove is null)
-            {
-                return 1;
-            }
-
             return evaluatedMove.ScoreAfterMove.CompareTo(ScoreAfterMove);
         }
 
-        public bool Equals(EvaluatedMove? evaluatedMove)
+        public bool Equals(EvaluatedMove evaluatedMove)
         {
-            if (evaluatedMove is null)
-            {
-                return false;
-            }
-
             return Depth == evaluatedMove.Depth && ScoreAfterMove == evaluatedMove.ScoreAfterMove && Move == evaluatedMove.Move;
         }
 
@@ -50,24 +40,19 @@ namespace Mzinga.Core.AI
             return HashCode.Combine(Move, ScoreAfterMove, Depth);
         }
 
-        public static bool operator ==(EvaluatedMove? a, EvaluatedMove? b)
+        public static bool operator ==(EvaluatedMove a, EvaluatedMove b)
         {
-            if (a is null)
-            {
-                return b is null;
-            }
-
             return a.Equals(b);
         }
 
-        public static bool operator !=(EvaluatedMove? a, EvaluatedMove? b)
+        public static bool operator !=(EvaluatedMove a, EvaluatedMove b)
         {
             return !(a == b);
         }
 
         public override string ToString()
         {
-            return string.Format("{1}{0}{2}{0}{3}", EvaluatedMoveStringSeparator, Move, Depth, ScoreAfterMove);
+            return string.Join(EvaluatedMoveStringSeparator, Move, Depth, ScoreAfterMove);
         }
 
         public const char EvaluatedMoveStringSeparator = ';';

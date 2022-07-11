@@ -73,7 +73,7 @@ namespace Mzinga.Core.AI
         }
         private int? _transpositionTableSizeMB = null;
 
-        public const bool DefaultUseNullAspirationWindow = false;
+        public const bool DefaultUseNullAspirationWindow = true;
 
         public bool? UseNullAspirationWindow { get; set; } = null;
     }
