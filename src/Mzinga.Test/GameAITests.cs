@@ -143,7 +143,6 @@ namespace Mzinga.Test
 
         [DataTestMethod]
         [DynamicData(nameof(GetEngineConfigOptions), DynamicDataSourceType.Method)]
-        [Ignore]
         public void GameAI_TreeStrapAICanSolveOneBestMoveToForceWinPuzzleTest(int maxHelperThreads, int quiescentSearchMaxDepth)
         {
             TestUtils.LoadAndExecuteTestCases<GameAITreeStrapTestCase>("PuzzleCandidate_IsOneBestMoveToForceWinPuzzleTest.csv", maxHelperThreads, quiescentSearchMaxDepth);
@@ -158,7 +157,7 @@ namespace Mzinga.Test
 
         private static IEnumerable<object[]> GetEngineConfigOptions()
         {
-            var maxHelperThreads = new int?[] {  EngineConfig.MinMaxHelperThreads, EngineConfig.DefaultMaxHelperThreads };
+            var maxHelperThreads = new int?[] {  EngineConfig.MinMaxHelperThreads, /*EngineConfig.DefaultMaxHelperThreads*/ };
             var quiescentSearchMaxDepth = new int?[] { GameAIConfig.MinQuiescentSearchMaxDepth, GameAIConfig.DefaultQuiescentSearchMaxDepth };
 
             foreach (var mht in maxHelperThreads)

@@ -16,14 +16,13 @@ namespace Mzinga.Engine
         #region Options
 
         public const int MinMaxHelperThreads = 0;
-        public static int DefaultMaxHelperThreads => (Environment.ProcessorCount / 2) - 1;
+        public static int DefaultMaxHelperThreads => Math.Max((Environment.ProcessorCount / 2) - 1, MinMaxHelperThreads);
         public static int MaxMaxHelperThreads => Environment.ProcessorCount - 1;
 
         public int MaxHelperThreads
         {
             get
             {
-                // Hard min is 0, hard max is (Environment.ProcessorCount / 2) - 1
                 return Math.Max(MinMaxHelperThreads, _maxHelperThreads.HasValue ? Math.Min(_maxHelperThreads.Value, MaxMaxHelperThreads) : DefaultMaxHelperThreads);
             }
         }

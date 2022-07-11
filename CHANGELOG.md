@@ -8,6 +8,7 @@
 * Engine: Exposed QuiescentSearchMaxDepth option
 * Engine: Exposed UseNullAspirationWindow option
 * Engine: Fixed issue with never using end metric weights
+* Engine: Fixed issue with MaxHelperThreads == Auto on machines with only 1 processor
 * Test: Improve debugging of GameAI tests
 * Test: Improve GameAI tests with configurable options matrix
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
