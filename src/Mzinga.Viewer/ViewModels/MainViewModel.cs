@@ -260,14 +260,18 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                if (AppVM.EngineWrapper.TargetMove is not null && Board.TryGetMoveString(AppVM.EngineWrapper.TargetMove.Value, out string move))
+                var targetMove = AppVM.EngineWrapper.TargetMove;
+                if (targetMove.HasValue && Board.TryGetMoveString(targetMove.Value, out string move))
                 {
                     return move;
                 }
-                else if (AppVM.EngineWrapper.TargetPiece != PieceName.INVALID)
+
+                var targetPiece = AppVM.EngineWrapper.TargetPiece;
+                if (targetPiece != PieceName.INVALID)
                 {
-                    return AppVM.EngineWrapper.TargetPiece.ToString();
+                    return targetPiece.ToString();
                 }
+
                 return "";
             }
         }
