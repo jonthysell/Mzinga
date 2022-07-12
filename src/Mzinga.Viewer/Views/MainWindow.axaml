@@ -323,19 +323,30 @@
                            Content="History"
                            DockPanel.Dock="Top" />
                     <ListBox Items="{Binding BoardHistory.Items}"
+                             MinWidth="140"
+                             Padding="5,5,20,5"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
                              SelectionMode="Single"
-                             VerticalAlignment="Stretch"
-                             Width="140">
+                             SelectionChanged="BoardHistoryListBox_SelectionChanged"
+                             VirtualizationMode="None"
+                             VerticalAlignment="Stretch">
+                      <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                          <Setter Property="IsHitTestVisible" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.IsReviewMode}" />
+                        </Style>
+                      </ListBox.Styles>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <Grid>
                                     <TextBlock FontFamily="Lucida Console"
+                                               FontStyle="{Binding !IsActive, Converter={StaticResource BoolToItalicFontStyleConverter}}"
+                                               FontWeight="{Binding IsLastMove, Converter={StaticResource BoolToBoldFontWeightConverter}}"
                                                Text="{Binding MoveString}"
+                                               VerticalAlignment="Stretch"
                                                TextWrapping="NoWrap" />
-                                </StackPanel>
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                         <ListBox.ContextMenu>

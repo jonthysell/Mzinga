@@ -42,64 +42,109 @@ namespace Mzinga.Viewer.ViewModels
         {
             get
             {
-                return _activeBoardHistory.Count - 1;
+                return _currentMoveIndex;
             }
             set
             {
-                if (value >= 0)
+                if (value != _currentMoveIndex)
                 {
-                    _moveNumberChangedCallback?.Invoke(value + 1);
+                    _currentMoveIndex = value;
+                    UpdateItems();
+                    RaisePropertyChanged(nameof(CurrentMoveIndex));
                 }
-                RaisePropertyChanged(nameof(CurrentMoveIndex));
             }
         }
+        private int _currentMoveIndex;
 
-        internal BoardHistory _boardHistory;
-        internal BoardHistory _activeBoardHistory;
+        internal readonly BoardHistory BoardHistory;
 
-        private readonly Action<int> _moveNumberChangedCallback;
-
-        public ObservableBoardHistory(BoardHistory boardHistory, BoardHistory activeBoardHistory = null, Action<int> moveNumberChangedCallback = null)
+        public ObservableBoardHistory(BoardHistory boardHistory, int currentMoveIndex)
         {
-            _boardHistory = boardHistory ?? throw new ArgumentNullException(nameof(boardHistory));
-            _activeBoardHistory = activeBoardHistory ?? boardHistory;
-            _moveNumberChangedCallback = moveNumberChangedCallback;
+            BoardHistory = boardHistory ?? throw new ArgumentNullException(nameof(boardHistory));
+            _currentMoveIndex = currentMoveIndex < boardHistory.Count ? currentMoveIndex : throw new ArgumentOutOfRangeException(nameof(currentMoveIndex));
 
-            if (_activeBoardHistory.Count > _boardHistory.Count)
+            int countWidth = BoardHistory.Count.ToString().Length;
+
+            for (int i = 0; i < BoardHistory.Count; i++)
             {
-                throw new ArgumentException("Active history has more moves than history.");
-            }
-
-            int countWidth = _boardHistory.Count.ToString().Length;
-
-            for (int i = 0; i < _boardHistory.Count; i++)
-            {
-                BoardHistoryItem item = _boardHistory[i];
+                BoardHistoryItem item = BoardHistory[i];
 
                 string countString = (i + 1).ToString().PadLeft(countWidth) + ". ";
                 string moveString = item.MoveString;
-                
-                bool isActive = i < _activeBoardHistory.Count;
-                bool isLastMove = i + 1 == _activeBoardHistory.Count;
+
+                bool isActive = i <= _currentMoveIndex;
+                bool isLastMove = i == _currentMoveIndex;
 
                 Items.Add(new ObservableBoardHistoryItem(countString + moveString, isActive, isLastMove));
             }
+        }
+
+        public ObservableBoardHistory(BoardHistory boardHistory) : this(boardHistory, (boardHistory?.Count ?? 0) - 1) { }
+
+        private void UpdateItems()
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                UpdateItem(i);
+            }
+        }
+
+        private void UpdateItem(int moveIndex)
+        {
+            Items[moveIndex].IsActive = moveIndex <= _currentMoveIndex;
+            Items[moveIndex].IsLastMove = moveIndex == _currentMoveIndex;
         }
     }
 
     public class ObservableBoardHistoryItem : ObservableObject
     {
-        public string MoveString { get; private set; }
+        public string MoveString
+        {
+            get
+            {
+                return _moveString;
+            }
+            set
+            {
+                _moveString = value;
+                RaisePropertyChanged(nameof(MoveString));
+            }
+        }
+        private string _moveString;
 
-        public bool IsActive { get; private set; }
+        public bool IsActive
+        {
+            get
+            {
+                return _isActive;
+            }
+            set
+            {
+                _isActive = value;
+                RaisePropertyChanged(nameof(IsActive));
+            }
+        }
+        private bool _isActive;
 
-        public bool IsLastMove { get; private set; }
+        public bool IsLastMove
+        {
+            get
+            {
+                return _isLastMove;
+            }
+            set
+            {
+                _isLastMove = value;
+                RaisePropertyChanged(nameof(IsLastMove));
+            }
+        }
+        private bool _isLastMove;
 
         public ObservableBoardHistoryItem(string moveString, bool isActive, bool isLastMove)
         {
-            MoveString = moveString;
-            IsActive = isActive;
-            IsLastMove = isLastMove;
+            _moveString = moveString;
+            _isActive = isActive;
+            _isLastMove = isLastMove;
         }
     }
 }

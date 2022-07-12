@@ -130,5 +130,13 @@ namespace Mzinga.Viewer.Views
                 e.Handled = true;
             }
         }
+
+        private void BoardHistoryListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListBox lb)
+            {
+                lb.ScrollIntoView(Math.Max(VM.BoardHistory.CurrentMoveIndex, 0));
+            }
+        }
     }
 }

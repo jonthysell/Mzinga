@@ -362,7 +362,7 @@ namespace Mzinga.Viewer
                 GameMode = GameMode.Review,
             };
 
-            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, ReviewBoard.GetGameString());
+            SendCommand("newgame {0}", () => { OnGameModeChanged(); }, Board.GetGameString());
         }
 
         public void PlayTargetMove()

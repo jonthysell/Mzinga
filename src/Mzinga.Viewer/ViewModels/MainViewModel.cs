@@ -1030,7 +1030,6 @@ namespace Mzinga.Viewer.ViewModels
                                 PlayTarget.RaiseCanExecuteChanged();
                                 Pass.RaiseCanExecuteChanged();
 
-
                                 UpdateBoardHistory();
                             }
                             catch (Exception ex)
@@ -1305,31 +1304,47 @@ namespace Mzinga.Viewer.ViewModels
 
         private void UpdateBoardHistory()
         {
-            ObservableBoardHistory boardHistory = null;
-
-            if (Board is not null)
+            if (Board is null)
             {
-                if (IsPlayMode)
+                BoardHistory = null;
+            }
+            else if (IsPlayMode)
+            {
+                // Replace the BoardHistory and move on
+                if (BoardHistory is not null)
                 {
-                    boardHistory = new ObservableBoardHistory(Board.BoardHistory);
+                    BoardHistory.PropertyChanged -= BoardHistory_PropertyChanged;
                 }
-                else if (IsReviewMode)
+                BoardHistory = new ObservableBoardHistory(Board.BoardHistory);
+            }
+            else if (IsReviewMode)
+            {
+                if (BoardHistory?.BoardHistory == ReviewBoard.BoardHistory)
                 {
-                    boardHistory = new ObservableBoardHistory(ReviewBoard.BoardHistory, Board.BoardHistory, (moveNum) =>
-                    {
-                        try
-                        {
-                            AppVM.EngineWrapper.MoveToMoveNumber(moveNum);
-                        }
-                        catch (Exception ex)
-                        {
-                            ExceptionUtils.HandleException(ex);
-                        }
-                    });
+                    BoardHistory.CurrentMoveIndex = Board.BoardHistory.Count - 1;
+                }
+                else
+                {
+                    // Replace the BoardHistory
+                    BoardHistory = new ObservableBoardHistory(ReviewBoard.BoardHistory, Board.BoardHistory.Count - 1);
+                    BoardHistory.PropertyChanged += BoardHistory_PropertyChanged;
                 }
             }
+        }
 
-            BoardHistory = boardHistory;
+        private void BoardHistory_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ObservableBoardHistory.CurrentMoveIndex))
+            {
+                try
+                {
+                    AppVM.EngineWrapper.MoveToMoveNumber(BoardHistory.CurrentMoveIndex + 1);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionUtils.HandleException(ex);
+                }
+            }
         }
 
         internal void CanvasClick(double cursorX, double cursorY)
