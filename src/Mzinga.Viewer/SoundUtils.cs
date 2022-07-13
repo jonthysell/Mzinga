@@ -71,7 +71,7 @@ namespace Mzinga.Viewer
 
     internal static partial class NativeMethods
     {
-        [DllImport("winmm.dll", SetLastError = true)]
+        [DllImport("winmm.dll", SetLastError = true, CharSet = CharSet.Unicode, ThrowOnUnmappableChar = true)]
         internal static extern bool PlaySound(string pszSound, IntPtr hmod, SoundFlags fdwSound);
 
         [Flags]

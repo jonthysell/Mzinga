@@ -175,7 +175,7 @@ namespace Mzinga.Core.AI
             {
                 // Start LazySMP helper threads
                 CancellationTokenSource helperCTS = new CancellationTokenSource();
-                Task[]? helperThreads = StartHelperThreads(board, depth, bestMoveParams.MaxSearchDepth, movesToEvaluate, bestMoveParams.MaxHelperThreads, helperCTS);
+                Task[]? helperThreads = StartHelperThreads(board, depth, bestMoveParams.MaxSearchDepth, bestMoveParams.MaxHelperThreads, helperCTS);
 
                 // "Re-sort" moves to evaluate based on the next iteration
                 movesToEvaluate = await EvaluateMovesToDepthAsync(board, depth, movesToEvaluate, OrderType.Default, depth == 1, token);
@@ -336,7 +336,7 @@ namespace Mzinga.Core.AI
 
         #region Threading support
 
-        private Task[]? StartHelperThreads(Board board, int depth, int maxDepth, IReadOnlyList<EvaluatedMove> movesToEvaluate, int threads, CancellationTokenSource tokenSource)
+        private Task[]? StartHelperThreads(Board board, int depth, int maxDepth, int threads, CancellationTokenSource tokenSource)
         {
             Task[]? helperThreads = null;
 

@@ -21,7 +21,7 @@ namespace Mzinga.Viewer
             _fontWeight = fontWeight;
         }
 
-        private FontWeight _fontWeight;
+        private readonly FontWeight _fontWeight;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

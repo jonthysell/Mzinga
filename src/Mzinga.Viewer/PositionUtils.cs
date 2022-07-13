@@ -44,7 +44,9 @@ namespace Mzinga.Viewer
             }
             else if (ydiff > zdiff)
             {
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
                 ry = -rx - rz;
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
             }
             else
             {

@@ -79,8 +79,10 @@ namespace Mzinga.Test
                     line = line.Trim();
                     if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("#"))
                     {
-                        T testCase = new T();
-                        testCase.TestArgs = args;
+                        T testCase = new T
+                        {
+                            TestArgs = args
+                        };
                         testCase.Parse(line);
                         testCases.Add(lineNum, testCase);
                     }

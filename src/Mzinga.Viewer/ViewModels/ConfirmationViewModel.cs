@@ -15,8 +15,17 @@ namespace Mzinga.Viewer.ViewModels
         Yes,
     }
 
-    public class ConfirmationViewModel : InformationObservableObject
+    public class ConfirmationViewModel : InformationViewModelBase
     {
+        public static AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+
+        }
+
         #region Properties
 
         public ConfirmationResult Result { get; private set; } = ConfirmationResult.Cancel;

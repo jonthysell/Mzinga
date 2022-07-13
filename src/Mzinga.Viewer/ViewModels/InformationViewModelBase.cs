@@ -7,17 +7,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public abstract class InformationObservableObject : ObservableObject
+    public abstract class InformationViewModelBase : ObservableObject
     {
-        public AppViewModel AppVM
-        {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-
-        }
-
         public string Title
         {
             get
@@ -58,7 +49,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public event EventHandler RequestClose;
 
-        public InformationObservableObject(string message, string title, string details = null)
+        public InformationViewModelBase(string message, string title, string details = null)
         {
             Title = title;
             Message = message;

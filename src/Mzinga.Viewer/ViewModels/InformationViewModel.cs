@@ -8,8 +8,17 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class InformationViewModel : InformationObservableObject
+    public class InformationViewModel : InformationViewModelBase
     {
+        public static AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+
+        }
+
         #region Commands
 
         public RelayCommand Accept

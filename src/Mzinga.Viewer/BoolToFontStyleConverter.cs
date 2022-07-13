@@ -21,7 +21,7 @@ namespace Mzinga.Viewer
             _fontStyle = fontStyle;
         }
 
-        private FontStyle _fontStyle;
+        private readonly FontStyle _fontStyle;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

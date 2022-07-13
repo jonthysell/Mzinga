@@ -154,7 +154,7 @@ namespace Mzinga.Viewer
             return releaseInfos;
         }
 
-        private static Regex _markdownUriRegex = new Regex(@"\[([^\]]*)\]\(([^\)]*)\)", RegexOptions.Compiled);
+        private static readonly Regex _markdownUriRegex = new Regex(@"\[([^\]]*)\]\(([^\)]*)\)", RegexOptions.Compiled);
 
         private const string _userAgent = "Mozilla/5.0";
     }

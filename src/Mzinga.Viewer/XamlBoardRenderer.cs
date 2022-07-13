@@ -672,8 +672,12 @@ namespace Mzinga.Viewer
             Canvas.SetLeft(bugText, center.X - (bugText.Text.Length * (bugText.FontSize / 3.0)));
             Canvas.SetTop(bugText, center.Y - (bugText.FontSize / 2.0));
 
-            Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
-            b.Child = bugText;
+            Border b = new Border
+            {
+                Height = size * 2.0,
+                Width = size * 2.0,
+                Child = bugText
+            };
 
             Canvas.SetLeft(b, center.X - (b.Width / 2.0));
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
@@ -744,8 +748,12 @@ namespace Mzinga.Viewer
             bugGrid.RenderTransform = new RotateTransform(rotateAngle);
             bugGrid.RenderTransformOrigin = RelativePoint.Center;
 
-            Border b = new Border() { Height = size * 2.0, Width = size * 2.0 };
-            b.Child = safeGrid;
+            Border b = new Border
+            {
+                Height = size * 2.0,
+                Width = size * 2.0,
+                Child = safeGrid
+            };
 
             Canvas.SetLeft(b, center.X - (b.Width / 2.0));
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
