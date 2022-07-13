@@ -17,6 +17,7 @@
 * Viewer: Improve BoardHistory UI and Review Mode performance
 * Viewer: Sort options in Engine Options dialog
 * Viewer: Engine console now scrolls to keep up with the latest output
+* Viewer: Updated Avalonia to 0.10.16
 
 ## v0.12.9 ##
 
