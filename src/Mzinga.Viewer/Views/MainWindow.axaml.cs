@@ -54,7 +54,6 @@ namespace Mzinga.Viewer.Views
 
             Opened += MainWindow_Opened;
             Closing += MainWindow_Closing;
-            
         }
 
         private void InitializeComponent()
@@ -135,7 +134,11 @@ namespace Mzinga.Viewer.Views
         {
             if (sender is ListBox lb)
             {
-                lb.ScrollIntoView(Math.Max(VM.BoardHistory.CurrentMoveIndex, 0));
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    lb.ScrollIntoView(Math.Max(VM.BoardHistory.CurrentMoveIndex, 0));
+                }, Avalonia.Threading.DispatcherPriority.ApplicationIdle);
+                e.Handled = true;
             }
         }
     }
