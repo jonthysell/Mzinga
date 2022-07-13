@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 using Mzinga.Core;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {
@@ -52,32 +52,32 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _isIdle = value;
-                RaisePropertyChanged(nameof(IsIdle));
-                RaisePropertyChanged(nameof(IsBusy));
+                OnPropertyChanged(nameof(IsIdle));
+                OnPropertyChanged(nameof(IsBusy));
 
-                NewGame.RaiseCanExecuteChanged();
-                LoadGame.RaiseCanExecuteChanged();
-                SaveGame.RaiseCanExecuteChanged();
+                NewGame.NotifyCanExecuteChanged();
+                LoadGame.NotifyCanExecuteChanged();
+                SaveGame.NotifyCanExecuteChanged();
 
-                PlayTarget.RaiseCanExecuteChanged();
-                Pass.RaiseCanExecuteChanged();
-                UndoLastMove.RaiseCanExecuteChanged();
+                PlayTarget.NotifyCanExecuteChanged();
+                Pass.NotifyCanExecuteChanged();
+                UndoLastMove.NotifyCanExecuteChanged();
 
-                MoveToStart.RaiseCanExecuteChanged();
-                MoveBack.RaiseCanExecuteChanged();
-                MoveForward.RaiseCanExecuteChanged();
-                MoveToEnd.RaiseCanExecuteChanged();
+                MoveToStart.NotifyCanExecuteChanged();
+                MoveBack.NotifyCanExecuteChanged();
+                MoveForward.NotifyCanExecuteChanged();
+                MoveToEnd.NotifyCanExecuteChanged();
 
-                SwitchToPlayMode.RaiseCanExecuteChanged();
-                ShowGameMetadata.RaiseCanExecuteChanged();
-                SwitchToReviewMode.RaiseCanExecuteChanged();
+                SwitchToPlayMode.NotifyCanExecuteChanged();
+                ShowGameMetadata.NotifyCanExecuteChanged();
+                SwitchToReviewMode.NotifyCanExecuteChanged();
 
-                FindBestMove.RaiseCanExecuteChanged();
-                ShowEngineOptions.RaiseCanExecuteChanged();
-                ShowViewerConfig.RaiseCanExecuteChanged();
+                FindBestMove.NotifyCanExecuteChanged();
+                ShowEngineOptions.NotifyCanExecuteChanged();
+                ShowViewerConfig.NotifyCanExecuteChanged();
 
-                CopyHistoryToClipboard.RaiseCanExecuteChanged();
-                CheckForUpdatesAsync.RaiseCanExecuteChanged();
+                CopyHistoryToClipboard.NotifyCanExecuteChanged();
+                CheckForUpdatesAsync.NotifyCanExecuteChanged();
             }
         }
         private bool _isIdle = true;
@@ -99,8 +99,8 @@ namespace Mzinga.Viewer.ViewModels
             private set
             {
                 _isRunningTimeCommand = value;
-                RaisePropertyChanged(nameof(IsRunningTimedCommand));
-                RaisePropertyChanged(nameof(IsRunningIndeterminateCommand));
+                OnPropertyChanged(nameof(IsRunningTimedCommand));
+                OnPropertyChanged(nameof(IsRunningIndeterminateCommand));
             }
         }
         private bool _isRunningTimeCommand = false;
@@ -122,7 +122,7 @@ namespace Mzinga.Viewer.ViewModels
             private set
             {
                 _timedCommandProgress = Math.Max(0.0, Math.Min(100, value * 100));
-                RaisePropertyChanged(nameof(TimedCommandProgress));
+                OnPropertyChanged(nameof(TimedCommandProgress));
             }
         }
         private double _timedCommandProgress = 0.0;
@@ -180,9 +180,9 @@ namespace Mzinga.Viewer.ViewModels
             private set
             {
                 _boardHistory = value;
-                RaisePropertyChanged(nameof(BoardHistory));
-                CopyHistoryToClipboard.RaiseCanExecuteChanged();
-                RaisePropertyChanged(nameof(CurrentMoveCommentary));
+                OnPropertyChanged(nameof(BoardHistory));
+                CopyHistoryToClipboard.NotifyCanExecuteChanged();
+                OnPropertyChanged(nameof(CurrentMoveCommentary));
             }
         }
         private ObservableBoardHistory _boardHistory = null;
@@ -294,7 +294,7 @@ namespace Mzinga.Viewer.ViewModels
                 }
 
                 _canvasHexRadius = value;
-                RaisePropertyChanged(nameof(CanvasHexRadius));
+                OnPropertyChanged(nameof(CanvasHexRadius));
             }
         }
         private double _canvasHexRadius = 20;
@@ -308,7 +308,7 @@ namespace Mzinga.Viewer.ViewModels
             private set
             {
                 _canvasCursorX = value;
-                RaisePropertyChanged(nameof(CanvasCursorX));
+                OnPropertyChanged(nameof(CanvasCursorX));
             }
         }
         private double _canvasCursorX;
@@ -322,7 +322,7 @@ namespace Mzinga.Viewer.ViewModels
             private set
             {
                 _canvasCursorY = value;
-                RaisePropertyChanged(nameof(CanvasCursorY));
+                OnPropertyChanged(nameof(CanvasCursorY));
             }
         }
         private double _canvasCursorY;
@@ -344,7 +344,7 @@ namespace Mzinga.Viewer.ViewModels
             internal set
             {
                 _canRaiseStackedPieces = value;
-                RaisePropertyChanged(nameof(CanRaiseStackedPieces));
+                OnPropertyChanged(nameof(CanRaiseStackedPieces));
             }
         }
         private bool _canRaiseStackedPieces = false;
@@ -369,12 +369,12 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, true, (settings) =>
+                        StrongReferenceMessenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, true, (settings) =>
                         {
                             try
                             {
                                 AppVM.EngineWrapper.NewGame(settings);
-                                RaisePropertyChanged(nameof(Title));
+                                OnPropertyChanged(nameof(Title));
                             }
                             catch (Exception ex)
                             {
@@ -403,14 +403,14 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         IsIdle = false;
-                        Messenger.Default.Send(new LoadGameMessage((gameRecording) =>
+                        StrongReferenceMessenger.Default.Send(new LoadGameMessage((gameRecording) =>
                         {
                             try
                             {
                                 if (gameRecording is not null)
                                 {
                                     AppVM.EngineWrapper.LoadGame(gameRecording);
-                                    RaisePropertyChanged(nameof(Title));
+                                    OnPropertyChanged(nameof(Title));
                                 }
                             }
                             catch (Exception ex)
@@ -443,19 +443,19 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
+                        StrongReferenceMessenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
                         {
                             try
                             {
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.Clear();
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.CopyFrom(metadata);
 
-                                Messenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording, (fileName) =>
+                                StrongReferenceMessenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording, (fileName) =>
                                 {
                                     if (IsReviewMode)
                                     {
                                         AppVM.EngineWrapper.CurrentGameSettings.GameRecording.FileName = fileName;
-                                        RaisePropertyChanged(nameof(Title));
+                                        OnPropertyChanged(nameof(Title));
                                     }
                                 }));
                             }
@@ -681,7 +681,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
+                        StrongReferenceMessenger.Default.Send(new GameMetadataMessage(AppVM.EngineWrapper.CurrentGameSettings.Metadata, (metadata) =>
                         {
                             try
                             {
@@ -714,7 +714,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("Switching to play mode starts a new game at the current position. Do you want to continue?", (confirmed) =>
+                        StrongReferenceMessenger.Default.Send(new ConfirmationMessage("Switching to play mode starts a new game at the current position. Do you want to continue?", (confirmed) =>
                         {
                             try
                             {
@@ -722,7 +722,7 @@ namespace Mzinga.Viewer.ViewModels
                                 {
                                     string activeGameString = Board.GetGameString();
 
-                                    Messenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, false, (settings) =>
+                                    StrongReferenceMessenger.Default.Send(new NewGameMessage(AppVM.EngineWrapper.CurrentGameSettings, false, (settings) =>
                                     {
                                         try
                                         {
@@ -767,7 +767,7 @@ namespace Mzinga.Viewer.ViewModels
                         }
                         else
                         {
-                            Messenger.Default.Send(new ConfirmationMessage("Switching to review mode will end your game. Do you want to continue?", (confirmed) =>
+                            StrongReferenceMessenger.Default.Send(new ConfirmationMessage("Switching to review mode will end your game. Do you want to continue?", (confirmed) =>
                             {
                                 try
                                 {
@@ -831,7 +831,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new EngineConsoleMessage());
+                        StrongReferenceMessenger.Default.Send(new EngineConsoleMessage());
                     }
                     catch (Exception ex)
                     {
@@ -854,7 +854,7 @@ namespace Mzinga.Viewer.ViewModels
                         {
                             AppVM.DoOnUIThread(() =>
                             {
-                                Messenger.Default.Send(new EngineOptionsMessage(AppVM.EngineWrapper.EngineOptions, (changedOptions) =>
+                                StrongReferenceMessenger.Default.Send(new EngineOptionsMessage(AppVM.EngineWrapper.EngineOptions, (changedOptions) =>
                                 {
                                     try
                                     {
@@ -893,7 +893,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 ViewerConfig.ShowBoardHistory = value;
-                RaisePropertyChanged(nameof(ShowBoardHistory));
+                OnPropertyChanged(nameof(ShowBoardHistory));
             }
         }
 
@@ -906,7 +906,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 ViewerConfig.ShowMoveCommentary = value;
-                RaisePropertyChanged(nameof(ShowMoveCommentary));
+                OnPropertyChanged(nameof(ShowMoveCommentary));
             }
         }
 
@@ -919,8 +919,8 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 ViewerConfig.AutoCenterBoard = value;
-                RaisePropertyChanged(nameof(AutoCenterBoard));
-                RaisePropertyChanged(nameof(CanCenterBoard));
+                OnPropertyChanged(nameof(AutoCenterBoard));
+                OnPropertyChanged(nameof(CanCenterBoard));
             }
         }
 
@@ -933,8 +933,8 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 ViewerConfig.AutoZoomBoard = value;
-                RaisePropertyChanged(nameof(AutoZoomBoard));
-                RaisePropertyChanged(nameof(CanZoomBoard));
+                OnPropertyChanged(nameof(AutoZoomBoard));
+                OnPropertyChanged(nameof(CanZoomBoard));
             }
         }
 
@@ -1022,17 +1022,17 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ViewerConfigMessage(ViewerConfig, (config) =>
+                        StrongReferenceMessenger.Default.Send(new ViewerConfigMessage(ViewerConfig, (config) =>
                         {
                             try
                             {
                                 ViewerConfig.CopyFrom(config);
 
-                                RaisePropertyChanged(nameof(ViewerConfig));
-                                RaisePropertyChanged(nameof(TargetMove));
+                                OnPropertyChanged(nameof(ViewerConfig));
+                                OnPropertyChanged(nameof(TargetMove));
 
-                                PlayTarget.RaiseCanExecuteChanged();
-                                Pass.RaiseCanExecuteChanged();
+                                PlayTarget.NotifyCanExecuteChanged();
+                                Pass.NotifyCanExecuteChanged();
 
                                 UpdateBoardHistory();
                             }
@@ -1076,24 +1076,24 @@ namespace Mzinga.Viewer.ViewModels
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(Board));
-                    RaisePropertyChanged(nameof(BoardIsLoaded));
-                    SaveGame.RaiseCanExecuteChanged();
+                    OnPropertyChanged(nameof(Board));
+                    OnPropertyChanged(nameof(BoardIsLoaded));
+                    SaveGame.NotifyCanExecuteChanged();
 
-                    PlayTarget.RaiseCanExecuteChanged();
-                    Pass.RaiseCanExecuteChanged();
-                    UndoLastMove.RaiseCanExecuteChanged();
+                    PlayTarget.NotifyCanExecuteChanged();
+                    Pass.NotifyCanExecuteChanged();
+                    UndoLastMove.NotifyCanExecuteChanged();
 
-                    MoveToStart.RaiseCanExecuteChanged();
-                    MoveBack.RaiseCanExecuteChanged();
-                    MoveForward.RaiseCanExecuteChanged();
-                    MoveToEnd.RaiseCanExecuteChanged();
+                    MoveToStart.NotifyCanExecuteChanged();
+                    MoveBack.NotifyCanExecuteChanged();
+                    MoveForward.NotifyCanExecuteChanged();
+                    MoveToEnd.NotifyCanExecuteChanged();
 
-                    FindBestMove.RaiseCanExecuteChanged();
-                    RaisePropertyChanged(nameof(GameState));
+                    FindBestMove.NotifyCanExecuteChanged();
+                    OnPropertyChanged(nameof(GameState));
 
-                    RaisePropertyChanged(nameof(CanCenterBoard));
-                    RaisePropertyChanged(nameof(CanZoomBoard));
+                    OnPropertyChanged(nameof(CanCenterBoard));
+                    OnPropertyChanged(nameof(CanZoomBoard));
 
                     if (AppVM.EngineWrapper.GameIsOver && AppVM.EngineWrapper.CurrentGameSettings.GameMode == GameMode.Play)
                     {
@@ -1105,13 +1105,13 @@ namespace Mzinga.Viewer.ViewModels
                         switch (Board.BoardState)
                         {
                             case BoardState.WhiteWins:
-                                Messenger.Default.Send(new InformationMessage("White has won the game.", "Game Over"));
+                                StrongReferenceMessenger.Default.Send(new InformationMessage("White has won the game.", "Game Over"));
                                 break;
                             case BoardState.BlackWins:
-                                Messenger.Default.Send(new InformationMessage("Black has won the game.", "Game Over"));
+                                StrongReferenceMessenger.Default.Send(new InformationMessage("Black has won the game.", "Game Over"));
                                 break;
                             case BoardState.Draw:
-                                Messenger.Default.Send(new InformationMessage("The game is a draw.", "Game Over"));
+                                StrongReferenceMessenger.Default.Send(new InformationMessage("The game is a draw.", "Game Over"));
                                 break;
                         }
                     }
@@ -1124,7 +1124,7 @@ namespace Mzinga.Viewer.ViewModels
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(ValidMoves));
+                    OnPropertyChanged(nameof(ValidMoves));
                 });
             };
 
@@ -1132,8 +1132,8 @@ namespace Mzinga.Viewer.ViewModels
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(TargetMove));
-                    PlayTarget.RaiseCanExecuteChanged();
+                    OnPropertyChanged(nameof(TargetMove));
+                    PlayTarget.NotifyCanExecuteChanged();
 
                     if (AppVM.EngineWrapper.CurrentTurnIsHuman && IsPlayMode && !ViewerConfig.RequireMoveConfirmation)
                     {
@@ -1193,8 +1193,8 @@ namespace Mzinga.Viewer.ViewModels
 
             AppVM.EngineWrapper.GameModeChanged += (sender, args) =>
             {
-                RaisePropertyChanged(nameof(IsPlayMode));
-                RaisePropertyChanged(nameof(IsReviewMode));
+                OnPropertyChanged(nameof(IsPlayMode));
+                OnPropertyChanged(nameof(IsReviewMode));
             };
 
             PropertyChanged += MainViewModel_PropertyChanged;
@@ -1247,11 +1247,11 @@ namespace Mzinga.Viewer.ViewModels
 
                 if (!AppViewModel.CheckForUpdatesEnabled)
                 {
-                    Messenger.Default.Send(new InformationMessage($"Welcome to {AppInfo.Name}!"));
+                    StrongReferenceMessenger.Default.Send(new InformationMessage($"Welcome to {AppInfo.Name}!"));
                 }
                 else
                 {
-                    Messenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, $"Welcome to {AppInfo.Name}!", $"Would you like to check for updates when {AppInfo.Name} starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
+                    StrongReferenceMessenger.Default.Send(new ConfirmationMessage(string.Join(Environment.NewLine + Environment.NewLine, $"Welcome to {AppInfo.Name}!", $"Would you like to check for updates when {AppInfo.Name} starts?", "You can change your mind later in Viewer Options."), (enableAutoUpdate) =>
                     {
                         try
                         {
@@ -1274,20 +1274,20 @@ namespace Mzinga.Viewer.ViewModels
                 case nameof(IsReviewMode):
                     AppVM.DoOnUIThread(() =>
                     {
-                        RaisePropertyChanged(nameof(Title));
+                        OnPropertyChanged(nameof(Title));
 
-                        PlayTarget.RaiseCanExecuteChanged();
-                        Pass.RaiseCanExecuteChanged();
-                        UndoLastMove.RaiseCanExecuteChanged();
+                        PlayTarget.NotifyCanExecuteChanged();
+                        Pass.NotifyCanExecuteChanged();
+                        UndoLastMove.NotifyCanExecuteChanged();
 
-                        MoveToStart.RaiseCanExecuteChanged();
-                        MoveBack.RaiseCanExecuteChanged();
-                        MoveForward.RaiseCanExecuteChanged();
-                        MoveToEnd.RaiseCanExecuteChanged();
+                        MoveToStart.NotifyCanExecuteChanged();
+                        MoveBack.NotifyCanExecuteChanged();
+                        MoveForward.NotifyCanExecuteChanged();
+                        MoveToEnd.NotifyCanExecuteChanged();
 
-                        SwitchToPlayMode.RaiseCanExecuteChanged();
-                        ShowGameMetadata.RaiseCanExecuteChanged();
-                        SwitchToReviewMode.RaiseCanExecuteChanged();
+                        SwitchToPlayMode.NotifyCanExecuteChanged();
+                        ShowGameMetadata.NotifyCanExecuteChanged();
+                        SwitchToReviewMode.NotifyCanExecuteChanged();
 
                         UpdateBoardHistory();
                     });
@@ -1295,12 +1295,12 @@ namespace Mzinga.Viewer.ViewModels
                 case nameof(ViewerConfig):
                     AppVM.DoOnUIThread(() =>
                     {
-                        RaisePropertyChanged(nameof(ShowBoardHistory));
-                        RaisePropertyChanged(nameof(ShowMoveCommentary));
-                        RaisePropertyChanged(nameof(AutoCenterBoard));
-                        RaisePropertyChanged(nameof(CanCenterBoard));
-                        RaisePropertyChanged(nameof(AutoZoomBoard));
-                        RaisePropertyChanged(nameof(CanZoomBoard));
+                        OnPropertyChanged(nameof(ShowBoardHistory));
+                        OnPropertyChanged(nameof(ShowMoveCommentary));
+                        OnPropertyChanged(nameof(AutoCenterBoard));
+                        OnPropertyChanged(nameof(CanCenterBoard));
+                        OnPropertyChanged(nameof(AutoZoomBoard));
+                        OnPropertyChanged(nameof(CanZoomBoard));
                     });
                     break;
             }

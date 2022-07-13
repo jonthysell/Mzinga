@@ -3,12 +3,12 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class ViewerConfigViewModel : ViewModelBase
+    public class ViewerConfigViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {
@@ -35,8 +35,8 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.EngineType = value;
-                RaisePropertyChanged(nameof(EngineType));
-                RaisePropertyChanged(nameof(EngineCommandLine));
+                OnPropertyChanged(nameof(EngineType));
+                OnPropertyChanged(nameof(EngineCommandLine));
             }
         }
 
@@ -49,7 +49,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.EngineCommandLine = value;
-                RaisePropertyChanged(nameof(EngineCommandLine));
+                OnPropertyChanged(nameof(EngineCommandLine));
             }
         }
 
@@ -62,7 +62,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.VisualTheme = value;
-                RaisePropertyChanged(nameof(VisualTheme));
+                OnPropertyChanged(nameof(VisualTheme));
             }
         }
 
@@ -75,7 +75,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.AutoCenterBoard = value;
-                RaisePropertyChanged(nameof(AutoCenterBoard));
+                OnPropertyChanged(nameof(AutoCenterBoard));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.AutoZoomBoard = value;
-                RaisePropertyChanged(nameof(AutoZoomBoard));
+                OnPropertyChanged(nameof(AutoZoomBoard));
             }
         }
 
@@ -101,7 +101,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.HexOrientation = value;
-                RaisePropertyChanged(nameof(HexOrientation));
+                OnPropertyChanged(nameof(HexOrientation));
             }
         }
 
@@ -114,7 +114,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.PieceStyle = value;
-                RaisePropertyChanged(nameof(PieceStyle));
+                OnPropertyChanged(nameof(PieceStyle));
             }
         }
 
@@ -127,7 +127,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.PieceColors = value;
-                RaisePropertyChanged(nameof(PieceColors));
+                OnPropertyChanged(nameof(PieceColors));
             }
         }
 
@@ -140,7 +140,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.DisablePiecesInHandWithNoMoves = value;
-                RaisePropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
+                OnPropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
             }
         }
 
@@ -153,7 +153,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.DisablePiecesInPlayWithNoMoves = value;
-                RaisePropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
+                OnPropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
             }
         }
 
@@ -166,7 +166,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.HighlightTargetMove = value;
-                RaisePropertyChanged(nameof(HighlightTargetMove));
+                OnPropertyChanged(nameof(HighlightTargetMove));
             }
         }
 
@@ -179,7 +179,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.HighlightValidMoves = value;
-                RaisePropertyChanged(nameof(HighlightValidMoves));
+                OnPropertyChanged(nameof(HighlightValidMoves));
             }
         }
 
@@ -192,7 +192,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.HighlightLastMovePlayed = value;
-                RaisePropertyChanged(nameof(HighlightLastMovePlayed));
+                OnPropertyChanged(nameof(HighlightLastMovePlayed));
             }
         }
 
@@ -205,7 +205,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.BlockInvalidMoves = value;
-                RaisePropertyChanged(nameof(BlockInvalidMoves));
+                OnPropertyChanged(nameof(BlockInvalidMoves));
             }
         }
 
@@ -218,7 +218,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.RequireMoveConfirmation = value;
-                RaisePropertyChanged(nameof(RequireMoveConfirmation));
+                OnPropertyChanged(nameof(RequireMoveConfirmation));
             }
         }
 
@@ -231,7 +231,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.AddPieceNumbers = value;
-                RaisePropertyChanged(nameof(AddPieceNumbers));
+                OnPropertyChanged(nameof(AddPieceNumbers));
             }
         }
 
@@ -244,7 +244,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.StackPiecesInHand = value;
-                RaisePropertyChanged(nameof(StackPiecesInHand));
+                OnPropertyChanged(nameof(StackPiecesInHand));
             }
         }
 
@@ -257,7 +257,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.ShowBoardHistory = value;
-                RaisePropertyChanged(nameof(ShowBoardHistory));
+                OnPropertyChanged(nameof(ShowBoardHistory));
             }
         }
 
@@ -270,7 +270,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.ShowMoveCommentary = value;
-                RaisePropertyChanged(nameof(ShowMoveCommentary));
+                OnPropertyChanged(nameof(ShowMoveCommentary));
             }
         }
 
@@ -283,7 +283,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.PlaySoundEffects = value;
-                RaisePropertyChanged(nameof(PlaySoundEffects));
+                OnPropertyChanged(nameof(PlaySoundEffects));
             }
         }
 
@@ -296,7 +296,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Config.CheckUpdateOnStart = value;
-                RaisePropertyChanged(nameof(CheckUpdateOnStart));
+                OnPropertyChanged(nameof(CheckUpdateOnStart));
             }
         }
 
@@ -389,25 +389,25 @@ namespace Mzinga.Viewer.ViewModels
                         };
                         Config = newConfig;
 
-                        RaisePropertyChanged(nameof(EngineType));
-                        RaisePropertyChanged(nameof(EngineCommandLine));
-                        RaisePropertyChanged(nameof(VisualTheme));
-                        RaisePropertyChanged(nameof(AutoCenterBoard));
-                        RaisePropertyChanged(nameof(AutoZoomBoard));
-                        RaisePropertyChanged(nameof(HexOrientation));
-                        RaisePropertyChanged(nameof(PieceStyle));
-                        RaisePropertyChanged(nameof(PieceColors));
-                        RaisePropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
-                        RaisePropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
-                        RaisePropertyChanged(nameof(HighlightTargetMove));
-                        RaisePropertyChanged(nameof(HighlightValidMoves));
-                        RaisePropertyChanged(nameof(HighlightLastMovePlayed));
-                        RaisePropertyChanged(nameof(BlockInvalidMoves));
-                        RaisePropertyChanged(nameof(RequireMoveConfirmation));
-                        RaisePropertyChanged(nameof(AddPieceNumbers));
-                        RaisePropertyChanged(nameof(StackPiecesInHand));
-                        RaisePropertyChanged(nameof(PlaySoundEffects));
-                        RaisePropertyChanged(nameof(CheckUpdateOnStart));
+                        OnPropertyChanged(nameof(EngineType));
+                        OnPropertyChanged(nameof(EngineCommandLine));
+                        OnPropertyChanged(nameof(VisualTheme));
+                        OnPropertyChanged(nameof(AutoCenterBoard));
+                        OnPropertyChanged(nameof(AutoZoomBoard));
+                        OnPropertyChanged(nameof(HexOrientation));
+                        OnPropertyChanged(nameof(PieceStyle));
+                        OnPropertyChanged(nameof(PieceColors));
+                        OnPropertyChanged(nameof(DisablePiecesInHandWithNoMoves));
+                        OnPropertyChanged(nameof(DisablePiecesInPlayWithNoMoves));
+                        OnPropertyChanged(nameof(HighlightTargetMove));
+                        OnPropertyChanged(nameof(HighlightValidMoves));
+                        OnPropertyChanged(nameof(HighlightLastMovePlayed));
+                        OnPropertyChanged(nameof(BlockInvalidMoves));
+                        OnPropertyChanged(nameof(RequireMoveConfirmation));
+                        OnPropertyChanged(nameof(AddPieceNumbers));
+                        OnPropertyChanged(nameof(StackPiecesInHand));
+                        OnPropertyChanged(nameof(PlaySoundEffects));
+                        OnPropertyChanged(nameof(CheckUpdateOnStart));
 
                     }
                     catch (Exception ex)

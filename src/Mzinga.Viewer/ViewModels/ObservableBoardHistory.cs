@@ -5,7 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text;
 
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using Mzinga.Core;
 
@@ -50,7 +50,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     _currentMoveIndex = value;
                     UpdateItems();
-                    RaisePropertyChanged(nameof(CurrentMoveIndex));
+                    OnPropertyChanged(nameof(CurrentMoveIndex));
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _moveString = value;
-                RaisePropertyChanged(nameof(MoveString));
+                OnPropertyChanged(nameof(MoveString));
             }
         }
         private string _moveString;
@@ -121,7 +121,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _isActive = value;
-                RaisePropertyChanged(nameof(IsActive));
+                OnPropertyChanged(nameof(IsActive));
             }
         }
         private bool _isActive;
@@ -135,7 +135,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _isLastMove = value;
-                RaisePropertyChanged(nameof(IsLastMove));
+                OnPropertyChanged(nameof(IsLastMove));
             }
         }
         private bool _isLastMove;

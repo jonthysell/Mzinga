@@ -3,12 +3,12 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class EngineConsoleViewModel : ViewModelBase
+    public class EngineConsoleViewModel : ObservableObject
     {
         internal static readonly EngineConsoleViewModel Instance = new EngineConsoleViewModel();
 
@@ -37,9 +37,9 @@ namespace Mzinga.Viewer.ViewModels
             protected set
             {
                 _isIdle = value;
-                RaisePropertyChanged(nameof(IsIdle));
-                SendEngineCommand.RaiseCanExecuteChanged();
-                CancelEngineCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged(nameof(IsIdle));
+                SendEngineCommand.NotifyCanExecuteChanged();
+                CancelEngineCommand.NotifyCanExecuteChanged();
             }
         }
         private bool _isIdle = true;
@@ -61,8 +61,8 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _engineInputText = value;
-                RaisePropertyChanged(nameof(EngineInputText));
-                SendEngineCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged(nameof(EngineInputText));
+                SendEngineCommand.NotifyCanExecuteChanged();
             }
         }
         private string _engineInputText = "";
@@ -123,7 +123,7 @@ namespace Mzinga.Viewer.ViewModels
             {
                 AppVM.DoOnUIThread(() =>
                 {
-                    RaisePropertyChanged(nameof(EngineOutputText));
+                    OnPropertyChanged(nameof(EngineOutputText));
                 });
             };
 

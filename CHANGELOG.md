@@ -18,6 +18,7 @@
 * Viewer: Sort options in Engine Options dialog
 * Viewer: Engine console now scrolls to keep up with the latest output
 * Viewer: Updated Avalonia to 0.10.16
+* Viewer: Migrated from deprecated MVVM Light Toolkit to new MVVM Toolkit
 
 ## v0.12.9 ##
 

@@ -52,7 +52,7 @@
     <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
     <PackageReference Include="Markdown.Avalonia" Version="0.10.11" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-    <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>

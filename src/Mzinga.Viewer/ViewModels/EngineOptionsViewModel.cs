@@ -6,12 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class EngineOptionsViewModel : ViewModelBase
+    public class EngineOptionsViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {
@@ -87,7 +87,7 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         LoadOptions(true);
-                        RaisePropertyChanged(nameof(Options));
+                        OnPropertyChanged(nameof(Options));
                     }
                     catch (Exception ex)
                     {

@@ -5,12 +5,12 @@ using System;
 
 using Mzinga.Core;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class NewGameViewModel : ViewModelBase
+    public class NewGameViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {
@@ -39,7 +39,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.WhitePlayerType = value;
-                    RaisePropertyChanged(nameof(WhitePlayerType));
+                    OnPropertyChanged(nameof(WhitePlayerType));
                 }
                 catch (Exception ex)
                 {
@@ -59,7 +59,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.BlackPlayerType = value;
-                    RaisePropertyChanged(nameof(BlackPlayerType));
+                    OnPropertyChanged(nameof(BlackPlayerType));
                 }
                 catch (Exception ex)
                 {
@@ -87,7 +87,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.GameType = Enums.EnableBugType(BugType.Mosquito, Settings.GameType, EnableMosquito && value);
-                    RaisePropertyChanged(nameof(IncludeMosquito));
+                    OnPropertyChanged(nameof(IncludeMosquito));
                 }
                 catch (Exception ex)
                 {
@@ -115,7 +115,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.GameType = Enums.EnableBugType(BugType.Ladybug, Settings.GameType, EnableLadybug && value);
-                    RaisePropertyChanged(nameof(IncludeLadybug));
+                    OnPropertyChanged(nameof(IncludeLadybug));
                 }
                 catch (Exception ex)
                 {
@@ -143,7 +143,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.GameType = Enums.EnableBugType(BugType.Pillbug, Settings.GameType, EnablePillbug && value);
-                    RaisePropertyChanged(nameof(IncludePillbug));
+                    OnPropertyChanged(nameof(IncludePillbug));
                 }
                 catch (Exception ex)
                 {
@@ -163,11 +163,11 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     Settings.BestMoveType = value;
-                    RaisePropertyChanged(nameof(BestMoveType));
-                    RaisePropertyChanged(nameof(EnableBestMoveMaxDepthValue));
-                    RaisePropertyChanged(nameof(BestMoveMaxDepthValue));
-                    RaisePropertyChanged(nameof(EnableBestMoveMaxTimeValue));
-                    RaisePropertyChanged(nameof(BestMoveMaxTimeValue));
+                    OnPropertyChanged(nameof(BestMoveType));
+                    OnPropertyChanged(nameof(EnableBestMoveMaxDepthValue));
+                    OnPropertyChanged(nameof(BestMoveMaxDepthValue));
+                    OnPropertyChanged(nameof(EnableBestMoveMaxTimeValue));
+                    OnPropertyChanged(nameof(BestMoveMaxTimeValue));
                 }
                 catch (Exception ex)
                 {
@@ -193,7 +193,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Settings.BestMoveMaxDepth = value;
-                RaisePropertyChanged(nameof(BestMoveMaxDepthValue));
+                OnPropertyChanged(nameof(BestMoveMaxDepthValue));
             }
         }
 
@@ -214,7 +214,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 Settings.BestMoveMaxTime = value;
-                RaisePropertyChanged(nameof(BestMoveMaxTimeValue));
+                OnPropertyChanged(nameof(BestMoveMaxTimeValue));
             }
         }
 

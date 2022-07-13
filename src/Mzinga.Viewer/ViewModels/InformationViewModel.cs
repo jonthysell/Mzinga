@@ -3,12 +3,12 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class InformationViewModel : InformationViewModelBase
+    public class InformationViewModel : InformationObservableObject
     {
         #region Commands
 

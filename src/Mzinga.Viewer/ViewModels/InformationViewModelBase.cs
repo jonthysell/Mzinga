@@ -3,11 +3,11 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public abstract class InformationViewModelBase : ViewModelBase
+    public abstract class InformationObservableObject : ObservableObject
     {
         public AppViewModel AppVM
         {
@@ -58,7 +58,7 @@ namespace Mzinga.Viewer.ViewModels
 
         public event EventHandler RequestClose;
 
-        public InformationViewModelBase(string message, string title, string details = null)
+        public InformationObservableObject(string message, string title, string details = null)
         {
             Title = title;
             Message = message;

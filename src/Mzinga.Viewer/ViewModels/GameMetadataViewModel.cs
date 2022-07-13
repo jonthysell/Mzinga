@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class GameMetadataViewModel : ViewModelBase
+    public class GameMetadataViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {
@@ -98,8 +98,8 @@ namespace Mzinga.Viewer.ViewModels
                     try
                     {
                         LoadTags();
-                        RaisePropertyChanged(nameof(StandardTags));
-                        RaisePropertyChanged(nameof(OptionalTags));
+                        OnPropertyChanged(nameof(StandardTags));
+                        OnPropertyChanged(nameof(OptionalTags));
                     }
                     catch (Exception ex)
                     {

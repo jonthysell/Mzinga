@@ -11,7 +11,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Mzinga.Viewer;
 using Mzinga.Viewer.ViewModels;
@@ -26,34 +26,34 @@ namespace Mzinga.Viewer
 
         public static void RegisterMessageHandlers(object recipient)
         {
-            Messenger.Default.Register<ExceptionMessage>(recipient, async (message) => await ShowExceptionAsync(message));
-            Messenger.Default.Register<InformationMessage>(recipient, async (message) => await ShowInformationAsync(message));
-            Messenger.Default.Register<ConfirmationMessage>(recipient, async (message) => await ShowConfirmationAsync(message));
-            Messenger.Default.Register<LaunchUrlMessage>(recipient, async (message) => await LaunchUrlAsync(message));
-            Messenger.Default.Register<ShowAboutMessage>(recipient, async (message) => await ShowAboutAsync(message));
-            Messenger.Default.Register<NewGameMessage>(recipient, async (message) => await ShowNewGameAsync(message));
-            Messenger.Default.Register<LoadGameMessage>(recipient, async (message) => await ShowLoadGameAsync(message));
-            Messenger.Default.Register<SaveGameMessage>(recipient, async (message) => await ShowSaveGameAsync(message));
-            Messenger.Default.Register<GameMetadataMessage>(recipient, async (message) => await ShowGameMetadataAsync(message));
-            Messenger.Default.Register<ViewerConfigMessage>(recipient, async (message) => await ShowViewerConfigAsync(message));
-            Messenger.Default.Register<EngineOptionsMessage>(recipient, async (message) => await ShowEngineOptionsAsync(message));
-            Messenger.Default.Register<EngineConsoleMessage>(recipient, (message) => ShowEngineConsole(message));
+            StrongReferenceMessenger.Default.Register<ExceptionMessage>(recipient, async (recipient, message) => await ShowExceptionAsync(message));
+            StrongReferenceMessenger.Default.Register<InformationMessage>(recipient, async (recipient, message) => await ShowInformationAsync(message));
+            StrongReferenceMessenger.Default.Register<ConfirmationMessage>(recipient, async (recipient, message) => await ShowConfirmationAsync(message));
+            StrongReferenceMessenger.Default.Register<LaunchUrlMessage>(recipient, async (recipient, message) => await LaunchUrlAsync(message));
+            StrongReferenceMessenger.Default.Register<ShowAboutMessage>(recipient, async (recipient, message) => await ShowAboutAsync(message));
+            StrongReferenceMessenger.Default.Register<NewGameMessage>(recipient, async (recipient, message) => await ShowNewGameAsync(message));
+            StrongReferenceMessenger.Default.Register<LoadGameMessage>(recipient, async (recipient, message) => await ShowLoadGameAsync(message));
+            StrongReferenceMessenger.Default.Register<SaveGameMessage>(recipient, async (recipient, message) => await ShowSaveGameAsync(message));
+            StrongReferenceMessenger.Default.Register<GameMetadataMessage>(recipient, async (recipient, message) => await ShowGameMetadataAsync(message));
+            StrongReferenceMessenger.Default.Register<ViewerConfigMessage>(recipient, async (recipient, message) => await ShowViewerConfigAsync(message));
+            StrongReferenceMessenger.Default.Register<EngineOptionsMessage>(recipient, async (recipient, message) => await ShowEngineOptionsAsync(message));
+            StrongReferenceMessenger.Default.Register<EngineConsoleMessage>(recipient, (recipient, message) => ShowEngineConsole(message));
         }
 
         public static void UnregisterMessageHandlers(object recipient)
         {
-            Messenger.Default.Unregister<ExceptionMessage>(recipient);
-            Messenger.Default.Unregister<InformationMessage>(recipient);
-            Messenger.Default.Unregister<ConfirmationMessage>(recipient);
-            Messenger.Default.Unregister<ShowAboutMessage>(recipient);
-            Messenger.Default.Unregister<LaunchUrlMessage>(recipient);
-            Messenger.Default.Unregister<NewGameMessage>(recipient);
-            Messenger.Default.Unregister<LoadGameMessage>(recipient);
-            Messenger.Default.Unregister<SaveGameMessage>(recipient);
-            Messenger.Default.Unregister<GameMetadataMessage>(recipient);
-            Messenger.Default.Unregister<ViewerConfigMessage>(recipient);
-            Messenger.Default.Unregister<EngineOptionsMessage>(recipient);
-            Messenger.Default.Unregister<EngineConsoleMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<ExceptionMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<InformationMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<ConfirmationMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<ShowAboutMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<LaunchUrlMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<NewGameMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<LoadGameMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<SaveGameMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<GameMetadataMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<ViewerConfigMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<EngineOptionsMessage>(recipient);
+            StrongReferenceMessenger.Default.Unregister<EngineConsoleMessage>(recipient);
         }
 
         private static async Task ShowExceptionAsync(ExceptionMessage message)

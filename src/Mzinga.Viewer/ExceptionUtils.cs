@@ -3,7 +3,7 @@
 
 using System;
 
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Mzinga.Viewer.ViewModels;
 
@@ -23,7 +23,7 @@ namespace Mzinga.Viewer
         {
             AppVM.DoOnUIThread(() =>
             {
-                Messenger.Default.Send(new ExceptionMessage(exception));
+                StrongReferenceMessenger.Default.Send(new ExceptionMessage(exception));
             });
         }
     }

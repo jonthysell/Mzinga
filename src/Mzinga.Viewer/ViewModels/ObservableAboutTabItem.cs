@@ -3,7 +3,7 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mzinga.Viewer.ViewModels
 {

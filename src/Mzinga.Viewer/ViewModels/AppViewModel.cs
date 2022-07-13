@@ -3,15 +3,15 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Mzinga.Engine;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class AppViewModel : ViewModelBase
+    public class AppViewModel : ObservableObject
     {
         public static AppViewModel Instance { get; private set; }
 
@@ -43,7 +43,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ShowAboutMessage());
+                        StrongReferenceMessenger.Default.Send(new ShowAboutMessage());
                     }
                     catch (Exception ex)
                     {
@@ -62,13 +62,13 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("This will open the official Hive website in your browser. Do you want to continue?", (confirmed) =>
+                        StrongReferenceMessenger.Default.Send(new ConfirmationMessage("This will open the official Hive website in your browser. Do you want to continue?", (confirmed) =>
                         {
                             try
                             {
                                 if (confirmed)
                                 {
-                                    Messenger.Default.Send(new LaunchUrlMessage("https://gen42.com/games/hive"));
+                                    StrongReferenceMessenger.Default.Send(new LaunchUrlMessage("https://gen42.com/games/hive"));
                                 }
                             }
                             catch (Exception ex)
@@ -94,13 +94,13 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage("This will open the Mzinga website in your browser. Do you want to continue?", (confirmed) =>
+                        StrongReferenceMessenger.Default.Send(new ConfirmationMessage("This will open the Mzinga website in your browser. Do you want to continue?", (confirmed) =>
                         {
                             try
                             {
                                 if (confirmed)
                                 {
-                                    Messenger.Default.Send(new LaunchUrlMessage("http://mzinga.jonthysell.com"));
+                                    StrongReferenceMessenger.Default.Send(new LaunchUrlMessage("http://mzinga.jonthysell.com"));
                                 }
                             }
                             catch (Exception ex)
@@ -126,13 +126,13 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     try
                     {
-                        Messenger.Default.Send(new ConfirmationMessage($"This will open \"{ url }\" in your browser. Do you want to continue?", (confirmed) =>
+                        StrongReferenceMessenger.Default.Send(new ConfirmationMessage($"This will open \"{ url }\" in your browser. Do you want to continue?", (confirmed) =>
                         {
                             try
                             {
                                 if (confirmed)
                                 {
-                                    Messenger.Default.Send(new LaunchUrlMessage(url));
+                                    StrongReferenceMessenger.Default.Send(new LaunchUrlMessage(url));
                                 }
                             }
                             catch (Exception ex)

@@ -5,7 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text;
 
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mzinga.Viewer.ViewModels
 {
@@ -55,7 +55,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _value = value;
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
         private bool _value;
@@ -89,7 +89,7 @@ namespace Mzinga.Viewer.ViewModels
                     ExceptionUtils.HandleException(ex);
                 }
                 
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
         private int _value;
@@ -128,7 +128,7 @@ namespace Mzinga.Viewer.ViewModels
                 {
                     ExceptionUtils.HandleException(ex);
                 }
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
         private double _value;
@@ -156,9 +156,9 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _selectedValueIndex = value;
-                RaisePropertyChanged(nameof(SelectedValueIndex));
-                RaisePropertyChanged(nameof(Value));
-                RaisePropertyChanged(nameof(FriendlyValue));
+                OnPropertyChanged(nameof(SelectedValueIndex));
+                OnPropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(FriendlyValue));
             }
         }
         private int _selectedValueIndex = 0;

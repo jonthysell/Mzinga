@@ -3,8 +3,8 @@
 
 using System;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
@@ -15,7 +15,7 @@ namespace Mzinga.Viewer.ViewModels
         Yes,
     }
 
-    public class ConfirmationViewModel : InformationViewModelBase
+    public class ConfirmationViewModel : InformationObservableObject
     {
         #region Properties
 

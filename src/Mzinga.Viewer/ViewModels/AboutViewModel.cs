@@ -4,13 +4,13 @@
 using System;
 using System.Collections.ObjectModel;
 
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Mzinga.Viewer.ViewModels
 {
-    public class AboutViewModel : ViewModelBase
+    public class AboutViewModel : ObservableObject
     {
         public static AppViewModel AppVM
         {

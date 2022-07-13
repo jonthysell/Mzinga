@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Mzinga.Viewer.ViewModels;
 
@@ -54,14 +54,14 @@ namespace Mzinga.Viewer
                     {
                         if (showUpToDate)
                         {
-                            Messenger.Default.Send(new InformationMessage("Unable to check for updates at this time. Please try again later."));
+                            StrongReferenceMessenger.Default.Send(new InformationMessage("Unable to check for updates at this time. Please try again later."));
                         }
                     }
                     else if (latestRelease.LongVersion <= AppInfo.LongVersion)
                     {
                         if (showUpToDate)
                         {
-                            Messenger.Default.Send(new InformationMessage($"{AppInfo.Product} is already up-to-date."));
+                            StrongReferenceMessenger.Default.Send(new InformationMessage($"{AppInfo.Product} is already up-to-date."));
                         }
                     }
                     else
@@ -69,13 +69,13 @@ namespace Mzinga.Viewer
                         // Update available
                         if (confirmUpdate)
                         {
-                            Messenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", !string.IsNullOrWhiteSpace(latestRelease.Body) ? string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body) : null, (result) =>
+                            StrongReferenceMessenger.Default.Send(new ConfirmationMessage($"{latestRelease.Name} is now avaliable. Would you like to open the release page?", !string.IsNullOrWhiteSpace(latestRelease.Body) ? string.Join(Environment.NewLine, $"## {latestRelease.TagName} ##", latestRelease.Body) : null, (result) =>
                             {
                                 try
                                 {
                                     if (result)
                                     {
-                                        Messenger.Default.Send(new LaunchUrlMessage(latestRelease.HtmlUrl.AbsoluteUri));
+                                        StrongReferenceMessenger.Default.Send(new LaunchUrlMessage(latestRelease.HtmlUrl.AbsoluteUri));
                                     }
                                 }
                                 catch (Exception ex)

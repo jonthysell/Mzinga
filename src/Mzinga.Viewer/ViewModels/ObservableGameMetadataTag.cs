@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using GalaSoft.MvvmLight;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mzinga.Viewer.ViewModels
 {
@@ -20,7 +20,7 @@ namespace Mzinga.Viewer.ViewModels
             protected set
             {
                 _key = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentNullException(nameof(value));
-                RaisePropertyChanged(nameof(Key));
+                OnPropertyChanged(nameof(Key));
             }
         }
         private string _key = "";
@@ -34,7 +34,7 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _value = value;
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
         private string _value = "";
@@ -56,8 +56,8 @@ namespace Mzinga.Viewer.ViewModels
             set
             {
                 _canEdit = value;
-                RaisePropertyChanged(nameof(CanEdit));
-                RaisePropertyChanged(nameof(IsReadOnly));
+                OnPropertyChanged(nameof(CanEdit));
+                OnPropertyChanged(nameof(IsReadOnly));
             }
         }
         private bool _canEdit = true;

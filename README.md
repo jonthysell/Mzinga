@@ -78,4 +78,4 @@ Avalonia Copyright (c) .NET Foundation and Contributors.
 
 Markdown.Avalonia Copyright (c) 2010 Bevan Arps, 2020 Whistyun.
 
-MVVM Light Toolkit Copyright (c) 2009-2018 Laurent Bugnion.
+MVVM Toolkit Copyright (c) .NET Foundation and Contributors.
