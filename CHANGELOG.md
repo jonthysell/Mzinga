@@ -14,7 +14,7 @@
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
 * Viewer: Fix issue when using newgame via the Engine Console not updating the GameType metadata
 * Viewer: Fix crash when playing AI vs AI games with too short search times
-* Viewer: Improve BoardHiustory UI and Review Mode performance
+* Viewer: Improve BoardHistory UI and Review Mode performance
 * Viewer: Sort options in Engine Options dialog
 * Viewer: Engine console now scrolls to keep up with the latest output
 
