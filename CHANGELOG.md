@@ -9,6 +9,7 @@
 * Engine: Exposed UseNullAspirationWindow option
 * Engine: Fixed issue with never using end metric weights
 * Engine: Fixed issue with MaxHelperThreads == Auto on machines with only 1 processor
+* Engine: Migrated from deprecated Mono.Posix to new Mono.Unix
 * Test: Improve debugging of GameAI tests
 * Test: Improve GameAI tests with configurable options matrix
 * Test: Changed GameAI TreeStrap test to verify best move is maintained after training
@@ -19,6 +20,7 @@
 * Viewer: Engine console now scrolls to keep up with the latest output
 * Viewer: Updated Avalonia to 0.10.16
 * Viewer: Migrated from deprecated MVVM Light Toolkit to new MVVM Toolkit
+* Viewer: Migrated from deprecated Mono.Posix to new Mono.Unix
 
 ## v0.12.9 ##
 

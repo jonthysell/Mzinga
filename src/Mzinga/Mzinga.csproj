@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AI\**" />
-    <EmbeddedResource Remove="AI\**" />
-    <None Remove="AI\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Engine\DefaultEngineConfig.xml" />
   </ItemGroup>
 

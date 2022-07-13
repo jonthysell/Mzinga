@@ -39,6 +39,7 @@
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <EntryPointProjectUniqueName>..\Mzinga.Viewer\Mzinga.Viewer.csproj</EntryPointProjectUniqueName>
     <PackageCertificateKeyFile>Mzinga.Viewer.WinStore_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>BAF5546832EB64B3792F4EF2A030527B67FD3718</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
     <AppxBundle>Always</AppxBundle>

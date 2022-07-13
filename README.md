@@ -78,4 +78,6 @@ Avalonia Copyright (c) .NET Foundation and Contributors.
 
 Markdown.Avalonia Copyright (c) 2010 Bevan Arps, 2020 Whistyun.
 
+Mono.Unix Copyright (c) 2021 Mono Project.
+
 MVVM Toolkit Copyright (c) .NET Foundation and Contributors.

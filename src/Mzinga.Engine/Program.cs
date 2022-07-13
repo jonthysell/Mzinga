@@ -11,6 +11,10 @@ namespace Mzinga.Engine
     {
         static string ID => $"{AppInfo.Name} v{AppInfo.Version}";
 
+        static string LicensesText => string.Join(Environment.NewLine + Environment.NewLine,
+            AppInfo.FormattedLicensesText,
+            $"## Mono.Unix ##", AppInfo.MitLicenseName, "Copyright © 2021 Mono Project", AppInfo. MitLicenseBody);
+
         private static Engine? _engine;
 
         private static volatile bool _interceptCancel = false;
@@ -23,7 +27,7 @@ namespace Mzinga.Engine
 
             EngineConfig config = LoadConfig(args.Length > 0 ? args[0] : null);
 
-            _engine = new Engine(ID, config, PrintLine);
+            _engine = new Engine(ID, config, PrintLine, LicensesText);
             _engine.ParseCommand("info");
 
             if (AppInfo.IsWindows)
