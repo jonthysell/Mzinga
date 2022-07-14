@@ -27,7 +27,7 @@ namespace Mzinga
                 if (_version is null)
                 {
                     Version? vers = Assembly.GetName().Version;
-                    _version = vers is null ? "0" : (vers.Build == 0 ? $"{vers.Major}.{vers.Minor}" : $"{vers.Major}.{vers.Minor}.{vers.Build}");
+                    _version = vers is null ? "0.0.0" : $"{vers.Major}.{vers.Minor}.{vers.Build}";
                 }
                 return _version;
             }

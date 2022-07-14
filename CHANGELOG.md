@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Update version string to always display Major.Minor.Build
+
 ## v0.13.0 ##
 
 * Core: Allow for no (zero-sized) transposition table
