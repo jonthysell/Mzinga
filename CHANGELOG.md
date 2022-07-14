@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.0 ##
 
 * Core: Allow for no (zero-sized) transposition table
 * Core: Cache sorted move lists at each position
