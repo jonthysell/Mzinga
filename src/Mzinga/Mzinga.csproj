@@ -15,4 +15,8 @@
     <EmbeddedResource Include="Engine\DefaultEngineConfig.xml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="MzingaTest" />
+  </ItemGroup>
+
 </Project>
