@@ -18,6 +18,10 @@
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RestoreForWinStore)' == 'true' ">
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="$(RepoRoot)\LICENSE.md">
       <Pack>True</Pack>

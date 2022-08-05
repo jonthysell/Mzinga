@@ -73,6 +73,8 @@ jobs:
     name: Publish Windows Setup Build
     runs-on: windows-latest
     needs: pub_create_github_release
+    env:
+      Product: MzingaViewer
     strategy:
       matrix:
         target: [Win32.Setup, Win64.Setup]
@@ -97,9 +99,50 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.pub_create_github_release.outputs.upload_url }}
-        asset_path: ${{ env.BuildDir }}/${{ env.Product }}Viewer.${{ matrix.target }}/${{ env.Product }}Viewer.${{ matrix.target }}.msi
-        asset_name: ${{ env.Product }}Viewer.${{ matrix.target }}.msi
+        asset_path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}/${{ env.Product }}.${{ matrix.target }}.msi
+        asset_name: ${{ env.Product }}.${{ matrix.target }}.msi
         asset_content_type: application/octet-stream
+
+  pub_build_windows_winstore:
+    name: Publish Windows WinStore Build
+    runs-on: windows-latest
+    needs: pub_create_github_release
+    env:
+      Product: MzingaViewer
+      CertFile: src\Mzinga.Viewer.WinStore\Mzinga.Viewer.WinStore_TemporaryKey.pfx
+    strategy:
+      matrix:
+        target: [WinStore]
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create Code Signing Certificate
+      run: |
+        Set-Content -Path cert.txt -Value '${{ secrets.WINSTORE_PFX }}'
+        certutil -decode cert.txt ${{ env.CertFile }}
+        Remove-Item cert.txt
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+
+    - name: Cleanup Code Signing Certificate
+      run: |
+        Remove-Item ${{ env.CertFile }}
+
+    - name: Upload ${{ matrix.target }} Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
 
   pub_build_linux:
     name: Publish Linux Build
