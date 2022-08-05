@@ -3,6 +3,7 @@
 ## next ##
 
 * Core: Update version string to always display Major.Minor.Build
+* Viewer: Updated WinStore TargetPlatformVersion to 10.0.19041.0
 
 ## v0.13.0 ##
 
