@@ -132,6 +132,7 @@ jobs:
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
     
     - name: Cleanup Code Signing Certificate
+      if: always()
       run: |
         Remove-Item ${{ env.CertFile }}
 
