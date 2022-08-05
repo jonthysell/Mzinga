@@ -74,6 +74,8 @@ jobs:
     name: CI Windows Setup Build
     runs-on: windows-latest
     needs: ci_build_and_test
+    env:
+      Product: MzingaViewer
     strategy:
       matrix:
         target: [Win32.Setup, Win64.Setup]
@@ -95,8 +97,49 @@ jobs:
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.Product }}Viewer.${{ matrix.target }}
-        path: ${{ env.BuildDir }}/${{ env.Product }}Viewer.${{ matrix.target }}/${{ env.Product }}Viewer.${{ matrix.target }}.msi
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}/${{ env.Product }}.${{ matrix.target }}.msi
+
+  ci_build_windows_winstore:
+    name: CI Windows WinStore Build
+    runs-on: windows-latest
+    needs: ci_build_and_test
+    env:
+      Product: MzingaViewer
+      CertFile: src\Mzinga.Viewer.WinStore\Mzinga.Viewer.WinStore_TemporaryKey.pfx
+    strategy:
+      matrix:
+        target: [WinStore]
+    steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Create Code Signing Certificate
+      run: |
+        Set-Content -Path cert.txt -Value '${{ secrets.WINSTORE_PFX }}'
+        certutil -decode cert.txt ${{ env.CertFile }}
+        Remove-Item cert.txt
+
+    - name: Build ${{ matrix.target }}
+      run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
+    
+    - name: Cleanup Code Signing Certificate
+      run: |
+        Remove-Item ${{ env.CertFile }}
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.Product }}.${{ matrix.target }}
+        path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
     
   ci_build_linux:
     name: CI Linux Build
