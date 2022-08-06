@@ -4,7 +4,7 @@ param(
     [boolean]$Clean = $True,
     [string]$BuildArgs = "",
     [string]$ProjectPath = "src\$Product.$Target\$Product.$Target.wapproj",
-    [string]$PackageCertificateKeyFile = "$Product.$Target_TemporaryKey.pfx"
+    [string]$PackageCertificateKeyFile = "$Product.$($Target)_TemporaryKey.pfx"
 )
 
 [string] $RepoRoot = Resolve-Path "$PSScriptRoot\.."
