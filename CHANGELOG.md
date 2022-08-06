@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.1 ##
 
 * Core: Update version string to always display Major.Minor.Build
 * Viewer: Updated WinStore TargetPlatformVersion to 10.0.19041.0
