@@ -1,5 +1,10 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Updated Avalonia to 0.10.18
+* Viewer: Updated MVVM Toolkit to 8.0.0
+
 ## v0.13.1 ##
 
 * Core: Update version string to always display Major.Minor.Build
