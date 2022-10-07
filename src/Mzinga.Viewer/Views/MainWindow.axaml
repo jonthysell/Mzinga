@@ -27,7 +27,7 @@
                         <NativeMenuItem Command="{Binding LoadGame}"
                                         Gesture="Cmd+O"
                                         Header="Open..." />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding SaveGame}"
                                         Gesture="Cmd+S"
                                         Header="Save As..." />
@@ -45,7 +45,7 @@
                                         Header="Move Forward" />
                         <NativeMenuItem Command="{Binding MoveToEnd}"
                                         Header="Move To End" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowGameMetadata}"
                                         Header="Edit Metadata" />
                         <NativeMenuItem Command="{Binding SwitchToPlayMode}"
@@ -60,10 +60,10 @@
                     <NativeMenu>
                         <NativeMenuItem Header="{Binding EngineId}"
                                         IsEnabled="False" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding FindBestMove}"
                                         Header="Find Best Move" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowEngineOptions}"
                                         Gesture="Cmd+Shift+E"
                                         Header="Engine Options" />
@@ -82,14 +82,14 @@
                         <NativeMenuItem Command="{Binding ToggleShowMoveCommentary}"
                                         Header="Show Move Commentary"
                                         IsChecked="{Binding ShowMoveCommentary}" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ToggleAutoCenterBoard}"
                                         Header="Auto Center Board"
                                         IsChecked="{Binding AutoCenterBoard}" />
                         <NativeMenuItem Command="{Binding ToggleAutoZoomBoard}"
                                         Header="Auto Zoom Board"
                                         IsChecked="{Binding AutoZoomBoard}" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowViewerConfig}"
                                         Gesture="Cmd+Shift+V"
                                         Header="Viewer Options" />

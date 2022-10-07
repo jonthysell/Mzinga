@@ -126,7 +126,7 @@
                                        Increment="1"
                                        IsEnabled="{Binding EnableBestMoveMaxTimeValue}"
                                        Minimum="0"
-                                       Value="{Binding BestMoveMaxTimeValue, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                                       Value="{Binding BestMoveMaxTimeValue, Converter={StaticResource TimeSpanToDecimalConverter}}"
                                        VerticalAlignment="Center" />
                     </Grid>
                 </DockPanel>

@@ -6,7 +6,7 @@
     <Application.Resources>
         <viewer:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
         <viewer:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
-        <viewer:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
+        <viewer:TimeSpanToDecimalConverter x:Key="TimeSpanToDecimalConverter" />
         <viewer:BoolToItalicFontStyleConverter x:Key="BoolToItalicFontStyleConverter" />
         <viewer:BoolToBoldFontWeightConverter x:Key="BoolToBoldFontWeightConverter" />
     </Application.Resources>
@@ -97,11 +97,11 @@
                             Header="Mzinga Website" />
             <NativeMenuItem Command="{Binding LaunchHiveWebsite}"
                             Header="Hive Website" />
-            <NativeMenuItemSeperator />
+            <NativeMenuItemSeparator />
             <NativeMenuItem Command="{Binding CheckForUpdatesAsync}"
                             Header="Check for Updates"
                             IsEnabled="{Binding CheckForUpdatesEnabled}" />
-            <NativeMenuItemSeperator />
+            <NativeMenuItemSeparator />
             <NativeMenuItem Command="{Binding ShowLicenses}"
                             Header="About MzingaViewer" />
         </NativeMenu>
