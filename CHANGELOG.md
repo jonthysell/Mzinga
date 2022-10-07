@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.2 ##
 
 * Viewer: Updated Avalonia to 0.10.18
 * Viewer: Updated MVVM Toolkit to 8.0.0
