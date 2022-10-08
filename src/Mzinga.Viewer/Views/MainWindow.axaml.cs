@@ -137,7 +137,7 @@ namespace Mzinga.Viewer.Views
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
                     lb.ScrollIntoView(Math.Max(VM.BoardHistory.CurrentMoveIndex, 0));
-                }, Avalonia.Threading.DispatcherPriority.ApplicationIdle);
+                }, Avalonia.Threading.DispatcherPriority.Normal);
                 e.Handled = true;
             }
         }
