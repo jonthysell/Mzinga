@@ -40,9 +40,9 @@ namespace Mzinga.Viewer
         private double CanvasOffsetX = 0.0;
         private double CanvasOffsetY = 0.0;
 
-        private double CurrentZoomFactor = 1.0;
+        private double CurrentZoomFactor = 0.0;
 
-        private double BoardPieceSize => GetDefaultPieceSize() * CurrentZoomFactor;
+        private double BoardPieceSize => GetDefaultPieceSize() * Math.Pow(2.0, CurrentZoomFactor);
 
         private double HandPieceSize => GetDefaultPieceSize();
 
@@ -167,19 +167,25 @@ namespace Mzinga.Viewer
             }
         }
 
-        public void SetZoom(double value)
+        public bool TrySetZoom(double value)
         {
-            CurrentZoomFactor = Math.Max(0.25, value);
+            var newValue = Math.Clamp(value, -1.0, 2.0);
+            if (CurrentZoomFactor != newValue)
+            {
+                CurrentZoomFactor = newValue;
+                return true;
+            }
+            return false;
         }
 
-        public void IncreaseZoom()
+        public bool TryIncreaseZoom()
         {
-            SetZoom(CurrentZoomFactor + 0.25);
+            return TrySetZoom(CurrentZoomFactor + 0.1);
         }
 
-        public void DecreaseZoom()
+        public bool TryDecreaseZoom()
         {
-            SetZoom(CurrentZoomFactor - 0.25);
+            return TrySetZoom(CurrentZoomFactor - 0.1);
         }
 
         private double GetDefaultPieceSize()
@@ -236,7 +242,7 @@ namespace Mzinga.Viewer
                 if (autoZoom)
                 {
                     double desiredSize = 0.5 * Math.Min(boardCanvasHeight / verticalPiecesMin, boardCanvasWidth / horizontalPiecesMin);
-                    SetZoom(desiredSize / GetDefaultPieceSize());
+                    TrySetZoom(0.0);
                 }
 
                 WhiteHandStackPanel.MinWidth = whiteHandCount > 0 ? (HandPieceSize + PieceCanvasMargin) * 2 : 0;
@@ -948,15 +954,23 @@ namespace Mzinga.Viewer
 
         private void BoardCanvas_PointerWheelChanged(object sender, PointerWheelEventArgs e)
         {
-            if (e.Delta.Y > 0)
+            if (!VM.AutoZoomBoard)
             {
-                IncreaseZoom();
-                TryRedraw();
-            }
-            else if (e.Delta.Y < 0)
-            {
-                DecreaseZoom();
-                TryRedraw();
+                if (e.Delta.Y > 0)
+                {
+                    if (TryIncreaseZoom())
+                    {
+                        
+                        TryRedraw();
+                    }
+                }
+                else if (e.Delta.Y < 0)
+                {
+                    if (TryDecreaseZoom())
+                    {
+                        TryRedraw();
+                    }
+                }
             }
         }
     }
