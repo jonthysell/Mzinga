@@ -585,9 +585,11 @@ namespace Mzinga.Viewer
 
             double strokeThickness = size / 10;
 
-            Path hex = new Path
+            var hex = new HexShape()
             {
-                StrokeThickness = strokeThickness
+                StrokeThickness = strokeThickness,
+                HexSize = size,
+                HexOrientation = hexOrientation,
             };
 
             switch (hexType)
@@ -616,40 +618,8 @@ namespace Mzinga.Viewer
                     break;
             }
 
-            PathGeometry data = new PathGeometry();
-            PathFigure figure = new PathFigure
-            {
-                IsClosed = true
-            };
-
-            double hexRadius = size - 0.75 * strokeThickness;
-
-            for (int i = 0; i <= 6; i++)
-            {
-                double angle_deg = 60.0 * i + (hexOrientation == HexOrientation.PointyTop ? 30.0 : 0);
-
-                double angle_rad1 = Math.PI / 180 * (angle_deg - 3);
-                double angle_rad2 = Math.PI / 180 * (angle_deg + 3);
-
-                Point p1 = new Point(center.X + hexRadius * Math.Cos(angle_rad1), center.Y + hexRadius * Math.Sin(angle_rad1));
-                Point p2 = new Point(center.X + hexRadius * Math.Cos(angle_rad2), center.Y + hexRadius * Math.Sin(angle_rad2));
-
-                if (i == 0)
-                {
-                    figure.StartPoint = p2;
-                }
-                else
-                {
-                    figure.Segments.Add(new LineSegment() { Point = p1 });
-                    figure.Segments.Add(new ArcSegment() {
-                        Point = p2,
-                        SweepDirection = SweepDirection.CounterClockwise,
-                    });
-                }
-            }
-
-            data.Figures.Add(figure);
-            hex.Data = data;
+            Canvas.SetLeft(hex, center.X - size);
+            Canvas.SetTop(hex, center.Y - size);
 
             return hex;
         }
