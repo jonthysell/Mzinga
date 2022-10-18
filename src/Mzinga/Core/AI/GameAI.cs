@@ -147,7 +147,7 @@ namespace Mzinga.Core.AI
 
             // Try to get cached best move if available
             ulong key = board.ZobristKey;
-            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry is not null && tEntry.BestMove.HasValue)
+            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry.BestMove.HasValue)
             {
                 bestMove = new EvaluatedMove(tEntry.BestMove.Value, tEntry.Value, tEntry.Depth);
                 OnBestMoveFound(board, bestMoveParams, bestMove.Value);
@@ -380,7 +380,7 @@ namespace Mzinga.Core.AI
 
             ulong key = board.ZobristKey;
 
-            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry is not null && tEntry.Depth >= depth)
+            if (TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry.Depth >= depth)
             {
                 if (tEntry.Type == TranspositionTableEntryType.Exact)
                 {
@@ -525,7 +525,7 @@ namespace Mzinga.Core.AI
         {
             ulong key = board.ZobristKey;
 
-            if (_cachedValidMoves.TryLookup(key, out var moves) && moves is not null)
+            if (_cachedValidMoves.TryLookup(key, out var moves))
             {
                 return moves;
             }
@@ -540,7 +540,7 @@ namespace Mzinga.Core.AI
         {
             ulong key = board.ZobristKey;
 
-            if (_cachedSortedMoves.TryLookup(key, out var moves) && moves is not null)
+            if (_cachedSortedMoves.TryLookup(key, out var moves))
             {
                 return moves;
             }
@@ -852,7 +852,7 @@ namespace Mzinga.Core.AI
             ulong key = board.ZobristKey;
             bool newKey = visitedKeys.Add(key);
 
-            if (newKey && TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry is not null && tEntry.Depth > 1 && !token.IsCancellationRequested)
+            if (newKey && TranspositionTable.TryLookup(key, out TranspositionTableEntry? tEntry) && tEntry.Depth > 1 && !token.IsCancellationRequested)
             {
                 double colorValue = board.CurrentColor == PlayerColor.White ? 1.0 : -1.0;
 

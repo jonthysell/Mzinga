@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mzinga.Core
 {
     public delegate bool FixedCacheReplaceEntryPredicate<TValue>(TValue existingEntry, TValue newEntry);
 
-    public class FixedCache<TKey, TEntry> where TKey : IEquatable<TKey>, IComparable<TKey>
+    public class FixedCache<TKey, TEntry> where TKey : notnull, IEquatable<TKey>, IComparable<TKey> where TEntry : notnull
     {
         public int Count
         {
@@ -111,9 +112,9 @@ namespace Mzinga.Core
             _dict[key] = wrappedEntry;
         }
 
-        public bool TryLookup(TKey key, out TEntry? entry)
+        public bool TryLookup(TKey key, [NotNullWhen(returnValue: true)] out TEntry? entry)
         {
-            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry) && wrappedEntry is not null)
+            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry))
             {
                 entry = wrappedEntry.Entry;
 #if DEBUG
@@ -161,7 +162,7 @@ namespace Mzinga.Core
 
         private const int DefaultCapacity = 1024;
 
-        private class FixedCacheEntry<TK, TE> where TK : IEquatable<TK>, IComparable<TK>
+        private class FixedCacheEntry<TK, TE> where TK : notnull, IEquatable<TK>, IComparable<TK> where TE : notnull
         {
             public LinkedListNode<TK> ListNode;
             public TE Entry;

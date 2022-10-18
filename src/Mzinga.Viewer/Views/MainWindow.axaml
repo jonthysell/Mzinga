@@ -231,10 +231,10 @@
                             VerticalAlignment="Stretch" />
                 <Grid Grid.Column="1"
                       Grid.Row="0">
-                    <Canvas Background="Transparent"
-                            ClipToBounds="True"
-                            IsEnabled="{Binding BoardIsLoaded}"
-                            Name="BoardCanvas" />
+                  <Canvas Background="Transparent"
+                          ClipToBounds="True"
+                          IsEnabled="{Binding BoardIsLoaded}"
+                          Name="BoardCanvas" />
                 </Grid>
                 <Grid Grid.Column="1"
                       Grid.Row="1">
