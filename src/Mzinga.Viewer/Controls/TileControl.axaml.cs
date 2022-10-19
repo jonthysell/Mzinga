@@ -79,6 +79,20 @@ namespace Mzinga.Viewer
             }
         }
 
+        public static readonly StyledProperty<bool> UseColoredPiecesProperty = AvaloniaProperty.Register<TileControl, bool>(nameof(UseColoredPieces));
+
+        public bool UseColoredPieces
+        {
+            get
+            {
+                return GetValue(UseColoredPiecesProperty);
+            }
+            set
+            {
+                SetValue(UseColoredPiecesProperty, value);
+            }
+        }
+
         public static readonly StyledProperty<bool> AddPieceNumbersProperty = AvaloniaProperty.Register<TileControl, bool>(nameof(AddPieceNumbers));
 
         public bool AddPieceNumbers
@@ -97,14 +111,15 @@ namespace Mzinga.Viewer
         {
             PieceNameProperty.Changed.AddClassHandler<TileControl>(PieceNameChanged);
             HexSizeProperty.Changed.AddClassHandler<TileControl>(HexSizeChanged);
+            UseColoredPiecesProperty.Changed.AddClassHandler<TileControl>(UseColoredPiecesChanged);
         }
 
         private static void PieceNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (sender is TileControl tc)
             {
-                tc.Background = Enums.GetColor(tc.PieceName) == PlayerColor.White ? Brushes.White : Brushes.Black;
-                tc.Foreground = Enums.GetColor(tc.PieceName) == PlayerColor.White ? Brushes.Black : Brushes.White;
+                tc.Background = tc.GetBackgroundBrush();
+                tc.Foreground = tc.GetForegroundBrush();
             }
         }
 
@@ -114,6 +129,14 @@ namespace Mzinga.Viewer
             {
                 tc.Width = tc.HexSize * 2.0;
                 tc.Height = tc.HexSize * 2.0;
+            }
+        }
+
+        private static void UseColoredPiecesChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (sender is TileControl tc)
+            {
+                tc.Foreground = tc.GetForegroundBrush();
             }
         }
 
@@ -155,6 +178,16 @@ namespace Mzinga.Viewer
         private bool IsBugNumVisible()
         {
             return AddPieceNumbers && Enums.TryGetBugNum(PieceName, out int _);
+        }
+
+        private IBrush GetBackgroundBrush()
+        {
+            return Enums.GetColor(PieceName) == PlayerColor.White ? Brushes.White : Brushes.Black;
+        }
+
+        private IBrush GetForegroundBrush()
+        {
+            return UseColoredPieces ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(PieceName)] : (Enums.GetColor(PieceName) == PlayerColor.White ? Brushes.Black : Brushes.White);
         }
 
         private ITransform GetBugGraphicGridRenderTransform()
