@@ -1,24 +1,43 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<ResourceDictionary x:CompileBindings="True"
+                    xmlns="https://github.com/avaloniaui"
                     xmlns:local="clr-namespace:Mzinga.Viewer"
-                    x:CompileBindings="True">
-
-  <ControlTheme x:Key="{x:Type local:TileControl}"
-                TargetType="{x:Type local:TileControl}">
-    <Setter Property="Template">
-      <ControlTemplate>
-        <Grid>
-          <local:HexShape x:Name="PART_BaseHexShape" HexSize="{TemplateBinding HexSize}" HexOrientation="{TemplateBinding HexOrientation}" Stroke="#333333" Fill="{TemplateBinding Background}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" />
-          <Grid x:Name="PART_BugGraphicOuterGrid" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-            <Grid x:Name="PART_BugGraphicInnerGrid">
-              <local:BugShape x:Name="PART_BugGraphicBugShape" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{TemplateBinding Foreground}" />
-            </Grid>
-            <Ellipse x:Name="PART_BugGraphicBugNumberEllipse" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Width="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}" Height="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}" />
-            <TextBlock x:Name="PART_BugGraphicBugNumberTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Arial Black" Foreground="{TemplateBinding Background}" />
-          </Grid>
-        </Grid>
-      </ControlTemplate>
-    </Setter>
-  </ControlTheme>
-
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ControlTheme TargetType="{x:Type local:TileControl}"
+                  x:Key="{x:Type local:TileControl}">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <local:HexShape Fill="{TemplateBinding Background}"
+                                    Height="{TemplateBinding Height}"
+                                    HexOrientation="{TemplateBinding HexOrientation}"
+                                    HexSize="{TemplateBinding HexSize}"
+                                    Stroke="#333333"
+                                    Width="{TemplateBinding Width}"
+                                    x:Name="PART_BaseHexShape" />
+                    <Grid Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          x:Name="PART_BugGraphicOuterGrid">
+                        <Grid x:Name="PART_BugGraphicInnerGrid">
+                            <local:BugShape Fill="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            Stretch="Uniform"
+                                            VerticalAlignment="Center"
+                                            x:Name="PART_BugGraphicBugShape" />
+                        </Grid>
+                        <Ellipse Fill="{TemplateBinding Foreground}"
+                                 Height="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Width="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}"
+                                 x:Name="PART_BugGraphicBugNumberEllipse" />
+                        <TextBlock FontFamily="Arial Black"
+                                   Foreground="{TemplateBinding Background}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   x:Name="PART_BugGraphicBugNumberTextBlock" />
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
 </ResourceDictionary>

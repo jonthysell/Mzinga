@@ -1,13 +1,13 @@
 <Style xmlns="https://github.com/avaloniaui"
        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <Style.Resources>
-    <Color x:Key="QueenBeeColor">#FFFAA71D</Color>
-    <Color x:Key="SpiderColor">#FF8B3F1B</Color>
-    <Color x:Key="BeetleColor">#FF9565C2</Color>
-    <Color x:Key="GrasshopperColor">#FF419D46</Color>
-    <Color x:Key="SoldierAntColor">#FF258DC1</Color>
-    <Color x:Key="MosquitoColor">#FF6F6F91</Color>
-    <Color x:Key="LadybugColor">#FFD12020</Color>
-    <Color x:Key="PillbugColor">#FF259966</Color>
-  </Style.Resources>
+    <Style.Resources>
+        <Color x:Key="QueenBeeColor">#FFFAA71D</Color>
+        <Color x:Key="SpiderColor">#FF8B3F1B</Color>
+        <Color x:Key="BeetleColor">#FF9565C2</Color>
+        <Color x:Key="GrasshopperColor">#FF419D46</Color>
+        <Color x:Key="SoldierAntColor">#FF258DC1</Color>
+        <Color x:Key="MosquitoColor">#FF6F6F91</Color>
+        <Color x:Key="LadybugColor">#FFD12020</Color>
+        <Color x:Key="PillbugColor">#FF259966</Color>
+    </Style.Resources>
 </Style>
