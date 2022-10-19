@@ -152,6 +152,42 @@ namespace Mzinga.Core
             return PlayerColor.NumPlayerColors;
         }
 
+        public static bool TryGetBugNum(PieceName value, out int bugNum)
+        {
+            bugNum = GetBugNum(value);
+            return bugNum > 0;
+        }
+
+        public static int GetBugNum(PieceName value)
+        {
+            switch (value)
+            {
+                case PieceName.wS1:
+                case PieceName.wB1:
+                case PieceName.wG1:
+                case PieceName.wA1:
+                case PieceName.bS1:
+                case PieceName.bB1:
+                case PieceName.bG1:
+                case PieceName.bA1:
+                    return 1;
+                case PieceName.wB2:
+                case PieceName.wG2:
+                case PieceName.wA2:
+                case PieceName.bB2:
+                case PieceName.bG2:
+                case PieceName.bA2:
+                    return 2;
+                case PieceName.wG3:
+                case PieceName.wA3:
+                case PieceName.bG3:
+                case PieceName.bA3:
+                    return 3;
+            }
+
+            return 0;
+        }
+
         public static Direction LeftOf(Direction value)
         {
             return (Direction)(((int)value + (int)Direction.NumDirections - 1) % (int)Direction.NumDirections);
