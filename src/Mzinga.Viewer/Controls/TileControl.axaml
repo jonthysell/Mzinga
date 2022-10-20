@@ -6,7 +6,8 @@
                   x:Key="{x:Type local:TileControl}">
         <Setter Property="Template">
             <ControlTemplate>
-                <Grid>
+                <Grid Height="{TemplateBinding Height}"
+                      Width="{TemplateBinding Width}">
                     <local:HexShape Fill="{TemplateBinding Background}"
                                     Height="{TemplateBinding Height}"
                                     HexOrientation="{TemplateBinding HexOrientation}"
@@ -35,6 +36,15 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    x:Name="PART_BugGraphicBugNumberTextBlock" />
+                    </Grid>
+                    <Grid Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          x:Name="PART_BugTextGrid">
+                        <TextBlock FontFamily="Arial Black"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   x:Name="PART_BugTextTextBlock" />
                     </Grid>
                 </Grid>
             </ControlTemplate>

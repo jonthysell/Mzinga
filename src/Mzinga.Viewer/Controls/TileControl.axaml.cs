@@ -146,13 +146,15 @@ namespace Mzinga.Viewer
 
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
+            // Bind the base hex
             var baseHexShape = e.NameScope.Find("PART_BaseHexShape") as HexShape;
             baseHexShape.Bind(Shape.StrokeThicknessProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize / 10));
 
+            // Bind the graphical piece body
             var bugGraphicOuterGrid = e.NameScope.Find("PART_BugGraphicOuterGrid") as Grid;
             bugGraphicOuterGrid.Bind(IsVisibleProperty, this.GetObservable(PieceStyleProperty).Select(pieceStyle => pieceStyle == PieceStyle.Graphical));
 
-            var bugGraphicInnerGrid = e.NameScope.Find("PART_BugGraphicInnerGrid") as Visual;
+            var bugGraphicInnerGrid = e.NameScope.Find("PART_BugGraphicInnerGrid") as Grid;
             bugGraphicInnerGrid.Bind(WidthProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio));
             bugGraphicInnerGrid.Bind(HeightProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio));
             bugGraphicInnerGrid.Bind(RenderTransformProperty, this.GetObservable(PieceNameProperty).Select(_ => GetBugGraphicGridRenderTransform()));
@@ -171,6 +173,15 @@ namespace Mzinga.Viewer
             var bugGraphicBugNumberEllipse = e.NameScope.Find("PART_BugGraphicBugNumberEllipse") as Ellipse;
             bugGraphicBugNumberEllipse.Bind(IsVisibleProperty, this.GetObservable(PieceNameProperty).Select(_ => IsBugNumVisible()));
             bugGraphicBugNumberEllipse.Bind(IsVisibleProperty, this.GetObservable(AddPieceNumbersProperty).Select(_ => IsBugNumVisible()));
+
+            // Bind the text piece body
+            var bugTextGrid = e.NameScope.Find("PART_BugTextGrid") as Grid;
+            bugTextGrid.Bind(IsVisibleProperty, this.GetObservable(PieceStyleProperty).Select(pieceStyle => pieceStyle == PieceStyle.Text));
+
+            var bugTextTextBlock = e.NameScope.Find("PART_BugTextTextBlock") as TextBlock;
+            bugTextTextBlock.Bind(TextBlock.FontSizeProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 0.75));
+            bugTextTextBlock.Bind(TextBlock.TextProperty, this.GetObservable(PieceNameProperty).Select(_ => GetBugText()));
+            bugTextTextBlock.Bind(TextBlock.TextProperty, this.GetObservable(AddPieceNumbersProperty).Select(_ => GetBugText()));
 
             base.OnApplyTemplate(e);
         }
@@ -198,6 +209,12 @@ namespace Mzinga.Viewer
                 rotateAngle += (bugNum - 1) * 60.0;
             }
             return new RotateTransform(rotateAngle);
+        }
+
+        private string GetBugText()
+        {
+            string text = PieceName.ToString().Substring(1);
+            return AddPieceNumbers ? text : text.TrimEnd('1', '2', '3');
         }
 
         public const double GraphicalBugSizeRatio = 1.25;
