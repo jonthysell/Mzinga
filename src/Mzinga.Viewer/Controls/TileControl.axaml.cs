@@ -205,7 +205,7 @@ namespace Mzinga.Viewer
 
         private ITransform GetBugGraphicGridRenderTransform()
         {
-            double rotateAngle = HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
+            double rotateAngle = HexOrientation == HexOrientation.PointyTop ? -90.0 : -60.0;
             if (Enums.TryGetBugNum(PieceName, out int bugNum))
             {
                 rotateAngle += (bugNum - 1) * 60.0;

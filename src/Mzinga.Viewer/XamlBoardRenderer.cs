@@ -674,7 +674,7 @@ namespace Mzinga.Viewer
             safeGrid.Children.Add(bugGrid);
 
             // Bug rotation
-            double rotateAngle = MainViewModel.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : 0.0;
+            double rotateAngle = MainViewModel.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : -60.0;
 
             if (int.TryParse(pieceName.ToString().Last().ToString(), out int bugNum))
             {
