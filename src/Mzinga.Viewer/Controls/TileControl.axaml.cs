@@ -107,11 +107,19 @@ namespace Mzinga.Viewer
             }
         }
 
+        public static readonly ISolidColorBrush TileControlStrokeBrush;
+
+        public static readonly ISolidColorBrush TileControlDisabledBrush;
+
         static TileControl()
         {
             PieceNameProperty.Changed.AddClassHandler<TileControl>(PieceNameChanged);
             HexSizeProperty.Changed.AddClassHandler<TileControl>(HexSizeChanged);
             UseColoredPiecesProperty.Changed.AddClassHandler<TileControl>(UseColoredPiecesChanged);
+            IsEnabledProperty.Changed.AddClassHandler<TileControl>(IsEnabledChanged);
+
+            TileControlStrokeBrush = App.Current.FindResource("TileControlStrokeBrush") as ISolidColorBrush;
+            TileControlDisabledBrush = App.Current.FindResource("TileControlDisabledBrush") as ISolidColorBrush;
         }
 
         private static void PieceNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
@@ -140,6 +148,14 @@ namespace Mzinga.Viewer
             }
         }
 
+        private static void IsEnabledChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (sender is TileControl tc)
+            {
+                tc.Foreground = tc.GetForegroundBrush();
+            }
+        }
+
         public TileControl() : base()
         {
         }
@@ -149,6 +165,7 @@ namespace Mzinga.Viewer
             // Bind the base hex
             var baseHexShape = e.NameScope.Find("PART_BaseHexShape") as HexShape;
             baseHexShape.Bind(Shape.StrokeThicknessProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize / 10));
+            baseHexShape.Bind(Shape.StrokeProperty, this.GetObservable(IsEnabledProperty).Select(isEnabled => isEnabled ? TileControlStrokeBrush : ColorUtils.MixSolidColorBrushes(TileControlStrokeBrush, TileControlDisabledBrush)));
 
             // Bind the graphical piece body
             var bugGraphicOuterGrid = e.NameScope.Find("PART_BugGraphicOuterGrid") as Grid;
@@ -200,7 +217,8 @@ namespace Mzinga.Viewer
 
         private IBrush GetForegroundBrush()
         {
-            return UseColoredPieces ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(PieceName)] : (Enums.GetColor(PieceName) == PlayerColor.White ? Brushes.Black : Brushes.White);
+            var bugBrush = UseColoredPieces ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(PieceName)] : (Enums.GetColor(PieceName) == PlayerColor.White ? Brushes.Black : Brushes.White);
+            return IsEnabled ? bugBrush : ColorUtils.MixSolidColorBrushes(bugBrush, TileControlDisabledBrush);
         }
 
         private ITransform GetBugGraphicGridRenderTransform()

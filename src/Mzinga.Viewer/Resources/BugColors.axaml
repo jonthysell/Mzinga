@@ -9,5 +9,21 @@
         <Color x:Key="MosquitoColor">#FF6F6F91</Color>
         <Color x:Key="LadybugColor">#FFD12020</Color>
         <Color x:Key="PillbugColor">#FF259966</Color>
+        <SolidColorBrush Color="{StaticResource QueenBeeColor}"
+                         x:Key="QueenBeeColorBrush" />
+        <SolidColorBrush Color="{StaticResource SpiderColor}"
+                         x:Key="SpiderColorBrush" />
+        <SolidColorBrush Color="{StaticResource BeetleColor}"
+                         x:Key="BeetleColorBrush" />
+        <SolidColorBrush Color="{StaticResource GrasshopperColor}"
+                         x:Key="GrasshopperColorBrush" />
+        <SolidColorBrush Color="{StaticResource SoldierAntColor}"
+                         x:Key="SoldierAntColorBrush" />
+        <SolidColorBrush Color="{StaticResource MosquitoColor}"
+                         x:Key="MosquitoColorBrush" />
+        <SolidColorBrush Color="{StaticResource LadybugColor}"
+                         x:Key="LadybugColorBrush" />
+        <SolidColorBrush Color="{StaticResource PillbugColor}"
+                         x:Key="PillbugColorBrush" />
     </Style.Resources>
 </Style>

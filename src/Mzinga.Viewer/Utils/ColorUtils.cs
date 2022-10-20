@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
-
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -16,17 +16,17 @@ namespace Mzinga.Viewer
     {
         public static readonly Color[] BugColors;
 
-        public static readonly SolidColorBrush[] BugColorBrushes;
+        public static readonly ISolidColorBrush[] BugColorBrushes;
 
         static ColorUtils()
         {
             BugColors = new Color[(int)BugType.NumBugTypes];
-            BugColorBrushes = new SolidColorBrush[(int)BugType.NumBugTypes];
+            BugColorBrushes = new ISolidColorBrush[(int)BugType.NumBugTypes];
 
             for (int bt = 0; bt < (int)BugType.NumBugTypes; bt++)
             {
                 BugColors[bt] = (Color)App.Current.FindResource($"{(BugType)bt}Color");
-                BugColorBrushes[bt] = new SolidColorBrush(BugColors[bt]);
+                BugColorBrushes[bt] = (ISolidColorBrush)App.Current.FindResource($"{(BugType)bt}ColorBrush");
             }
         }
 
@@ -37,7 +37,7 @@ namespace Mzinga.Viewer
                                        (byte)((c1.G + c2.G) / 2),
                                        (byte)((c1.B + c2.B) / 2));
         }
-        public static SolidColorBrush MixSolidColorBrushes(SolidColorBrush b1, SolidColorBrush b2)
+        public static ISolidColorBrush MixSolidColorBrushes(ISolidColorBrush b1, ISolidColorBrush b2)
         {
             return new SolidColorBrush(MixColors(b1.Color, b2.Color));
         }

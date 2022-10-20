@@ -2,6 +2,12 @@
                     xmlns="https://github.com/avaloniaui"
                     xmlns:local="clr-namespace:Mzinga.Viewer"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="TileControlStrokeColor">#FF333333</Color>
+    <Color x:Key="TileControlDisabledColor">LightGray</Color>
+    <SolidColorBrush Color="{StaticResource TileControlStrokeColor}"
+                     x:Key="TileControlStrokeBrush" />
+    <SolidColorBrush Color="{StaticResource TileControlDisabledColor}"
+                     x:Key="TileControlDisabledBrush" />
     <ControlTheme TargetType="{x:Type local:TileControl}"
                   x:Key="{x:Type local:TileControl}">
         <Setter Property="Template">
@@ -12,7 +18,6 @@
                                     Height="{TemplateBinding Height}"
                                     HexOrientation="{TemplateBinding HexOrientation}"
                                     HexSize="{TemplateBinding HexSize}"
-                                    Stroke="#333333"
                                     Width="{TemplateBinding Width}"
                                     x:Name="PART_BaseHexShape" />
                     <Grid Height="{TemplateBinding Height}"
