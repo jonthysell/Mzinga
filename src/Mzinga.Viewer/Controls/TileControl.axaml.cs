@@ -165,8 +165,9 @@ namespace Mzinga.Viewer
             bugGraphicBugShape.Bind(BugShape.BugTypeProperty, this.GetObservable(PieceNameProperty).Select(pieceName => Enums.GetBugType(pieceName)));
 
             var bugGraphicBugNumberTextBlock = e.NameScope.Find("PART_BugGraphicBugNumberTextBlock") as TextBlock;
-            bugGraphicBugNumberTextBlock.Bind(TextBlock.FontSizeProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize / 2));
+            bugGraphicBugNumberTextBlock.Bind(TextBlock.FontSizeProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 0.5));
             bugGraphicBugNumberTextBlock.Bind(TextBlock.TextProperty, this.GetObservable(PieceNameProperty).Select(pieceName => Enums.TryGetBugNum(pieceName, out int bugNum) ? bugNum.ToString() : ""));
+            bugGraphicBugNumberTextBlock.Bind(PaddingProperty, this.GetObservable(HexSizeProperty).Select(hexSize => new Thickness(0, 0, 0, hexSize * 0.075)));
             bugGraphicBugNumberTextBlock.Bind(IsVisibleProperty, this.GetObservable(PieceNameProperty).Select(_ => IsBugNumVisible()));
             bugGraphicBugNumberTextBlock.Bind(IsVisibleProperty, this.GetObservable(AddPieceNumbersProperty).Select(_ => IsBugNumVisible()));
 
@@ -182,6 +183,7 @@ namespace Mzinga.Viewer
             bugTextTextBlock.Bind(TextBlock.FontSizeProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 0.75));
             bugTextTextBlock.Bind(TextBlock.TextProperty, this.GetObservable(PieceNameProperty).Select(_ => GetBugText()));
             bugTextTextBlock.Bind(TextBlock.TextProperty, this.GetObservable(AddPieceNumbersProperty).Select(_ => GetBugText()));
+            bugTextTextBlock.Bind(PaddingProperty, this.GetObservable(HexSizeProperty).Select(hexSize => new Thickness(0, 0, 0, hexSize * 0.1)));
 
             base.OnApplyTemplate(e);
         }
