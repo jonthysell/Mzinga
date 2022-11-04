@@ -91,8 +91,6 @@ namespace Mzinga.Viewer
 
         private readonly SolidColorBrush DisabledPieceBrush;
 
-        private readonly SolidColorBrush[] BugBrushes;
-
         public XamlBoardRenderer(MainViewModel vm, Canvas boardCanvas, StackPanel whiteHandStackPanel, StackPanel blackHandStackPanel)
         {
             VM = vm ?? throw new ArgumentNullException(nameof(vm));
@@ -115,18 +113,6 @@ namespace Mzinga.Viewer
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
 
             DisabledPieceBrush = new SolidColorBrush(Colors.LightGray);
-
-            BugBrushes = new SolidColorBrush[]
-            {
-                new SolidColorBrush(Color.FromArgb(255, 250, 167, 29)), // Bee
-                new SolidColorBrush(Color.FromArgb(255, 139, 63, 27)), // Spider
-                new SolidColorBrush(Color.FromArgb(255, 149, 101, 194)), // Beetle
-                new SolidColorBrush(Color.FromArgb(255, 65, 157, 70)), // Grasshopper
-                new SolidColorBrush(Color.FromArgb(255, 37, 141, 193)), // Ant
-                new SolidColorBrush(Color.FromArgb(255, 111, 111, 97)), // Mosquito
-                new SolidColorBrush(Color.FromArgb(255, 209, 32, 32)), // Ladybug
-                new SolidColorBrush(Color.FromArgb(255, 37, 153, 102)), // Pillbug
-            };
 
             // Bind board updates to VM
             if (VM is not null)
@@ -617,7 +603,7 @@ namespace Mzinga.Viewer
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            var bugBrush = MainViewModel.ViewerConfig.PieceColors ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create text
             string text = pieceName.ToString().Substring(1);
@@ -628,7 +614,7 @@ namespace Mzinga.Viewer
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
                 FontSize = size * 0.75,
-                Foreground = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
+                Foreground = disabled ? ColorUtils.MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
             };
 
             Canvas.SetLeft(bugText, center.X - (bugText.Text.Length * (bugText.FontSize / 3.0)));
@@ -654,14 +640,14 @@ namespace Mzinga.Viewer
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            SolidColorBrush bugBrush = MainViewModel.ViewerConfig.PieceColors ? BugBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
+            var bugBrush = MainViewModel.ViewerConfig.PieceColors ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
 
             // Create bug
             var bugShape = new BugShape()
             {
                 BugType = Enums.GetBugType(pieceName),
                 Stretch = Stretch.Uniform,
-                Fill = disabled ? MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
+                Fill = disabled ? ColorUtils.MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
                 VerticalAlignment = VerticalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center,
             };
@@ -721,18 +707,6 @@ namespace Mzinga.Viewer
             Canvas.SetTop(b, center.Y - (b.Height / 2.0));
 
             return b;
-        }
-
-        private static SolidColorBrush MixSolidColorBrushes(SolidColorBrush b1, SolidColorBrush b2)
-        {
-            SolidColorBrush result = new SolidColorBrush
-            {
-                Color = Color.FromArgb((byte)((b1.Color.A + b2.Color.A) / 2),
-                                       (byte)((b1.Color.R + b2.Color.R) / 2),
-                                       (byte)((b1.Color.G + b2.Color.G) / 2),
-                                       (byte)((b1.Color.B + b2.Color.B) / 2))
-            };
-            return result;
         }
 
         private enum HexType
