@@ -41,10 +41,10 @@
                      Grid.ColumnSpan="3"
                      Grid.Row="1"
                      IsReadOnly="True"
+                     PropertyChanged="EngineConsoleOutput_PropertyChanged"
                      Text="{Binding EngineOutputText, Mode=OneWay}"
                      TextWrapping="Wrap"
                      VerticalContentAlignment="Top"
-                     PropertyChanged="EngineConsoleOutput_PropertyChanged"
                      x:Name="EngineConsoleOutput" />
         </Grid>
     </Panel>

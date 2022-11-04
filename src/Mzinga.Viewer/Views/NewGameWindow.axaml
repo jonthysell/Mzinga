@@ -9,7 +9,6 @@
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.NewGameWindow"
         xmlns="https://github.com/avaloniaui"
-        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
@@ -18,13 +17,10 @@
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">
-          <local:TileControl Grid.Column="0"
-                   Grid.Row="0"
-                   Grid.RowSpan="2" HexSize="16" HexOrientation="PointyTop" PieceName="wQ"  />
-            <!--<Image Classes="MzingaIcon"
+            <Image Classes="MzingaIcon"
                    Grid.Column="0"
                    Grid.Row="0"
-                   Grid.RowSpan="2" />-->
+                   Grid.RowSpan="2" />
             <StackPanel Classes="DialogMain"
                         Grid.Column="1"
                         Grid.Row="0">
