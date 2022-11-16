@@ -45,10 +45,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.0-preview3" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview3" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview3" Condition="'$(Configuration)' == 'Debug'" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview3" />
+    <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.0-preview4" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.0-preview4" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
     <PackageReference Include="Dotnet.Bundle" Version="0.9.13" />
     <PackageReference Include="Markdown.Avalonia" Version="11.0.0-a4" />
     <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
