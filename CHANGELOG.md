@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Fixed "crash" when exiting while Internal Engine is still running
+
 ## v0.13.2 ##
 
 * Viewer: Updated Avalonia to 0.10.18
