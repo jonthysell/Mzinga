@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Minor rendering improvements
 * Viewer: Updated New Game Window
 * Viewer: Updated Avalonia to 11.0.0-preview4

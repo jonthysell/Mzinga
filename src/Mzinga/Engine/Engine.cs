@@ -107,6 +107,11 @@ namespace Mzinga.Engine
                 throw new ArgumentNullException(nameof(command));
             }
 
+            if (ExitRequested)
+            {
+                return;
+            }
+
             string[] split = command.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
             try
@@ -800,7 +805,6 @@ namespace Mzinga.Engine
         {
             StopPonder();
 
-            _board = null;
             ExitRequested = true;
         }
 

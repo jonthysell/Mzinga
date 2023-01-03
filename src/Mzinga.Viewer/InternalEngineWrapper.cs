@@ -42,18 +42,21 @@ namespace Mzinga.Viewer
 
         protected override void OnEngineInput(string command)
         {
-            Task.Run(() =>
+            if (_engine is not null)
             {
-                lock (_engine)
+                Task.Run(() =>
                 {
-                    _engine.ParseCommand(command);
-                }
-            });
+                    lock (_engine)
+                    {
+                        _engine?.ParseCommand(command);
+                    }
+                });
+            }
         }
 
         protected override void OnCancelCommand()
         {
-            _engine.TryCancelAsyncCommand();
+            _engine?.TryCancelAsyncCommand();
         }
     }
 }
