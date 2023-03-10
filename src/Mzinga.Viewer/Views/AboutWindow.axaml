@@ -14,7 +14,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:CompileBindings="True"
+        x:DataType="vm:AboutViewModel">
     <Panel>
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
@@ -38,12 +40,12 @@
                     <DataTemplate>
                         <md:MarkdownScrollViewer Margin="0,5"
                                                  Markdown="{Binding Body, Mode=OneWay}"
-                                                 Width="500">
+                                                 Width="500" x:DataType="vm:ObservableAboutTabItem">
                             <md:MarkdownScrollViewer.Styles>
                                 <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
                             </md:MarkdownScrollViewer.Styles>
                             <md:MarkdownScrollViewer.Engine>
-                                <md:Markdown HyperlinkCommand="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.AppVM.LaunchURL}" />
+                                <md:Markdown HyperlinkCommand="{Binding AppVM.LaunchURL}" />
                             </md:MarkdownScrollViewer.Engine>
                         </md:MarkdownScrollViewer>
                     </DataTemplate>

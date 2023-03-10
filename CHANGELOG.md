@@ -4,6 +4,7 @@
 
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Minor rendering improvements
+* Viewer: Switched to CompiledBindings for improved performance
 * Viewer: Updated New Game Window
 * Viewer: Updated Avalonia to 11.0.0-preview5
 * Viewer: Updated Markdown.Avalonia to 11.0.0-a9

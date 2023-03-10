@@ -15,7 +15,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:CompileBindings="True"
+        x:DataType="vm:MainViewModel">
     <NativeMenu.Menu>
         <NativeMenu>
             <NativeMenuItem Header="File">
@@ -334,7 +336,7 @@
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="IsHitTestVisible"
-                                        Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.IsReviewMode}" />
+                                        Value="{Binding (vm:MainViewModel)$parent[Window].DataContext.IsReviewMode}" />
                             </Style>
                         </ListBox.Styles>
                         <ListBox.ItemTemplate>
