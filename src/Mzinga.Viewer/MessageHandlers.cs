@@ -219,9 +219,8 @@ namespace Mzinga.Viewer
 
                 if (files is not null && files.Count > 0 && files[0].CanOpenRead)
                 {
-                    string fileName = files[0].Name.Trim();
                     using Stream inputStream = await files[0].OpenReadAsync();
-                    gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
+                    gr = Path.GetExtension(files[0].Path.ToString()).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, files[0].Path) : GameRecording.LoadPGN(inputStream, files[0].Path);
                 }
             }
             catch (Exception ex)
@@ -236,7 +235,9 @@ namespace Mzinga.Viewer
 
         private static async Task ShowSaveGameAsync(SaveGameMessage message)
         {
-            string fileName = null;
+            Uri oldFileUri = message.GameRecording.FileUri;
+            Uri newFileUri = null;
+
             try
             {
                 var options = new FilePickerSaveOptions()
@@ -244,8 +245,8 @@ namespace Mzinga.Viewer
                     Title = "Save Game",
                     DefaultExtension = ".pgn",
                     FileTypeChoices = GetFilters(false),
-                    SuggestedStartLocation = !string.IsNullOrEmpty(message.GameRecording.FileName) ? await MainWindow.StorageProvider.TryGetFolderFromPath(new Uri(message.GameRecording.FileName)) : null,
-                    SuggestedFileName = !string.IsNullOrEmpty(message.GameRecording.FileName) ? Path.GetFileNameWithoutExtension(message.GameRecording.FileName) : null,
+                    SuggestedStartLocation = oldFileUri is null ? null : await MainWindow.StorageProvider.TryGetFolderFromPath(oldFileUri),
+                    SuggestedFileName = oldFileUri is null ? null : (await MainWindow.StorageProvider.TryGetFileFromPath(oldFileUri))?.Name,
                     ShowOverwritePrompt = true,
                 };
 
@@ -253,9 +254,9 @@ namespace Mzinga.Viewer
 
                 if (file is not null && file.CanOpenWrite)
                 {
-                    fileName = file.Name.Trim();
                     using Stream outputStream = await file.OpenWriteAsync();
                     message.GameRecording.SavePGN(outputStream);
+                    newFileUri = file.Path;
                 }
             }
             catch (Exception ex)
@@ -264,7 +265,7 @@ namespace Mzinga.Viewer
             }
             finally
             {
-                message.Process(fileName);
+                message.Process(newFileUri);
             }
         }
 

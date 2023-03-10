@@ -20,7 +20,7 @@ namespace Mzinga.Viewer
 
         public GameRecordingSource GameRecordingSource { get; private set; }
 
-        public string FileName { get; set; } = null;
+        public Uri FileUri { get; set; } = null;
 
         public GameRecording(Board board, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
         {
@@ -105,7 +105,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        public static GameRecording LoadPGN(Stream inputStream, string fileName = null)
+        public static GameRecording LoadPGN(Stream inputStream, Uri fileUri = null)
         {
             if (inputStream is null)
             {
@@ -204,7 +204,7 @@ namespace Mzinga.Viewer
 
             return new GameRecording(board, GameRecordingSource.PGN, metadata)
             {
-                FileName = fileName?.Trim()
+                FileUri = fileUri
             };
         }
 
@@ -219,7 +219,7 @@ namespace Mzinga.Viewer
             return new KeyValuePair<string, string>(key, value);
         }
 
-        public static GameRecording LoadSGF(Stream inputStream, string fileName = null)
+        public static GameRecording LoadSGF(Stream inputStream, Uri fileUri = null)
         {
             if (inputStream is null)
             {
@@ -363,18 +363,18 @@ namespace Mzinga.Viewer
 
                             lastMoveCompleted = false;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             moveList.Add(Move.PassString);
 
                             lastMoveCompleted = false;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             lastMoveCompleted = true;
                             whiteTurn = !whiteTurn;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
                         }
@@ -421,7 +421,7 @@ namespace Mzinga.Viewer
 
             return new GameRecording(board, GameRecordingSource.SGF, metadata)
             {
-                FileName = fileName?.Trim()
+                FileUri = fileUri
             };
         }
 
