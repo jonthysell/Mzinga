@@ -6,7 +6,7 @@
 * Viewer: Minor rendering improvements
 * Viewer: Updated New Game Window
 * Viewer: Updated Avalonia to 11.0.0-preview5
-* Viewer: Updated Markdown.Avalonia to 11.0.0-a4
+* Viewer: Updated Markdown.Avalonia to 11.0.0-a9
 
 ## v0.13.2 ##
 
