@@ -333,6 +333,11 @@
                              SelectionChanged="BoardHistoryListBox_SelectionChanged"
                              SelectionMode="Single"
                              VerticalAlignment="Stretch">
+                      <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <StackPanel />
+                        </ItemsPanelTemplate>
+                      </ListBox.ItemsPanel>
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="IsHitTestVisible"
