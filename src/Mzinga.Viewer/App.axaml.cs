@@ -29,14 +29,9 @@ namespace Mzinga.Viewer
 
         public string ViewerConfigPath { get; private set; }
 
-        public static IStyle FluentLight { get; private set; }
-        public static IStyle FluentDark { get; private set; }
-
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
-            FluentLight = AvaloniaXamlLoader.Load(new Uri("avares://Avalonia.Themes.Fluent/FluentLight.xaml")) as IStyle;
-            FluentDark = AvaloniaXamlLoader.Load(new Uri("avares://Avalonia.Themes.Fluent/FluentDark.xaml")) as IStyle;
         }
 
         public override void OnFrameworkInitializationCompleted()
@@ -69,7 +64,7 @@ namespace Mzinga.Viewer
             AppViewModel.Init(parameters);
             DataContext = AppVM;
 
-            Current.Styles[0] = AppVM.ViewerConfig.VisualTheme == VisualTheme.Dark ? FluentDark : FluentLight;
+            Current.RequestedThemeVariant = AppVM.ViewerConfig.VisualTheme == VisualTheme.Dark ? ThemeVariant.Dark : ThemeVariant.Light;
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {

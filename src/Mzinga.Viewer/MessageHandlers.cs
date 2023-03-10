@@ -219,7 +219,7 @@ namespace Mzinga.Viewer
 
                 if (files is not null && files.Count > 0 && files[0].CanOpenRead)
                 {
-                    string fileName = files[0].TryGetUri(out var uri) ? uri.LocalPath : files[0].Name.Trim();
+                    string fileName = files[0].Name.Trim();
                     using Stream inputStream = await files[0].OpenReadAsync();
                     gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
                 }
@@ -244,7 +244,7 @@ namespace Mzinga.Viewer
                     Title = "Save Game",
                     DefaultExtension = ".pgn",
                     FileTypeChoices = GetFilters(false),
-                    SuggestedStartLocation = !string.IsNullOrEmpty(message.GameRecording.FileName) ? new BclStorageFolder(Path.GetDirectoryName(message.GameRecording.FileName)) : null,
+                    SuggestedStartLocation = !string.IsNullOrEmpty(message.GameRecording.FileName) ? await MainWindow.StorageProvider.TryGetFolderFromPath(new Uri(message.GameRecording.FileName)) : null,
                     SuggestedFileName = !string.IsNullOrEmpty(message.GameRecording.FileName) ? Path.GetFileNameWithoutExtension(message.GameRecording.FileName) : null,
                     ShowOverwritePrompt = true,
                 };
@@ -253,7 +253,7 @@ namespace Mzinga.Viewer
 
                 if (file is not null && file.CanOpenWrite)
                 {
-                    fileName = file.TryGetUri(out var uri) ? uri.LocalPath : file.Name.Trim();
+                    fileName = file.Name.Trim();
                     using Stream outputStream = await file.OpenWriteAsync();
                     message.GameRecording.SavePGN(outputStream);
                 }

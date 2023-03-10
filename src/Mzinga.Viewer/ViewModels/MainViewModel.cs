@@ -10,6 +10,7 @@ using Mzinga.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Avalonia.Styling;
 
 namespace Mzinga.Viewer.ViewModels
 {

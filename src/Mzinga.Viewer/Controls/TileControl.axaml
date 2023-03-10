@@ -10,6 +10,7 @@
                      x:Key="TileControlDisabledBrush" />
     <ControlTheme TargetType="{x:Type local:TileControl}"
                   x:Key="{x:Type local:TileControl}">
+      <Setter Property="Background" Value="White" />
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid Height="{TemplateBinding Height}"

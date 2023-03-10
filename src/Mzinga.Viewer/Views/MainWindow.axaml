@@ -330,8 +330,7 @@
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
                              SelectionChanged="BoardHistoryListBox_SelectionChanged"
                              SelectionMode="Single"
-                             VerticalAlignment="Stretch"
-                             VirtualizationMode="None">
+                             VerticalAlignment="Stretch">
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="IsHitTestVisible"
