@@ -58,19 +58,27 @@ namespace Mzinga.Viewer
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Avalonia.Threading.Dispatcher.UIThread.Post(action); },
                 TextToClipboard = TextToClipboard,
+                UpdateVisualTheme = UpdateVisualTheme,
                 InternalEngineConfig = InternalEngineConfig, // Should be the unmodified defaults
             };
 
             AppViewModel.Init(parameters);
             DataContext = AppVM;
 
-            Current.RequestedThemeVariant = AppVM.ViewerConfig.VisualTheme == VisualTheme.Dark ? ThemeVariant.Dark : ThemeVariant.Light;
+            UpdateVisualTheme(AppVM.ViewerConfig.VisualTheme);
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var window = new Views.MainWindow();
                 desktop.MainWindow = window;
             }
+        }
+
+        private void UpdateVisualTheme(VisualTheme visualTheme)
+        {
+            AppVM.DoOnUIThread(() => {
+                Current.RequestedThemeVariant = visualTheme == VisualTheme.Dark ? ThemeVariant.Dark : ThemeVariant.Light;
+            });
         }
 
         private void Desktop_Exit(object sender, ControlledApplicationLifetimeExitEventArgs e)

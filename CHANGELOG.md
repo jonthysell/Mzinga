@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Switch between Light and Dark themes without restarting the app
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Minor rendering improvements
 * Viewer: Switched to CompiledBindings for improved performance

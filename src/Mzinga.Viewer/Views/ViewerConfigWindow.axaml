@@ -101,8 +101,6 @@
                                                  Content="Dark"
                                                  GroupName="VisualTheme"
                                                  IsChecked="{Binding Path=VisualTheme, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Dark}" />
-                                    <Label Content="Note: Restart viewer to change theme."
-                                           HorizontalAlignment="Center" />
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel Classes="GroupBox">

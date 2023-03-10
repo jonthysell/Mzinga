@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -364,6 +365,7 @@ namespace Mzinga.Viewer.ViewModels
                     {
                         Accepted = false;
                         RequestClose?.Invoke(this, null);
+                        AppVM.UpdateVisualTheme(OriginalConfig.VisualTheme);
                     }
                     catch (Exception ex)
                     {
@@ -421,6 +423,8 @@ namespace Mzinga.Viewer.ViewModels
 
         public ViewerConfig Config { get; private set; }
 
+        public ViewerConfig OriginalConfig { get; private set; }
+
         public bool Accepted { get; private set; }
 
         public event EventHandler RequestClose;
@@ -429,9 +433,22 @@ namespace Mzinga.Viewer.ViewModels
 
         public ViewerConfigViewModel(ViewerConfig config, Action<ViewerConfig> callback = null)
         {
+            OriginalConfig = config?.Clone() ?? throw new ArgumentNullException(nameof(config));
             Config =  config?.Clone() ?? throw new ArgumentNullException(nameof(config));
             Accepted = false;
             Callback = callback;
+
+            PropertyChanged += ViewerConfigViewModel_PropertyChanged;
+        }
+
+        private void ViewerConfigViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(VisualTheme):
+                    AppVM.UpdateVisualTheme(VisualTheme);
+                    break;
+            }
         }
 
         public void ProcessClose()

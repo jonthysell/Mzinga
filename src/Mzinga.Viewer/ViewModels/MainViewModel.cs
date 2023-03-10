@@ -1294,6 +1294,7 @@ namespace Mzinga.Viewer.ViewModels
                     });
                     break;
                 case nameof(ViewerConfig):
+                    AppVM.UpdateVisualTheme(ViewerConfig.VisualTheme);
                     AppVM.DoOnUIThread(() =>
                     {
                         OnPropertyChanged(nameof(ShowBoardHistory));
