@@ -3,6 +3,7 @@
 ## next ##
 
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
+* Viewer: Fixed issues when loading newer BoardSpace SGF files
 
 ## v0.13.2 ##
 

@@ -363,18 +363,18 @@ namespace Mzinga.Viewer
 
                             lastMoveCompleted = false;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             moveList.Add(Move.PassString);
 
                             lastMoveCompleted = false;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             lastMoveCompleted = true;
                             whiteTurn = !whiteTurn;
                         }
-                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\]")).Success)
+                        else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
                         {
                             rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
                         }
