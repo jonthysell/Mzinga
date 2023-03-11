@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Core: Fixed issue with parsing moves next to pieces not in play
 * Viewer: Switch between Light and Dark themes without restarting the app
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Fixed issues when loading newer BoardSpace SGF files
