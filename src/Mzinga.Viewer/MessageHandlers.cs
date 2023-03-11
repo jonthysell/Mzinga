@@ -220,7 +220,7 @@ namespace Mzinga.Viewer
                 if (files is not null && files.Count > 0 && files[0].CanOpenRead)
                 {
                     using Stream inputStream = await files[0].OpenReadAsync();
-                    gr = Path.GetExtension(files[0].Path.ToString()).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, files[0].Path) : GameRecording.LoadPGN(inputStream, files[0].Path);
+                    gr = GameRecording.Load(inputStream, files[0].Path);
                 }
             }
             catch (Exception ex)
