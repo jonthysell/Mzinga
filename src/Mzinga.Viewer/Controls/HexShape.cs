@@ -52,7 +52,7 @@ namespace Mzinga.Viewer
                 IsClosed = true
             };
 
-            double hexRadius = HexSize - 0.75 * StrokeThickness;
+            double hexRadius = HexSize - StrokeThickness;
 
             for (int i = 0; i <= 6; i++)
             {

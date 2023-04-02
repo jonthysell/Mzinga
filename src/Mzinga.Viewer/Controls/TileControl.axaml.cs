@@ -23,7 +23,7 @@ namespace Mzinga.Viewer
 {
     public class TileControl : TemplatedControl
     {
-        public static readonly StyledProperty<PieceName> PieceNameProperty = AvaloniaProperty.Register<TileControl, PieceName>(nameof(PieceName));
+        public static readonly StyledProperty<PieceName> PieceNameProperty = AvaloniaProperty.Register<TileControl, PieceName>(nameof(PieceName), PieceName.INVALID);
 
         public PieceName PieceName
         {
@@ -93,6 +93,20 @@ namespace Mzinga.Viewer
             }
         }
 
+        public static readonly StyledProperty<bool> UseSplitBackgroundProperty = AvaloniaProperty.Register<TileControl, bool>(nameof(UseSplitBackground));
+
+        public bool UseSplitBackground
+        {
+            get
+            {
+                return GetValue(UseSplitBackgroundProperty);
+            }
+            set
+            {
+                SetValue(UseSplitBackgroundProperty, value);
+            }
+        }
+
         public static readonly StyledProperty<bool> AddPieceNumbersProperty = AvaloniaProperty.Register<TileControl, bool>(nameof(AddPieceNumbers));
 
         public bool AddPieceNumbers
@@ -107,19 +121,41 @@ namespace Mzinga.Viewer
             }
         }
 
+        public static readonly StyledProperty<string> TextProperty = AvaloniaProperty.Register<TileControl, string>(nameof(Text));
+
+        public string Text
+        {
+            get
+            {
+                return GetValue(TextProperty);
+            }
+            set
+            {
+                SetValue(TextProperty, value);
+            }
+        }
+
         public static readonly ISolidColorBrush TileControlStrokeBrush;
 
         public static readonly ISolidColorBrush TileControlDisabledBrush;
+
+        public static readonly IBrush SplitBackgroundPointyTopBrush;
+
+        public static readonly IBrush SplitBackgroundFlatTopBrush;
 
         static TileControl()
         {
             PieceNameProperty.Changed.AddClassHandler<TileControl>(PieceNameChanged);
             HexSizeProperty.Changed.AddClassHandler<TileControl>(HexSizeChanged);
+            HexOrientationProperty.Changed.AddClassHandler<TileControl>(HexOrientationChanged);
             UseColoredPiecesProperty.Changed.AddClassHandler<TileControl>(UseColoredPiecesChanged);
+            UseSplitBackgroundProperty.Changed.AddClassHandler<TileControl>(UseSplitBackgroundChanged);
             IsEnabledProperty.Changed.AddClassHandler<TileControl>(IsEnabledChanged);
 
             TileControlStrokeBrush = App.Current.FindResource("TileControlStrokeBrush") as ISolidColorBrush;
             TileControlDisabledBrush = App.Current.FindResource("TileControlDisabledBrush") as ISolidColorBrush;
+            SplitBackgroundPointyTopBrush = App.Current.FindResource("SplitBackgroundPointyTopBrush") as IBrush;
+            SplitBackgroundFlatTopBrush = App.Current.FindResource("SplitBackgroundFlatTopBrush") as IBrush;
         }
 
         private static void PieceNameChanged(object sender, AvaloniaPropertyChangedEventArgs e)
@@ -140,11 +176,27 @@ namespace Mzinga.Viewer
             }
         }
 
+        private static void HexOrientationChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (sender is TileControl tc)
+            {
+                tc.Background = tc.GetBackgroundBrush();
+            }
+        }
+
         private static void UseColoredPiecesChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
             if (sender is TileControl tc)
             {
                 tc.Foreground = tc.GetForegroundBrush();
+            }
+        }
+
+        private static void UseSplitBackgroundChanged(object sender, AvaloniaPropertyChangedEventArgs e)
+        {
+            if (sender is TileControl tc)
+            {
+                tc.Background = tc.GetBackgroundBrush();
             }
         }
 
@@ -194,7 +246,7 @@ namespace Mzinga.Viewer
 
             // Bind the text piece body
             var bugTextGrid = e.NameScope.Find("PART_BugTextGrid") as Grid;
-            bugTextGrid.Bind(IsVisibleProperty, this.GetObservable(PieceStyleProperty).Select(pieceStyle => pieceStyle == PieceStyle.Text));
+            bugTextGrid.Bind(IsVisibleProperty, this.GetObservable(PieceStyleProperty).Select(pieceStyle => pieceStyle == PieceStyle.Text || !string.IsNullOrEmpty(Text)));
 
             var bugTextTextBlock = e.NameScope.Find("PART_BugTextTextBlock") as TextBlock;
             bugTextTextBlock.Bind(TextBlock.FontSizeProperty, this.GetObservable(HexSizeProperty).Select(hexSize => hexSize * 0.75));
@@ -212,6 +264,11 @@ namespace Mzinga.Viewer
 
         private IBrush GetBackgroundBrush()
         {
+            if (UseSplitBackground)
+            {
+                return HexOrientation == HexOrientation.PointyTop ? SplitBackgroundPointyTopBrush : SplitBackgroundFlatTopBrush;
+            }
+
             return Enums.GetColor(PieceName) == PlayerColor.White ? Brushes.White : Brushes.Black;
         }
 
@@ -233,6 +290,11 @@ namespace Mzinga.Viewer
 
         private string GetBugText()
         {
+            if (!string.IsNullOrEmpty(Text))
+            {
+                return Text;
+            }
+
             string text = PieceName.ToString().Substring(1);
             return AddPieceNumbers ? text : text.TrimEnd('1', '2', '3');
         }

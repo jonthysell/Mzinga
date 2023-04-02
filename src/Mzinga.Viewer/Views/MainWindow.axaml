@@ -11,13 +11,14 @@
         d:DesignWidth="800"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.MainWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:MainViewModel"
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:CompileBindings="True"
-        x:DataType="vm:MainViewModel">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <NativeMenu.Menu>
         <NativeMenu>
             <NativeMenuItem Header="File">
@@ -333,11 +334,11 @@
                              SelectionChanged="BoardHistoryListBox_SelectionChanged"
                              SelectionMode="Single"
                              VerticalAlignment="Stretch">
-                      <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                          <StackPanel />
-                        </ItemsPanelTemplate>
-                      </ListBox.ItemsPanel>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="IsHitTestVisible"

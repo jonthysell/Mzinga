@@ -2,6 +2,7 @@
 
 ## next ##
 
+* New icon
 * Core: Fixed issue with parsing moves next to pieces not in play
 * Viewer: Switch between Light and Dark themes without restarting the app
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running

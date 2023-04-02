@@ -9,23 +9,24 @@
         d:DesignWidth="480"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.ConfirmationWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:ConfirmationViewModel"
         xmlns="https://github.com/avaloniaui"
         xmlns:ctxt="clr-namespace:ColorTextBlock.Avalonia;assembly=ColorTextBlock.Avalonia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:CompileBindings="True"
-        x:DataType="vm:ConfirmationViewModel">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Panel>
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">
-            <Image Classes="MzingaIcon"
-                   Grid.Column="0"
-                   Grid.Row="0"
-                   Grid.RowSpan="2" />
+            <local:TileControl Classes="MzingaIcon"
+                               Grid.Column="0"
+                               Grid.Row="0"
+                               Grid.RowSpan="2" />
             <StackPanel Classes="DialogMain"
                         Grid.Column="1"
                         Grid.Row="0">

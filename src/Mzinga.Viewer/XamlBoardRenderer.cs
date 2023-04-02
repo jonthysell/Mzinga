@@ -614,6 +614,7 @@ namespace Mzinga.Viewer
                 VerticalAlignment = VerticalAlignment.Center,
                 FontFamily = new FontFamily("Arial Black"),
                 FontSize = size * 0.75,
+                FontWeight = FontWeight.Bold,
                 Foreground = disabled ? ColorUtils.MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
             };
 

@@ -13,7 +13,7 @@ namespace Mzinga.Viewer
 {
     public class BugShape : Shape
     {
-        public static readonly StyledProperty<BugType> BugTypeProperty = AvaloniaProperty.Register<BugShape, BugType>(nameof(BugType));
+        public static readonly StyledProperty<BugType> BugTypeProperty = AvaloniaProperty.Register<BugShape, BugType>(nameof(BugType), BugType.INVALID);
 
         public BugType BugType
         {
