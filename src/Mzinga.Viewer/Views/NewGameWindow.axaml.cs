@@ -9,7 +9,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class NewGameWindow : Window
+    public partial class NewGameWindow : Window
     {
         public NewGameViewModel VM
         {
@@ -27,14 +27,6 @@ namespace Mzinga.Viewer.Views
         public NewGameWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

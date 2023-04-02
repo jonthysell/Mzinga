@@ -16,7 +16,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class MainWindow : Window
+    public partial class MainWindow : Window
     {
         public MainViewModel VM
         {
@@ -31,15 +31,6 @@ namespace Mzinga.Viewer.Views
             }
         }
 
-        public Canvas BoardCanvas => _boardCanvas ??= this.FindControl<Canvas>(nameof(BoardCanvas));
-        private Canvas _boardCanvas;
-
-        public StackPanel WhiteHandStackPanel => _whiteHandStackPanel ??= this.FindControl<StackPanel>(nameof(WhiteHandStackPanel));
-        private StackPanel _whiteHandStackPanel;
-
-        public StackPanel BlackHandStackPanel => _blackHandStackPanel ??= this.FindControl<StackPanel>(nameof(BlackHandStackPanel));
-        private StackPanel _blackHandStackPanel;
-
         public XamlBoardRenderer BoardRenderer { get; private set; }
 
         public MainWindow()
@@ -47,18 +38,11 @@ namespace Mzinga.Viewer.Views
             VM = AppViewModel.Instance.MainVM;
 
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
+
             BoardRenderer = new XamlBoardRenderer(VM, BoardCanvas, WhiteHandStackPanel, BlackHandStackPanel);
 
             Opened += MainWindow_Opened;
             Closing += MainWindow_Closing;
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
 
         private void MainWindow_Opened(object sender, EventArgs e)

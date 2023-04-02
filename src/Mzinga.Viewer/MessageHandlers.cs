@@ -217,7 +217,7 @@ namespace Mzinga.Viewer
 
                 var files = await MainWindow.StorageProvider.OpenFilePickerAsync(options);
 
-                if (files is not null && files.Count > 0 && files[0].CanOpenRead)
+                if (files is not null && files.Count > 0)
                 {
                     using Stream inputStream = await files[0].OpenReadAsync();
                     gr = GameRecording.Load(inputStream, files[0].Path);
@@ -245,14 +245,14 @@ namespace Mzinga.Viewer
                     Title = "Save Game",
                     DefaultExtension = ".pgn",
                     FileTypeChoices = GetFilters(false),
-                    SuggestedStartLocation = oldFileUri is null ? null : await MainWindow.StorageProvider.TryGetFolderFromPath(oldFileUri),
-                    SuggestedFileName = oldFileUri is null ? null : (await MainWindow.StorageProvider.TryGetFileFromPath(oldFileUri))?.Name,
+                    SuggestedStartLocation = oldFileUri is null ? null : await MainWindow.StorageProvider.TryGetFolderFromPathAsync(oldFileUri),
+                    SuggestedFileName = oldFileUri is null ? null : (await MainWindow.StorageProvider.TryGetFileFromPathAsync(oldFileUri))?.Name,
                     ShowOverwritePrompt = true,
                 };
 
                 var file = await MainWindow.StorageProvider.SaveFilePickerAsync(options);
 
-                if (file is not null && file.CanOpenWrite)
+                if (file is not null)
                 {
                     using Stream outputStream = await file.OpenWriteAsync();
                     message.GameRecording.SavePGN(outputStream);
