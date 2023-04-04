@@ -40,7 +40,9 @@
                                                Grid.Row="0"
                                                HexOrientation="FlatTop"
                                                HexSize="32"
+                                               Name="WhitePlayerTile"
                                                PieceName="wQ"
+                                               PointerReleased="ToggleOption_Click"
                                                UseColoredPieces="True" />
                             <StackPanel>
                                 <RadioButton Command="{Binding ToggleRadioButton}"
@@ -66,7 +68,9 @@
                                                Grid.Row="1"
                                                HexOrientation="FlatTop"
                                                HexSize="32"
+                                               Name="BlackPlayerTile"
                                                PieceName="bQ"
+                                               PointerReleased="ToggleOption_Click"
                                                UseColoredPieces="True" />
                             <StackPanel>
                                 <RadioButton Command="{Binding ToggleRadioButton}"
@@ -95,7 +99,10 @@
                     <StackPanel HorizontalAlignment="Center"
                                 Orientation="Horizontal">
                         <StackPanel Margin="15,0">
-                            <Canvas Height="54"
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="MosquitoCanvas"
+                                    PointerReleased="ToggleOption_Click"
                                     Width="54">
                                 <local:TileControl Canvas.Left="6"
                                                    Canvas.Top="6"
@@ -117,7 +124,10 @@
                                       IsEnabled="{Binding EnableMosquito}" />
                         </StackPanel>
                         <StackPanel Margin="15,0">
-                            <Canvas Height="54"
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="LadybugCanvas"
+                                    PointerReleased="ToggleOption_Click"
                                     Width="54">
                                 <local:TileControl Canvas.Left="6"
                                                    Canvas.Top="6"
@@ -139,7 +149,10 @@
                                       IsEnabled="{Binding EnableLadybug}" />
                         </StackPanel>
                         <StackPanel Margin="15,0">
-                            <Canvas Height="54"
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="PillbugCanvas"
+                                    PointerReleased="ToggleOption_Click"
                                     Width="54">
                                 <local:TileControl Canvas.Left="6"
                                                    Canvas.Top="6"

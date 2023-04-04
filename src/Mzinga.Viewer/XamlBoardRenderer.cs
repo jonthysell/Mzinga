@@ -637,7 +637,6 @@ namespace Mzinga.Viewer
                 Height = size * 2,
                 Width = size * 2,
                 Margin = new Thickness(PieceCanvasMargin),
-                Name = pieceName.ToString()
             };
 
             var pieceTile = new TileControl()
@@ -667,12 +666,11 @@ namespace Mzinga.Viewer
 
         private void PieceCanvas_Click(object sender, PointerReleasedEventArgs e)
         {
-            if (sender is Canvas pieceCanvas)
+            if (sender is Canvas pieceCanvas && pieceCanvas.Children.Count > 0 && pieceCanvas.Children[0] is TileControl pieceTile)
             {
                 if (e.InitialPressMouseButton == MouseButton.Left)
                 {
-                    PieceName clickedPiece = Enum.Parse<PieceName>(pieceCanvas.Name);
-                    MainViewModel.TryPieceClick(clickedPiece);
+                    MainViewModel.TryPieceClick(pieceTile.PieceName);
                     e.Handled = true;
                 }
             }
