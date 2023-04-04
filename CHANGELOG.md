@@ -6,6 +6,7 @@
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Fixed issues when loading newer BoardSpace SGF files
 * Viewer: Added detection of PGN and SGF files without filename extensions
+* Viewer: Fixed issue with overwriting existing PGN files
 
 ## v0.13.2 ##
 

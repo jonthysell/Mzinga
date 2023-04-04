@@ -252,7 +252,7 @@ namespace Mzinga.Viewer
 
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    using Stream outputStream = File.OpenWrite(fileName);
+                    using Stream outputStream = File.Create(fileName);
                     message.GameRecording.SavePGN(outputStream);
                 }
             }
