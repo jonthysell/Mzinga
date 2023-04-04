@@ -2,18 +2,23 @@
 
 ## next ##
 
-* Core: Fixed issue with parsing moves next to pieces not in play
-* Viewer: Fixed "crash" when exiting while Internal Engine is still running
-* Viewer: Fixed issues when loading newer BoardSpace SGF files
-* Viewer: Added detection of PGN and SGF files without filename extensions
-* Viewer: Fixed issue with overwriting existing PGN files
-* Viewer: Fixed issue with move commentary not updating
 * New icon
 * Viewer: Minor rendering improvements
 * Viewer: Switched to CompiledBindings for improved performance
 * Viewer: Updated New Game Window
 * Viewer: Updated Avalonia to 11.0.0-preview6
 * Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 11.0.0-b1
+
+## v0.13.3 ##
+
+* Core: Fixed issue with parsing moves next to pieces not in play
+* Viewer: Fixed "crash" when exiting while Internal Engine is still running
+* Viewer: Fixed issues when loading newer BoardSpace SGF files
+* Viewer: Added detection of PGN and SGF files without filename extensions
+* Viewer: Fixed issue with overwriting existing PGN files
+* Viewer: Fixed issue with move commentary not updating
+* Viewer: Updated Avalonia to 0.10.19
+* Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 0.10.13
 
 ## v0.13.2 ##
 
