@@ -581,6 +581,7 @@ namespace Mzinga.Viewer.ViewModels
                 if (AppVM.EngineWrapper.CurrentGameSettings is not null)
                 {
                     AppVM.EngineWrapper.CurrentGameSettings?.Metadata.SetMoveCommentary(BoardHistory.CurrentMoveIndex + 1, value);
+                    OnPropertyChanged(nameof(CurrentMoveCommentary));
                 }
             }
         }
@@ -1343,6 +1344,7 @@ namespace Mzinga.Viewer.ViewModels
                 try
                 {
                     AppVM.EngineWrapper.MoveToMoveNumber(BoardHistory.CurrentMoveIndex + 1);
+                    OnPropertyChanged(nameof(CurrentMoveCommentary));
                 }
                 catch (Exception ex)
                 {

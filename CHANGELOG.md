@@ -7,6 +7,7 @@
 * Viewer: Fixed issues when loading newer BoardSpace SGF files
 * Viewer: Added detection of PGN and SGF files without filename extensions
 * Viewer: Fixed issue with overwriting existing PGN files
+* Viewer: Fixed issue with move commentary not updating
 
 ## v0.13.2 ##
 
