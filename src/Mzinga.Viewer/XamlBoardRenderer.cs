@@ -75,21 +75,12 @@ namespace Mzinga.Viewer
         private const double BaseStackShiftLevel = 0.1;
         private const double RaisedStackShiftLevel = 0.5;
 
-        private const double GraphicalBugSizeRatio = 1.25;
-
         private Board LastBoard;
-
-        private readonly SolidColorBrush WhiteBrush;
-        private readonly SolidColorBrush BlackBrush;
-
-        private readonly SolidColorBrush PieceOutlineBrush;
 
         private readonly SolidColorBrush SelectedMoveEdgeBrush;
         private readonly SolidColorBrush SelectedMoveBodyBrush;
 
         private readonly SolidColorBrush LastMoveEdgeBrush;
-
-        private readonly SolidColorBrush DisabledPieceBrush;
 
         public XamlBoardRenderer(MainViewModel vm, Canvas boardCanvas, StackPanel whiteHandStackPanel, StackPanel blackHandStackPanel)
         {
@@ -99,10 +90,6 @@ namespace Mzinga.Viewer
             BlackHandStackPanel = blackHandStackPanel ?? throw new ArgumentNullException(nameof(blackHandStackPanel));
 
             // Init brushes
-            WhiteBrush = new SolidColorBrush(Colors.White);
-            BlackBrush = new SolidColorBrush(Colors.Black);
-
-            PieceOutlineBrush = new SolidColorBrush(Color.Parse("#333333"));
 
             SelectedMoveEdgeBrush = new SolidColorBrush(Colors.Orange);
             SelectedMoveBodyBrush = new SolidColorBrush(Colors.Aqua)
@@ -111,8 +98,6 @@ namespace Mzinga.Viewer
             };
 
             LastMoveEdgeBrush = new SolidColorBrush(Colors.SeaGreen);
-
-            DisabledPieceBrush = new SolidColorBrush(Colors.LightGray);
 
             // Bind board updates to VM
             if (VM is not null)
@@ -294,22 +279,29 @@ namespace Mzinga.Viewer
 
                             Point center = GetPoint(position, BoardPieceSize, hexOrientation, true);
 
-                            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
-
-                            Shape hex = GetHex(center, BoardPieceSize, hexType, hexOrientation);
-                            hex.ZIndex = z;
-                            BoardCanvas.Children.Add(hex);
-
                             bool disabled = MainViewModel.ViewerConfig.DisablePiecesInPlayWithNoMoves && !(validMoves is not null && validMoves.Any(m => m.PieceName == pieceName));
 
-                            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, BoardPieceSize, pieceName, disabled) : GetPieceGraphics(center, BoardPieceSize, pieceName, disabled);
-                            hexText.ZIndex = z + 1;
-                            BoardCanvas.Children.Add(hexText);
+                            var pieceTile = new TileControl()
+                            {
+                                PieceName = pieceName,
+                                HexOrientation = hexOrientation,
+                                HexSize = BoardPieceSize,
+                                PieceStyle = MainViewModel.ViewerConfig.PieceStyle,
+                                UseColoredPieces = MainViewModel.ViewerConfig.PieceColors,
+                                AddPieceNumbers = MainViewModel.ViewerConfig.AddPieceNumbers,
+                                IsEnabled = !disabled,
+                                ZIndex = z,
+                            };
+
+                            Canvas.SetLeft(pieceTile, center.X - BoardPieceSize);
+                            Canvas.SetTop(pieceTile, center.Y - BoardPieceSize);
+
+                            BoardCanvas.Children.Add(pieceTile);
 
                             minPoint = Min(center, BoardPieceSize, minPoint);
                             maxPoint = Max(center, BoardPieceSize, maxPoint);
                         }
-                        z += 2;
+                        z++;
                     }
                 }
 
@@ -566,14 +558,6 @@ namespace Mzinga.Viewer
 
             switch (hexType)
             {
-                case HexType.WhitePiece:
-                    hex.Fill = WhiteBrush;
-                    hex.Stroke = PieceOutlineBrush;
-                    break;
-                case HexType.BlackPiece:
-                    hex.Fill = BlackBrush;
-                    hex.Stroke = PieceOutlineBrush;
-                    break;
                 case HexType.ValidMove:
                     hex.Fill = SelectedMoveBodyBrush;
                     hex.Stroke = SelectedMoveBodyBrush;
@@ -596,124 +580,8 @@ namespace Mzinga.Viewer
             return hex;
         }
 
-        private Border GetPieceText(Point center, double size, PieceName pieceName, bool disabled)
-        {
-            if (size <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
-
-            var bugBrush = MainViewModel.ViewerConfig.PieceColors ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
-
-            // Create text
-            string text = pieceName.ToString().Substring(1);
-            TextBlock bugText = new TextBlock
-            {
-                Text = MainViewModel.ViewerConfig.AddPieceNumbers ? text : text.TrimEnd('1', '2', '3'),
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                FontFamily = new FontFamily("Arial Black"),
-                FontSize = size * 0.75,
-                FontWeight = FontWeight.Bold,
-                Foreground = disabled ? ColorUtils.MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
-            };
-
-            Canvas.SetLeft(bugText, center.X - (bugText.Text.Length * (bugText.FontSize / 3.0)));
-            Canvas.SetTop(bugText, center.Y - (bugText.FontSize / 2.0));
-
-            Border b = new Border
-            {
-                Height = size * 2.0,
-                Width = size * 2.0,
-                Child = bugText
-            };
-
-            Canvas.SetLeft(b, center.X - (b.Width / 2.0));
-            Canvas.SetTop(b, center.Y - (b.Height / 2.0));
-
-            return b;
-        }
-
-        private Border GetPieceGraphics(Point center, double size, PieceName pieceName, bool disabled)
-        {
-            if (size <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
-
-            var bugBrush = MainViewModel.ViewerConfig.PieceColors ? ColorUtils.BugColorBrushes[(int)Enums.GetBugType(pieceName)] : (Enums.GetColor(pieceName) == PlayerColor.White ? BlackBrush : WhiteBrush);
-
-            // Create bug
-            var bugShape = new BugShape()
-            {
-                BugType = Enums.GetBugType(pieceName),
-                Stretch = Stretch.Uniform,
-                Fill = disabled ? ColorUtils.MixSolidColorBrushes(bugBrush, DisabledPieceBrush) : bugBrush,
-                VerticalAlignment = VerticalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center,
-            };
-
-            Grid safeGrid = new Grid() { Height = size * 2.0, Width = size * 2.0 };
-
-            Grid bugGrid = new Grid() { Height = size * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio, Width = size * 2.0 * Math.Sin(Math.PI / 6) * GraphicalBugSizeRatio };
-            bugGrid.Children.Add(bugShape);
-
-            safeGrid.Children.Add(bugGrid);
-
-            // Bug rotation
-            double rotateAngle = MainViewModel.ViewerConfig.HexOrientation == HexOrientation.PointyTop ? -90.0 : -60.0;
-
-            if (int.TryParse(pieceName.ToString().Last().ToString(), out int bugNum))
-            {
-                rotateAngle += (bugNum - 1) * 60.0;
-
-                if (MainViewModel.ViewerConfig.AddPieceNumbers)
-                {
-                    // Add bug number
-                    TextBlock bugText = new TextBlock
-                    {
-                        Text = bugNum.ToString(),
-                        HorizontalAlignment = HorizontalAlignment.Center,
-                        VerticalAlignment = VerticalAlignment.Center,
-                        FontFamily = new FontFamily("Arial Black"),
-                        FontSize = size * 0.5,
-                        Foreground = Enums.GetColor(pieceName) == PlayerColor.White ? WhiteBrush : BlackBrush,
-                    };
-
-                    Ellipse bugTextEllipse = new Ellipse()
-                    {
-                        HorizontalAlignment = bugText.HorizontalAlignment,
-                        VerticalAlignment = bugText.VerticalAlignment,
-                        Width = bugText.FontSize,
-                        Height = bugText.FontSize,
-                        Fill = bugShape.Fill,
-                    };
-
-                    safeGrid.Children.Add(bugTextEllipse);
-                    safeGrid.Children.Add(bugText);
-                }
-            }
-
-            bugGrid.RenderTransform = new RotateTransform(rotateAngle);
-            bugGrid.RenderTransformOrigin = RelativePoint.Center;
-
-            Border b = new Border
-            {
-                Height = size * 2.0,
-                Width = size * 2.0,
-                Child = safeGrid
-            };
-
-            Canvas.SetLeft(b, center.X - (b.Width / 2.0));
-            Canvas.SetTop(b, center.Y - (b.Height / 2.0));
-
-            return b;
-        }
-
         private enum HexType
         {
-            WhitePiece,
-            BlackPiece,
             ValidMove,
             SelectedPiece,
             SelectedMove,
