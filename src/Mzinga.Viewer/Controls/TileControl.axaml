@@ -79,6 +79,7 @@
                                  Width="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}"
                                  x:Name="PART_BugGraphicBugNumberEllipse" />
                         <TextBlock FontFamily="Arial Black"
+                                   FontWeight="Bold"
                                    Foreground="{TemplateBinding Background}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
