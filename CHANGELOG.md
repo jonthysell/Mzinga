@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.3 ##
 
 * Core: Fixed issue with parsing moves next to pieces not in play
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
