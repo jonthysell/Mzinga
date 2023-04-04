@@ -764,22 +764,26 @@ namespace Mzinga.Viewer
         {
             Point center = new Point(size, size);
 
-            HexType hexType = (Enums.GetColor(pieceName) == PlayerColor.White) ? HexType.WhitePiece : HexType.BlackPiece;
-
-            Shape hex = GetHex(center, size, hexType, hexOrientation);
-            var hexText = MainViewModel.ViewerConfig.PieceStyle == PieceStyle.Text ? GetPieceText(center, size, pieceName, disabled) : GetPieceGraphics(center, size, pieceName, disabled);
-
             Canvas pieceCanvas = new Canvas
             {
                 Height = size * 2,
                 Width = size * 2,
                 Margin = new Thickness(PieceCanvasMargin),
-                Background = new SolidColorBrush(Colors.Transparent),
                 Name = pieceName.ToString()
             };
 
-            pieceCanvas.Children.Add(hex);
-            pieceCanvas.Children.Add(hexText);
+            var pieceTile = new TileControl()
+            {
+                PieceName = pieceName,
+                HexOrientation = hexOrientation,
+                HexSize = size,
+                PieceStyle = MainViewModel.ViewerConfig.PieceStyle,
+                UseColoredPieces = MainViewModel.ViewerConfig.PieceColors,
+                AddPieceNumbers = MainViewModel.ViewerConfig.AddPieceNumbers,
+                IsEnabled = !disabled,
+            };
+
+            pieceCanvas.Children.Add(pieceTile);
 
             // Add highlight if the piece is selected
             if (MainViewModel.AppVM.EngineWrapper.TargetPiece == pieceName)
