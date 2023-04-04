@@ -1,5 +1,12 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Core: Fixed issue with parsing moves next to pieces not in play
+* Viewer: Fixed "crash" when exiting while Internal Engine is still running
+* Viewer: Fixed issues when loading newer BoardSpace SGF files
+* Viewer: Added detection of PGN and SGF files without filename extensions
+
 ## v0.13.2 ##
 
 * Viewer: Updated Avalonia to 0.10.18

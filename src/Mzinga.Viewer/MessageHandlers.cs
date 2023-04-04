@@ -219,7 +219,7 @@ namespace Mzinga.Viewer
                 {
                     string fileName = filenames[0].Trim();
                     using Stream inputStream = File.OpenRead(fileName);
-                    gr = Path.GetExtension(fileName).ToLower() == ".sgf" ? GameRecording.LoadSGF(inputStream, fileName) : GameRecording.LoadPGN(inputStream, fileName);
+                    gr = GameRecording.Load(inputStream, fileName);
                 }
             }
             catch (Exception ex)

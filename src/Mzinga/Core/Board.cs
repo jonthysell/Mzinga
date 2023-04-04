@@ -459,7 +459,14 @@ namespace Mzinga.Core
                     }
                     else
                     {
+                        // Moving piece on top of target piece
                         destination = targetPosition.GetAbove();
+                    }
+
+                    if (targetPosition.Stack < 0)
+                    {
+                        // Technically putting piece back in hand, move can be parsed but will surely be invalid if played
+                        destination = targetPosition;
                     }
                 }
 
