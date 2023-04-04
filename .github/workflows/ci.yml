@@ -34,7 +34,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build Solution
-      run: dotnet build -v diag --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
+      run: dotnet build -v d --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
 
     - name: Test Solution
       run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
@@ -53,10 +53,6 @@ jobs:
       matrix:
         target: [Unpacked, Win32, Win64]
     steps:
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '6.0.x'
 
     - name: Checkout
       uses: actions/checkout@v2
