@@ -2,12 +2,13 @@
 
 ## next ##
 
-* New icon
 * Core: Fixed issue with parsing moves next to pieces not in play
-* Viewer: Switch between Light and Dark themes without restarting the app
 * Viewer: Fixed "crash" when exiting while Internal Engine is still running
 * Viewer: Fixed issues when loading newer BoardSpace SGF files
 * Viewer: Added detection of PGN and SGF files without filename extensions
+* Viewer: Fixed issue with overwriting existing PGN files
+* Viewer: Fixed issue with move commentary not updating
+* New icon
 * Viewer: Minor rendering improvements
 * Viewer: Switched to CompiledBindings for improved performance
 * Viewer: Updated New Game Window
