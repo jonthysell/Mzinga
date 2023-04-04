@@ -64,7 +64,7 @@
                     Value="True" />
             <Setter Property="UseSplitBackground"
                     Value="True" />
-          <Setter Property="Text"
+            <Setter Property="Text"
                     Value="M" />
             <Setter Property="HorizontalAlignment"
                     Value="Center" />
