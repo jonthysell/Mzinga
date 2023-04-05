@@ -254,6 +254,7 @@ namespace Mzinga.Viewer
 
                 if (file is not null)
                 {
+                    await file.DeleteAsync(); // Must delete file first because IStorageFile.OpenWriteAsync doesn't truncate first
                     using Stream outputStream = await file.OpenWriteAsync();
                     message.GameRecording.SavePGN(outputStream);
                     newFileUri = file.Path;
