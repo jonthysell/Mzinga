@@ -9,6 +9,10 @@
 * Viewer: Updated Avalonia to 11.0.0-preview6
 * Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 11.0.0-b1
 
+## v0.13.4 ##
+
+* Viewer: Engine Console now includes engine's std:err output
+
 ## v0.13.3 ##
 
 * Core: Fixed issue with parsing moves next to pieces not in play
