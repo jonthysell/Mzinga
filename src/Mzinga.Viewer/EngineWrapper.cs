@@ -293,39 +293,43 @@ namespace Mzinga.Viewer
 
         protected abstract void OnCancelCommand();
 
-        protected void OnEngineOutput(string line)
+        protected void OnEngineOutput(string line, bool process = true)
         {
             EngineTextAppendLine(line);
-            _outputLines.Add(line);
 
-            if (line == "ok")
+            if (process)
             {
-                try
+                _outputLines.Add(line);
+
+                if (line == "ok")
                 {
-                    string[] outputLines = new string[_outputLines.Count - 1];
-                    _outputLines.CopyTo(0, outputLines, 0, outputLines.Length);
-                    ProcessEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
+                    try
+                    {
+                        string[] outputLines = new string[_outputLines.Count - 1];
+                        _outputLines.CopyTo(0, outputLines, 0, outputLines.Length);
+                        ProcessEngineOutput(IdentifyCommand(_inputToProcess.Peek()), outputLines);
+                    }
+                    catch (EngineErrorException ex)
+                    {
+                        TargetPiece = PieceName.INVALID; // Reset the move
+                        ExceptionUtils.HandleException(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                    finally
+                    {
+                        _inputToProcess.Dequeue();
+                        _outputLines.Clear();
+                        RunNextCommand();
+                    }
                 }
-                catch (EngineErrorException ex)
+                else if (_currentlyRunningCommand == EngineCommand.BestMove)
                 {
-                    TargetPiece = PieceName.INVALID; // Reset the move
-                    ExceptionUtils.HandleException(ex);
+                    // Got a preliminary bestmove result, update the TargetMove but don't autoplay it
+                    ProcessBestMove(line, false);
                 }
-                catch (Exception ex)
-                {
-                    ExceptionUtils.HandleException(ex);
-                }
-                finally
-                {
-                    _inputToProcess.Dequeue();
-                    _outputLines.Clear();
-                    RunNextCommand();
-                }
-            }
-            else if (_currentlyRunningCommand == EngineCommand.BestMove)
-            {
-                // Got a preliminary bestmove result, update the TargetMove but don't autoplay it
-                ProcessBestMove(line, false);
             }
         }
 

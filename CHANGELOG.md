@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Engine Console now includes engine's std:err output
+
 ## v0.13.3 ##
 
 * Core: Fixed issue with parsing moves next to pieces not in play

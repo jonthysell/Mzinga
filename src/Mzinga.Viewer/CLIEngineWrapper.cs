@@ -59,11 +59,17 @@ namespace Mzinga.Viewer
             _process.StartInfo.CreateNoWindow = true;
             _process.StartInfo.RedirectStandardInput = true;
             _process.StartInfo.RedirectStandardOutput = true;
+            _process.StartInfo.RedirectStandardError = true;
             _process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
 
             _process.OutputDataReceived += (sender, e) =>
             {
                 OnEngineOutput(e.Data);
+            };
+
+            _process.ErrorDataReceived += (sender, e) =>
+            {
+                OnEngineOutput(e.Data, false);
             };
         }
 
@@ -73,6 +79,7 @@ namespace Mzinga.Viewer
 
             _process.Start();
             _process.BeginOutputReadLine();
+            _process.BeginErrorReadLine();
 
             _writer = _process.StandardInput;
         }
@@ -83,6 +90,7 @@ namespace Mzinga.Viewer
             {
                 // Stop processing output
                 _process.CancelOutputRead();
+                _process.CancelErrorRead();
 
                 // Try to cancel a running command
                 if (!IsIdle)
