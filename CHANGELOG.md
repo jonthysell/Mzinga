@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.4 ##
 
 * Viewer: Engine Console now includes engine's std:err output
 
