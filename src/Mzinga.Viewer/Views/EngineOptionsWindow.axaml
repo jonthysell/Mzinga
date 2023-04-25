@@ -31,7 +31,7 @@
                           Padding="0,5">
                 <StackPanel Margin="5,0"
                             Width="400">
-                    <ItemsControl Items="{Binding Options}">
+                    <ItemsControl ItemsSource="{Binding Options}">
                         <ItemsControl.DataTemplates>
                             <DataTemplate DataType="{x:Type vm:ObservableBooleanEngineOption}">
                                 <DockPanel Classes="GroupBox">
@@ -66,7 +66,7 @@
                                     <Label Classes="Header"
                                            Content="{Binding FriendlyKey}"
                                            DockPanel.Dock="Top" />
-                                    <ComboBox Items="{Binding FriendlyValues}"
+                                    <ComboBox ItemsSource="{Binding FriendlyValues}"
                                               SelectedIndex="{Binding SelectedValueIndex}" />
                                 </DockPanel>
                             </DataTemplate>

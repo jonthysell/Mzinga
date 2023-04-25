@@ -29,7 +29,7 @@
             <TabControl Grid.Column="1"
                         Grid.Row="0"
                         Height="400"
-                        Items="{Binding TabItems}">
+                        ItemsSource="{Binding TabItems}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock FontSize="14"

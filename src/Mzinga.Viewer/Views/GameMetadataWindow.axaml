@@ -31,7 +31,7 @@
                           Padding="0,5">
                 <StackPanel Margin="5,0"
                             Width="400">
-                    <ItemsControl Items="{Binding StandardTags}">
+                    <ItemsControl ItemsSource="{Binding StandardTags}">
                         <ItemsControl.DataTemplates>
                             <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
                                 <DockPanel Classes="GroupBox">
@@ -48,13 +48,13 @@
                                            Content="{Binding Key}"
                                            DockPanel.Dock="Top" />
                                     <ComboBox IsEnabled="{Binding CanEdit}"
-                                              Items="{Binding PossibleValues}"
+                                              ItemsSource="{Binding PossibleValues}"
                                               SelectedItem="{Binding Value}" />
                                 </DockPanel>
                             </DataTemplate>
                         </ItemsControl.DataTemplates>
                     </ItemsControl>
-                    <ItemsControl Items="{Binding OptionalTags}">
+                    <ItemsControl ItemsSource="{Binding OptionalTags}">
                         <ItemsControl.DataTemplates>
                             <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
                                 <DockPanel Classes="GroupBox">

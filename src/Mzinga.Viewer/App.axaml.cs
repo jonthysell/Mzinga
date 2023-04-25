@@ -6,6 +6,7 @@ using System.IO;
 
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 
@@ -28,6 +29,8 @@ namespace Mzinga.Viewer
         public EngineConfig InternalEngineConfig { get; private set; } = EngineConfig.GetDefaultEngineConfig(); // This should be the only place we load the config in the Viewer
 
         public string ViewerConfigPath { get; private set; }
+
+        public IClipboard Clipboard { get; private set; }
 
         public override void Initialize()
         {
@@ -71,6 +74,7 @@ namespace Mzinga.Viewer
             {
                 var window = new Views.MainWindow();
                 desktop.MainWindow = window;
+                Clipboard = desktop.MainWindow.Clipboard;
             }
         }
 
@@ -129,7 +133,7 @@ namespace Mzinga.Viewer
 
         private void TextToClipboard(string text)
         {
-            Clipboard.SetTextAsync(text);
+            Clipboard.SetTextAsync(text).Wait();
         }
 
         private static string GetDefaultViewerConfigFileName()
