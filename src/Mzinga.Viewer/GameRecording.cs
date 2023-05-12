@@ -380,6 +380,13 @@ namespace Mzinga.Viewer
                             }
                             else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
                             {
+                                if (lastMoveCompleted)
+                                {
+                                    // Newer SGF files no longer explicitly record pass moves.
+                                    // Since no move parsed during this round, assume the player passed.
+                                    moveList.Add(Move.PassString);
+                                }
+
                                 lastMoveCompleted = true;
                                 whiteTurn = !whiteTurn;
                             }
