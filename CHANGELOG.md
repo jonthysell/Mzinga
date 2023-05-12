@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.5 ##
 
 * Viewer: Fixed issue with loading newer BoardSpace SGF files which record pass moves differently
 
