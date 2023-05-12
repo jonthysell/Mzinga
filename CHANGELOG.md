@@ -9,6 +9,10 @@
 * Viewer: Updated Avalonia to 11.0.0-preview7
 * Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 11.0.0-b1
 
+## v0.13.5 ##
+
+* Viewer: Fixed issue with loading newer BoardSpace SGF files which record pass moves differently
+
 ## v0.13.4 ##
 
 * Viewer: Engine Console now includes engine's std:err output
