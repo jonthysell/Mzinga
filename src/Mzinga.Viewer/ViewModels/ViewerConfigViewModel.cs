@@ -66,32 +66,6 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
-        public bool AutoCenterBoard
-        {
-            get
-            {
-                return Config.AutoCenterBoard;
-            }
-            set
-            {
-                Config.AutoCenterBoard = value;
-                OnPropertyChanged(nameof(AutoCenterBoard));
-            }
-        }
-
-        public bool AutoZoomBoard
-        {
-            get
-            {
-                return Config.AutoZoomBoard;
-            }
-            set
-            {
-                Config.AutoZoomBoard = value;
-                OnPropertyChanged(nameof(AutoZoomBoard));
-            }
-        }
-
         public HexOrientation HexOrientation
         {
             get
@@ -248,6 +222,45 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
 
+        public bool PlaySoundEffects
+        {
+            get
+            {
+                return Config.PlaySoundEffects;
+            }
+            set
+            {
+                Config.PlaySoundEffects = value;
+                OnPropertyChanged(nameof(PlaySoundEffects));
+            }
+        }
+
+        public bool AutoCenterBoard
+        {
+            get
+            {
+                return Config.AutoCenterBoard;
+            }
+            set
+            {
+                Config.AutoCenterBoard = value;
+                OnPropertyChanged(nameof(AutoCenterBoard));
+            }
+        }
+
+        public bool AutoZoomBoard
+        {
+            get
+            {
+                return Config.AutoZoomBoard;
+            }
+            set
+            {
+                Config.AutoZoomBoard = value;
+                OnPropertyChanged(nameof(AutoZoomBoard));
+            }
+        }
+
         public bool ShowBoardHistory
         {
             get
@@ -271,19 +284,6 @@ namespace Mzinga.Viewer.ViewModels
             {
                 Config.ShowMoveCommentary = value;
                 OnPropertyChanged(nameof(ShowMoveCommentary));
-            }
-        }
-
-        public bool PlaySoundEffects
-        {
-            get
-            {
-                return Config.PlaySoundEffects;
-            }
-            set
-            {
-                Config.PlaySoundEffects = value;
-                OnPropertyChanged(nameof(PlaySoundEffects));
             }
         }
 
@@ -392,8 +392,6 @@ namespace Mzinga.Viewer.ViewModels
                         OnPropertyChanged(nameof(EngineType));
                         OnPropertyChanged(nameof(EngineCommandLine));
                         OnPropertyChanged(nameof(VisualTheme));
-                        OnPropertyChanged(nameof(AutoCenterBoard));
-                        OnPropertyChanged(nameof(AutoZoomBoard));
                         OnPropertyChanged(nameof(HexOrientation));
                         OnPropertyChanged(nameof(PieceStyle));
                         OnPropertyChanged(nameof(PieceColors));
@@ -407,6 +405,10 @@ namespace Mzinga.Viewer.ViewModels
                         OnPropertyChanged(nameof(AddPieceNumbers));
                         OnPropertyChanged(nameof(StackPiecesInHand));
                         OnPropertyChanged(nameof(PlaySoundEffects));
+                        OnPropertyChanged(nameof(AutoCenterBoard));
+                        OnPropertyChanged(nameof(AutoZoomBoard));
+                        OnPropertyChanged(nameof(ShowBoardHistory));
+                        OnPropertyChanged(nameof(ShowMoveCommentary));
                         OnPropertyChanged(nameof(CheckUpdateOnStart));
 
                     }
