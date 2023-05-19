@@ -257,6 +257,8 @@ namespace Mzinga.Viewer
                             Match m = null;
                             if ((m = Regex.Match(line, @"^\(;")).Success)
                             {
+                                // Handle start of game parsing
+
                                 gameStarted = true;
                             }
 
@@ -264,11 +266,14 @@ namespace Mzinga.Viewer
                             {
                                 if ((m = Regex.Match(line, @"\)$")).Success)
                                 {
-                                    // End of game detected
+                                    // Handle end of game parsing
+
                                     break;
                                 }
                                 else if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
                                 {
+                                    // Handle GameType metadata
+
                                     var gameType = GameType.Base;
                                     var split = m.Groups[1].Value.ToUpper().Split("-");
                                     gameType = Enums.EnableBugType(BugType.Mosquito, gameType, split.Length > 1 && split[1].Contains('M'));
@@ -278,18 +283,26 @@ namespace Mzinga.Viewer
                                 }
                                 else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
                                 {
+                                    // Handle Event metadata
+
                                     metadata.SetTag("Event", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"PC\[(.*)\]")).Success)
                                 {
+                                    // Handle Site metadata
+
                                     metadata.SetTag("Site", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"RO\[(.*)\]")).Success)
                                 {
+                                    // Handle Round metadata
+
                                     metadata.SetTag("Round", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"DT\[(.+)\]")).Success)
                                 {
+                                    // Handle Date/SgfDate metadata
+
                                     string rawDate = m.Groups[1].Value;
                                     metadata.SetTag("SgfDate", rawDate);
 
@@ -313,23 +326,32 @@ namespace Mzinga.Viewer
                                 }
                                 else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
                                 {
+                                    // Handle White metadata
+
                                     metadata.SetTag("White", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"P1\[id ""(.*)""\]")).Success)
                                 {
+                                    // Handle Black metadata
                                     metadata.SetTag("Black", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"RE\[(.+)\]")).Success)
                                 {
+                                    // Handle SgfResult metadata
+
                                     rawResult = m.Groups[1].Value;
                                     metadata.SetTag("SgfResult", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"GN\[(.+)\]")).Success)
                                 {
+                                    // Handle SgfGameName metadata
+
                                     metadata.SetTag("SgfGameName", m.Groups[1].Value);
                                 }
                                 else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                                 {
+                                    // Handle player playing a move
+
                                     // Initial parse
                                     string movingPiece = m.Groups[^3].Value.ToLower();
                                     string destination = m.Groups[^1].Value.ToLower().Replace("\\\\", "\\");
@@ -387,12 +409,29 @@ namespace Mzinga.Viewer
                                 }
                                 else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
                                 {
+                                    // Handle player passing
+
                                     moveList.Add(Move.PassString);
 
                                     lastMoveCompleted = false;
                                 }
+                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ (offer|accept|decline)draw\s*\]", RegexOptions.IgnoreCase)).Success)
+                                {
+                                    // Handle player offering/accepting a draw
+
+                                    lastMoveCompleted = false;
+                                }
+                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
+                                {
+                                    // Handle player resignation
+
+                                    rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
+                                    lastMoveCompleted = false;
+                                }
                                 else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
                                 {
+                                    // Handle player end of turn
+
                                     if (lastMoveCompleted)
                                     {
                                         // Newer SGF files no longer explicitly record pass moves.
@@ -402,10 +441,6 @@ namespace Mzinga.Viewer
 
                                     lastMoveCompleted = true;
                                     whiteTurn = !whiteTurn;
-                                }
-                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
-                                {
-                                    rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
                                 }
                             }
                         }
