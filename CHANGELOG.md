@@ -5,6 +5,7 @@
 * Viewer: Fixed issue with resetting default sidebar viewer option
 * Viewer: Improved SGF parsing to handle SGF start/end of game markers
 * Viewer: Improved SGF parsing to handle draw offers
+* Viewer: Improved SGF parsing to handle movedone command
 
 ## v0.13.5 ##
 

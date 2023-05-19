@@ -348,9 +348,11 @@ namespace Mzinga.Viewer
 
                                     metadata.SetTag("SgfGameName", m.Groups[1].Value);
                                 }
-                                else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
+                                else if ((m = Regex.Match(line, @"(((pmove|move|pmovedone|movedone) (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
                                 {
                                     // Handle player playing a move
+
+                                    string command = m.Groups[1].Value.ToLower();
 
                                     // Initial parse
                                     string movingPiece = m.Groups[^3].Value.ToLower();
@@ -365,7 +367,8 @@ namespace Mzinga.Viewer
                                     // Add missing color indicator
                                     if (movingPiece.Equals("b1", StringComparison.InvariantCultureIgnoreCase) || movingPiece.Equals("b2", StringComparison.InvariantCultureIgnoreCase) || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
                                     {
-                                        movingPiece = (whiteTurn ? "w" : "b") + movingPiece.ToUpperInvariant();
+                                        char movingColor = command.Contains("move") ? command[^1] : (whiteTurn ? 'w' : 'b');
+                                        movingPiece = movingColor + movingPiece.ToUpperInvariant();
                                     }
 
                                     // Fix missing destination
@@ -406,6 +409,13 @@ namespace Mzinga.Viewer
                                     backupPositions[backupPos].Push(movingPiece);
 
                                     lastMoveCompleted = false;
+
+                                    if (command.Contains("movedone"))
+                                    {
+                                        // Special case where we simulate a both a "move" and the "done" logic
+                                        lastMoveCompleted = true;
+                                        whiteTurn = !whiteTurn;
+                                    } 
                                 }
                                 else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
                                 {
