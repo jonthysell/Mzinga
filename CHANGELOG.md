@@ -3,6 +3,7 @@
 ## next ##
 
 * Viewer: Fixed issue with resetting default sidebar viewer option
+* Viewer: Improved SGF parsing to handle SGF start/end of game markers
 
 ## v0.13.5 ##
 

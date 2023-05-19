@@ -242,6 +242,7 @@ namespace Mzinga.Viewer
                 Dictionary<string, Stack<string>> backupPositions = new Dictionary<string, Stack<string>>();
 
                 string rawResult = "";
+                bool gameStarted = false;
                 bool lastMoveCompleted = true;
                 bool whiteTurn = true;
                 using (StreamReader sr = new StreamReader(inputStream))
@@ -254,148 +255,166 @@ namespace Mzinga.Viewer
                         {
                             // Line has contents
                             Match m = null;
-                            if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
+                            if ((m = Regex.Match(line, @"^\(;")).Success)
                             {
-                                var gameType = GameType.Base;
-                                var split = m.Groups[1].Value.ToUpper().Split("-");
-                                gameType = Enums.EnableBugType(BugType.Mosquito, gameType, split.Length > 1 && split[1].Contains('M'));
-                                gameType = Enums.EnableBugType(BugType.Ladybug, gameType, split.Length > 1 && split[1].Contains('L'));
-                                gameType = Enums.EnableBugType(BugType.Pillbug, gameType, split.Length > 1 && split[1].Contains('P'));
-                                metadata.SetTag("GameType", Enums.GetGameTypeString(gameType));
+                                gameStarted = true;
                             }
-                            else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
-                            {
-                                metadata.SetTag("Event", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"PC\[(.*)\]")).Success)
-                            {
-                                metadata.SetTag("Site", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"RO\[(.*)\]")).Success)
-                            {
-                                metadata.SetTag("Round", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"DT\[(.+)\]")).Success)
-                            {
-                                string rawDate = m.Groups[1].Value;
-                                metadata.SetTag("SgfDate", rawDate);
 
-                                rawDate = Regex.Replace(rawDate, @"(\D{3}) (\D{3}) (\d{2}) (\d{2}):(\d{2}):(\d{2}) (.{3,}) (\d{4})", @"$1 $2 $3 $4:$5:$6 $8");
-
-                                if (DateTime.TryParseExact(rawDate, SgfDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsed))
+                            if (gameStarted)
+                            {
+                                if ((m = Regex.Match(line, @"\)$")).Success)
                                 {
-                                    metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
+                                    // End of game detected
+                                    break;
                                 }
-                                else
+                                else if ((m = Regex.Match(line, @"SU\[(.*)\]")).Success)
                                 {
-                                    foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.AllCultures))
+                                    var gameType = GameType.Base;
+                                    var split = m.Groups[1].Value.ToUpper().Split("-");
+                                    gameType = Enums.EnableBugType(BugType.Mosquito, gameType, split.Length > 1 && split[1].Contains('M'));
+                                    gameType = Enums.EnableBugType(BugType.Ladybug, gameType, split.Length > 1 && split[1].Contains('L'));
+                                    gameType = Enums.EnableBugType(BugType.Pillbug, gameType, split.Length > 1 && split[1].Contains('P'));
+                                    metadata.SetTag("GameType", Enums.GetGameTypeString(gameType));
+                                }
+                                else if ((m = Regex.Match(line, @"EV\[(.*)\]")).Success)
+                                {
+                                    metadata.SetTag("Event", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"PC\[(.*)\]")).Success)
+                                {
+                                    metadata.SetTag("Site", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"RO\[(.*)\]")).Success)
+                                {
+                                    metadata.SetTag("Round", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"DT\[(.+)\]")).Success)
+                                {
+                                    string rawDate = m.Groups[1].Value;
+                                    metadata.SetTag("SgfDate", rawDate);
+
+                                    rawDate = Regex.Replace(rawDate, @"(\D{3}) (\D{3}) (\d{2}) (\d{2}):(\d{2}):(\d{2}) (.{3,}) (\d{4})", @"$1 $2 $3 $4:$5:$6 $8");
+
+                                    if (DateTime.TryParseExact(rawDate, SgfDateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsed))
                                     {
-                                        if (DateTime.TryParseExact(rawDate, SgfDateFormats, ci, DateTimeStyles.None, out parsed))
-                                        {
-                                            metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
-                            {
-                                metadata.SetTag("White", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"P1\[id ""(.*)""\]")).Success)
-                            {
-                                metadata.SetTag("Black", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"RE\[(.+)\]")).Success)
-                            {
-                                rawResult = m.Groups[1].Value;
-                                metadata.SetTag("SgfResult", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"GN\[(.+)\]")).Success)
-                            {
-                                metadata.SetTag("SgfGameName", m.Groups[1].Value);
-                            }
-                            else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
-                            {
-                                // Initial parse
-                                string movingPiece = m.Groups[^3].Value.ToLower();
-                                string destination = m.Groups[^1].Value.ToLower().Replace("\\\\", "\\");
-
-                                string backupPos = m.Groups[^2].Value;
-
-                                // Remove unnecessary numbers
-                                movingPiece = movingPiece.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
-                                destination = destination.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
-
-                                // Add missing color indicator
-                                if (movingPiece.Equals("b1", StringComparison.InvariantCultureIgnoreCase) || movingPiece.Equals("b2", StringComparison.InvariantCultureIgnoreCase) || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
-                                {
-                                    movingPiece = (whiteTurn ? "w" : "b") + movingPiece.ToUpperInvariant();
-                                }
-
-                                // Fix missing destination
-                                if (destination == ".")
-                                {
-                                    if (moveList.Count == 0)
-                                    {
-                                        destination = "";
+                                        metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
                                     }
                                     else
                                     {
-                                        destination = backupPositions[backupPos].Peek();
+                                        foreach (CultureInfo ci in CultureInfo.GetCultures(CultureTypes.AllCultures))
+                                        {
+                                            if (DateTime.TryParseExact(rawDate, SgfDateFormats, ci, DateTimeStyles.None, out parsed))
+                                            {
+                                                metadata.SetTag("Date", parsed.ToString("yyyy.MM.dd"));
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-
-                                // Remove move that wasn't commited
-                                if (!lastMoveCompleted)
+                                else if ((m = Regex.Match(line, @"P0\[id ""(.*)""\]")).Success)
                                 {
-                                    moveList.RemoveAt(moveList.Count - 1);
+                                    metadata.SetTag("White", m.Groups[1].Value);
                                 }
-
-                                moveList.Add(string.Format("{0} {1}", movingPiece, destination));
-
-                                foreach (Stack<string> stack in backupPositions.Values)
+                                else if ((m = Regex.Match(line, @"P1\[id ""(.*)""\]")).Success)
                                 {
-                                    if (stack.Count > 0 && stack.Peek() == movingPiece)
+                                    metadata.SetTag("Black", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"RE\[(.+)\]")).Success)
+                                {
+                                    rawResult = m.Groups[1].Value;
+                                    metadata.SetTag("SgfResult", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"GN\[(.+)\]")).Success)
+                                {
+                                    metadata.SetTag("SgfGameName", m.Groups[1].Value);
+                                }
+                                else if ((m = Regex.Match(line, @"((move (w|b))|(dropb)|(pdropb)) ([a-z0-9]+) ([a-z] [0-9]+) ([a-z0-9\\\-\/\.]*)", RegexOptions.IgnoreCase)).Success)
+                                {
+                                    // Initial parse
+                                    string movingPiece = m.Groups[^3].Value.ToLower();
+                                    string destination = m.Groups[^1].Value.ToLower().Replace("\\\\", "\\");
+
+                                    string backupPos = m.Groups[^2].Value;
+
+                                    // Remove unnecessary numbers
+                                    movingPiece = movingPiece.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
+                                    destination = destination.Replace("m1", "M", StringComparison.InvariantCultureIgnoreCase).Replace("l1", "L", StringComparison.InvariantCultureIgnoreCase).Replace("p1", "P", StringComparison.InvariantCultureIgnoreCase);
+
+                                    // Add missing color indicator
+                                    if (movingPiece.Equals("b1", StringComparison.InvariantCultureIgnoreCase) || movingPiece.Equals("b2", StringComparison.InvariantCultureIgnoreCase) || !(movingPiece.StartsWith("b") || movingPiece.StartsWith("w")))
                                     {
-                                        stack.Pop();
-                                        break;
+                                        movingPiece = (whiteTurn ? "w" : "b") + movingPiece.ToUpperInvariant();
                                     }
+
+                                    // Fix missing destination
+                                    if (destination == ".")
+                                    {
+                                        if (moveList.Count == 0)
+                                        {
+                                            destination = "";
+                                        }
+                                        else
+                                        {
+                                            destination = backupPositions[backupPos].Peek();
+                                        }
+                                    }
+
+                                    // Remove move that wasn't commited
+                                    if (!lastMoveCompleted)
+                                    {
+                                        moveList.RemoveAt(moveList.Count - 1);
+                                    }
+
+                                    moveList.Add(string.Format("{0} {1}", movingPiece, destination));
+
+                                    foreach (Stack<string> stack in backupPositions.Values)
+                                    {
+                                        if (stack.Count > 0 && stack.Peek() == movingPiece)
+                                        {
+                                            stack.Pop();
+                                            break;
+                                        }
+                                    }
+
+                                    if (!backupPositions.ContainsKey(backupPos))
+                                    {
+                                        backupPositions.Add(backupPos, new Stack<string>());
+                                    }
+
+                                    backupPositions[backupPos].Push(movingPiece);
+
+                                    lastMoveCompleted = false;
                                 }
-
-                                if (!backupPositions.ContainsKey(backupPos))
+                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
                                 {
-                                    backupPositions.Add(backupPos, new Stack<string>());
-                                }
-
-                                backupPositions[backupPos].Push(movingPiece);
-
-                                lastMoveCompleted = false;
-                            }
-                            else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ pass\s*\]", RegexOptions.IgnoreCase)).Success)
-                            {
-                                moveList.Add(Move.PassString);
-
-                                lastMoveCompleted = false;
-                            }
-                            else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
-                            {
-                                if (lastMoveCompleted)
-                                {
-                                    // Newer SGF files no longer explicitly record pass moves.
-                                    // Since no move parsed during this round, assume the player passed.
                                     moveList.Add(Move.PassString);
-                                }
 
-                                lastMoveCompleted = true;
-                                whiteTurn = !whiteTurn;
-                            }
-                            else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
-                            {
-                                rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
+                                    lastMoveCompleted = false;
+                                }
+                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ done\s*\]", RegexOptions.IgnoreCase)).Success)
+                                {
+                                    if (lastMoveCompleted)
+                                    {
+                                        // Newer SGF files no longer explicitly record pass moves.
+                                        // Since no move parsed during this round, assume the player passed.
+                                        moveList.Add(Move.PassString);
+                                    }
+
+                                    lastMoveCompleted = true;
+                                    whiteTurn = !whiteTurn;
+                                }
+                                else if ((m = Regex.Match(line, @"P(0|1)\[[0-9]+ resign\s*\]", RegexOptions.IgnoreCase)).Success)
+                                {
+                                    rawResult = m.Groups[1].Value == "0" ? BoardState.BlackWins.ToString() : BoardState.WhiteWins.ToString();
+                                }
                             }
                         }
                     }
+                }
+
+                if (!gameStarted)
+                {
+                    throw new Exception($"Unable to detect start of Hive game.");
                 }
 
                 Board board = new Board(metadata.GameType);
