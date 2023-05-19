@@ -15,9 +15,8 @@ using Avalonia.Platform.Storage.FileIO;
 
 using CommunityToolkit.Mvvm.Messaging;
 
-using Mzinga.Viewer;
+using Mzinga.Core;
 using Mzinga.Viewer.ViewModels;
-
 using Mzinga.Viewer.Views;
 
 namespace Mzinga.Viewer

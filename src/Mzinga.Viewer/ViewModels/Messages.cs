@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 
+using Mzinga.Core;
+
 namespace Mzinga.Viewer.ViewModels
 {
     public class ExceptionMessage

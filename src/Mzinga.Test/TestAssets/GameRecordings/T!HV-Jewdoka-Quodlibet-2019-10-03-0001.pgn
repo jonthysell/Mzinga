@@ -1,0 +1,68 @@
+[GameType "Base+MLP"]
+[Date "2019.10.02"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Jewdoka"]
+[Black "Quodlibet"]
+[Result "BlackWins"]
+[SgfDate "October 2, 2019"]
+[SgfGameName "T!HV-Jewdoka-Quodlibet-2019-10-03-0001"]
+[SgfResult "Game won by Quodlibet"]
+
+1. wL
+2. bG1 /wL
+3. wQ wL-
+4. bL /bG1
+5. wA1 wQ/
+6. bQ -bL
+7. wA2 wA1-
+8. bM bQ/
+9. wS1 \wQ
+10. bP \bQ
+11. wS1 \bM
+12. bA1 bL-
+13. wA2 bA1\
+14. bL \wQ
+15. wA1 bQ\
+16. bA2 bL/
+17. wP wQ-
+18. bA3 \bL
+19. wA3 wS1/
+20. bA3 \wA3
+21. wB1 /wA1
+22. bB1 -bQ
+23. wB1 wA1
+24. bB2 \bL
+25. wS2 wP\
+26. bB2 bL
+27. wS2 bA1-
+28. bA2 wA2\
+29. wB2 /wB1
+30. bB2 wL
+31. wB1 bQ
+32. bB1 wB1
+33. wB2 /bB1
+34. bG2 \bA3
+35. wB2 bB1
+36. bG2 wA3\
+37. wS1 \bA3
+38. bL /wA3
+39. wB2 bP
+40. bM /wQ
+41. wS2 bA2\
+42. bM wQ
+43. wP bM\
+44. bS1 bM/
+45. wA1 \bS1
+46. bG3 -bA1
+47. wM wA1/
+48. bG1 /wA1
+49. wP bM-
+50. bS2 /bM
+51. wP bS1-
+52. bM bS2-
+53. wM bS1/
+54. bG2 wQ-
+
+BlackWins

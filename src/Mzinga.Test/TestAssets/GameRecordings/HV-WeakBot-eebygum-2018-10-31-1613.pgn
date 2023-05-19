@@ -1,0 +1,105 @@
+[GameType "Base"]
+[Date "2018.10.31"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "WeakBot"]
+[Black "eebygum"]
+[Result "WhiteWins"]
+[SgfDate "31 October 2018"]
+[SgfGameName "HV-WeakBot-eebygum-2018-10-31-1613"]
+[SgfResult "Game won by WeakBot"]
+
+1. wA1
+2. bA1 /wA1
+3. wA2 \wA1
+4. bG1 /bA1
+5. wS1 \wA2
+6. bQ bA1\
+7. wQ wA1-
+8. bG1 \wQ
+9. wS2 -wA2
+10. bG1 wQ\
+11. wB1 \wQ
+12. bA2 bG1-
+13. wG1 \wS2
+14. bA2 wB1/
+15. wG1 -bA2
+16. bS1 bQ-
+17. wQ bG1/
+18. bA2 wQ/
+19. wS2 -bQ
+20. bA2 \wQ
+21. wB1 bA2
+22. bG2 bS1\
+23. wB2 wQ/
+24. bG2 wA1\
+25. wA3 \wB2
+26. bS1 wQ-
+27. wA3 bQ\
+28. bG3 bS1-
+29. wA3 bG3-
+30. bQ wS2\
+31. wG2 -wS2
+32. bB1 bG1\
+33. wG1 \bA1
+34. bB1 wQ\
+35. wA1 /bQ
+36. bA3 /bG1
+37. wS1 \bG2
+38. bA3 \wA2
+39. wG2 bQ/
+40. bB1 bG1
+41. wG1 bQ-
+42. bA1 wG1-
+43. wG3 -wB1
+44. bB1 -wQ
+45. wB2 bS1
+46. bA1 wQ\
+47. wA3 \bA3
+48. bB1 wQ
+49. wA3 bQ\
+50. bG3 /wB1
+51. wS1 -bA3
+52. bG1 \wB2
+53. wB1 bB1
+54. bB2 /bA1
+55. wA3 bB2\
+56. bA2 wA3/
+57. wA3 \bG2
+58. bA2 \wB1
+59. wA3 bB2\
+60. bS2 bA3/
+61. wS1 bS2/
+62. bG1 -wA2
+63. wB2 bA2-
+64. bA2 wB2/
+65. wA3 bA2\
+66. bB2 /wB1
+67. wB2 wB1
+68. bB2 wB2
+69. wG1 -bG2
+70. bG1 wG3-
+71. wG1 bQ-
+72. bB2 -bA1
+73. wA1 bA2/
+74. bQ /wS2
+75. wB2 bB2
+76. bQ -wS2
+77. wG1 -bG2
+78. bQ \wS2
+79. wS2 \bQ
+80. bA1 -wA2
+81. wG3 -bA1
+82. bG1 wB1\
+83. wG3 bQ\
+84. bG1 wA1\
+85. wA1 /bQ
+86. bA2 wG2\
+87. wA2 -bQ
+88. bG3 wB2\
+89. wB2 bG3
+90. bG1 wB1\
+91. wA3 bQ/
+
+WhiteWins

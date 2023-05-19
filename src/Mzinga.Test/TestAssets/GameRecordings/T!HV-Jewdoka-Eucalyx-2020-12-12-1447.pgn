@@ -1,0 +1,55 @@
+[GameType "Base+MLP"]
+[Date "2020.12.12"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Jewdoka"]
+[Black "Eucalyx"]
+[Result "WhiteWins"]
+[SgfDate "Sat Dec 12 08:47:45 CST 2020"]
+[SgfGameName "T!HV-Jewdoka-Eucalyx-2020-12-12-1447"]
+[SgfResult "Game won by Jewdoka"]
+
+1. wL
+2. bL /wL
+3. wM wL/
+4. bQ bL\
+5. wQ \wL
+6. bM -bQ
+7. wA1 wM\
+8. bP /bQ
+9. wM bQ\
+10. bQ -bM
+11. wB1 wM\
+12. bA1 bQ\
+13. wB1 wM
+14. bA1 wA1/
+15. wB1 bP
+16. bA2 bA1-
+17. wA2 /wM
+18. bA2 -wQ
+19. wP wQ/
+20. bB1 bQ/
+21. wA3 -wA2
+22. bS1 \bQ
+23. wP -bA1
+24. bA1 wA1-
+25. wA3 \bS1
+26. bS2 bA1/
+27. wM /bQ
+28. bA2 /wM
+29. wA2 -bQ
+30. bB1 wA3-
+31. wG1 wB1\
+32. bA2 wB1/
+33. wB1 bM
+34. wG1 /bP
+35. wG2 /wM
+36. bA2 -wG2
+37. wG3 wG1\
+38. bB2 bP-
+39. wG3 bQ\
+40. bB2 bP
+41. wB1 bQ/
+
+WhiteWins

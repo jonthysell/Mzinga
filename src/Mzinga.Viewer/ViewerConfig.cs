@@ -63,9 +63,9 @@ namespace Mzinga.Viewer
 
         public bool PlaySoundEffects { get; set; } = true;
 
-        public bool AutoZoomBoard { get; set; } = true;
-
         public bool AutoCenterBoard { get; set; } = true;
+
+        public bool AutoZoomBoard { get; set; } = true;
 
         public bool ShowBoardHistory { get; set; } = false;
 

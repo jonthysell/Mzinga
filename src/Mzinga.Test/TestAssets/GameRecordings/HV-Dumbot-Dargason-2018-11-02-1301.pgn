@@ -1,0 +1,55 @@
+[GameType "Base"]
+[Date "2018.11.02"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Dumbot"]
+[Black "Dargason"]
+[Result "WhiteWins"]
+[SgfDate "Fri Nov 02 09:01:07 EDT 2018"]
+[SgfGameName "HV-Dumbot-Dargason-2018-11-02-1301"]
+[SgfResult "Game won by Dumbot"]
+
+1. wA1
+2. bS1 /wA1
+3. wG1 \wA1
+4. bA1 bS1\
+5. wB1 wG1/
+6. bA2 -bS1
+7. wQ wB1/
+8. bQ -bA1
+9. wB2 wB1\
+10. bA1 wB2-
+11. wQ \bA1
+12. bA2 wQ/
+13. wS1 \wG1
+14. bS2 bA2-
+15. wA2 \wB1
+16. bB1 \bS2
+17. wS2 -wG1
+18. bG1 bB1-
+19. wS2 -bQ
+20. bG1 wQ-
+21. wA2 bB1/
+22. bB2 \bA2
+23. wS1 -bB2
+24. bG2 bS2-
+25. wB2 bA1
+26. bA3 /bG2
+27. wG2 /wB2
+28. bA3 wA2\
+29. wG3 \wS2
+30. bB1 bA2
+31. wG3 /bQ
+32. bG1 \wG1
+33. wA3 wB2\
+34. bG2 \wQ
+35. wA3 bQ-
+36. bB2 /wA2
+37. wA2 \bQ
+38. bB1 wQ
+39. wG1 bS1-
+40. bB1 \wG2
+41. wG2 bQ\
+
+WhiteWins

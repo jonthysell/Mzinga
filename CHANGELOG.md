@@ -9,6 +9,15 @@
 * Viewer: Updated Avalonia to 11.0.0-preview8
 * Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 11.0.0-b1
 
+## v0.13.6 ##
+
+* Core: Moved GameRecording code into Core
+* Test: Added tests for SGF/PGN loading/saving
+* Viewer: Fixed issue with resetting default sidebar viewer option
+* Viewer: Improved SGF parsing to handle SGF start/end of game markers
+* Viewer: Improved SGF parsing to handle draw offers
+* Viewer: Improved SGF parsing to handle movedone command
+
 ## v0.13.5 ##
 
 * Viewer: Fixed issue with loading newer BoardSpace SGF files which record pass moves differently

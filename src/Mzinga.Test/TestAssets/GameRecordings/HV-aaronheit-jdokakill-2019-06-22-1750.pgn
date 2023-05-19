@@ -1,0 +1,72 @@
+[GameType "Base+MLP"]
+[Date "2019.06.22"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "aaronheit"]
+[Black "jdokakill"]
+[Result "BlackWins"]
+[SgfDate "Sat Jun 22 10:50:36 PDT 2019"]
+[SgfGameName "HV-aaronheit-jdokakill-2019-06-22-1750"]
+[SgfResult "Game won by jdokakill"]
+
+1. wL
+2. bL /wL
+3. wQ wL/
+4. bQ bL\
+5. wA1 wQ\
+6. bM -bQ
+7. wM wQ-
+8. bA1 \bM
+9. wM bQ\
+10. bM wM\
+11. wA2 -wQ
+12. bP -bQ
+13. wA1 -bA1
+14. bS1 /bP
+15. wA2 bQ-
+16. bA2 bS1\
+17. wA3 -wQ
+18. bA2 wA2-
+19. wG1 wQ/
+20. bS1 -wA1
+21. wG1 /bP
+22. bS2 bM-
+23. wB1 /wG1
+24. bA2 /wB1
+25. wG2 \wB1
+26. bS2 /wM
+27. wA3 bM\
+28. bS2 wA3\
+29. wB2 wA2/
+30. bS1 -wL
+31. wG2 /bQ
+32. bL -wA1
+33. wG3 wB2\
+34. bQ \wG1
+35. wG3 bP-
+36. bQ /wA1
+37. wB2 wL\
+38. bS1 wQ/
+39. wA2 /bQ
+40. bA3 \bS1
+41. wG2 bQ\
+42. bL -wA2
+43. wP wQ\
+44. bA1 wA1/
+45. wL wM/
+46. bA3 \wQ
+47. wS1 wP\
+48. bB1 \bS1
+49. wB2 bP/
+50. bB1 bA3
+51. wB2 bP
+52. bB1 wQ
+53. wB2 wG1
+54. bG1 -bB1
+55. wB2 wG2
+56. bA1 wP/
+57. wB2 bQ
+58. bB1 -wP
+
+BlackWins

@@ -4,9 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-using Mzinga.Core;
-
-namespace Mzinga.Viewer
+namespace Mzinga.Core
 {
     public class GameMetadata
     {
@@ -41,14 +39,14 @@ namespace Mzinga.Viewer
 
         #region Move Commentary
 
-        public IReadOnlyDictionary<int, string> MoveCommentary
+        public IReadOnlyDictionary<int, string?> MoveCommentary
         {
             get
             {
                 return _moveCommentary;
             }
         }
-        private readonly Dictionary<int, string> _moveCommentary = new Dictionary<int, string>();
+        private readonly Dictionary<int, string?> _moveCommentary = new Dictionary<int, string?>();
 
         #endregion
 
@@ -67,7 +65,7 @@ namespace Mzinga.Viewer
             _optionalTags.Clear();
         }
 
-        public string GetTag(string key)
+        public string? GetTag(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -94,7 +92,7 @@ namespace Mzinga.Viewer
                     return Result.ToString();
             }
 
-            if (_optionalTags.TryGetValue(key, out string value))
+            if (_optionalTags.TryGetValue(key, out string? value))
             {
                 return value;
             }
@@ -144,7 +142,7 @@ namespace Mzinga.Viewer
             }
         }
 
-        public void SetMoveCommentary(int moveNum, string commentary)
+        public void SetMoveCommentary(int moveNum, string? commentary)
         {
             if (moveNum < 0)
             {
@@ -154,14 +152,14 @@ namespace Mzinga.Viewer
             _moveCommentary[moveNum] = commentary?.Replace("{", "").Replace("}", "");
         }
 
-        public string GetMoveCommentary(int moveNum)
+        public string? GetMoveCommentary(int moveNum)
         {
             if (moveNum < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(moveNum));
             }
 
-            if (_moveCommentary.TryGetValue(moveNum, out string commentary))
+            if (_moveCommentary.TryGetValue(moveNum, out string? commentary))
             {
                 return commentary;
             }
@@ -189,7 +187,7 @@ namespace Mzinga.Viewer
                 clone._optionalTags.Add(kvp.Key, kvp.Value);
             }
 
-            foreach (KeyValuePair<int, string> kvp in MoveCommentary)
+            foreach (KeyValuePair<int, string?> kvp in MoveCommentary)
             {
                 clone._moveCommentary.Add(kvp.Key, kvp.Value);
             }
@@ -219,7 +217,7 @@ namespace Mzinga.Viewer
                 _optionalTags[kvp.Key] = kvp.Value;
             }
 
-            foreach (KeyValuePair<int, string> kvp in metadata.MoveCommentary)
+            foreach (KeyValuePair<int, string?> kvp in metadata.MoveCommentary)
             {
                 _moveCommentary[kvp.Key] = kvp.Value;
             }
