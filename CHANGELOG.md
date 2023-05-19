@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.13.6 ##
 
 * Core: Moved GameRecording code into Core
 * Test: Added tests for SGF/PGN loading/saving
