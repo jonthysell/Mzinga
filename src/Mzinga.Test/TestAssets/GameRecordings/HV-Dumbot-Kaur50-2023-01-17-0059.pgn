@@ -1,0 +1,102 @@
+[GameType "Base+MLP"]
+[Date "2023.01.16"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Dumbot"]
+[Black "Kaur50"]
+[Result "BlackWins"]
+[SgfDate "Mon Jan 16 20:59:12 AST 2023"]
+[SgfGameName "HV-Dumbot-Kaur50-2023-01-17-0059"]
+[SgfResult "Game won by Kaur50"]
+
+1. wB1
+2. bP wB1/
+3. wM wB1\
+4. bM bP/
+5. wS1 -wM
+6. bQ bM\
+7. wQ \wS1
+8. bA1 \bP
+9. wM /bQ
+10. bP bQ/
+11. wS2 \wQ
+12. bA1 wS2/
+13. wA1 wM\
+14. bA2 \bP
+15. wA1 -bM
+16. bQ wA1/
+17. wA2 /wM
+18. bA2 wM-
+19. wS1 -wS2
+20. bP bQ-
+21. wA2 bP\
+22. bA3 bP/
+23. wL /wM
+24. bA3 /wQ
+25. wA3 /wL
+26. bS1 bA2\
+27. wA3 -bA3
+28. bS1 wA2-
+29. wA3 \bQ
+30. bG1 bA2-
+31. wB2 wA3/
+32. bA3 wB2/
+33. wG1 \wA3
+34. bG1 -wQ
+35. wG2 /wL
+36. bB1 \bA1
+37. wS1 \bB1
+38. bB2 /bG1
+39. wG3 -wG2
+40. bB2 bG1
+41. wP -wG3
+42. bB2 wQ
+43. wP /bB2
+44. bB2 wB1
+45. wQ /bG1
+46. bM wB2\
+47. wA3 -bQ
+48. bA3 \wG1
+49. wS1 -bA3
+50. bB1 wA3
+51. wS1 bA3-
+52. bA3 -wQ
+53. wG1 bM/
+54. bS2 \bA3
+55. wG1 \bB2
+56. bG1 /wQ
+57. wS1 bM-
+58. bA1 -wB2
+59. wS1 bS1-
+60. bS2 -wS2
+61. wS1 bM-
+62. bA3 wS1/
+63. pass
+64. bB2 wM
+65. pass
+66. bB2 wL
+67. pass
+68. bB2 wG2
+69. pass
+70. bB2 wG3
+71. pass
+72. bB2 wP
+73. pass
+74. bL -bS2
+75. pass
+76. bL \wS2
+77. pass
+78. bS2 -wQ
+79. pass
+80. bG2 -bG1
+81. pass
+82. bG2 \wQ
+83. pass
+84. bG3 -bG1
+85. pass
+86. bG3 wQ\
+87. pass
+88. bB2 wQ/
+
+BlackWins

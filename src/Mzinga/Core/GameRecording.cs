@@ -8,9 +8,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using Mzinga.Core;
-
-namespace Mzinga.Viewer
+namespace Mzinga.Core
 {
     public class GameRecording
     {
@@ -20,11 +18,11 @@ namespace Mzinga.Viewer
 
         public GameRecordingSource GameRecordingSource { get; private set; }
 
-        public string FileName { get; set; } = null;
+        public string? FileName { get; set; } = null;
 
-        public GameRecording(Board board, GameRecordingSource gameRecordingSource, GameMetadata metadata = null)
+        public GameRecording(Board board, GameRecordingSource gameRecordingSource, GameMetadata? metadata = null)
         {
-            Board = board?.Clone() ?? throw new ArgumentNullException(nameof(board));
+            Board = board.Clone();
 
             GameRecordingSource = gameRecordingSource;
 
@@ -42,12 +40,8 @@ namespace Mzinga.Viewer
 
         public void SavePGN(Stream outputStream)
         {
-            if (outputStream is null)
-            {
-                throw new ArgumentNullException(nameof(outputStream));
-            }
-
             using StreamWriter sw = new StreamWriter(outputStream, Encoding.ASCII);
+
             // Write Mandatory Tags
             sw.WriteLine(GetPGNTag("GameType", Enums.GetGameTypeString(Metadata.GameType)));
 
@@ -96,22 +90,17 @@ namespace Mzinga.Viewer
             return string.Format("[{0} \"{1}\"]", key.Trim(), value is not null ? value.Trim() : "");
         }
 
-        private void WritePGNMoveCommentary(StreamWriter streamWriter,  int moveNum)
+        private void WritePGNMoveCommentary(StreamWriter streamWriter, int moveNum)
         {
-            string commentary = Metadata.GetMoveCommentary(moveNum)?.Trim(new char[] { ' ', '\t', '\r', '\n' });
+            string? commentary = Metadata.GetMoveCommentary(moveNum)?.Trim(new char[] { ' ', '\t', '\r', '\n' });
             if (!string.IsNullOrEmpty(commentary))
             {
                 streamWriter.WriteLine("{" + commentary + "}");
             }
         }
 
-        public static GameRecording LoadPGN(Stream inputStream, string fileName = null)
+        public static GameRecording LoadPGN(Stream inputStream, string? fileName = null)
         {
-            if (inputStream is null)
-            {
-                throw new ArgumentNullException(nameof(inputStream));
-            }
-
             try
             {
                 GameMetadata metadata = new GameMetadata();
@@ -120,11 +109,11 @@ namespace Mzinga.Viewer
 
                 string rawResult = "";
 
-                string multiLineCommentary = null;
+                string? multiLineCommentary = null;
 
                 using (StreamReader sr = new StreamReader(inputStream, Encoding.ASCII))
                 {
-                    string line = null;
+                    string? line = null;
                     while ((line = sr.ReadLine()) is not null)
                     {
                         line = line.Trim();
@@ -226,13 +215,8 @@ namespace Mzinga.Viewer
             return new KeyValuePair<string, string>(key, value);
         }
 
-        public static GameRecording LoadSGF(Stream inputStream, string fileName = null)
+        public static GameRecording LoadSGF(Stream inputStream, string? fileName = null)
         {
-            if (inputStream is null)
-            {
-                throw new ArgumentNullException(nameof(inputStream));
-            }
-
             try
             {
                 GameMetadata metadata = new GameMetadata();
@@ -247,14 +231,14 @@ namespace Mzinga.Viewer
                 bool whiteTurn = true;
                 using (StreamReader sr = new StreamReader(inputStream))
                 {
-                    string line = null;
+                    string? line = null;
                     while ((line = sr.ReadLine()) is not null)
                     {
                         line = line.Trim();
                         if (!string.IsNullOrWhiteSpace(line))
                         {
                             // Line has contents
-                            Match m = null;
+                            Match? m = null;
                             if ((m = Regex.Match(line, @"^\(;")).Success)
                             {
                                 // Handle start of game parsing
@@ -518,13 +502,8 @@ namespace Mzinga.Viewer
             "ddd MMM dd HH:mm:ss yyyy",
         };
 
-        public static GameRecording Load(Stream inputStream, string fileName = null)
+        public static GameRecording Load(Stream inputStream, string? fileName = null)
         {
-            if (inputStream is null)
-            {
-                throw new ArgumentNullException(nameof(inputStream));
-            }
-
             if (fileName is not null)
             {
                 // Try to parse out type from file extension
@@ -540,7 +519,7 @@ namespace Mzinga.Viewer
             // Unable to use uri, try to peek at file contents
             using (StreamReader sr = new StreamReader(inputStream))
             {
-                string line = null;
+                string? line = null;
                 while ((line = sr.ReadLine()) is not null)
                 {
                     line = line.Trim();

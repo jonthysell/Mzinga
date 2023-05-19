@@ -8,8 +8,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mzinga.Core;
 
 namespace Mzinga.Test
 {
@@ -92,7 +94,7 @@ namespace Mzinga.Test
             return testCases;
         }
 
-        private static Stream GetEmbeddedResource(string fileName)
+        public static Stream GetEmbeddedResource(string fileName)
         {
             foreach (var name in TestAssembly.GetManifestResourceNames())
             {
@@ -103,6 +105,51 @@ namespace Mzinga.Test
             }
 
             throw new FileNotFoundException();
+        }
+
+        public static IEnumerable<KeyValuePair<string, Stream>> GetEmbeddedResources(string pattern)
+        {
+            foreach (var name in TestAssembly.GetManifestResourceNames())
+            {
+                if (Regex.IsMatch(name, pattern))
+                {
+                    yield return new KeyValuePair<string, Stream>(name, TestAssembly.GetManifestResourceStream(name));
+                }
+            }
+        }
+
+        public static void ProcessEmbeddedResources(string pattern, Action<string, Stream> action)
+        {
+            var resources = GetEmbeddedResources(pattern);
+            Assert.IsNotNull(resources);
+            Assert.AreNotEqual(0, resources.Count());
+
+            var failedResources = new List<string>();
+            StringBuilder failMessages = new StringBuilder();
+
+            foreach (var kvp in resources)
+            {
+                try
+                {
+                    action(kvp.Key, kvp.Value);
+                }
+                catch (Exception ex)
+                {
+                    failedResources.Add(kvp.Key);
+                    failMessages.AppendLine($"Exception processing \"{kvp.Key}\":");
+                    failMessages.AppendLine(ex.ToString());
+                }
+            }
+
+            if (failedResources.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"{failedResources.Count} resources failed:");
+
+                sb.Append(failMessages);
+
+                Assert.Fail(sb.ToString());
+            }
         }
 
         public static void ExecuteTestCases<T>(IReadOnlyDictionary<int, T> testCases) where T : ITestCase, new()
@@ -121,7 +168,7 @@ namespace Mzinga.Test
                 catch (Exception ex)
                 {
                     failedTestCases.Add(testCase);
-                    failMessages.AppendLine(string.Format("Test case on line #{0} failed:", lineNum));
+                    failMessages.AppendLine($"Test case on line #{lineNum} failed:");
                     failMessages.AppendLine(ex.Message);
                 }
                 Trace.TraceInformation($"Test case on line #{lineNum} finished in {stopWatch.ElapsedMilliseconds}ms");
@@ -130,7 +177,7 @@ namespace Mzinga.Test
             if (failedTestCases.Count > 0)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine(string.Format("{0} test cases failed:", failedTestCases.Count));
+                sb.AppendLine($"{failedTestCases.Count} test cases failed:");
 
                 sb.Append(failMessages);
 

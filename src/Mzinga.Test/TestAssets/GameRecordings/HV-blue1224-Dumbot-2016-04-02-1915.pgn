@@ -1,0 +1,53 @@
+[GameType "Base+MLP"]
+[Date "2016.04.02"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "blue1224"]
+[Black "Dumbot"]
+[Result "WhiteWins"]
+[SgfDate "Sat Apr 02 15:15:58 EDT 2016"]
+[SgfGameName "HV-blue1224-Dumbot-2016-04-02-1915"]
+[SgfResult "Game won by blue1224"]
+
+1. wS1
+2. bA1 /wS1
+3. wA1 \wS1
+4. bG1 -bA1
+5. wQ wS1-
+6. bP -bG1
+7. wP wQ/
+8. bQ bP\
+9. wA1 bQ\
+10. bS1 bA1\
+11. wB1 /wA1
+12. bB1 -bQ
+13. wB1 wA1
+14. bS2 bP/
+15. wB1 bQ
+16. bB1 wB1
+17. wB2 /wA1
+18. bB2 bS2/
+19. wB2 /bB1
+20. bB2 -wS1
+21. wB2 bB1
+22. bB2 wS1
+23. wS2 -wA1
+24. bL \bA1
+25. wB2 bP
+26. bA2 \bL
+27. wG1 /wA1
+28. bA2 wG1\
+29. wL -wG1
+30. bA2 /wL
+31. wG1 -bS1
+32. bG1 /wQ
+33. wG2 -wB2
+34. bS2 -wG2
+35. wA2 \wB2
+36. bA2 \wP
+37. wL -bB1
+38. bL wQ-
+39. wB2 -bA1
+
+WhiteWins

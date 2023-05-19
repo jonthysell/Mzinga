@@ -1,0 +1,78 @@
+[GameType "Base+MLP"]
+[Date "2016.03.29"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "nevir"]
+[Black "Bechster"]
+[Result "BlackWins"]
+[SgfDate "Tue Mar 29 21:05:19 CEST 2016"]
+[SgfGameName "U!HV-nevir-Bechster-2016-03-29-1905"]
+[SgfResult "Game won by Bechster"]
+
+1. wA1
+2. bP wA1-
+3. wM -wA1
+4. bA1 bP\
+5. wQ wM\
+6. bA2 bP-
+7. wP -wQ
+8. bQ bP/
+9. wM bQ/
+10. bA2 wM/
+11. wA2 \wP
+12. bA1 -wA2
+13. wB1 \wQ
+14. bA3 bP\
+15. wB1 wA1
+16. bB1 bQ\
+17. wB2 \wQ
+18. bA3 wQ\
+19. wB1 bP
+20. bB1 wB1
+21. wA3 /wP
+22. bA3 wA3\
+23. wB2 wA1
+24. bB2 bQ\
+25. wB2 -bQ
+26. bS1 bA3-
+27. wS1 \wQ
+28. bA2 \wB2
+29. wL wM-
+30. bB2 bQ
+31. wL \bB2
+32. bB2 wB2
+33. wM bQ-
+34. bM /bA1
+35. wG1 wM\
+36. bA2 wG1-
+37. wL bQ/
+38. bL \bB2
+39. wG2 wL-
+40. bA2 wG2-
+41. wS1 \bL
+42. bM wA2/
+43. wL \bQ
+44. bA1 wS1/
+45. wG1 bQ/
+46. bS1 /wA3
+47. wG3 -wP
+48. bA3 -wG3
+49. wG1 /bB1
+50. bS2 bS1\
+51. wA1 bM\
+52. bS2 wQ\
+53. wA2 bQ/
+54. bA1 \wG2
+55. wL bQ\
+56. bG1 -bM
+57. wL /bL
+58. bA1 /wQ
+59. wG1 \wG2
+60. bA2 wQ-
+61. wA1 /bM
+62. bM \wQ
+63. wL \bQ
+64. bB1 wQ/
+
+BlackWins

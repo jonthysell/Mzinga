@@ -8,10 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="TestAssets\**" />
     <Content Remove="TestCases\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="TestAssets\**" />
     <EmbeddedResource Include="TestCases\**" />
   </ItemGroup>
 

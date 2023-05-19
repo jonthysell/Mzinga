@@ -1,0 +1,51 @@
+[GameType "Base+P"]
+[Date "2013.05.22"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "kkurtonis"]
+[Black "RINGERSOLL"]
+[Result "WhiteWins"]
+[SgfDate "Wed May 22 12:57:07 EDT 2013"]
+
+1. wG1
+2. bG1 wG1-
+3. wA1 -wG1
+4. bG2 bG1-
+5. wQ wA1/
+6. bQ bG1/
+7. wA1 bQ/
+8. bA1 bG1\
+9. wS1 wA1-
+10. bA1 wQ/
+11. wS1 bG2\
+12. bS1 bA1/
+13. wB1 /wG1
+14. bS1 -wQ
+15. wB1 wG1
+16. bP bA1/
+17. wP wA1-
+18. bP bA1-
+19. wP bG2/
+20. bG1 wA1/
+21. wA2 wS1-
+22. bQ bA1/
+23. wA3 wP-
+24. bS2 /bS1
+25. wA2 \bQ
+26. bS2 wB1\
+27. wB2 wA2/
+28. bB1 \bS1
+29. wB2 bQ/
+30. bB1 bS1/
+31. wB2 bQ
+32. bA2 bG1/
+33. wA3 \bA2
+34. bG3 -bB1
+35. wS2 wB2/
+36. bG3 bS1\
+37. wB2 bP
+38. bA3 \bB1
+39. wG2 wA2/
+
+WhiteWins

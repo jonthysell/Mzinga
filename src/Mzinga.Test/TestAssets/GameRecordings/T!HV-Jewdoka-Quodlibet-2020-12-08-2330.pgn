@@ -1,0 +1,80 @@
+[GameType "Base+MLP"]
+[Date "2020.12.08"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Jewdoka"]
+[Black "Quodlibet"]
+[Result "Draw"]
+[SgfDate "Tue Dec 08 20:30:56 CLST 2020"]
+[SgfGameName "T!HV-Jewdoka-Quodlibet-2020-12-08-2330"]
+[SgfResult "The game is a draw"]
+
+1. wB1
+2. bL /wB1
+3. wQ wB1-
+4. bQ -bL
+5. wA1 \wB1
+6. bM bQ\
+7. wA1 bM\
+8. bA1 /bQ
+9. wA2 wA1-
+10. bA1 wA2\
+11. wM \wQ
+12. bP /bQ
+13. wA3 -wM
+14. bA2 -bP
+15. wA3 -bA2
+16. bA3 /bP
+17. wM wB1
+18. bB1 -bQ
+19. wM bL
+20. bS1 /bA1
+21. wP wQ\
+22. bS1 -wA1
+23. wB2 /wQ
+24. bQ bB1/
+25. wM bM
+26. bS2 bQ/
+27. wB2 bL
+28. bS2 \wQ
+29. wS1 /wP
+30. bA3 /wA1
+31. wB1 bS2
+32. bS1 /wA3
+33. wG1 wM-
+34. bB2 bA1-
+35. wS2 -wQ
+36. bB2 wS1\
+37. wG1 /bA3
+38. bB2 wS1
+39. wP wQ-
+40. bG1 bB2-
+41. wP wQ/
+42. bG1 wM-
+43. wB2 bG1
+44. bB2 /wQ
+45. wQ wP\
+46. bB2 wS1
+47. wB1 wS2
+48. bQ \wM
+49. wB1 bL
+50. bG2 /bP
+51. wB1 bQ
+52. bB1 wB1
+53. wB2 bL
+54. bG2 \wB2
+55. wB2 bG2
+56. bG1 bB2-
+57. wG2 \wB2
+58. bL \wG2
+59. wM bB1
+60. bB2 wS2\
+61. wM bM
+62. bB1 wB2
+63. wG3 /wG1
+64. bB2 wS2
+65. wG3 wM-
+66. bB2 bS2
+
+Draw

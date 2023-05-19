@@ -1,0 +1,45 @@
+[GameType "Base+MLP"]
+[Date "2018.10.28"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Abbo69"]
+[Black "WeakBot"]
+[Result "WhiteWins"]
+[SgfDate "28 October 2018"]
+[SgfGameName "HV-Abbo69-WeakBot-2018-10-28-2007"]
+[SgfResult "Game won by Abbo69"]
+
+1. wS1
+2. bL /wS1
+3. wA1 \wS1
+4. bB1 -bL
+5. wQ wS1-
+6. bS1 /bL
+7. wP \wQ
+8. bQ -bS1
+9. wQ wP/
+10. bP \bQ
+11. wA1 /bQ
+12. bS2 bP/
+13. wB1 -wA1
+14. bB2 bS2/
+15. wB1 wA1
+16. bS1 wP\
+17. wB1 bQ
+18. bB2 -wS1
+19. wS2 wB1\
+20. bS1 wQ/
+21. wA2 wS2-
+22. bG1 \bB2
+23. wA2 /bL
+24. bB1 wA2
+25. wB1 bP
+26. bB1 wS2
+27. wG1 /wA1
+28. bG2 bB1\
+29. wG1 bQ/
+30. bB1 wA2
+31. wB1 -bQ
+
+WhiteWins

@@ -1,0 +1,108 @@
+[GameType "Base"]
+[Date "2018.10.31"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Dumbot"]
+[Black "guest"]
+[Result "Draw"]
+[SgfDate "Wed Oct 31 15:02:42 CET 2018"]
+[SgfGameName "HV-Dumbot-guest-2018-10-31-1402"]
+[SgfResult "The game is a draw"]
+
+1. wG1
+2. bG1 -wG1
+3. wA1 wG1\
+4. bQ /bG1
+5. wB1 wA1-
+6. bS1 /bQ
+7. wQ \wB1
+8. bS1 /wA1
+9. wS1 \wQ
+10. bS2 \bG1
+11. wS1 \bS2
+12. bA1 /bS1
+13. wB2 wQ-
+14. bA1 \wQ
+15. wA2 wB2\
+16. bA1 wA2\
+17. wS2 wB2-
+18. bA2 /bS1
+19. wS2 bA1\
+20. bA2 \wQ
+21. wA3 wB2-
+22. bA2 wA3/
+23. wG2 \wS1
+24. bA3 /bS1
+25. wG2 bQ-
+26. bQ -bG1
+27. wB1 -bA1
+28. bQ /wS1
+29. wS1 /bQ
+30. bA3 bS1\
+31. wS2 bA3\
+32. bA1 wB1\
+33. wG3 wQ\
+34. bA1 \wQ
+35. wG1 -bS1
+36. bB1 bA1/
+37. wA2 bB1/
+38. bB2 \bA1
+39. wB1 /wA3
+40. bB2 bA1
+41. wA2 -bA2
+42. bB1 bB2
+43. wA2 \bQ
+44. bG2 bB1/
+45. wG3 -bA2
+46. bA2 wA3-
+47. wG1 /bB1
+48. bB1 wG1
+49. wA1 bG2-
+50. bG2 wA1-
+51. wA1 bB2-
+52. bG2 wQ\
+53. wA1 bQ/
+54. bG3 \bB1
+55. wB2 bG2
+56. bG1 wQ-
+57. wB2 wQ
+58. bB2 wB2
+59. wA1 bA2/
+60. bA1 -wG3
+61. wB1 bG1
+62. bB2 wG2-
+63. wB2 bB1
+64. bG2 \wQ
+65. wG3 -bQ
+66. bG2 wQ\
+67. wG2 bG2-
+68. bG2 \wQ
+69. wG2 \bA1
+70. bG2 wQ\
+71. wB1 bG2
+72. pass
+73. wA2 -wS1
+74. pass
+75. wA2 -bS1
+76. pass
+77. wA2 \wG3
+78. pass
+79. wA2 /wS1
+80. pass
+81. wA2 bA1/
+82. pass
+83. wA2 bQ/
+84. pass
+85. wA2 \bG3
+86. pass
+87. wA2 bA2\
+88. pass
+89. wA1 \bQ
+90. pass
+91. wA1 bA2/
+92. pass
+93. wA1 \bQ
+94. pass
+
+Draw

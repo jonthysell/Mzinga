@@ -2,6 +2,8 @@
 
 ## next ##
 
+* Core: Moved GameRecording code into Core
+* Test: Added tests for SGF/PGN loading/saving
 * Viewer: Fixed issue with resetting default sidebar viewer option
 * Viewer: Improved SGF parsing to handle SGF start/end of game markers
 * Viewer: Improved SGF parsing to handle draw offers

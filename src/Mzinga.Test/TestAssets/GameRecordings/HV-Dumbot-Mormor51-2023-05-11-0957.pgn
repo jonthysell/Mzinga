@@ -1,0 +1,89 @@
+[GameType "Base+MLP"]
+[Date "2023.05.11"]
+[Event ""]
+[Site ""]
+[Round ""]
+[White "Dumbot"]
+[Black "Mormor51"]
+[Result "WhiteWins"]
+[SgfDate "Thu May 11 11:57:24 CEST 2023"]
+[SgfGameName "HV-Dumbot-Mormor51-2023-05-11-0957"]
+[SgfResult "Dumbot vann spelet"]
+
+1. wP
+2. bB1 /wP
+3. wB1 wP/
+4. bQ bB1\
+5. wL wP-
+6. bG1 /bQ
+7. wQ \wP
+8. bG1 /wL
+9. wL /bQ
+10. bB1 wP
+11. wB1 bB1
+12. bP bQ-
+13. wS1 wQ-
+14. bA1 bP\
+15. wS1 bP-
+16. bS1 /bA1
+17. wS1 bS1\
+18. bB2 bP/
+19. wS2 -wQ
+20. bB2 wB1-
+21. wB2 wQ/
+22. bB2 wB1
+23. wS2 -bQ
+24. bA2 bB2-
+25. wA1 \wS2
+26. bA2 wB2/
+27. wG1 -wQ
+28. bA3 bB2-
+29. wA1 bA3-
+30. bS2 \bA2
+31. wG2 wS1\
+32. bS2 \wG1
+33. wA2 -wG2
+34. bG2 \bS2
+35. wA2 -bG2
+36. bG3 bA2/
+37. wG3 -wG2
+38. bG3 /wQ
+39. wA2 bA2/
+40. bG3 wA2/
+41. wA3 /wG1
+42. bG2 /wQ
+43. wA3 bG3-
+44. bM -bS2
+45. wA3 -bM
+46. bL bM/
+47. wM wA1/
+48. bL \wQ
+49. wG1 bL/
+50. bG3 \wS2
+51. wS2 \bG3
+52. bG3 wA2/
+53. wB2 bL
+54. bG3 wQ/
+55. wG1 bA2-
+56. bB2 wQ-
+57. wM bB2-
+58. bB2 wB1
+59. wS2 -bQ
+60. bG2 wA1-
+61. wA2 bG2-
+62. bB2 /wQ
+63. wA2 -bB2
+64. bG2 -wA2
+65. wA1 wM-
+66. bG2 wM\
+67. wA1 bG2-
+68. pass
+69. wM \bA2
+70. pass
+71. wM bP-
+72. pass
+73. wG2 bQ\
+74. bQ \wM
+75. wA2 bQ-
+
+WhiteWins
