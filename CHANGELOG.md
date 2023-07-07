@@ -3,6 +3,7 @@
 ## next ##
 
 * New icon
+* Viewer: Fixed issue with checkbox / radiobutton label misalignment
 * Viewer: Minor rendering improvements
 * Viewer: Switched to CompiledBindings for improved performance
 * Viewer: Updated New Game Window
