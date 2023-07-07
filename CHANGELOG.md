@@ -6,7 +6,7 @@
 * Viewer: Minor rendering improvements
 * Viewer: Switched to CompiledBindings for improved performance
 * Viewer: Updated New Game Window
-* Viewer: Updated Avalonia to 11.0.0-rc1.1
+* Viewer: Updated Avalonia to 11.0.0
 * Viewer: Updated Markdown.Avalonia to Markdown.Avalonia.Tight 11.0.0-d1
 
 ## v0.13.6 ##
