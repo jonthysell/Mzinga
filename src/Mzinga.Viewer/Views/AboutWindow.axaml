@@ -28,7 +28,7 @@
                                Grid.RowSpan="2" />
             <TabControl Grid.Column="1"
                         Grid.Row="0"
-                        Height="400"
+                        Height="375"
                         ItemsSource="{Binding TabItems}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -39,17 +39,18 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <md:MarkdownScrollViewer Margin="0,5"
-                                                 Markdown="{Binding Body, Mode=OneWay}"
-                                                 Width="500"
-                                                 x:DataType="vm:ObservableAboutTabItem">
+                      <ScrollViewer Margin="0,5" Width="500" Padding="10,0,30,0">
+                          <md:MarkdownScrollViewer Width="460"
+                                                   Markdown="{Binding Body, Mode=OneWay}"
+                                                   x:DataType="vm:ObservableAboutTabItem">
                             <md:MarkdownScrollViewer.Styles>
-                                <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
+                              <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
                             </md:MarkdownScrollViewer.Styles>
                             <md:MarkdownScrollViewer.Engine>
-                                <md:Markdown HyperlinkCommand="{Binding AppVM.LaunchURL}" />
+                              <md:Markdown HyperlinkCommand="{Binding AppVM.LaunchURL}" />
                             </md:MarkdownScrollViewer.Engine>
-                        </md:MarkdownScrollViewer>
+                          </md:MarkdownScrollViewer>
+                      </ScrollViewer>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
