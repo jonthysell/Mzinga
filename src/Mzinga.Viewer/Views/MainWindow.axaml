@@ -374,6 +374,7 @@
                            Content="Commentary"
                            DockPanel.Dock="Top" />
                     <TextBox AcceptsReturn="True"
+                             Classes="Scrolling"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              Text="{Binding CurrentMoveCommentary}"

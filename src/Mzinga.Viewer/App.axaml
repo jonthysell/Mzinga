@@ -47,6 +47,10 @@
             <Setter Property="VerticalContentAlignment"
                     Value="Center" />
         </Style>
+        <Style Selector="TextBox.Scrolling ScrollViewer TextPresenter">
+            <Setter Property="Margin"
+                    Value="0,0,30,0" />
+        </Style>
         <Style Selector="local|TileControl.MzingaIcon">
             <Setter Property="HexSize"
                     Value="24" />

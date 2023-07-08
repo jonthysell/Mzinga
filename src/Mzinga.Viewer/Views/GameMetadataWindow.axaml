@@ -24,51 +24,52 @@
                                Grid.Column="0"
                                Grid.Row="0"
                                Grid.RowSpan="2" />
-            <ScrollViewer Grid.Column="1"
-                          Grid.Row="0"
-                          Height="375"
-                          Margin="0,5"
-                          Padding="10,5,30,5">
-                <StackPanel Margin="5,0"
-                            Width="500">
-                    <ItemsControl ItemsSource="{Binding StandardTags}">
-                        <ItemsControl.DataTemplates>
-                            <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding Key}"
-                                           DockPanel.Dock="Top" />
-                                    <TextBox IsReadOnly="{Binding IsReadOnly}"
-                                             Text="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type vm:ObservableGameMetadataEnumTag}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding Key}"
-                                           DockPanel.Dock="Top" />
-                                    <ComboBox IsEnabled="{Binding CanEdit}"
-                                              ItemsSource="{Binding PossibleValues}"
-                                              SelectedItem="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </ItemsControl.DataTemplates>
-                    </ItemsControl>
-                    <ItemsControl ItemsSource="{Binding OptionalTags}">
-                        <ItemsControl.DataTemplates>
-                            <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding Key}"
-                                           DockPanel.Dock="Top" />
-                                    <TextBox IsReadOnly="{Binding IsReadOnly}"
-                                             Text="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </ItemsControl.DataTemplates>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
+            <Grid Grid.Column="1"
+                  Grid.Row="0"
+                  Height="375">
+                <ScrollViewer Margin="0,5"
+                              Padding="10,0,30,0">
+                    <StackPanel Margin="5,0"
+                                Width="500">
+                        <ItemsControl ItemsSource="{Binding StandardTags}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding Key}"
+                                               DockPanel.Dock="Top" />
+                                        <TextBox IsReadOnly="{Binding IsReadOnly}"
+                                                 Text="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:ObservableGameMetadataEnumTag}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding Key}"
+                                               DockPanel.Dock="Top" />
+                                        <ComboBox IsEnabled="{Binding CanEdit}"
+                                                  ItemsSource="{Binding PossibleValues}"
+                                                  SelectedItem="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding OptionalTags}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type vm:ObservableGameMetadataStringTag}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding Key}"
+                                               DockPanel.Dock="Top" />
+                                        <TextBox IsReadOnly="{Binding IsReadOnly}"
+                                                 Text="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
             <StackPanel Classes="DialogButtons"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"

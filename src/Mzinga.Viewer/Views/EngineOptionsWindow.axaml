@@ -24,56 +24,57 @@
                                Grid.Column="0"
                                Grid.Row="0"
                                Grid.RowSpan="2" />
-            <ScrollViewer Grid.Column="1"
-                          Grid.Row="0"
-                          Height="375"
-                          Margin="0,5"
-                          Padding="10,5,30,5">
-                <StackPanel Margin="5,0"
-                            Width="500">
-                    <ItemsControl ItemsSource="{Binding Options}">
-                        <ItemsControl.DataTemplates>
-                            <DataTemplate DataType="{x:Type vm:ObservableBooleanEngineOption}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding FriendlyKey}"
-                                           DockPanel.Dock="Top" />
-                                    <CheckBox IsChecked="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type vm:ObservableIntegerEngineOption}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding FriendlyKey}"
-                                           DockPanel.Dock="Top" />
-                                    <NumericUpDown Maximum="{Binding MaxValue}"
-                                                   Minimum="{Binding MinValue}"
-                                                   Value="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type vm:ObservableDoubleEngineOption}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding FriendlyKey}"
-                                           DockPanel.Dock="Top" />
-                                    <NumericUpDown Maximum="{Binding MaxValue}"
-                                                   Minimum="{Binding MinValue}"
-                                                   Value="{Binding Value}" />
-                                </DockPanel>
-                            </DataTemplate>
-                            <DataTemplate DataType="{x:Type vm:ObservableEnumEngineOption}">
-                                <DockPanel Classes="GroupBox">
-                                    <Label Classes="Header"
-                                           Content="{Binding FriendlyKey}"
-                                           DockPanel.Dock="Top" />
-                                    <ComboBox ItemsSource="{Binding FriendlyValues}"
-                                              SelectedIndex="{Binding SelectedValueIndex}" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </ItemsControl.DataTemplates>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>
+            <Grid Grid.Column="1"
+                  Grid.Row="0"
+                  Height="375">
+                <ScrollViewer Margin="0,5"
+                              Padding="10,0,30,0">
+                    <StackPanel Margin="5,0"
+                                Width="500">
+                        <ItemsControl ItemsSource="{Binding Options}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate DataType="{x:Type vm:ObservableBooleanEngineOption}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding FriendlyKey}"
+                                               DockPanel.Dock="Top" />
+                                        <CheckBox IsChecked="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:ObservableIntegerEngineOption}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding FriendlyKey}"
+                                               DockPanel.Dock="Top" />
+                                        <NumericUpDown Maximum="{Binding MaxValue}"
+                                                       Minimum="{Binding MinValue}"
+                                                       Value="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:ObservableDoubleEngineOption}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding FriendlyKey}"
+                                               DockPanel.Dock="Top" />
+                                        <NumericUpDown Maximum="{Binding MaxValue}"
+                                                       Minimum="{Binding MinValue}"
+                                                       Value="{Binding Value}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:ObservableEnumEngineOption}">
+                                    <DockPanel Classes="GroupBox">
+                                        <Label Classes="Header"
+                                               Content="{Binding FriendlyKey}"
+                                               DockPanel.Dock="Top" />
+                                        <ComboBox ItemsSource="{Binding FriendlyValues}"
+                                                  SelectedIndex="{Binding SelectedValueIndex}" />
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
             <StackPanel Classes="DialogButtons"
                         Grid.Column="0"
                         Grid.ColumnSpan="2"

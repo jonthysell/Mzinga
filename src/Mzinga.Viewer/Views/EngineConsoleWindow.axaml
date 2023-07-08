@@ -39,6 +39,7 @@
                     Grid.Column="2"
                     Grid.Row="0" />
             <TextBox AcceptsReturn="True"
+                     Classes="Scrolling"
                      FontFamily="Lucida Console"
                      Grid.Column="0"
                      Grid.ColumnSpan="3"
