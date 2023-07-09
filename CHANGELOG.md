@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.14.0 ##
 
 * New icon
 * Viewer: Fixed issue with checkbox / radiobutton label misalignment
