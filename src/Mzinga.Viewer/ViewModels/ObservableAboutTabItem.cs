@@ -9,6 +9,14 @@ namespace Mzinga.Viewer.ViewModels
 {
     public class ObservableAboutTabItem : ObservableObject
     {
+        public static AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+        }
+
         public string Header { get; private set; }
 
         public string Body { get; private set; }

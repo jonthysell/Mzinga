@@ -3,13 +3,15 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class NewGameWindow : Window
+    public partial class NewGameWindow : Window
     {
         public NewGameViewModel VM
         {
@@ -27,14 +29,34 @@ namespace Mzinga.Viewer.Views
         public NewGameWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
-        private void InitializeComponent()
+        private void ToggleOption_Click(object sender, PointerReleasedEventArgs e)
         {
-            AvaloniaXamlLoader.Load(this);
+            if (e.InitialPressMouseButton == MouseButton.Left)
+            {
+                if (sender == WhitePlayerTile)
+                {
+                    VM.WhitePlayerType = (PlayerType)(1 - (int)VM.WhitePlayerType);
+                }
+                else if (sender == BlackPlayerTile)
+                {
+                    VM.BlackPlayerType = (PlayerType)(1 - (int)VM.BlackPlayerType);
+                }
+                else if (sender == MosquitoCanvas)
+                {
+                    VM.IncludeMosquito = !VM.IncludeMosquito;
+                }
+                else if (sender == LadybugCanvas)
+                {
+                    VM.IncludeLadybug = !VM.IncludeLadybug;
+                }
+                else if (sender == PillbugCanvas)
+                {
+                    VM.IncludePillbug = !VM.IncludePillbug;
+                }
+                e.Handled = true;
+            }
         }
     }
 }

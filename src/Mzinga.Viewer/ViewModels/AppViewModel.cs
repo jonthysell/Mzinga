@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using System.ComponentModel;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,6 +25,8 @@ namespace Mzinga.Viewer.ViewModels
         public DoOnUIThread DoOnUIThread { get; private set; }
 
         public TextToClipboard TextToClipboard { get; private set; }
+
+        public UpdateVisualTheme UpdateVisualTheme { get; private set; }
 
         public EngineWrapper EngineWrapper { get; private set; }
 
@@ -206,6 +209,7 @@ namespace Mzinga.Viewer.ViewModels
             ViewerConfig = parameters.ViewerConfig;
             DoOnUIThread = parameters.DoOnUIThread;
             TextToClipboard = parameters.TextToClipboard;
+            UpdateVisualTheme = parameters.UpdateVisualTheme;
             InternalEngineConfig = parameters.InternalEngineConfig;
 
             if (ViewerConfig.EngineType == EngineType.CommandLine)
@@ -238,6 +242,8 @@ namespace Mzinga.Viewer.ViewModels
     public delegate void DoOnUIThread(Action action);
 
     public delegate void TextToClipboard(string text);
+
+    public delegate void UpdateVisualTheme(VisualTheme visualTheme);
 
     public class AppViewModelParameters
     {
@@ -283,6 +289,19 @@ namespace Mzinga.Viewer.ViewModels
             }
         }
         private TextToClipboard _textToClipboard;
+
+        public UpdateVisualTheme UpdateVisualTheme
+        {
+            get
+            {
+                return _updateVisualTheme;
+            }
+            set
+            {
+                _updateVisualTheme = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+        private UpdateVisualTheme _updateVisualTheme;
 
         public EngineConfig InternalEngineConfig;
     }

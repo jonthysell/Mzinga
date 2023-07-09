@@ -18,7 +18,7 @@ namespace Mzinga.Core
 
         public GameRecordingSource GameRecordingSource { get; private set; }
 
-        public string? FileName { get; set; } = null;
+		public Uri? FileUri { get; set; } = null;
 
         public GameRecording(Board board, GameRecordingSource gameRecordingSource, GameMetadata? metadata = null)
         {
@@ -99,7 +99,7 @@ namespace Mzinga.Core
             }
         }
 
-        public static GameRecording LoadPGN(Stream inputStream, string? fileName = null)
+        public static GameRecording LoadPGN(Stream inputStream, Uri? fileUri = null)
         {
             try
             {
@@ -195,7 +195,7 @@ namespace Mzinga.Core
 
                 return new GameRecording(board, GameRecordingSource.PGN, metadata)
                 {
-                    FileName = fileName?.Trim()
+                    FileUri = fileUri
                 };
             }
             catch (Exception ex)
@@ -215,7 +215,7 @@ namespace Mzinga.Core
             return new KeyValuePair<string, string>(key, value);
         }
 
-        public static GameRecording LoadSGF(Stream inputStream, string? fileName = null)
+        public static GameRecording LoadSGF(Stream inputStream, Uri? fileUri = null)
         {
             try
             {
@@ -485,7 +485,7 @@ namespace Mzinga.Core
 
                 return new GameRecording(board, GameRecordingSource.SGF, metadata)
                 {
-                    FileName = fileName?.Trim()
+                    FileUri = fileUri
                 };
             }
             catch (Exception ex)
@@ -502,17 +502,17 @@ namespace Mzinga.Core
             "ddd MMM dd HH:mm:ss yyyy",
         };
 
-        public static GameRecording Load(Stream inputStream, string? fileName = null)
+        public static GameRecording Load(Stream inputStream, Uri? fileUri = null)
         {
-            if (fileName is not null)
+            if (fileUri is not null && fileUri.IsFile)
             {
                 // Try to parse out type from file extension
-                switch (Path.GetExtension(fileName).ToLower())
+                switch (Path.GetExtension(fileUri.ToString()).ToLower())
                 {
                     case ".pgn":
-                        return LoadPGN(inputStream, fileName);
+                        return LoadPGN(inputStream, fileUri);
                     case ".sgf":
-                        return LoadSGF(inputStream, fileName);
+                        return LoadSGF(inputStream, fileUri);
                 }
             }
 
@@ -528,13 +528,13 @@ namespace Mzinga.Core
                     {
                         // SGF detected
                         inputStream.Position = 0;
-                        return LoadSGF(inputStream, fileName);
+                        return LoadSGF(inputStream, fileUri);
                     }
                     else if (line.StartsWith("[") && line.EndsWith("]"))
                     {
                         // PGN detected
                         inputStream.Position = 0;
-                        return LoadPGN(inputStream, fileName);
+                        return LoadPGN(inputStream, fileUri);
                     }
                 }
             }

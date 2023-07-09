@@ -8,8 +8,11 @@
         d:DesignWidth="480"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.ViewerConfigWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:ViewerConfigViewModel"
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -17,20 +20,20 @@
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">
-            <Image Classes="MzingaIcon"
-                   Grid.Column="0"
-                   Grid.Row="0"
-                   Grid.RowSpan="2" />
+            <local:TileControl Classes="MzingaIcon"
+                               Grid.Column="0"
+                               Grid.Row="0"
+                               Grid.RowSpan="2" />
             <TabControl Grid.Column="1"
                         Grid.Row="0"
-                        Height="300">
+                        Height="375">
                 <TabItem FontSize="14"
                          FontWeight="Bold"
                          Header="Game">
                     <ScrollViewer Margin="0,5"
-                                  Padding="0,5">
+                                  Padding="10,5,30,5">
                         <StackPanel Margin="5,0"
-                                    Width="400">
+                                    Width="500">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
                                        Content="Moves"
@@ -49,9 +52,9 @@
                          FontWeight="Bold"
                          Header="Engine">
                     <ScrollViewer Margin="0,5"
-                                  Padding="0,5">
+                                  Padding="10,5,30,5">
                         <StackPanel Margin="5,0"
-                                    Width="400">
+                                    Width="500">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
                                        Content="Type"
@@ -78,16 +81,257 @@
                 </TabItem>
                 <TabItem FontSize="14"
                          FontWeight="Bold"
+                         Header="Pieces">
+                    <ScrollViewer Margin="0,5"
+                                  Padding="10,5,30,5">
+                        <Grid ColumnDefinitions="Auto,*"
+                              Margin="5,0"
+                              Width="500">
+                            <StackPanel>
+                                <DockPanel Classes="GroupBox">
+                                    <Label Classes="Header"
+                                           Content="Hex Orientation"
+                                           DockPanel.Dock="Top" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                                     CommandParameter="HexOrientation.PointyTop"
+                                                     Content="Pointy Top (Default)"
+                                                     GroupName="HexOrientation"
+                                                     IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}" />
+                                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                                     CommandParameter="HexOrientation.FlatTop"
+                                                     Content="Flat Top"
+                                                     GroupName="HexOrientation"
+                                                     IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <DockPanel Classes="GroupBox">
+                                    <Label Classes="Header"
+                                           Content="Bug Style"
+                                           DockPanel.Dock="Top" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                                     CommandParameter="PieceStyle.Graphical"
+                                                     Content="Graphical (Default)"
+                                                     GroupName="PieceStyle"
+                                                     IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Graphical}" />
+                                        <RadioButton Command="{Binding ToggleRadioButton}"
+                                                     CommandParameter="PieceStyle.Text"
+                                                     Content="Text"
+                                                     GroupName="PieceStyle"
+                                                     IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <DockPanel Classes="GroupBox">
+                                    <Label Classes="Header"
+                                           Content="Piece Style"
+                                           DockPanel.Dock="Top" />
+                                    <StackPanel>
+                                        <CheckBox Content="Colored bug pieces"
+                                                  IsChecked="{Binding PieceColors}" />
+                                        <CheckBox Content="Add numbers to piece of similar type"
+                                                  IsChecked="{Binding AddPieceNumbers}" />
+                                        <CheckBox Content="Stack pieces of similar type in hand"
+                                                  IsChecked="{Binding StackPiecesInHand}" />
+                                    </StackPanel>
+                                </DockPanel>
+                            </StackPanel>
+                            <Grid ColumnDefinitions="*,*,*,*"
+                                  Grid.Column="1"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center">
+                                <StackPanel Grid.Column="0">
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wQ"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wG1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wG2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wG3"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wA1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wA2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wA3"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wS1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wS2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wB1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wB2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wM"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wL"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="wP"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bQ"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bG1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bG2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bG3"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bA1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bA2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bA3"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bS1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bS2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bB1"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bB2"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bM"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bL"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                    <local:TileControl AddPieceNumbers="{Binding AddPieceNumbers}"
+                                                       HexOrientation="{Binding HexOrientation}"
+                                                       HexSize="20"
+                                                       PieceName="bP"
+                                                       PieceStyle="{Binding PieceStyle}"
+                                                       UseColoredPieces="{Binding PieceColors}" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem FontSize="14"
+                         FontWeight="Bold"
                          Header="Visuals">
                     <ScrollViewer Margin="0,5"
-                                  Padding="0,5">
+                                  Padding="10,5,30,5">
                         <StackPanel Margin="5,0"
-                                    Width="400">
+                                    Width="500">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
                                        Content="Theme"
                                        DockPanel.Dock="Top" />
-                                <StackPanel>
+                                <StackPanel Orientation="Horizontal">
                                     <RadioButton Command="{Binding ToggleRadioButton}"
                                                  CommandParameter="VisualTheme.Light"
                                                  Content="Light (Default)"
@@ -98,55 +342,6 @@
                                                  Content="Dark"
                                                  GroupName="VisualTheme"
                                                  IsChecked="{Binding Path=VisualTheme, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Dark}" />
-                                    <Label Content="Note: Restart viewer to change theme."
-                                           HorizontalAlignment="Center" />
-                                </StackPanel>
-                            </DockPanel>
-                            <DockPanel Classes="GroupBox">
-                                <Label Classes="Header"
-                                       Content="Hex Orientation"
-                                       DockPanel.Dock="Top" />
-                                <StackPanel>
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="HexOrientation.PointyTop"
-                                                 Content="Pointy Top (Default)"
-                                                 GroupName="HexOrientation"
-                                                 IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=PointyTop}" />
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="HexOrientation.FlatTop"
-                                                 Content="Flat Top"
-                                                 GroupName="HexOrientation"
-                                                 IsChecked="{Binding Path=HexOrientation, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=FlatTop}" />
-                                </StackPanel>
-                            </DockPanel>
-                            <DockPanel Classes="GroupBox">
-                                <Label Classes="Header"
-                                       Content="Bug Style"
-                                       DockPanel.Dock="Top" />
-                                <StackPanel>
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="PieceStyle.Graphical"
-                                                 Content="Graphical (Default)"
-                                                 GroupName="PieceStyle"
-                                                 IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Graphical}" />
-                                    <RadioButton Command="{Binding ToggleRadioButton}"
-                                                 CommandParameter="PieceStyle.Text"
-                                                 Content="Text"
-                                                 GroupName="PieceStyle"
-                                                 IsChecked="{Binding Path=PieceStyle, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Text}" />
-                                </StackPanel>
-                            </DockPanel>
-                            <DockPanel Classes="GroupBox">
-                                <Label Classes="Header"
-                                       Content="Piece Style"
-                                       DockPanel.Dock="Top" />
-                                <StackPanel>
-                                    <CheckBox Content="Colored bug pieces"
-                                              IsChecked="{Binding PieceColors}" />
-                                    <CheckBox Content="Add numbers to piece of similar type"
-                                              IsChecked="{Binding AddPieceNumbers}" />
-                                    <CheckBox Content="Stack pieces of similar type in hand"
-                                              IsChecked="{Binding StackPiecesInHand}" />
                                 </StackPanel>
                             </DockPanel>
                             <DockPanel Classes="GroupBox">
@@ -203,9 +398,9 @@
                          FontWeight="Bold"
                          Header="Misc">
                     <ScrollViewer Margin="0,5"
-                                  Padding="0,5">
+                                  Padding="10,5,30,5">
                         <StackPanel Margin="5,0"
-                                    Width="400">
+                                    Width="500">
                             <DockPanel Classes="GroupBox">
                                 <Label Classes="Header"
                                        Content="General"

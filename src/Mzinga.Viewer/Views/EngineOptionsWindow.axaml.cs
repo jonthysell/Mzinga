@@ -9,7 +9,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class EngineOptionsWindow : Window
+    public partial class EngineOptionsWindow : Window
     {
         public EngineOptionsViewModel VM
         {
@@ -27,14 +27,6 @@ namespace Mzinga.Viewer.Views
         public EngineOptionsWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 
@@ -29,14 +30,11 @@ namespace Mzinga.Viewer
 
         public string ViewerConfigPath { get; private set; }
 
-        public static IStyle FluentLight { get; private set; }
-        public static IStyle FluentDark { get; private set; }
+        public IClipboard Clipboard { get; private set; }
 
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
-            FluentLight = AvaloniaXamlLoader.Load(new Uri("avares://Avalonia.Themes.Fluent/FluentLight.xaml")) as IStyle;
-            FluentDark = AvaloniaXamlLoader.Load(new Uri("avares://Avalonia.Themes.Fluent/FluentDark.xaml")) as IStyle;
         }
 
         public override void OnFrameworkInitializationCompleted()
@@ -63,19 +61,28 @@ namespace Mzinga.Viewer
                 ViewerConfig = LoadConfig(),
                 DoOnUIThread = (action) => { Avalonia.Threading.Dispatcher.UIThread.Post(action); },
                 TextToClipboard = TextToClipboard,
+                UpdateVisualTheme = UpdateVisualTheme,
                 InternalEngineConfig = InternalEngineConfig, // Should be the unmodified defaults
             };
 
             AppViewModel.Init(parameters);
             DataContext = AppVM;
 
-            Current.Styles[0] = AppVM.ViewerConfig.VisualTheme == VisualTheme.Dark ? FluentDark : FluentLight;
+            UpdateVisualTheme(AppVM.ViewerConfig.VisualTheme);
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var window = new Views.MainWindow();
                 desktop.MainWindow = window;
+                Clipboard = desktop.MainWindow.Clipboard;
             }
+        }
+
+        private void UpdateVisualTheme(VisualTheme visualTheme)
+        {
+            AppVM.DoOnUIThread(() => {
+                Current.RequestedThemeVariant = visualTheme == VisualTheme.Dark ? ThemeVariant.Dark : ThemeVariant.Light;
+            });
         }
 
         private void Desktop_Exit(object sender, ControlledApplicationLifetimeExitEventArgs e)
@@ -126,7 +133,7 @@ namespace Mzinga.Viewer
 
         private void TextToClipboard(string text)
         {
-            Clipboard.SetTextAsync(text);
+            Clipboard.SetTextAsync(text).Wait();
         }
 
         private static string GetDefaultViewerConfigFileName()

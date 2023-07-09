@@ -1,0 +1,102 @@
+<ResourceDictionary x:CompileBindings="True"
+                    xmlns="https://github.com/avaloniaui"
+                    xmlns:local="clr-namespace:Mzinga.Viewer"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Background="White"
+                Padding="20">
+            <local:TileControl HexOrientation="FlatTop"
+                               HexSize="128"
+                               PieceName="wQ"
+                               PieceStyle="Text"
+                               Text="M"
+                               UseColoredPieces="True"
+                               UseSplitBackground="True" />
+        </Border>
+    </Design.PreviewWith>
+    <Color x:Key="TileControlStrokeColor">#FF333333</Color>
+    <Color x:Key="TileControlDisabledColor">LightGray</Color>
+    <SolidColorBrush Color="{StaticResource TileControlStrokeColor}"
+                     x:Key="TileControlStrokeBrush" />
+    <SolidColorBrush Color="{StaticResource TileControlDisabledColor}"
+                     x:Key="TileControlDisabledBrush" />
+    <LinearGradientBrush EndPoint="50%,100%"
+                         StartPoint="50%,0%"
+                         x:Key="SplitBackgroundFlatTopBrush">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="White"
+                          Offset="0" />
+            <GradientStop Color="White"
+                          Offset="0.625" />
+            <GradientStop Color="Black"
+                          Offset="0.625" />
+            <GradientStop Color="Black"
+                          Offset="1.0" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <LinearGradientBrush EndPoint="50%,100%"
+                         StartPoint="50%,0%"
+                         x:Key="SplitBackgroundPointyTopBrush">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="White"
+                          Offset="0" />
+            <GradientStop Color="White"
+                          Offset="0.555" />
+            <GradientStop Color="Black"
+                          Offset="0.555" />
+            <GradientStop Color="Black"
+                          Offset="1.0" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <ControlTheme TargetType="{x:Type local:TileControl}"
+                  x:Key="{x:Type local:TileControl}">
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Height="{TemplateBinding Height}"
+                      Width="{TemplateBinding Width}">
+                    <local:HexShape Fill="{TemplateBinding Background}"
+                                    Height="{TemplateBinding Height}"
+                                    HexOrientation="{TemplateBinding HexOrientation}"
+                                    HexSize="{TemplateBinding HexSize}"
+                                    Width="{TemplateBinding Width}"
+                                    x:Name="PART_BaseHexShape" />
+                    <Grid Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          x:Name="PART_BugGraphicOuterGrid">
+                        <Grid x:Name="PART_BugGraphicInnerGrid">
+                            <local:BugShape Fill="{TemplateBinding Foreground}"
+                                            HorizontalAlignment="Center"
+                                            Stretch="Uniform"
+                                            VerticalAlignment="Center"
+                                            x:Name="PART_BugGraphicBugShape" />
+                        </Grid>
+                        <Ellipse Fill="{TemplateBinding Foreground}"
+                                 Height="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 Width="{Binding FontSize, ElementName=PART_BugGraphicBugNumberTextBlock}"
+                                 x:Name="PART_BugGraphicBugNumberEllipse" />
+                        <TextBlock FontFamily="Arial Black"
+                                   FontWeight="Bold"
+                                   Foreground="{TemplateBinding Background}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   x:Name="PART_BugGraphicBugNumberTextBlock" />
+                    </Grid>
+                    <Grid Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}"
+                          x:Name="PART_BugTextGrid">
+                        <TextBlock FontFamily="Arial Black"
+                                   FontWeight="Bold"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   x:Name="PART_BugTextTextBlock" />
+                    </Grid>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

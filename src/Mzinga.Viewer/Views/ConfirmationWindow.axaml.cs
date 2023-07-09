@@ -9,7 +9,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class ConfirmationWindow : Window
+    public partial class ConfirmationWindow : Window
     {
         public ConfirmationViewModel VM
         {
@@ -27,14 +27,6 @@ namespace Mzinga.Viewer.Views
         public ConfirmationWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
 }

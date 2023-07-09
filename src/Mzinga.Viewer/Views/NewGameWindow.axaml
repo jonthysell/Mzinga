@@ -8,8 +8,11 @@
         d:DesignWidth="480"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.NewGameWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:NewGameViewModel"
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -17,10 +20,10 @@
         <Grid ColumnDefinitions="Auto,*"
               Margin="5"
               RowDefinitions="*,Auto">
-            <Image Classes="MzingaIcon"
-                   Grid.Column="0"
-                   Grid.Row="0"
-                   Grid.RowSpan="2" />
+            <local:TileControl Classes="MzingaIcon"
+                               Grid.Column="0"
+                               Grid.Row="0"
+                               Grid.RowSpan="2" />
             <StackPanel Classes="DialogMain"
                         Grid.Column="1"
                         Grid.Row="0">
@@ -28,47 +31,65 @@
                     <Label Classes="Header"
                            Content="Players"
                            DockPanel.Dock="Top" />
-                    <Grid ColumnDefinitions="*,Auto,Auto"
-                          RowDefinitions="Auto,Auto">
-                        <Label Content="White:"
-                               Grid.Column="0"
-                               Grid.Row="0"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                        <RadioButton Command="{Binding ToggleRadioButton}"
-                                     CommandParameter="WhitePlayerType.Human"
-                                     Content="Human"
-                                     Grid.Column="1"
-                                     Grid.Row="0"
-                                     GroupName="WhitePlayerType"
-                                     IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" />
-                        <RadioButton Command="{Binding ToggleRadioButton}"
-                                     CommandParameter="WhitePlayerType.EngineAI"
-                                     Content="Computer"
-                                     Grid.Column="2"
-                                     Grid.Row="0"
-                                     GroupName="WhitePlayerType"
-                                     IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" />
-                        <Label Content="Black:"
-                               Grid.Column="0"
-                               Grid.Row="1"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                        <RadioButton Command="{Binding ToggleRadioButton}"
-                                     CommandParameter="BlackPlayerType.Human"
-                                     Content="Human"
-                                     Grid.Column="1"
-                                     Grid.Row="1"
-                                     GroupName="BlackPlayerType"
-                                     IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" />
-                        <RadioButton Command="{Binding ToggleRadioButton}"
-                                     CommandParameter="BlackPlayerType.EngineAI"
-                                     Content="Computer"
-                                     Grid.Column="2"
-                                     Grid.Row="2"
-                                     GroupName="BlackPlayerType"
-                                     IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" />
-                    </Grid>
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Margin="15,0"
+                                    Orientation="Horizontal">
+                            <local:TileControl Grid.Column="0"
+                                               Grid.Row="0"
+                                               HexOrientation="FlatTop"
+                                               HexSize="32"
+                                               Name="WhitePlayerTile"
+                                               PieceName="wQ"
+                                               PointerReleased="ToggleOption_Click"
+                                               UseColoredPieces="True" />
+                            <StackPanel>
+                                <RadioButton Command="{Binding ToggleRadioButton}"
+                                             CommandParameter="WhitePlayerType.Human"
+                                             Content="Human"
+                                             Grid.Column="1"
+                                             Grid.Row="0"
+                                             GroupName="WhitePlayerType"
+                                             IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" />
+                                <RadioButton Command="{Binding ToggleRadioButton}"
+                                             CommandParameter="WhitePlayerType.EngineAI"
+                                             Content="Engine"
+                                             Grid.Column="2"
+                                             Grid.Row="0"
+                                             GroupName="WhitePlayerType"
+                                             IsChecked="{Binding Path=WhitePlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Margin="15,0"
+                                    Orientation="Horizontal">
+                            <local:TileControl Grid.Column="0"
+                                               Grid.Row="1"
+                                               HexOrientation="FlatTop"
+                                               HexSize="32"
+                                               Name="BlackPlayerTile"
+                                               PieceName="bQ"
+                                               PointerReleased="ToggleOption_Click"
+                                               UseColoredPieces="True" />
+                            <StackPanel>
+                                <RadioButton Command="{Binding ToggleRadioButton}"
+                                             CommandParameter="BlackPlayerType.Human"
+                                             Content="Human"
+                                             Grid.Column="1"
+                                             Grid.Row="1"
+                                             GroupName="BlackPlayerType"
+                                             IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=Human}" />
+                                <RadioButton Command="{Binding ToggleRadioButton}"
+                                             CommandParameter="BlackPlayerType.EngineAI"
+                                             Content="Engine"
+                                             Grid.Column="2"
+                                             Grid.Row="2"
+                                             GroupName="BlackPlayerType"
+                                             IsChecked="{Binding Path=BlackPlayerType, Mode=OneWay, Converter={StaticResource EnumMatchToBooleanConverter}, ConverterParameter=EngineAI}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
                 </DockPanel>
                 <DockPanel Classes="GroupBox"
                            IsEnabled="{Binding IsNewGame}">
@@ -77,24 +98,90 @@
                            DockPanel.Dock="Top" />
                     <StackPanel HorizontalAlignment="Center"
                                 Orientation="Horizontal">
-                        <CheckBox Content="Mosquito"
-                                  IsChecked="{Binding IncludeMosquito}"
-                                  IsEnabled="{Binding EnableMosquito}" />
-                        <CheckBox Content="Ladybug"
-                                  IsChecked="{Binding IncludeLadybug}"
-                                  IsEnabled="{Binding EnableLadybug}" />
-                        <CheckBox Content="Pillbug"
-                                  IsChecked="{Binding IncludePillbug}"
-                                  IsEnabled="{Binding EnablePillbug}" />
+                        <StackPanel Margin="15,0">
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="MosquitoCanvas"
+                                    PointerReleased="ToggleOption_Click"
+                                    Width="54">
+                                <local:TileControl Canvas.Left="6"
+                                                   Canvas.Top="6"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludeMosquito}"
+                                                   PieceName="bM"
+                                                   UseColoredPieces="True" />
+                                <local:TileControl Canvas.Left="0"
+                                                   Canvas.Top="0"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludeMosquito}"
+                                                   PieceName="wM"
+                                                   UseColoredPieces="True" />
+                            </Canvas>
+                            <CheckBox Content="Mosquito"
+                                      IsChecked="{Binding IncludeMosquito}"
+                                      IsEnabled="{Binding EnableMosquito}" />
+                        </StackPanel>
+                        <StackPanel Margin="15,0">
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="LadybugCanvas"
+                                    PointerReleased="ToggleOption_Click"
+                                    Width="54">
+                                <local:TileControl Canvas.Left="6"
+                                                   Canvas.Top="6"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludeLadybug}"
+                                                   PieceName="bL"
+                                                   UseColoredPieces="True" />
+                                <local:TileControl Canvas.Left="0"
+                                                   Canvas.Top="0"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludeLadybug}"
+                                                   PieceName="wL"
+                                                   UseColoredPieces="True" />
+                            </Canvas>
+                            <CheckBox Content="Ladybug"
+                                      IsChecked="{Binding IncludeLadybug}"
+                                      IsEnabled="{Binding EnableLadybug}" />
+                        </StackPanel>
+                        <StackPanel Margin="15,0">
+                            <Canvas Background="Transparent"
+                                    Height="54"
+                                    Name="PillbugCanvas"
+                                    PointerReleased="ToggleOption_Click"
+                                    Width="54">
+                                <local:TileControl Canvas.Left="6"
+                                                   Canvas.Top="6"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludePillbug}"
+                                                   PieceName="bP"
+                                                   UseColoredPieces="True" />
+                                <local:TileControl Canvas.Left="0"
+                                                   Canvas.Top="0"
+                                                   HexOrientation="FlatTop"
+                                                   HexSize="24"
+                                                   IsEnabled="{Binding IncludePillbug}"
+                                                   PieceName="wP"
+                                                   UseColoredPieces="True" />
+                            </Canvas>
+                            <CheckBox Content="Pillbug"
+                                      IsChecked="{Binding IncludePillbug}"
+                                      IsEnabled="{Binding EnablePillbug}" />
+                        </StackPanel>
                     </StackPanel>
                 </DockPanel>
                 <DockPanel Classes="GroupBox">
                     <Label Classes="Header"
-                           Content="Computer"
+                           Content="Engine Settings"
                            DockPanel.Dock="Top" />
-                    <Grid ColumnDefinitions="*,Auto,Auto"
+                    <Grid ColumnDefinitions="Auto,Auto,*"
                           RowDefinitions="Auto,Auto">
-                        <Label Content="Best Move:"
+                        <Label Content="Search For"
                                Grid.Column="0"
                                Grid.Row="0"
                                Grid.RowSpan="2"
@@ -126,7 +213,7 @@
                                        Increment="1"
                                        IsEnabled="{Binding EnableBestMoveMaxTimeValue}"
                                        Minimum="0"
-                                       Value="{Binding BestMoveMaxTimeValue, Converter={StaticResource TimeSpanToDoubleConverter}}"
+                                       Value="{Binding BestMoveMaxTimeValue, Converter={StaticResource TimeSpanToDecimalConverter}}"
                                        VerticalAlignment="Center" />
                     </Grid>
                 </DockPanel>

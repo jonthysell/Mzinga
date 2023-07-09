@@ -1,0 +1,29 @@
+<Style xmlns="https://github.com/avaloniaui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style.Resources>
+        <Color x:Key="QueenBeeColor">#FFFAA71D</Color>
+        <Color x:Key="SpiderColor">#FF8B3F1B</Color>
+        <Color x:Key="BeetleColor">#FF9565C2</Color>
+        <Color x:Key="GrasshopperColor">#FF419D46</Color>
+        <Color x:Key="SoldierAntColor">#FF258DC1</Color>
+        <Color x:Key="MosquitoColor">#FF6F6F91</Color>
+        <Color x:Key="LadybugColor">#FFD12020</Color>
+        <Color x:Key="PillbugColor">#FF259966</Color>
+        <SolidColorBrush Color="{StaticResource QueenBeeColor}"
+                         x:Key="QueenBeeColorBrush" />
+        <SolidColorBrush Color="{StaticResource SpiderColor}"
+                         x:Key="SpiderColorBrush" />
+        <SolidColorBrush Color="{StaticResource BeetleColor}"
+                         x:Key="BeetleColorBrush" />
+        <SolidColorBrush Color="{StaticResource GrasshopperColor}"
+                         x:Key="GrasshopperColorBrush" />
+        <SolidColorBrush Color="{StaticResource SoldierAntColor}"
+                         x:Key="SoldierAntColorBrush" />
+        <SolidColorBrush Color="{StaticResource MosquitoColor}"
+                         x:Key="MosquitoColorBrush" />
+        <SolidColorBrush Color="{StaticResource LadybugColor}"
+                         x:Key="LadybugColorBrush" />
+        <SolidColorBrush Color="{StaticResource PillbugColor}"
+                         x:Key="PillbugColorBrush" />
+    </Style.Resources>
+</Style>

@@ -114,19 +114,19 @@ namespace Mzinga.Viewer.ViewModels
 
     public class SaveGameMessage
     {
-        private readonly Action<string> Callback;
+        private readonly Action<Uri> Callback;
 
         public GameRecording GameRecording { get; private set; }
 
-        public SaveGameMessage(GameRecording gameRecording, Action<string> callback = null)
+        public SaveGameMessage(GameRecording gameRecording, Action<Uri> callback = null)
         {
             GameRecording = gameRecording;
             Callback = callback;
         }
 
-        public void Process(string fileName)
+        public void Process(Uri fileUri)
         {
-            Callback?.Invoke(fileName);
+            Callback?.Invoke(fileUri);
         }
     }
 

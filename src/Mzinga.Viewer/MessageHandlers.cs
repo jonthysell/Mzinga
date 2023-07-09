@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
+using Avalonia.Platform.Storage.FileIO;
 
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -205,20 +207,19 @@ namespace Mzinga.Viewer
             GameRecording gr = null;
             try
             {
-                OpenFileDialog dialog = new OpenFileDialog
+                var options = new FilePickerOpenOptions()
                 {
                     AllowMultiple = false,
                     Title = "Open Game",
-                    Filters = GetFilters(true),
+                    FileTypeFilter = GetFilters(true),
                 };
 
-                string[] filenames = await dialog.ShowAsync(MainWindow);
+                var files = await MainWindow.StorageProvider.OpenFilePickerAsync(options);
 
-                if (filenames is not null && filenames.Length > 0 && !string.IsNullOrWhiteSpace(filenames[0]))
+                if (files is not null && files.Count > 0)
                 {
-                    string fileName = filenames[0].Trim();
-                    using Stream inputStream = File.OpenRead(fileName);
-                    gr = GameRecording.Load(inputStream, fileName);
+                    using Stream inputStream = await files[0].OpenReadAsync();
+                    gr = GameRecording.Load(inputStream, files[0].Path);
                 }
             }
             catch (Exception ex)
@@ -233,26 +234,29 @@ namespace Mzinga.Viewer
 
         private static async Task ShowSaveGameAsync(SaveGameMessage message)
         {
-            string fileName = null;
+            Uri oldFileUri = message.GameRecording.FileUri;
+            Uri newFileUri = null;
+
             try
             {
-                SaveFileDialog dialog = new SaveFileDialog
+                var options = new FilePickerSaveOptions()
                 {
                     Title = "Save Game",
                     DefaultExtension = ".pgn",
-                    Filters = GetFilters(false),
-                    Directory = !string.IsNullOrEmpty(message.GameRecording.FileName) ? Path.GetDirectoryName(message.GameRecording.FileName) : null,
-                    InitialFileName = !string.IsNullOrEmpty(message.GameRecording.FileName) ? Path.GetFileName(message.GameRecording.FileName) : null,
+                    FileTypeChoices = GetFilters(false),
+                    SuggestedStartLocation = oldFileUri is null ? null : await MainWindow.StorageProvider.TryGetFolderFromPathAsync(oldFileUri),
+                    SuggestedFileName = oldFileUri is null ? null : (await MainWindow.StorageProvider.TryGetFileFromPathAsync(oldFileUri))?.Name,
+                    ShowOverwritePrompt = true,
                 };
 
-                string result = await dialog.ShowAsync(MainWindow);
+                var file = await MainWindow.StorageProvider.SaveFilePickerAsync(options);
 
-                fileName = result?.Trim();
-
-                if (!string.IsNullOrEmpty(fileName))
+                if (file is not null)
                 {
-                    using Stream outputStream = File.Create(fileName);
+                    await file.DeleteAsync(); // Must delete file first because IStorageFile.OpenWriteAsync doesn't truncate first
+                    using Stream outputStream = await file.OpenWriteAsync();
                     message.GameRecording.SavePGN(outputStream);
+                    newFileUri = file.Path;
                 }
             }
             catch (Exception ex)
@@ -261,35 +265,32 @@ namespace Mzinga.Viewer
             }
             finally
             {
-                message.Process(fileName);
+                message.Process(newFileUri);
             }
         }
 
-        private static List<FileDialogFilter> GetFilters(bool open)
+        private static List<FilePickerFileType> GetFilters(bool open)
         {
-            var filters = new List<FileDialogFilter>();
+            var filters = new List<FilePickerFileType>();
 
             if (open)
             {
-                filters.Add(new FileDialogFilter()
+                filters.Add(new FilePickerFileType("All Supported Files")
                 {
-                    Name = "All Supported Files",
-                    Extensions = new List<string>() { "pgn", "sgf" }
+                    Patterns = new List<string>() { "*.pgn", "*.sgf" }
                 });
             }
 
-            filters.Add(new FileDialogFilter()
+            filters.Add(new FilePickerFileType("Portable Game Notation")
             {
-                Name = "Portable Game Notation",
-                Extensions = new List<string>() { "pgn" }
+                Patterns = new List<string>() { "*.pgn" }
             });
 
             if (open)
             {
-                filters.Add(new FileDialogFilter()
+                filters.Add(new FilePickerFileType("BoardSpace Smart Game Format")
                 {
-                    Name = "BoardSpace Smart Game Format",
-                    Extensions = new List<string>() { "sgf" }
+                    Patterns = new List<string>() { "*.sgf" }
                 });
             }
 

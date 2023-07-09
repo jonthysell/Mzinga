@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
+using System;
 using System.IO;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace Mzinga.Test
         {
             TestUtils.ProcessEmbeddedResources("\\.(pgn|sgf)$", (name, inputStream) =>
             {
-                var gr = GameRecording.Load(inputStream, name);
+                var gr = GameRecording.Load(inputStream);
                 Assert.IsNotNull(gr);
             });
         }
@@ -35,7 +36,7 @@ namespace Mzinga.Test
         {
             TestUtils.ProcessEmbeddedResources("\\.sgf$", (name, inputStream) =>
             {
-                var gr = GameRecording.LoadSGF(inputStream, name);
+                var gr = GameRecording.LoadSGF(inputStream);
                 Assert.IsNotNull(gr);
             });
         }
@@ -45,7 +46,7 @@ namespace Mzinga.Test
         {
             TestUtils.ProcessEmbeddedResources("\\.pgn$", (name, inputStream) =>
             {
-                var gr = GameRecording.LoadPGN(inputStream, name);
+                var gr = GameRecording.LoadPGN(inputStream);
                 Assert.IsNotNull(gr);
             });
         }
@@ -55,7 +56,7 @@ namespace Mzinga.Test
         {
             TestUtils.ProcessEmbeddedResources("\\.(pgn|sgf)$", (name, inputStream) =>
             {
-                var gr = GameRecording.Load(inputStream, name);
+                var gr = GameRecording.Load(inputStream);
                 Assert.IsNotNull(gr);
 
                 using var ms = new MemoryStream();

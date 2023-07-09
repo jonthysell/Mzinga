@@ -10,6 +10,7 @@ using Mzinga.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Avalonia.Styling;
 
 namespace Mzinga.Viewer.ViewModels
 {
@@ -31,11 +32,11 @@ namespace Mzinga.Viewer.ViewModels
 
                 if (IsReviewMode)
                 {
-                    string fileName = AppVM.EngineWrapper.CurrentGameSettings?.GameRecording?.FileName;
+                    var fileUri = AppVM.EngineWrapper.CurrentGameSettings?.GameRecording?.FileUri;
 
-                    if (!string.IsNullOrWhiteSpace(fileName))
+                    if (fileUri is not null)
                     {
-                        title = $"{fileName} - {title}";
+                        title = $"{(fileUri.IsFile ? fileUri.LocalPath : fileUri.ToString())} - {title}";
                     }
                 }
 
@@ -450,11 +451,11 @@ namespace Mzinga.Viewer.ViewModels
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.Clear();
                                 AppVM.EngineWrapper.CurrentGameSettings.Metadata.CopyFrom(metadata);
 
-                                StrongReferenceMessenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording, (fileName) =>
+                                StrongReferenceMessenger.Default.Send(new SaveGameMessage(AppVM.EngineWrapper.CurrentGameSettings.GameRecording, (fileUri) =>
                                 {
-                                    if (IsReviewMode)
+                                    if (fileUri is not null && IsReviewMode)
                                     {
-                                        AppVM.EngineWrapper.CurrentGameSettings.GameRecording.FileName = fileName;
+                                        AppVM.EngineWrapper.CurrentGameSettings.GameRecording.FileUri = fileUri;
                                         OnPropertyChanged(nameof(Title));
                                     }
                                 }));
@@ -1294,6 +1295,7 @@ namespace Mzinga.Viewer.ViewModels
                     });
                     break;
                 case nameof(ViewerConfig):
+                    AppVM.UpdateVisualTheme(ViewerConfig.VisualTheme);
                     AppVM.DoOnUIThread(() =>
                     {
                         OnPropertyChanged(nameof(ShowBoardHistory));

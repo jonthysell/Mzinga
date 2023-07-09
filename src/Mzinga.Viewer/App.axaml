@@ -1,17 +1,22 @@
 <Application Name="MzingaViewer"
              x:Class="Mzinga.Viewer.App"
+             x:CompileBindings="True"
+             x:DataType="vm:AppViewModel"
              xmlns="https://github.com/avaloniaui"
-             xmlns:viewer="clr-namespace:Mzinga.Viewer"
+             xmlns:local="clr-namespace:Mzinga.Viewer"
+             xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
-        <viewer:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
-        <viewer:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
-        <viewer:TimeSpanToDoubleConverter x:Key="TimeSpanToDoubleConverter" />
-        <viewer:BoolToItalicFontStyleConverter x:Key="BoolToItalicFontStyleConverter" />
-        <viewer:BoolToBoldFontWeightConverter x:Key="BoolToBoldFontWeightConverter" />
+        <local:EnumMatchToBooleanConverter x:Key="EnumMatchToBooleanConverter" />
+        <local:IdleBoolToWaitCursorConverter x:Key="IdleBoolToWaitCursorConverter" />
+        <local:TimeSpanToDecimalConverter x:Key="TimeSpanToDecimalConverter" />
+        <local:BoolToItalicFontStyleConverter x:Key="BoolToItalicFontStyleConverter" />
+        <local:BoolToBoldFontWeightConverter x:Key="BoolToBoldFontWeightConverter" />
     </Application.Resources>
     <Application.Styles>
-        <StyleInclude Source="avares://Avalonia.Themes.Fluent/FluentLight.xaml" />
+        <StyleInclude Source="avares://Avalonia.Themes.Fluent/FluentTheme.xaml" />
+        <StyleInclude Source="avares://MzingaViewer/Resources/BugColors.axaml" />
+        <StyleInclude Source="avares://MzingaViewer/Controls/Controls.axaml" />
         <Style Selector="Window">
             <Setter Property="Icon"
                     Value="avares://MzingaViewer/Resources/icon.ico" />
@@ -29,14 +34,10 @@
         <Style Selector="CheckBox">
             <Setter Property="Margin"
                     Value="5" />
-            <Setter Property="Padding"
-                    Value="10" />
         </Style>
         <Style Selector="RadioButton">
             <Setter Property="Margin"
                     Value="5" />
-            <Setter Property="Padding"
-                    Value="10" />
         </Style>
         <Style Selector="TextBox">
             <Setter Property="Margin"
@@ -46,17 +47,29 @@
             <Setter Property="VerticalContentAlignment"
                     Value="Center" />
         </Style>
-        <Style Selector="Image.MzingaIcon">
-            <Setter Property="Height"
-                    Value="48" />
+        <Style Selector="TextBox.Scrolling ScrollViewer TextPresenter">
+            <Setter Property="Margin"
+                    Value="0,0,30,0" />
+        </Style>
+        <Style Selector="local|TileControl.MzingaIcon">
+            <Setter Property="HexSize"
+                    Value="24" />
+            <Setter Property="HexOrientation"
+                    Value="FlatTop" />
+            <Setter Property="PieceName"
+                    Value="wQ" />
+            <Setter Property="PieceStyle"
+                    Value="Text" />
+            <Setter Property="UseColoredPieces"
+                    Value="True" />
+            <Setter Property="UseSplitBackground"
+                    Value="True" />
+            <Setter Property="Text"
+                    Value="M" />
             <Setter Property="HorizontalAlignment"
                     Value="Center" />
             <Setter Property="Margin"
                     Value="5" />
-            <Setter Property="Source"
-                    Value="avares://MzingaViewer/Resources/icon.ico" />
-            <Setter Property="Width"
-                    Value="48" />
             <Setter Property="VerticalAlignment"
                     Value="Top" />
         </Style>
@@ -97,11 +110,11 @@
                             Header="Mzinga Website" />
             <NativeMenuItem Command="{Binding LaunchHiveWebsite}"
                             Header="Hive Website" />
-            <NativeMenuItemSeperator />
+            <NativeMenuItemSeparator />
             <NativeMenuItem Command="{Binding CheckForUpdatesAsync}"
                             Header="Check for Updates"
                             IsEnabled="{Binding CheckForUpdatesEnabled}" />
-            <NativeMenuItemSeperator />
+            <NativeMenuItemSeparator />
             <NativeMenuItem Command="{Binding ShowLicenses}"
                             Header="About MzingaViewer" />
         </NativeMenu>

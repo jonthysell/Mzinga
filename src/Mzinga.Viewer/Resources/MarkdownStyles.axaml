@@ -7,8 +7,6 @@
                 Value="14" />
         <Setter Property="FontWeight"
                 Value="Bold" />
-        <Setter Property="Foreground"
-                Value="{StaticResource TextControlForeground}" />
         <Setter Property="Margin"
                 Value="0,5" />
     </Style>
@@ -19,5 +17,9 @@
     <Style Selector="Grid.List">
         <Setter Property="Margin"
                 Value="10,0" />
+    </Style>
+    <Style Selector="md|MarkdownScrollViewer ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility"
+                Value="Disabled" />
     </Style>
 </Styles>

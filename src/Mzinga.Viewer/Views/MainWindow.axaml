@@ -11,8 +11,11 @@
         d:DesignWidth="800"
         mc:Ignorable="d"
         x:Class="Mzinga.Viewer.Views.MainWindow"
+        x:CompileBindings="True"
+        x:DataType="vm:MainViewModel"
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Mzinga.Viewer"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Mzinga.Viewer.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -27,7 +30,7 @@
                         <NativeMenuItem Command="{Binding LoadGame}"
                                         Gesture="Cmd+O"
                                         Header="Open..." />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding SaveGame}"
                                         Gesture="Cmd+S"
                                         Header="Save As..." />
@@ -45,7 +48,7 @@
                                         Header="Move Forward" />
                         <NativeMenuItem Command="{Binding MoveToEnd}"
                                         Header="Move To End" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowGameMetadata}"
                                         Header="Edit Metadata" />
                         <NativeMenuItem Command="{Binding SwitchToPlayMode}"
@@ -60,10 +63,10 @@
                     <NativeMenu>
                         <NativeMenuItem Header="{Binding EngineId}"
                                         IsEnabled="False" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding FindBestMove}"
                                         Header="Find Best Move" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowEngineOptions}"
                                         Gesture="Cmd+Shift+E"
                                         Header="Engine Options" />
@@ -82,14 +85,14 @@
                         <NativeMenuItem Command="{Binding ToggleShowMoveCommentary}"
                                         Header="Show Move Commentary"
                                         IsChecked="{Binding ShowMoveCommentary}" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ToggleAutoCenterBoard}"
                                         Header="Auto Center Board"
                                         IsChecked="{Binding AutoCenterBoard}" />
                         <NativeMenuItem Command="{Binding ToggleAutoZoomBoard}"
                                         Header="Auto Zoom Board"
                                         IsChecked="{Binding AutoZoomBoard}" />
-                        <NativeMenuItemSeperator />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Command="{Binding ShowViewerConfig}"
                                         Gesture="Cmd+Shift+V"
                                         Header="Viewer Options" />
@@ -322,21 +325,26 @@
                     <Label Classes="Header"
                            Content="History"
                            DockPanel.Dock="Top" />
-                    <ListBox Items="{Binding BoardHistory.Items}"
+                    <ListBox ItemsSource="{Binding BoardHistory.Items}"
                              MinWidth="140"
                              Padding="5,5,20,5"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              SelectedIndex="{Binding BoardHistory.CurrentMoveIndex, Mode=TwoWay}"
-                             SelectionMode="Single"
                              SelectionChanged="BoardHistoryListBox_SelectionChanged"
-                             VirtualizationMode="None"
+                             SelectionMode="Single"
                              VerticalAlignment="Stretch">
-                      <ListBox.Styles>
-                        <Style Selector="ListBoxItem">
-                          <Setter Property="IsHitTestVisible" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window} Path=DataContext.IsReviewMode}" />
-                        </Style>
-                      </ListBox.Styles>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.Styles>
+                            <Style Selector="ListBoxItem">
+                                <Setter Property="IsHitTestVisible"
+                                        Value="{Binding (vm:MainViewModel)$parent[Window].DataContext.IsReviewMode}" />
+                            </Style>
+                        </ListBox.Styles>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -344,8 +352,8 @@
                                                FontStyle="{Binding !IsActive, Converter={StaticResource BoolToItalicFontStyleConverter}}"
                                                FontWeight="{Binding IsLastMove, Converter={StaticResource BoolToBoldFontWeightConverter}}"
                                                Text="{Binding MoveString}"
-                                               VerticalAlignment="Stretch"
-                                               TextWrapping="NoWrap" />
+                                               TextWrapping="NoWrap"
+                                               VerticalAlignment="Stretch" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -366,6 +374,7 @@
                            Content="Commentary"
                            DockPanel.Dock="Top" />
                     <TextBox AcceptsReturn="True"
+                             Classes="Scrolling"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              Text="{Binding CurrentMoveCommentary}"

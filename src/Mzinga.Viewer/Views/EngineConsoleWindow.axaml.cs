@@ -12,7 +12,7 @@ using Mzinga.Viewer.ViewModels;
 
 namespace Mzinga.Viewer.Views
 {
-    public class EngineConsoleWindow : Window
+    public partial class EngineConsoleWindow : Window
     {
         public static EngineConsoleWindow Instance { get; set; }
 
@@ -31,14 +31,6 @@ namespace Mzinga.Viewer.Views
         public EngineConsoleWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
 
         private void EngineConsoleWindow_Closed(object sender, EventArgs e)
