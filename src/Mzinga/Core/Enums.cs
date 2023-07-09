@@ -171,9 +171,11 @@ namespace Mzinga.Core
                 case PieceName.bG1:
                 case PieceName.bA1:
                     return 1;
+                case PieceName.wS2:
                 case PieceName.wB2:
                 case PieceName.wG2:
                 case PieceName.wA2:
+                case PieceName.bS2:
                 case PieceName.bB2:
                 case PieceName.bG2:
                 case PieceName.bA2:
