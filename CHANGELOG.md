@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Updated Markdown.Avalonia.Tight to 11.0.0
+
 ## v0.14.0 ##
 
 * New icon
