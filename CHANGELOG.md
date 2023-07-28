@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Updated Avalonia to 11.0.1
 * Viewer: Updated Markdown.Avalonia.Tight to 11.0.0
 
 ## v0.14.0 ##
