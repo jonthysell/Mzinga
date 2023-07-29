@@ -30,6 +30,11 @@ namespace Mzinga.Viewer.ViewModels
             {
                 string title = AppVM.ProgramTitle;
 
+                if (AppVM.EngineWrapper is CLIEngineWrapper)
+                {
+                    title += $" [{AppVM.EngineWrapper.ID}]";
+                }
+
                 if (IsReviewMode)
                 {
                     var fileUri = AppVM.EngineWrapper.CurrentGameSettings?.GameRecording?.FileUri;

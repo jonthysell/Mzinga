@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Added UHP engine to title bar
 * Viewer: Updated Avalonia to 11.0.1
 * Viewer: Updated Markdown.Avalonia.Tight to 11.0.0
 
