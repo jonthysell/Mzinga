@@ -9,7 +9,7 @@
   <Identity
     Name="32728JonThysell.MzingaViewer"
     Publisher="CN=3E953986-6DBE-4C0E-B918-B1BB3B0F02EF"
-    Version="0.14.0.0" />
+    Version="0.14.1.0" />
 
   <Properties>
     <DisplayName>MzingaViewer</DisplayName>

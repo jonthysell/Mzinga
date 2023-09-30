@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.14.1 ##
 
 * Viewer: Added UHP engine to title bar
 * Viewer: Updated Avalonia to 11.0.4
