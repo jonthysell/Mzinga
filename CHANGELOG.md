@@ -1,5 +1,11 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Viewer: Updated Avalonia to 11.0.7
+* Viewer: Updated CommunityToolkit.Mvvm to 8.2.2
+* Viewer: Updated System.Reactive.Linq to 6.0.0
+
 ## v0.14.1 ##
 
 * Viewer: Added UHP engine to title bar
