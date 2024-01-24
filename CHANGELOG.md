@@ -2,6 +2,7 @@
 
 ## next ##
 
+* Viewer: Add native ARM64 build (WinStore only)
 * Viewer: Updated Avalonia to 11.0.7
 * Viewer: Updated CommunityToolkit.Mvvm to 8.2.2
 * Viewer: Updated System.Reactive.Linq to 6.0.0
