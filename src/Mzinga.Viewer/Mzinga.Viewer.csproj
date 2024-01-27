@@ -10,7 +10,7 @@
     <Platforms>AnyCPU;x86;x64;arm64</Platforms>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64' ">
     <CFBundleName>MzingaViewer</CFBundleName>
     <CFBundleDisplayName>MzingaViewer</CFBundleDisplayName>
     <CFBundleIdentifier>com.jonthysell.mzingaviewer</CFBundleIdentifier>
@@ -27,7 +27,7 @@
     <AvaloniaResource Include="Resources\icon.ico" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' ">
+  <ItemGroup Condition=" '$(RuntimeIdentifier)' == 'osx-x64' Or '$(RuntimeIdentifier)' == 'osx-arm64' ">
     <Content Include="Resources\icon.icns">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

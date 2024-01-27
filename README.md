@@ -22,12 +22,12 @@ Mzinga was written in C# and should run anywhere that supports [.NET 6.0](https:
 
 #### Standard ####
 
-The standard Windows release provides self-contained x86/x64 binaries which run on Windows 7 SP1+, 8.1, 10, and 11.
+The standard Windows release provides self-contained x86/x64/arm64 binaries which run on Windows 7 SP1+, 8.1, 10, and 11.
 
-1. Download the latest Windows zip file (Mzinga.WinX86.zip *or* Mzinga.WinX64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Windows zip file (Mzinga.WinX86.zip, Mzinga.WinX64.zip, *or* Mzinga.WinArm64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the zip file
 
-**Note:** If you're unsure which version to download, try Mzinga.WinX64.zip first. Most modern PCs are 64-bit.
+**Note:** If you're unsure which version to download, try Mzinga.WinX64.zip first. Most modern PCs are x64.
 
 #### Setup MSI ####
 
@@ -36,7 +36,7 @@ A standalone version of *MzingaViewer* is available via an installer which can r
 1. Download the latest Windows setup file (MzingaViewer.WinX86.Setup.msi *or* MzingaViewer.WinX64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Open the installer
 
-**Note:** If you're unsure which version to download, try MzingaViewer.WinX64.Setup.msi first. Most modern PCs are 64-bit.
+**Note:** If you're unsure which version to download, try MzingaViewer.WinX64.Setup.msi first. Most modern PCs are x64.
 
 **Note:** This version does not contain the *MzingaEngine*, *MzingaPerft*, or *MzingaTrainer* binaries.
 
@@ -48,17 +48,23 @@ A standalone version of *MzingaViewer* is available via the Microsoft Store for 
 
 ### MacOS ###
 
-The MacOS release provides self-contained x64 binaries which run on OSX >= 10.13.
+The MacOS release provides self-contained x64/arm64 binaries which run on OSX >= 10.15.
 
-1. Download the latest MacOS tar.gz file (Mzinga.MacOS.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest MacOS tar.gz file (Mzinga.MacOSX64.tar.gz *or* Mzinga.MacOSArm64.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
+
+**Note:** If you're unsure which version to download, try Mzinga.MacOSX64.tar.gz first. Most modern PCs are x64.
+
+**Note:** If MacOS Gatekeeper prevents you from running Mzinga, you may need to run `xattr -cr` on the downloaded files.
 
 ### Linux ###
 
-The Linux release provides self-contained x64 binaries which run on many Linux distributions.
+The Linux release provides self-contained x64/arm64 binaries which run on many Linux distributions.
 
-1. Download the latest Linux tar.gz file (Mzinga.Linux.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Linux tar.gz file (Mzinga.LinuxX64.tar.gz *or* Mzinga.LinuxArm64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
+
+**Note:** If you're unsure which version to download, try Mzinga.LinuxX64.tar.gz first. Most modern PCs are x64.
 
 ### Unpacked ###
 

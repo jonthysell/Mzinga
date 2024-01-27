@@ -2,7 +2,7 @@
 
 ## next ##
 
-* Added native ARM64 build for Windows
+* Added native ARM64 build for Windows, MacOS, and Linux
 * Test: Updated Microsoft.NET.Test.Sdk to 17.8.0
 * Test: Updated MSTest to 3.2.0
 * Test: Updated coverlet.collector to 6.0.0
