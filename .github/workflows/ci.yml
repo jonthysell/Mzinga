@@ -128,7 +128,7 @@ jobs:
     needs: ci_build_and_test
     strategy:
       matrix:
-        target: [Linux]
+        target: [LinuxX64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -148,7 +148,7 @@ jobs:
     needs: ci_build_and_test
     strategy:
       matrix:
-        target: [MacOS]
+        target: [MacOSX64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3

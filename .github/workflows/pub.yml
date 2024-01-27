@@ -136,7 +136,7 @@ jobs:
     needs: pub_create_github_release
     strategy:
       matrix:
-        target: [Linux]
+        target: [LinuxX64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -160,7 +160,7 @@ jobs:
     needs: pub_create_github_release
     strategy:
       matrix:
-        target: [MacOS]
+        target: [MacOSX64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3

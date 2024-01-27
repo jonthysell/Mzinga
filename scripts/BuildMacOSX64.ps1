@@ -1,5 +1,5 @@
 [string] $Product = "Mzinga"
-[string] $Target = "MacOS"
+[string] $Target = "MacOSX64"
 
 & "$PSScriptRoot\Build.ps1" -Product $Product -Target $Target -BuildArgs "-t:BundleApp -p:RuntimeIdentifier=osx-x64 -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true" -ProjectPath "src\$Product.Viewer\$Product.Viewer.csproj"
 
