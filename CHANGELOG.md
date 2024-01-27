@@ -2,10 +2,10 @@
 
 ## next ##
 
+* Added native ARM64 build for Windows
 * Test: Updated Microsoft.NET.Test.Sdk to 17.8.0
 * Test: Updated MSTest to 3.2.0
 * Test: Updated coverlet.collector to 6.0.0
-* Viewer: Add native ARM64 build (WinStore only)
 * Viewer: Updated Avalonia to 11.0.7
 * Viewer: Updated CommunityToolkit.Mvvm to 8.2.2
 * Viewer: Updated System.Reactive.Linq to 6.0.0

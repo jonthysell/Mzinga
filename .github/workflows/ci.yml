@@ -46,7 +46,7 @@ jobs:
     needs: ci_build_and_test
     strategy:
       matrix:
-        target: [Unpacked, Win32, Win64]
+        target: [Unpacked, WinX86, WinX64, WinArm64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -68,7 +68,7 @@ jobs:
       Product: MzingaViewer
     strategy:
       matrix:
-        target: [Win32.Setup, Win64.Setup]
+        target: [WinX86.Setup, WinX64.Setup]
     steps:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1

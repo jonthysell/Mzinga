@@ -24,19 +24,19 @@ Mzinga was written in C# and should run anywhere that supports [.NET 6.0](https:
 
 The standard Windows release provides self-contained x86/x64 binaries which run on Windows 7 SP1+, 8.1, 10, and 11.
 
-1. Download the latest Windows zip file (Mzinga.Win32.zip *or* Mzinga.Win64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Windows zip file (Mzinga.WinX86.zip *or* Mzinga.WinX64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the zip file
 
-**Note:** If you're unsure which version to download, try Mzinga.Win64.zip first. Most modern PCs are 64-bit.
+**Note:** If you're unsure which version to download, try Mzinga.WinX64.zip first. Most modern PCs are 64-bit.
 
 #### Setup MSI ####
 
 A standalone version of *MzingaViewer* is available via an installer which can run on Windows 7 SP1+, 8.1, 10, and 11.
 
-1. Download the latest Windows setup file (MzingaViewer.Win32.Setup.msi *or* MzingaViewer.Win64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Windows setup file (MzingaViewer.WinX86.Setup.msi *or* MzingaViewer.WinX64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Open the installer
 
-**Note:** If you're unsure which version to download, try MzingaViewer.Win64.Setup.msi first. Most modern PCs are 64-bit.
+**Note:** If you're unsure which version to download, try MzingaViewer.WinX64.Setup.msi first. Most modern PCs are 64-bit.
 
 **Note:** This version does not contain the *MzingaEngine*, *MzingaPerft*, or *MzingaTrainer* binaries.
 

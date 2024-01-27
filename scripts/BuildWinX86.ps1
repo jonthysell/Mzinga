@@ -1,7 +1,7 @@
 param()
 
 [string] $Product = "Mzinga"
-[string] $Target = "Win32"
+[string] $Target = "WinX86"
 
 & "$PSScriptRoot\Build.ps1" -Product $Product -Target $Target -BuildArgs "-target:Publish -p:RuntimeIdentifier=win-x86 -p:PublishSingleFile=true -p:PublishTrimmed=true -p:IncludeAllContentForSelfExtract=true -p:EnableCompressionInSingleFile=true"
 
