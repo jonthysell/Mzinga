@@ -8,8 +8,8 @@
         <ProductVersion>3.9</ProductVersion>
         <ProjectGuid>eb905695-d35d-4b73-ae9c-ddff734604f8</ProjectGuid>
         <SchemaVersion>2.0</SchemaVersion>
-        <OutputName Condition=" '$(Platform)' == 'x86'">MzingaViewer.Win32.Setup</OutputName>
-        <OutputName Condition=" '$(Platform)' == 'x64'">MzingaViewer.Win64.Setup</OutputName>
+        <OutputName Condition=" '$(Platform)' == 'x86'">MzingaViewer.WinX86.Setup</OutputName>
+        <OutputName Condition=" '$(Platform)' == 'x64'">MzingaViewer.WinX64.Setup</OutputName>
         <OutputName Condition=" '$(OutputName)' == ''">MzingaViewer.Setup</OutputName>
         <OutputType>Package</OutputType>
         <DefineSolutionProperties>false</DefineSolutionProperties>
