@@ -33,7 +33,7 @@ The standard Windows release provides self-contained x86/x64/arm64 binaries whic
 
 A standalone version of *MzingaViewer* is available via an installer which can run on Windows 7 SP1+, 8.1, 10, and 11.
 
-1. Download the latest Windows setup file (MzingaViewer.WinX86.Setup.msi *or* MzingaViewer.WinX64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
+1. Download the latest Windows setup file (MzingaViewer.WinX86.Setup.msi, MzingaViewer.WinX64.Setup.msi *or* MzingaViewer.WinArm64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Open the installer
 
 **Note:** If you're unsure which version to download, try MzingaViewer.WinX64.Setup.msi first. Most modern PCs are x64.

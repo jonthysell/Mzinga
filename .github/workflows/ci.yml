@@ -68,11 +68,8 @@ jobs:
       Product: MzingaViewer
     strategy:
       matrix:
-        target: [WinX86.Setup, WinX64.Setup]
+        target: [WinX86.Setup, WinX64.Setup, WinArm64.Setup]
     steps:
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-
     - name: Checkout
       uses: actions/checkout@v3
 

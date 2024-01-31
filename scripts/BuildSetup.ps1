@@ -23,7 +23,7 @@ Write-Host "Build setup..."
 try
 {
     New-Item -Path "$OutputRoot\$TargetOutputDirectory" -ItemType "directory"
-    msbuild $BuildArgs.Split() -restore -p:Configuration=Release -p:OutputPath="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$ProjectPath"
+    dotnet msbuild $BuildArgs.Split() -restore -p:Configuration=Release -p:OutputPath="$RepoRoot\$OutputRoot\$TargetOutputDirectory" "$ProjectPath"
     if (!$?) {
     	throw 'Build failed!'
     }
