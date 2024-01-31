@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.15.0 ##
 
 * Added native ARM64 builds for Windows, MacOS, and Linux
 * Test: Updated Microsoft.NET.Test.Sdk to 17.8.0
