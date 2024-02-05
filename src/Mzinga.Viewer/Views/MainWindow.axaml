@@ -360,7 +360,7 @@
                         <ListBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding CopyHistoryToClipboard}"
-                                          Header="Copy History to Clipboard" />
+                                          Header="Copy History" />
                             </ContextMenu>
                         </ListBox.ContextMenu>
                     </ListBox>

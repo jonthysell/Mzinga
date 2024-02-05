@@ -4,11 +4,21 @@
 using System;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Mzinga.Viewer.ViewModels
 {
     public abstract class InformationViewModelBase : ObservableObject
     {
+        public static AppViewModel AppVM
+        {
+            get
+            {
+                return AppViewModel.Instance;
+            }
+
+        }
+
         public string Title
         {
             get
@@ -46,6 +56,32 @@ namespace Mzinga.Viewer.ViewModels
         public string Details { get; protected set; }
 
         public bool ShowDetails => !string.IsNullOrWhiteSpace(Details);
+
+        #region Commands
+
+        public RelayCommand CopyDetailsToClipboard
+        {
+            get
+            {
+                return _copyDetailsToClipboard ??= new RelayCommand(() =>
+                {
+                    try
+                    {
+                        AppVM.TextToClipboard(Details);
+                    }
+                    catch (Exception ex)
+                    {
+                        ExceptionUtils.HandleException(ex);
+                    }
+                }, () =>
+                {
+                    return ShowDetails;
+                });
+            }
+        }
+        private RelayCommand _copyDetailsToClipboard = null;
+
+        #endregion
 
         public event EventHandler RequestClose;
 

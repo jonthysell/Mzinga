@@ -38,20 +38,22 @@
                           IsVisible="{Binding ShowDetails}"
                           Margin="5"
                           Padding="0">
-                    <Grid Height="100">
-                        <ScrollViewer Margin="0,5"
-                                      Padding="10,0,30,0"
-                                      Width="440">
-                            <md:MarkdownScrollViewer Markdown="{Binding Details, Mode=OneWay}"
-                                                     Width="400">
-                                <md:MarkdownScrollViewer.Styles>
-                                    <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
-                                </md:MarkdownScrollViewer.Styles>
-                                <md:MarkdownScrollViewer.Engine>
-                                    <md:Markdown HyperlinkCommand="{Binding (vm:ConfirmationViewModel)$parent[Window].DataContext.AppVM.LaunchURL}" />
-                                </md:MarkdownScrollViewer.Engine>
-                            </md:MarkdownScrollViewer>
-                        </ScrollViewer>
+                    <Grid Height="150"
+                          Margin="5">
+                        <md:MarkdownScrollViewer Markdown="{Binding Details, Mode=OneWay}">
+                            <md:MarkdownScrollViewer.Styles>
+                                <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
+                            </md:MarkdownScrollViewer.Styles>
+                            <md:MarkdownScrollViewer.Engine>
+                                <md:Markdown HyperlinkCommand="{Binding (vm:ConfirmationViewModel)$parent[Window].DataContext.AppVM.LaunchURL}" />
+                            </md:MarkdownScrollViewer.Engine>
+                        </md:MarkdownScrollViewer>
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding CopyDetailsToClipboard}"
+                                          Header="Copy Details" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
                     </Grid>
                 </Expander>
             </StackPanel>

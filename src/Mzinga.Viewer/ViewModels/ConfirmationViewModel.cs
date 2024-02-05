@@ -17,15 +17,6 @@ namespace Mzinga.Viewer.ViewModels
 
     public class ConfirmationViewModel : InformationViewModelBase
     {
-        public static AppViewModel AppVM
-        {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-
-        }
-
         #region Properties
 
         public ConfirmationResult Result { get; private set; } = ConfirmationResult.Cancel;

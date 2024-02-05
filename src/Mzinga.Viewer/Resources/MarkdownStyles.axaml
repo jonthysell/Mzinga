@@ -18,8 +18,10 @@
         <Setter Property="Margin"
                 Value="10,0" />
     </Style>
-    <Style Selector="md|MarkdownScrollViewer ScrollViewer">
-        <Setter Property="VerticalScrollBarVisibility"
-                Value="Disabled" />
+    <Style Selector="md|MarkdownScrollViewer ScrollViewer /template/ ScrollContentPresenter">
+        <Setter Property="Padding"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="0,0,30,0" />
     </Style>
 </Styles>

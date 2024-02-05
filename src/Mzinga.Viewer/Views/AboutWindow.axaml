@@ -1,8 +1,9 @@
 <Window CanResize="False"
         MinHeight="100"
         MinWidth="100"
-        SizeToContent="WidthAndHeight"
+        SizeToContent="Height"
         Title="{Binding Title}"
+        Width="600"
         WindowStartupLocation="CenterOwner"
         d:DesignHeight="640"
         d:DesignWidth="480"
@@ -39,20 +40,15 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <ScrollViewer Margin="0,5"
-                                      Padding="10,0,30,0"
-                                      Width="500">
-                            <md:MarkdownScrollViewer Markdown="{Binding Body, Mode=OneWay}"
-                                                     Width="460"
-                                                     x:DataType="vm:ObservableAboutTabItem">
-                                <md:MarkdownScrollViewer.Styles>
-                                    <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
-                                </md:MarkdownScrollViewer.Styles>
-                                <md:MarkdownScrollViewer.Engine>
-                                    <md:Markdown HyperlinkCommand="{Binding AppVM.LaunchURL}" />
-                                </md:MarkdownScrollViewer.Engine>
-                            </md:MarkdownScrollViewer>
-                        </ScrollViewer>
+                        <md:MarkdownScrollViewer Markdown="{Binding Body, Mode=OneWay}"
+                                                 x:DataType="vm:ObservableAboutTabItem">
+                            <md:MarkdownScrollViewer.Styles>
+                                <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
+                            </md:MarkdownScrollViewer.Styles>
+                            <md:MarkdownScrollViewer.Engine>
+                                <md:Markdown HyperlinkCommand="{Binding AppVM.LaunchURL}" />
+                            </md:MarkdownScrollViewer.Engine>
+                        </md:MarkdownScrollViewer>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>

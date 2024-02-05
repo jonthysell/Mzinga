@@ -5,20 +5,12 @@ using System;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Mzinga.Core;
 
 namespace Mzinga.Viewer.ViewModels
 {
     public class InformationViewModel : InformationViewModelBase
     {
-        public static AppViewModel AppVM
-        {
-            get
-            {
-                return AppViewModel.Instance;
-            }
-
-        }
-
         #region Commands
 
         public RelayCommand Accept

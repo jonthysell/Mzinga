@@ -69,7 +69,7 @@ namespace Mzinga.Viewer.ViewModels
         {
             return string.Join(Environment.NewLine + Environment.NewLine,
                 "## Mzinga ##",
-                "Mzinga is a collection of open-source software to play the board game [Hive](https://gen42.com/games/hive), with the primary goal of building a community of developers who create Hive-playing AIs.",
+                "Mzinga is a collection of open-source software to play the abstract board game [Hive](https://gen42.com/games/hive), with the primary goal of building a community of developers who create Hive-playing AIs.",
                 "To that end, Mzinga proposes a [Universal Hive Protocol](https://github.com/jonthysell/Mzinga/wiki/UniversalHiveProtocol) to support interoperability for Hive-playing software.",
                 "For more information on Mzinga and its projects, please check out the [Mzinga Wiki](https://github.com/jonthysell/Mzinga/wiki).",
                 "## MzingaViewer ##",

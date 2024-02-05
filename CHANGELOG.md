@@ -1,5 +1,10 @@
 # Mzinga Changelog #
 
+## next ##
+
+Viewer: Fix formatting of Markdown text blocks
+Viewer: Add "Copy Details" to context-menu for dialogs with expandable Details
+
 ## v0.15.0 ##
 
 * Added native ARM64 builds for Windows, MacOS, and Linux
