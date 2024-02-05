@@ -2,8 +2,8 @@
 
 ## v0.15.1 ##
 
-Viewer: Fix formatting of Markdown text blocks
-Viewer: Add "Copy Details" to context-menu for dialogs with expandable Details
+* Viewer: Fix formatting of Markdown text blocks
+* Viewer: Add "Copy Details" to context-menu for dialogs with expandable Details
 
 ## v0.15.0 ##
 
