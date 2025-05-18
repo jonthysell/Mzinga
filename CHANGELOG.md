@@ -2,6 +2,7 @@
 
 ## next ##
 
+* fix: add thread safety to TryLookup by locking _storeLock (thanks @abstratovcm)
 * Update all projects to .NET 8.0
 * Updated Avalonia to v11.3.0
 * Updated Avalonia.Desktop to v11.3.0
