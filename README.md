@@ -78,7 +78,7 @@ The Unpacked release provides loose, framework-dependent .NET 6 binaries.
 
 Hive Copyright (c) 2016 Gen42 Games. Mzinga is in no way associated with or endorsed by Gen42 Games.
 
-Mzinga Copyright (c) 2015-2024 Jon Thysell.
+Mzinga Copyright (c) 2015-2025 Jon Thysell.
 
 Avalonia Copyright (c) .NET Foundation and Contributors.
 

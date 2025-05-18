@@ -3,7 +3,7 @@
     <Product>Mzinga</Product>
     <Company>Jon Thysell</Company>
     <Authors>Jon Thysell</Authors>
-    <Copyright>Copyright © 2015-2024 Jon Thysell</Copyright>
+    <Copyright>Copyright © 2015-2025 Jon Thysell</Copyright>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <RepositoryUrl>https://github.com/jonthysell/Mzinga</RepositoryUrl>
     <TargetFramework>net8.0</TargetFramework>
