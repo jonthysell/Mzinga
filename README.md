@@ -14,15 +14,14 @@ For more information on Mzinga and its projects, please check out the [Mzinga Wi
 
 Mzinga was written in C# and should run anywhere that supports [.NET 8.0](https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md). It has been officially tested on:
 
-* Windows 10 and 11
-* Ubuntu 20.04
-* macOS 10.15
+* Windows 10 and 11 (x64)
+* Ubuntu 22.04 (x64)
 
 ### Windows ###
 
 #### Standard ####
 
-The standard Windows release provides self-contained x86/x64/arm64 binaries which run on Windows 7 SP1+, 8.1, 10, and 11.
+The standard Windows release provides self-contained x86/x64/arm64 binaries which run on 10 and 11.
 
 1. Download the latest Windows zip file (Mzinga.WinX86.zip, Mzinga.WinX64.zip, *or* Mzinga.WinArm64.zip) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the zip file
@@ -31,7 +30,7 @@ The standard Windows release provides self-contained x86/x64/arm64 binaries whic
 
 #### Setup MSI ####
 
-A standalone version of *MzingaViewer* is available via an installer which can run on Windows 7 SP1+, 8.1, 10, and 11.
+A standalone version of *MzingaViewer* is available via an installer which can run on 10 and 11.
 
 1. Download the latest Windows setup file (MzingaViewer.WinX86.Setup.msi, MzingaViewer.WinX64.Setup.msi *or* MzingaViewer.WinArm64.Setup.msi) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Open the installer
@@ -48,14 +47,14 @@ A standalone version of *MzingaViewer* is available via the Microsoft Store for 
 
 ### MacOS ###
 
-The MacOS release provides self-contained x64/arm64 binaries which run on OSX >= 10.15.
+The MacOS release provides self-contained x64/arm64 binaries which should run on OSX >= 13.
 
 1. Download the latest MacOS tar.gz file (Mzinga.MacOSX64.tar.gz *or* Mzinga.MacOSArm64.tar.gz) from https://github.com/jonthysell/Mzinga/releases/latest
 2. Extract the tar.gz file
 
-**Note:** If you're unsure which version to download, try Mzinga.MacOSX64.tar.gz first. Most modern PCs are x64.
+**Note:** If you're on Apple Silicon (M1/M2/etc.), try Mzinga.MacOSArm64.tar.gz first. Otherwise if you're on Intel hardware use Mzinga.MacOSX64.tar.gz.
 
-**Note:** If MacOS Gatekeeper prevents you from running Mzinga, you may need to run `xattr -cr` on the downloaded files.
+**Note:** If MacOS Gatekeeper prevents you from running Mzinga (complaining that it's "damaged"), you may need to run `xattr -cr Mzinga*` in the directory first.
 
 ### Linux ###
 
@@ -68,7 +67,7 @@ The Linux release provides self-contained x64/arm64 binaries which run on many L
 
 ### Unpacked ###
 
-The Unpacked release provides loose, framework-dependent .NET 6 binaries.
+The Unpacked release provides loose, framework-dependent .NET 8 binaries.
 
 1. Install the latest [.NET Runtime](https://dotnet.microsoft.com/download/dotnet/8.0)
 2. Download the latest Unpacked zip file (Mzinga.Unpacked.zip) from https://github.com/jonthysell/Mzinga/releases/latest

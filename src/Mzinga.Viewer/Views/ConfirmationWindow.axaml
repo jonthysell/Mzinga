@@ -45,7 +45,7 @@
                                 <StyleInclude Source="avares://MzingaViewer/Resources/MarkdownStyles.axaml" />
                             </md:MarkdownScrollViewer.Styles>
                             <md:MarkdownScrollViewer.Engine>
-                                <md:Markdown HyperlinkCommand="{Binding (vm:ConfirmationViewModel)$parent[Window].DataContext.AppVM.LaunchURL}" />
+                                <md:Markdown HyperlinkCommand="{Binding $parent[Window].DataContext.AppVM.LaunchURL}" />
                             </md:MarkdownScrollViewer.Engine>
                         </md:MarkdownScrollViewer>
                         <Grid.ContextMenu>

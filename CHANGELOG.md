@@ -3,6 +3,19 @@
 ## next ##
 
 * Update all projects to .NET 8.0
+* Updated Avalonia to v11.3.0
+* Updated Avalonia.Desktop to v11.3.0
+* Updated Avalonia.Diagnostics to v11.3.0
+* Updated Avalonia.Themes.Fluent to v11.3.0
+* Updated CommunityToolkit.Mvvm to v8.4.0
+* Updated coverlet.collector to v6.0.4
+* Updated Microsoft.NET.Test.Sdk to v17.13.0
+* Updated MSTest.TestAdapter to v3.8.3
+* Updated MSTest.TestFramework to v3.8.3
+* Updated System.Reactive.Linq to v6.0.1
+* Updated WixToolset.Heat to v6.0.0
+* Updated WixToolset.UI.wixext to v6.0.0
+* Updated WixToolset.Util.wixext to v6.0.0
 
 ## v0.15.1 ##
 

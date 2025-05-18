@@ -1,13 +1,13 @@
 <Project>
     <Import Project="Sdk.props"
             Sdk="WixToolset.Sdk"
-            Version="4.0.3" />
+            Version="6.0.0" />
     <PropertyGroup>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <OutputName Condition="'$(Platform)' == 'x86'">MzingaViewer.WinX86.Setup</OutputName>
-        <OutputName Condition=" '$(Platform)' == 'x64'">MzingaViewer.WinX64.Setup</OutputName>
-        <OutputName Condition=" '$(Platform)' == 'ARM64'">MzingaViewer.WinArm64.Setup</OutputName>
-        <OutputName Condition=" '$(OutputName)' == ''">MzingaViewer.Setup</OutputName>
+        <OutputName Condition="'$(Platform)' == 'x64'">MzingaViewer.WinX64.Setup</OutputName>
+        <OutputName Condition="'$(Platform)' == 'ARM64'">MzingaViewer.WinArm64.Setup</OutputName>
+        <OutputName Condition="'$(OutputName)' == ''">MzingaViewer.Setup</OutputName>
         <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
         <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
         <SuppressIces>ICE61;</SuppressIces>
@@ -24,15 +24,15 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="WixToolset.UI.wixext"
-                          Version="4.0.3" />
+                          Version="6.0.0" />
         <PackageReference Include="WixToolset.Util.wixext"
-                          Version="4.0.3" />
+                          Version="6.0.0" />
         <PackageReference Include="WixToolset.Heat"
-                          Version="4.0.3" />
+                          Version="6.0.0" />
     </ItemGroup>
     <Import Project="Sdk.targets"
             Sdk="WixToolset.Sdk"
-            Version="4.0.3" />
+            Version="6.0.0" />
     <PropertyGroup>
         <PostBuildEvent />
     </PropertyGroup>
@@ -41,7 +41,7 @@
         <PropertyGroup>
             <LinkerBaseInputPaths>..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</LinkerBaseInputPaths>
             <DefineConstants>PublishPath=..\Mzinga.Viewer\bin\$(Platform)\$(Configuration) (Setup)\</DefineConstants>
-            <RunWixToolsOutOfProc Condition=" '$(PROCESSOR_ARCHITECTURE)'!='x86'">true</RunWixToolsOutOfProc>
+            <RunWixToolsOutOfProc Condition="'$(PROCESSOR_ARCHITECTURE)'!='x86'">true</RunWixToolsOutOfProc>
         </PropertyGroup>
         <HeatDirectory AutoGenerateGuids="true"
                        ComponentGroupName="MzingaPublishOut"

@@ -342,7 +342,7 @@
                         <ListBox.Styles>
                             <Style Selector="ListBoxItem">
                                 <Setter Property="IsHitTestVisible"
-                                        Value="{Binding (vm:MainViewModel)$parent[Window].DataContext.IsReviewMode}" />
+                                        Value="{Binding $parent[Window].DataContext.IsReviewMode}" />
                             </Style>
                         </ListBox.Styles>
                         <ListBox.ItemTemplate>
