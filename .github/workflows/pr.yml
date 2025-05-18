@@ -18,7 +18,7 @@ jobs:
         configuration: [Debug, Release]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build Solution
       run: dotnet build -v d --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
@@ -27,7 +27,7 @@ jobs:
       run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name:  ${{ matrix.configuration }}Binaries
         path: ${{ env.BinDir }}/${{ matrix.configuration }}/net6.0

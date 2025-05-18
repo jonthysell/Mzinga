@@ -23,7 +23,7 @@ jobs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create Release Notes
         run: ${{ env.ScriptDir }}/CreateReleaseNotes.ps1
@@ -49,7 +49,7 @@ jobs:
         target: [Unpacked, WinX86, WinX64, WinArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -75,7 +75,7 @@ jobs:
         target: [WinX86.Setup, WinX64.Setup, WinArm64.Setup]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -105,7 +105,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Create Code Signing Certificate
       run: |
@@ -122,7 +122,7 @@ jobs:
         Remove-Item ${{ env.CertFile }}
 
     - name: Upload ${{ matrix.target }} Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
@@ -136,7 +136,7 @@ jobs:
         target: [LinuxX64, LinuxArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
@@ -160,7 +160,7 @@ jobs:
         target: [MacOSX64, MacOSArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1

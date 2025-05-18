@@ -26,7 +26,7 @@ jobs:
         configuration: [Debug, Release]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build Solution
       run: dotnet build -v d --configuration ${{ matrix.configuration }} ${{ env.SolutionFile }}
@@ -35,7 +35,7 @@ jobs:
       run: dotnet test --configuration ${{ matrix.configuration }} --no-build ${{ env.SolutionFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name:  ${{ matrix.configuration }}Binaries
         path: ${{ env.BinDir }}/${{ matrix.configuration }}/net6.0
@@ -49,13 +49,13 @@ jobs:
         target: [Unpacked, WinX86, WinX64, WinArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.zip
@@ -71,13 +71,13 @@ jobs:
         target: [WinX86.Setup, WinX64.Setup, WinArm64.Setup]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}/${{ env.Product }}.${{ matrix.target }}.msi
@@ -97,7 +97,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Create Code Signing Certificate
       run: |
@@ -114,7 +114,7 @@ jobs:
         Remove-Item ${{ env.CertFile }}
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}
@@ -128,13 +128,13 @@ jobs:
         target: [LinuxX64, LinuxArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
@@ -148,13 +148,13 @@ jobs:
         target: [MacOSX64, MacOSArm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Build ${{ matrix.target }}
       run: ${{ env.ScriptDir }}/Build${{ matrix.target }}.ps1
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.Product }}.${{ matrix.target }}
         path: ${{ env.BuildDir }}/${{ env.Product }}.${{ matrix.target }}.tar.gz
