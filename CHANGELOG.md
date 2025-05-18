@@ -1,6 +1,6 @@
 # Mzinga Changelog #
 
-## next ##
+## v0.16.0 ##
 
 * fix: add thread safety to TryLookup by locking _storeLock (thanks @abstratovcm)
 * Update all projects to .NET 8.0
