@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name:  ${{ matrix.configuration }}Binaries
-        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net6.0
+        path: ${{ env.BinDir }}/${{ matrix.configuration }}/net8.0
 
   ci_build_windows:
     name: CI Windows Build

@@ -1,5 +1,9 @@
 # Mzinga Changelog #
 
+## next ##
+
+* Update all projects to .NET 8.0
+
 ## v0.15.1 ##
 
 * Viewer: Fix formatting of Markdown text blocks
