@@ -114,20 +114,23 @@ namespace Mzinga.Core
 
         public bool TryLookup(TKey key, [NotNullWhen(returnValue: true)] out TEntry? entry)
         {
-            if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry))
+            lock (_storeLock)
             {
-                entry = wrappedEntry.Entry;
+                if (_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? wrappedEntry))
+                {
+                    entry = wrappedEntry.Entry;
 #if DEBUG
-                Metrics.Hit();
+                    Metrics.Hit();
 #endif
-                return true;
-            }
+                    return true;
+                }
 #if DEBUG
-            Metrics.Miss();
+                Metrics.Miss();
 #endif
 
-            entry = default;
-            return false;
+                entry = default;
+                return false;
+            }
         }
 
         public void Clear()
