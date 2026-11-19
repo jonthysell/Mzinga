@@ -1,4 +1,4 @@
-﻿// Copyright (c) Jon Thysell <http://jonthysell.com>
+// Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
 using System;
@@ -64,6 +64,11 @@ namespace Mzinga.Core
 
         public void Store(TKey key, TEntry newEntry)
         {
+            if (Capacity == 0)
+            {
+                return;
+            }
+
             lock (_storeLock)
             {
                 if (!_dict.TryGetValue(key, out FixedCacheEntry<TKey, TEntry>? existingEntry))
