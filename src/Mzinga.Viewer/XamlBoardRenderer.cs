@@ -1,4 +1,4 @@
-﻿// Copyright (c) Jon Thysell <http://jonthysell.com>
+// Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
 using System;
@@ -703,7 +703,7 @@ namespace Mzinga.Viewer
                 if (pointerPoint.Properties.IsLeftButtonPressed)
                 {
                     var dX = pointerPoint.Position.X - DragStartPoint.Value.X;
-                    var dY = pointerPoint.Position.X - DragStartPoint.Value.X;
+                    var dY = pointerPoint.Position.Y - DragStartPoint.Value.Y;
 
                     if (MoveAfterDragStart || Math.Sqrt(dX * dX + dY * dY) >= MinDragDistanceToStartPan)
                     {
