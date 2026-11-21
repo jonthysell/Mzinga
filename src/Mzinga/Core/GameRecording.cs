@@ -1,4 +1,4 @@
-﻿// Copyright (c) Jon Thysell <http://jonthysell.com>
+// Copyright (c) Jon Thysell <http://jonthysell.com>
 // Licensed under the MIT License.
 
 using System;
@@ -462,11 +462,11 @@ namespace Mzinga.Core
                 }
 
                 // Set result
-                if (rawResult.Contains(metadata.White))
+                if (!string.IsNullOrEmpty(metadata.White) && rawResult.EndsWith(metadata.White, StringComparison.OrdinalIgnoreCase))
                 {
                     metadata.SetTag("Result", BoardState.WhiteWins.ToString());
                 }
-                else if (rawResult.Contains(metadata.Black))
+                else if (!string.IsNullOrEmpty(metadata.Black) && rawResult.EndsWith(metadata.Black, StringComparison.OrdinalIgnoreCase))
                 {
                     metadata.SetTag("Result", BoardState.BlackWins.ToString());
                 }
